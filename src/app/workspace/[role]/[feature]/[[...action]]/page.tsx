@@ -1,5 +1,2 @@
-import { WorkspacePage } from '@/views/workspace/WorkspacePage';
-
-export default function Page() {
-  return <WorkspacePage />;
-}
+// The root layout hosts the stable workspace shell across feature routes.
+export default function Page() { return null; }

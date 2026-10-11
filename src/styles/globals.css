@@ -31,3 +31,9 @@ input,select,textarea{accent-color:var(--ink)}
 
 /* Keep the lens centre fixed when login changes document height. */
 html:has(main[aria-label="Dorma 角色功能镜头"]){overflow-y:scroll;scrollbar-gutter:stable}
+
+/* Reserve the document scrollbar across routes to avoid sideways menu movement. */
+html{scrollbar-gutter:stable}
+
+/* Short lists and long forms must use the same viewport width. */
+html[data-dorma-workspace-active]{overflow-y:scroll!important;scrollbar-gutter:stable}

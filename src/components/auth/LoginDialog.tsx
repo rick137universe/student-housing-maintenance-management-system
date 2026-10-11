@@ -7,6 +7,7 @@ import s from './LoginDialog.module.css';
 
 interface Props {
   open: boolean;
+  appearance?: 'default' | 'anime';
   onClose: () => void;
   onSessionChange: (account: DemoAccount) => void;
 }
@@ -18,7 +19,7 @@ const roleIcons: Record<DemoAccount['role'], LucideIcon> = {
   admin: ShieldCheck,
 };
 
-export function LoginDialog({ open, onClose, onSessionChange }: Props) {
+export function LoginDialog({ open, onClose, onSessionChange, appearance = 'default' }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -52,6 +53,7 @@ export function LoginDialog({ open, onClose, onSessionChange }: Props) {
   return <dialog
     ref={dialog}
     className={s.portal}
+    data-appearance={appearance}
     aria-labelledby="portal-title"
     onClose={onClose}
     onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}

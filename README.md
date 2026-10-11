@@ -1,12 +1,12 @@
 # Dorma · 学生公寓住宿与报修管理系统前端
 
-> **前端移植阶段（2026-10-11）：** 首页已切换为 `Anime Clone` 的完整界面和动画，原页面文字与链接暂时保留，尚未匹配住宿业务。入口为 `src/views/home/AnimeHomePage.tsx`，导入组件位于 `src/components/home/AnimeHome.tsx`，页面内容位于 `src/data/anime-home-markup.ts`，样式位于 `src/styles/anime-*.css`，运行资源位于 `public/assets/`。既有业务详情路由、登录组件、数据和原 `HomePage.tsx` 保留；下面的原型功能说明对应移植前版本。
+> **公共业务首页第一版（2026-10-11）：** 保留 Anime Clone 的原镜头动画、段落顺序、时序及分辨率，公共介绍分为系统介绍、住宿服务、报修服务、信息与提醒。顶部与末尾的登录入口复用演示登录；登录后进入当前身份的第一个功能。赞助区域及部分原页脚暂时保留。
 
-Dorma 是面向学生、宿管人员、维修人员和系统管理员的校园住宿服务**前端演示项目**。当前版本已经具备四类身份的登录演示、角色专属首页、20 个功能分组和 57 个操作入口，以及相应的业务详情界面。首页使用滚动驱动的 SVG 镜头介绍功能；顶部导航可直接打开详情页。
+Dorma 是面向学生、宿管人员、维修人员和系统管理员的校园住宿服务**前端演示项目**。当前版本具备四类身份的登录演示、20 个功能分组和 57 个操作入口。公共首页展示通用服务场景；登录后进入当前身份专属的业务详情页，左侧菜单直接访问授权功能。
 
 > **当前阶段：可运行的交互原型。** 页面中的账号、账单、床位、工单和统计指标来自前端模拟数据。部分操作能更新当前页面状态，但没有真实身份认证、业务 API、数据库持久化或支付、备份服务。功能入口数量不代表业务流程已经完成。
 
-本文档依据 2026-09-26 的仓库代码编写，描述当前可从首页进入的版本。早期设计、旧版组件和一次性脚本集中在 `archive/`；它们不参与当前应用构建。早期 QA 截图保留在 Git 历史中，新的本地 QA 产物放在被忽略的 `docs/qa/`。
+本文档依据 2026-10-11 的仓库代码编写，描述当前可从首页进入的版本。早期设计、旧版组件和一次性脚本集中在 `archive/`；它们不参与当前应用构建。早期 QA 截图保留在 Git 历史中，新的本地 QA 产物放在被忽略的 `docs/qa/`。
 
 ## 开发语言与技术栈
 
@@ -14,12 +14,12 @@ Dorma 是面向学生、宿管人员、维修人员和系统管理员的校园�
 | --- | --- |
 | TypeScript / TSX | 主要开发语言；用于 Next.js 页面、React 组件、演示数据、类型定义和 `next.config.ts`。 |
 | CSS | `src/styles/globals.css` 提供全局样式；各功能目录中的 `*.module.css` 提供组件级样式。 |
-| JavaScript / JSON | `.mjs` 文件配置 ESLint 和 PostCSS；`package.json`、`tsconfig.json` 等管理依赖和工具配置。应用主体没有独立的 JavaScript 页面。 |
-| HTML / SVG | 页面元素通过 TSX 中的 JSX 渲染；首页镜头的 SVG 图形直接写在 React 组件中。 |
+| JavaScript / JSON | `.mjs` 文件配置 ESLint 和 PostCSS；`package.json`、`tsconfig.json` 等管理依赖和工具配置。原动画通过 `public/assets/js/home.js` 及其分包加载。 |
+| HTML / SVG | 业务页面使用 TSX；公共首页保留捕获的 HTML 模板、SVG 与 WebGL 场景。 |
 
-当前应用基于 **Next.js 16.3.5（App Router）**、**React 19.2.4** 和 **TypeScript 5**。样式主要使用 CSS Modules，并通过 PostCSS 接入 **Tailwind CSS 4**；界面图标使用 **Lucide React**。首页滚动镜头使用原生 SVG、CSS 动画、`requestAnimationFrame` 和 `IntersectionObserver`。演示登录使用浏览器 `sessionStorage`，主题选择使用 `localStorage`。
+当前应用基于 **Next.js 16.3.5（App Router）**、**React 19.2.4** 和 **TypeScript 5**。样式主要使用 CSS Modules，并通过 PostCSS 接入 **Tailwind CSS 4**；界面图标使用 **Lucide React**。公共首页使用原生 Anime.js / Three.js WebGL 运行资源、SVG 与 CSS 动画，保持原时序和分辨率；稳定的页面属性隔离样式，避免逐帧进行昂贵的关系选择器匹配。演示登录使用浏览器 `sessionStorage`，主题选择使用 `localStorage`。
 
-仓库还配置了 shadcn 组件生成器，并保留一个基于 Base UI 的按钮组件；当前业务页面未引用该按钮。`package.json` 中的 **Anime.js**、**Three.js** 等依赖来自早期方案，当前 `src/` 中没有对应的运行时导入，不能将它们视为现行页面的动画或 3D 引擎。项目目前只有前端演示代码，没有后端服务、数据库或正式 API 集成。开发环境要求 Node.js 24 或以上，使用 npm 和 `package-lock.json` 管理依赖；ESLint、TypeScript 类型检查与 Next.js 构建用于代码验证。
+仓库还配置了 shadcn 组件生成器，并保留一个基于 Base UI 的按钮组件；当前业务页面未引用该按钮。公共首页的动画运行时已打包在 `public/assets/js/`，配套资源包括字体、图片、GLB 模型和 Draco 解码文件；React 接入组件负责启动原脚本及连接登录入口。根布局保留已启动的首页场景，隐藏时暂停引擎；详情页外壳也由根布局保留，跨功能只更新业务内容，避免导航重新挂载。项目目前只有前端演示代码，没有后端服务、数据库或正式 API 集成。开发环境要求 Node.js 24 或以上，使用 npm 和 `package-lock.json` 管理依赖；ESLint、TypeScript 类型检查与 Next.js 构建用于代码验证。
 
 ## 本地运行与检查
 
@@ -38,22 +38,22 @@ npm run check
 
 该命令依次执行 ESLint、TypeScript 类型检查和 Next.js 生产构建。也可分别运行 `npm run lint`、`npm run typecheck`、`npm run build`。当前 `next.config.ts` 启用了 `output: "standalone"`，但 `npm run start` 仍调用 `next start`，运行时会出现不兼容提示；生产部署应使用构建生成的 `.next/standalone/server.js`，并按 Next.js 的 standalone 部署说明提供静态资源。
 
-本次目录整理后，`npm run check` 已通过。桌面（1440 × 1000）和手机（390 × 844）尺寸下，首页、登录弹层和缴费页面在浅色、深色主题中的 12 组迁移前后截图一致（对照时减少动画）。四类身份的登录、退出、详情页签切换、主题切换和跨角色访问拦截均已验证；代表性操作覆盖模拟缴费、工单列表搜索、维修接单和模拟备份。字体与 favicon 请求正常，17 个迁移资源文件的内容校验值一致。这些检查不等于所有操作入口和完整业务链路都已通过端到端验收。
+本次版本执行 `npm run check` 并进行浏览器回归：四类身份登录、全部 57 个操作入口、刷新与浏览器前进后退、退出登录和跨角色访问拦截；检查桌面与手机布局、主题切换及返回首页的动画初始化。这些检查不代表完整业务链路或后端权限已实现。
 
 ## 如何体验当前版本
 
-点击首页「登录工作台」，选择身份自动填入演示账号，再点击登录。四个演示账号的密码均为 `Dorma2026`：
+点击首页顶部「登录」或首屏「登录工作台」，选择身份自动填入演示账号，再点击登录。有演示会话时顶部显示「进入工作台」。四个演示账号的密码均为 `Dorma2026`：
 
-| 身份 | 用户名 | 首页功能分组 |
+| 身份 | 用户名 | 工作台功能分组 |
 | --- | --- | ---: |
 | 学生 | `202602341` | 5 |
 | 宿管人员 | `dm0301` | 5 |
 | 维修人员 | `wx008` | 4 |
 | 系统管理员 | `admin` | 6 |
 
-登录后可以滚动首页查看当前身份的功能动画，也可以用顶部导航直接进入功能的第一个操作。右侧操作卡可进入当前功能的指定操作。详情页地址格式为 `/workspace/{role}/{feature}/{action}`，例如 `/workspace/student/repair/action-1` 是学生「提交报修」页。详情页内可切换同一功能的其他操作。
+登录成功后进入当前身份第一个功能的第一个操作。工作台采用左侧角色功能菜单、右侧业务内容的布局，手机端通过「功能菜单」展开导航。详情页地址保持 `/workspace/{role}/{feature}/{action}`，例如 `/workspace/student/repair/action-1` 是学生「提交报修」页。工作台内部使用无刷新路由切换，左侧导航保持挂载，支持刷新及浏览器前进后退；首页与工作台之间使用客户端路由切换。原首页场景由根布局保留，离开时暂停引擎及滚动回调，返回时恢复，避免重新加载动画资源。公共首页不展示角色专属数据或管理操作。
 
-顶部支持「跟随系统 / 浅色 / 深色」主题。主题选项保存在浏览器 `localStorage`；演示身份保存在 `sessionStorage`，退出登录或结束当前浏览器会话后需要重新登录。详情页有基于演示角色的前端访问拦截，但它不构成正式系统的权限保护。
+工作台顶部支持「跟随系统 / 浅色 / 深色」主题；公共首页保留原动画的深色外观；工作台浅色模式使用黑白灰。主题选项保存在浏览器 `localStorage`；演示身份保存在 `sessionStorage`，退出登录或结束当前浏览器会话后需要重新登录。详情页有基于演示角色的前端访问拦截，但它不构成正式系统的权限保护。
 
 ## 功能进展
 
@@ -96,19 +96,19 @@ npm run check
 │  ├─ app/                     路由入口、根布局与 favicon.ico
 │  │  └─ workspace/[role]/[feature]/[[...action]]/
 │  ├─ views/                   页面主体，组合组件与页面状态
-│  │  ├─ home/                 HomePage.tsx 及页面样式
+│  │  ├─ home/                 AnimeHomePage.tsx；保留旧 HomePage.tsx
 │  │  └─ workspace/            WorkspacePage.tsx 及页面样式
 │  ├─ components/              界面组件及紧邻组件的 CSS Modules
 │  │  ├─ auth/                 LoginDialog 登录弹层
-│  │  ├─ home/                 Lens 系列镜头与动画组件
+│  │  ├─ home/                 AnimeHome.tsx 原页面接入；保留 Lens 组件
 │  │  ├─ workspace/            业务表单、列表、切换组件及共用样式
 │  │  ├─ theme/                ThemeProvider、useTheme、ThemeSelect
 │  │  └─ ui/                   shadcn 基础组件
 │  ├─ data/                    演示账号、模拟内容、角色菜单
 │  │  └─ graphics/             route-path.ts、sphere-paths.ts
 │  ├─ utils/                   demo-session.ts、class-names.ts
-│  └─ styles/                  globals.css 全局样式
-├─ public/assets/fonts/        当前网站字体
+│  └─ styles/                  globals.css 与 anime-*.css
+├─ public/assets/              原动画 JS 分包、模型、图片、字体与解码文件
 ├─ docs/                       当前文档，requirements-map.md 为需求映射
 ├─ archive/                    历史资料，不参与当前应用构建
 │  ├─ README.md                归档索引及使用边界
@@ -124,10 +124,10 @@ npm run check
 
 | 要修改的内容 | 文件入口 |
 | --- | --- |
-| 首页布局、角色导航与页面状态 | `src/views/home/HomePage.tsx` |
-| 首页 SVG 镜头与动画 | `src/components/home/`，路径常量在 `src/data/graphics/` |
+| 公共首页入口、文案与登录连接 | `src/views/home/AnimeHomePage.tsx`、`src/data/anime-home-markup.ts`、`src/components/home/AnimeHome.tsx` |
+| 公共首页原动画与样式 | `public/assets/js/home.js` 及分包、`src/styles/anime-*.css`；旧 Lens 组件保留 |
 | 登录弹层与演示身份 | `src/components/auth/LoginDialog.tsx`、`src/data/accounts.ts` |
-| 业务路由解析、角色访问拦截与页签 | `src/views/workspace/WorkspacePage.tsx` |
+| 业务路由解析、角色访问拦截与左侧菜单 | `src/views/workspace/WorkspacePage.tsx` |
 | 通用表单与列表 | `src/components/workspace/ActionWorkspace.tsx` |
 | 学生报修、维修人员工单交互 | `src/components/workspace/RepairWorkspace.tsx`、`MaintenanceWorkspace.tsx` |
 | 角色菜单、功能及操作 ID | `src/data/role-features.ts` |
@@ -142,7 +142,7 @@ npm run check
 
 根目录的 `.ts`、`.json`、`.mjs` 是文件格式，不是统一的职责分类。`package.json`、锁文件及 Next.js、TypeScript、ESLint、PostCSS、shadcn 配置保留在根目录，遵循工具的常见发现方式；README、`.gitignore`、工具指令文件也保留在此处。自动生成的 `next-env.d.ts`、依赖、构建结果和本地 QA 产物由 `.gitignore` 排除。
 
-网站字体放在 `public/assets/fonts/`，以后实际使用的图片放在 `public/assets/images/`（当前不创建空目录）。favicon 依照 Next.js 图标约定留在 `src/app/`，TSX 中的 SVG 动画继续作为源码维护。历史参考图统一放在 `archive/assets/images/`，与网站公开资源分开。
+网站字体放在 `public/assets/fonts/`，原动画图片位于 `public/assets/images/`，模型位于 `public/assets/models/`。favicon 依照 Next.js 图标约定留在 `src/app/`，TSX 中的 SVG 动画继续作为源码维护。历史参考图统一放在 `archive/assets/images/`，与网站公开资源分开。
 
 ## 已知边界与后续对接
 

@@ -1,11 +1,11 @@
-// Imported page content. Business labels and links will be mapped in the next stage.
+// Public service introduction. Keep the captured animation hooks and section order.
 export const animeHomeMarkup = `
     <header id="site-header" class="layout-container text-ui ui-overlay">
   <div id="site-header-content">
     <h1 class="heading-logo header-logo">
       <a href="/">
-        <img src="/assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118" />
-        <span>Anime.js | JavaScript Animation Engine</span>
+        <strong class="dorma-brand">dorma<span class="dorma-brand-dot">.</span></strong>
+        <span>Dorma · 学生公寓住宿与报修管理系统</span>
       </a>
       <label id="docs-versions" class="ui-select ui-input">
         <select class="ui-input" name="docs-versions" aria-label="Anime.js versions">
@@ -17,17 +17,7 @@ export const animeHomeMarkup = `
     </h1>
     <nav id="site-menu">
       <ul>
-                                        <li><a class="main-nav-link docs-link" data-id="docs" href="https://animejs.com/documentation" title="Documentation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g id="sidebar" fill="none" fill-rule="evenodd">
-    <path id="rectangle" fill="#FFFFFF" fill-rule="nonzero" d="M16.167 6.125H7.833A3.375 3.375 0 0 0 4.458 9.5v5a3.375 3.375 0 0 0 3.375 3.375h8.334a3.375 3.375 0 0 0 3.375-3.375v-5a3.375 3.375 0 0 0-3.375-3.375zm-8.334 1.75h8.334c.897 0 1.625.728 1.625 1.625v5c0 .897-.728 1.625-1.625 1.625H7.833A1.625 1.625 0 0 1 6.208 14.5v-5c0-.897.728-1.625 1.625-1.625z"/>
-    <polyline id="Path-42" stroke="#FFFFFF" stroke-width="1.75" points="9.5 7.75 9.5 12 9.5 16.25" data-points="13.5 8.75 10.5 12 13.5 15.25"/>
-  </g>
-</svg>
-<span>Docs</span></a></li>
-        <li><a class="main-nav-link" href="https://animejs.com/easing-editor" title="Easing functions editor"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="icon"><path fill="none" stroke="currentColor" stroke-width="1.75" d="M4.5,17 C14.5967876,17 8.37571813,7 19.5,7"/></svg><span>Easings</span></a></li>
-        <li><a class="main-nav-link" href="https://animejs.com/learn" title="Learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="icon">
-  <g fill="none"><path fill="currentColor" d="M16.1666667,6.125 L7.83333333,6.125 C5.9693723,6.125 4.45833333,7.63603897 4.45833333,9.5 L4.45833333,14.5 C4.45833333,16.363961 5.9693723,17.875 7.83333333,17.875 L16.1666667,17.875 C18.0306277,17.875 19.5416667,16.363961 19.5416667,14.5 L19.5416667,9.5 C19.5416667,7.63603897 18.0306277,6.125 16.1666667,6.125 Z M7.83333333,7.875 L16.1666667,7.875 C17.0641294,7.875 17.7916667,8.60253728 17.7916667,9.5 L17.7916667,14.5 C17.7916667,15.3974627 17.0641294,16.125 16.1666667,16.125 L7.83333333,16.125 C6.93587061,16.125 6.20833333,15.3974627 6.20833333,14.5 L6.20833333,9.5 C6.20833333,8.60253728 6.93587061,7.875 7.83333333,7.875 Z"/><path fill="currentColor" fill-rule="evenodd" d="M10,10.0706309 L10,13.9294941 C10,14.2445758 10.2554242,14.5 10.5705059,14.5 C10.6590742,14.5 10.7464261,14.479379 10.8256439,14.4397701 L14.6845071,12.5103385 C14.9663248,12.3694297 15.0805539,12.0267421 14.9396451,11.7449245 C14.8844409,11.634516 14.7949156,11.5449908 14.6845071,11.4897865 L10.8256439,9.56035488 C10.5438263,9.41944606 10.2011387,9.53367523 10.0602299,9.81549288 C10.033824,9.86830478 10.0158571,9.92473182 10.0068132,9.9827243 L10,10.0706309 Z"/></g>
-</svg><span>Learn</span></a></li>
+                                        <li><button type="button" class="main-nav-link dorma-entry" data-dorma-entry data-dorma-entry-label>登录</button></li>
         <li><a class="main-nav-link nav-link-retractable" href="https://codepen.io/collection/Poerqa?cursor=eyJwYWdlIjoxfQ==/" target="_blank" title="CodePen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g id="codepen" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
     <path id="Shape" stroke="#FFFFFF" stroke-width="1.75" d="M5 14.355L12 19l7-4.645v-4.71L12 5 5 9.645v4.71zm14 0l-7-4.71-7 4.71m0-4.71l7 4.646 7-4.646M12 5v4.645m0 4.71V19"/>
@@ -58,7 +48,7 @@ export const animeHomeMarkup = `
         </li>
       </ul>
     </nav>
-    <button id="toggle-site-menu" class="ui-input trigger-pane" title="Toggle site menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+    <button id="toggle-site-menu" class="ui-input trigger-pane" title="展开导航" aria-label="展开导航"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g id="menu" fill="none" fill-rule="evenodd">
     <rect id="Rectangle" width="16" height="1.75" x="4" y="8" fill="currentColor"/>
     <rect id="Rectangle-Copy" width="16" height="1.75" x="4" y="14" fill="currentColor"/>
@@ -72,15 +62,15 @@ export const animeHomeMarkup = `
     <div class="section formatted-text">
       <div class="section-content">
         <div class="section-text section-text-short">
-          <h2>All-in-one <br>animation <br>engine<span class="animation-engine red-dot">.</span></h2>
-          <p>A fast and flexible JavaScript <br>library to animate <span  class="animate-anything-wrapper"><span class="animate-anything">the web</span><span class="animate-anything-dot">.</span></span></p>
+          <h2>住宿与报修，<br>让校园生活<br>更有序<span class="animation-engine red-dot">。</span></h2>
+          <p>连接住宿、报修与日常服务，<br>一站了解<span class="animate-anything-wrapper"><span class="animate-anything">公寓生活</span><span class="animate-anything-dot" aria-hidden="true"></span></span><span class="dorma-sentence-period">。</span></p>
           <p></p>
         </div>
         <div class="fixed-container heading-links">
           <div class="layout-container">
             <div class="ui-group">
-              <pre class="npm-install"><code>npm i animejs</code></pre>
-              <button class="learn-more ui-input ui-button text-ui">Learn more <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <pre class="npm-install dorma-entry" role="button" tabindex="0" data-dorma-entry aria-label="登录工作台"><code>登录工作台</code></pre>
+              <button class="learn-more ui-input ui-button text-ui">了解系统 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="12 18 17.237 12.763 16 11.525 12.875 14.651 12.875 6.763 11.125 6.763 11.125 14.651 8 11.525 6.763 12.763"/>
   </g>
@@ -108,8 +98,8 @@ export const animeHomeMarkup = `
     <div class="section fixed-section">
       <div class="section-content">
         <div class="section-text formatted-text section-text-short">
-          <h2 class="section-heading text-xxl">The complete <br>animator's toolbox</h2>
-          <p class="section-sub-heading">Break free from browser limitations and animate anything on the web with a single API.</p>
+          <h2 class="section-heading text-xxl">校园服务，<br>从一个入口开始</h2>
+          <p class="section-sub-heading">住宿、报修、通知与提醒，在这里了解服务，登录后进入自己的工作台。</p>
         </div>
         <div class="toolbox-labels-container layout-container">
           <div class="toolbox-labels">
@@ -130,28 +120,25 @@ export const animeHomeMarkup = `
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Intuitive API</h2>
-              <p>Animate faster with an easy-to-use, yet powerful animation API.</p>
+              <h2>每一次入住，<br>都有新的开始</h2>
+              <p>从入住申请到住宿登记，让校园生活从清楚的安排开始。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Per property parameters</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>了解住宿服务</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Flexible keyframes system</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>入住事项</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Built-in easings</a></li>
+</svg>登录查看我的住宿</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -164,28 +151,25 @@ Built-in easings</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Enhanced transforms</h2>
-              <p>Smoothly blend individual CSS transform properties with a versatile composition API.</p>
+              <h2>住宿变更，<br>有迹可循</h2>
+              <p>入住、调宿与退宿，一条连续的住宿轨道，让每次变更都有记录。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/animation/animatable-properties/css-transforms"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Individual CSS Transforms</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-value-types/function-based"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>入住与调宿</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Function based values</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>退宿事项</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Blend composition</a></li>
+</svg>查看住宿记录</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -198,28 +182,25 @@ Blend composition</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Scroll Observer</h2>
-              <p>Synchronise and trigger animations on scroll with the Scroll Observer API.</p>
+              <h2>发现问题，<br>及时报修</h2>
+              <p>水电、家具或公共设施出现问题，描述故障并提交报修，让处理有据可依。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/events/onscroll/scrollobserver-synchronisation-modes"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Multiple synchronisation modes</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/events/onscroll/scrollobserver-thresholds"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>提交问题</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Advanced thresholds</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/events/onscroll/scrollobserver-callbacks"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>补充故障说明</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Complete set of callbacks</a></li>
+</svg>进入报修服务</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -232,28 +213,25 @@ Complete set of callbacks</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Advanced staggering</h2>
-              <p>Create stunning effects in seconds with the built-in Stagger utility function.</p>
+              <h2>处理进展，<br>一步步看得见</h2>
+              <p>从问题提交到维修完成，沿着处理流程了解当前进度。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/stagger/time-staggering"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Time staggering</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/stagger/values-staggering"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>了解处理流程</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Values staggering</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/stagger/timeline-positions-staggering"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>跟进维修进度</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Timeline positions staggering</a></li>
+</svg>查看我的报修</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -266,28 +244,25 @@ Timeline positions staggering</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>SVG toolset</h2>
-              <p>Morph shapes, follow motion paths, and draw lines easily with the built-in SVG utilities.</p>
+              <h2>服务协作，<br>让问题有回应</h2>
+              <p>问题记录、处理说明与维修结果，共同串起一次完整的服务。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/svg/morphto"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Shape morphing</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/svg/createdrawable"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>问题记录</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Line drawing</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/svg/createmotionpath"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>处理说明</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Motion path</a></li>
+</svg>维修结果</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -300,28 +275,25 @@ Motion path</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Springs and draggable</h2>
-              <p>Drag, snap, flick and throw HTML elements with the fully-featured Draggable API.</p>
+              <h2>维修完成，<br>留下你的反馈</h2>
+              <p>确认维修结果，记录服务体验，让后续服务更贴近实际需要。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/draggable/draggable-settings"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Versatile settings</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/draggable/draggable-callbacks"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>确认维修结果</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Comprehensive callbacks</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/draggable/draggable-methods"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>服务评价</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Useful methods</a></li>
+</svg>报修记录</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -338,28 +310,25 @@ Useful methods</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Runs like <br>clockwork</h2>
-              <p>Orchestrate animation sequences and keep callbacks in sync with the powerful Timeline API.</p>
+              <h2>重要事项，<br>及时了解</h2>
+              <p>公寓通知与日常提醒，让需要关注的事项在同一个入口汇集。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/timeline/add-animations"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Synchronise animations</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/timeline/time-position"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>公寓通知</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Advanced time positions</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/timeline/timeline-playback-settings"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>服务提醒</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Playback settings</a></li>
+</svg>查看公告</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -372,28 +341,25 @@ Playback settings</a></li>
       <div class="section-content">
           <div class="section-text">
             <div class="section-text-heading">
-              <h2>Responsive animations</h2>
-              <p>Make animations respond to media queries easily with the Scope API.</p>
+              <h2>账单与提醒，<br>心中有数</h2>
+              <p>了解账期、待办事项与缴费记录，按自己的节奏安排校园生活。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="https://animejs.com/documentation/scope/scope-parameters/mediaqueries"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Media queries</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/scope/scope-parameters/root"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>了解缴费事项</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Custom root element</a></li>
-              <li><a class="text-ui" href="https://animejs.com/documentation/scope/register-method-function"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+</svg>账单与记录</a></li>
+              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
-</svg>
-Scopped methods</a></li>
+</svg>登录查看提醒</a></li>
             </ul>
           </div>
           <div class="feature-section-demo-wrapper">
@@ -407,8 +373,8 @@ Scopped methods</a></li>
     <section class="section fixed-section">
       <div class="section-content">
         <div class="section-text formatted-text section-text-short">
-          <h2 class="section-heading text-xxl">A lightweight <br>and modular API</h2>
-          <p class="section-sub-heading">Keep your bundle size small by only importing the parts you need.</p>
+          <h2 class="section-heading text-xxl">信息汇集，<br>服务始终相连</h2>
+          <p class="section-sub-heading">住宿、报修与日常提醒各有分工，在一个工作台里找到所需服务。</p>
         </div>
       </div>
     </section>
@@ -448,89 +414,10 @@ Become a sponsor</a></li>
     <section class="section formatted-text">
       <div class="section-content section-centered">
         <div class="section-text section-centered">
-          <h2 class="text-xxxl">Start animating</h2>
-          <p>Get started quickly with our in-depth documentation.</p>
+          <h2 class="text-xxxl">登录，进入你的工作台</h2>
+          <p>使用自己的身份登录，找到属于你的住宿服务与日常工作。</p>
         </div>
-        <ul class="links-list links-list-boxed links-list-grid text-ui">
-          <li><a href="https://animejs.com/documentation/getting-started"><span class="label-dot"></span>Getting started<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/timer"><span class="label-dot"></span>Timer<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/animation"><span class="label-dot"></span>Animation<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/timeline"><span class="label-dot"></span>Timeline<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/animatable"><span class="label-dot"></span>Animatable<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/draggable"><span class="label-dot"></span>Draggable<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/scope"><span class="label-dot"></span>Scope<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/events/onscroll"><span class="label-dot"></span>Scroll<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/svg"><span class="label-dot"></span>SVG<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/utilities"><span class="label-dot"></span>Utils<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/easings"><span class="label-dot"></span>Easings<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <li><a href="https://animejs.com/documentation/web-animation-api"><span class="label-dot"></span>WAAPI<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</a></li>
-          <!-- <li><a class="text-ui docs-info-link" href="https://animejs.com/documentation/engine"><span class="label-dot"></span><span class="label-text">Engine<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-  <g fill="none" fill-rule="evenodd">
-    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
-  </g>
-</svg>
-</span></a></li> -->
-        </ul>
+        <ul class="links-list links-list-boxed links-list-grid text-ui dorma-start-links"><li><a href="#login" data-dorma-entry><span class="label-dot"></span><span data-dorma-entry-label>登录工作台</span><span aria-hidden="true">→</span></a></li></ul>
       </div>
     </section>
   </section>
@@ -542,83 +429,47 @@ Become a sponsor</a></li>
         <div class="scroll-cursor-ghost scroll-cursor"></div>
       </div>
     </div>
-<pre data-card="intuitive" data-><code>animate('.square', {
-  rotate: 90,
-  loop: true,
-  ease: 'inOutExpo',
-});
-</code></pre>
-<pre data-card="composition"><code>animate('.shape', {
-  x: random(-100, 100),
-  y: random(-100, 100),
-  rotate: random(-180, 180),
-  duration: random(500, 1000),
-  composition: 'blend',
-});
-</code></pre>
-<pre data-card="svgUtils"><code>animate('.car', {
-  ...createMotionPath('.circuit'),
-});
+<pre data-card="intuitive" data-><code>住宿服务
 
-animate(createDrawable('.circuit'), {
-  draw: '0 1',
-});
+了解入住事项
+提交住宿申请
+登录后查看个人住宿</code></pre>
+<pre data-card="composition"><code>住宿变更
 
-animate('.circuit-a', {
-  d: morphTo('.circuit-b'),
-});
-</code></pre>
-<pre data-card="scroll"><code>animate(createDrawable('path'), {
-  draw: ['0 0', '0 1', '1 1'],
-  delay: stagger(40),
-  ease: 'inOut(3)',
-  autoplay: onScroll({ sync: true }),
-});
-</code></pre>
-<pre data-card="staggering"><code>const options = {
-  grid: [13, 13],
-  from: 'center',
-};
+入住 → 调宿 → 退宿
+每次变更都有记录</code></pre>
+<pre data-card="svgUtils"><code>服务记录
 
-createTimeline()
-  .add('.dot', {
-    scale: stagger([1.1, .75], options),
-    ease: 'inOutQuad',
-  }, stagger(200, options));
-</code></pre>
-<pre data-card="draggable"><code>createDraggable('.circle', {
-  releaseEase: createSpring({
-    stiffness: 120,
-    damping: 6,
-  })
-});
-</code></pre>
-<pre data-card="clockwork"><code>createTimeline()
-  .add('.tick', {
-    y: '-=6',
-    duration: 50,
-  }, stagger(10))
-  .add('.ticker', {
-    rotate: 360,
-    duration: 1920,
-  }, '<');
-</code></pre>
-<pre data-card="responsive"><code>createScope({
-  mediaQueries: {
-    portrait: '(orientation: portrait)',
-  }
-})
-.add(({ matches }) => {
-  const isPortrait = matches.portrait;
-  createTimeline().add('.circle', {
-    y: isPortrait ? 0 : [-50, 50, -50],
-    x: isPortrait ? [-50, 50, -50] : 0,
-  }, stagger(100));
-});
-</code></pre>
+问题描述
+处理说明
+维修结果</code></pre>
+<pre data-card="scroll"><code>提交报修
+
+描述故障与发生位置
+补充问题说明
+登录后提交报修</code></pre>
+<pre data-card="staggering"><code>处理进展
+
+提交 → 处理 → 完成
+按流程了解维修进度</code></pre>
+<pre data-card="draggable"><code>完成与反馈
+
+确认维修结果
+记录服务体验
+查看报修记录</code></pre>
+<pre data-card="clockwork"><code>公寓动态
+
+公寓通知
+日常提醒
+需要关注的重要事项</code></pre>
+<pre data-card="responsive"><code>账单与提醒
+
+账期与待办
+缴费事项
+个人服务记录</code></pre>
     <div class="modules-sizes section-card formatted-text" data-card="modules" data-enter-offset="-=50lvh" data-leave-offset="-=150lvh">
       <div class="box-heading">
-        <h3>Bundle size</h3>
+        <h3>服务协作图示</h3>
         <div class="modules-bundle-size"><span class="size">24.50</span> KB</div>
       </div>
       <div class="modules-sizes-chart chart">
@@ -634,17 +485,17 @@ createTimeline()
         <div data-size="0.22" class="chart-bar module-scope color-scope"></div>
       </div>
       <ul class="modules-list">
-        <li><span class="label-dot color-timer"></span>Timer <span class="size">5.60 KB</span></li>
-        <li><span class="label-dot color-animation"></span>Animation <span class="size">+5.20 KB</span></li>
-        <li><span class="label-dot color-timeline"></span>Timeline <span class="size">+0.55 KB</span></li>
-        <li><span class="label-dot color-animatable"></span>Animatable <span class="size">+0.40 KB</span></li>
-        <li><span class="label-dot color-draggable"></span>Draggable <span class="size">+6.41 KB</span></li>
-        <li><span class="label-dot color-events"></span>Scroll <span class="size">+4.30 KB</span></li>
-        <li><span class="label-dot color-scope"></span>Scope <span class="size">+0.22 KB</span></li>
-        <li><span class="label-dot color-svg"></span>SVG <span class="size">0.35 KB</span></li>
-        <li><span class="label-dot color-utils"></span>Stagger <span class="size">+0.48 KB</span></li>
-        <li><span class="label-dot color-easings"></span>Spring <span class="size">0.52 KB</span></li>
-        <li><span class="label-dot color-waapi"></span>WAAPI <span class="size">3.50 KB</span></li>
+        <li><span class="label-dot color-timer"></span>服务提醒 <span class="size">5.60 KB</span></li>
+        <li><span class="label-dot color-animation"></span>住宿服务 <span class="size">+5.20 KB</span></li>
+        <li><span class="label-dot color-timeline"></span>处理进展 <span class="size">+0.55 KB</span></li>
+        <li><span class="label-dot color-animatable"></span>个人记录 <span class="size">+0.40 KB</span></li>
+        <li><span class="label-dot color-draggable"></span>服务反馈 <span class="size">+6.41 KB</span></li>
+        <li><span class="label-dot color-events"></span>公寓通知 <span class="size">+4.30 KB</span></li>
+        <li><span class="label-dot color-scope"></span>个人工作台 <span class="size">+0.22 KB</span></li>
+        <li><span class="label-dot color-svg"></span>问题记录 <span class="size">0.35 KB</span></li>
+        <li><span class="label-dot color-utils"></span>维修跟进 <span class="size">+0.48 KB</span></li>
+        <li><span class="label-dot color-easings"></span>生活服务 <span class="size">0.52 KB</span></li>
+        <li><span class="label-dot color-waapi"></span>信息汇集 <span class="size">3.50 KB</span></li>
       </ul>
     </div>
     <div class="funding-level-box section-card formatted-text" data-card="sponsors" data-enter-offset="-=50lvh" data-leave-offset="-=50lvh">

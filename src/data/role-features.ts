@@ -24,7 +24,7 @@ export const roleFeatures: Record<RoleId, RoleFeature[]> = {
   student: [
     feature('personal', '01', '个人信息', 'IDENTITY', '资料、密码与身份信息，只属于你。', '#ff4f64', 'identity', 'personal', ['查看个人信息', '修改个人信息', '修改登录密码']),
     feature('accommodation', '02', '住宿业务', 'RESIDENCE', '入住、调宿、退宿，一条连续的住宿轨道。', '#ffad24', 'rooms', 'accommodation', ['入住申请', '调宿申请', '退宿申请']),
-    feature('payment', '03', '缴费管理', 'PAYMENT', '滚动即充能，账单状态与电量同步抵达终点。', '#34c759', 'battery', 'payment', ['查看账单', '在线缴费', '缴费记录']),
+    feature('payment', '03', '缴费管理', 'PAYMENT', '查看账单、了解缴费事项，记录每一次缴费。', '#34c759', 'battery', 'payment', ['查看账单', '在线缴费', '缴费记录']),
     feature('repair', '04', '报修服务', 'REPAIR', '一次报修从提交到评价，每一步都有回声。', '#00e7c4', 'workflow', 'repair', ['提交报修', '查看进度', '服务评价']),
     feature('announcements', '05', '公告查看', 'BROADCAST', '公寓通知与缴费提醒，沿同一频率抵达。', '#50a8ff', 'broadcast', 'personal', ['公寓通知', '缴费提醒']),
   ],
@@ -37,7 +37,7 @@ export const roleFeatures: Record<RoleId, RoleFeature[]> = {
   ],
   maintenance: [
     feature('orders', '01', '工单接收', 'ORDER INTAKE', '派发工单沿轨道进入你的处理队列。', '#ff4f64', 'orderRoute', 'repair', ['查看工单', '确认接单']),
-    feature('repair', '02', '维修处理', 'SERVICE', '处理进度跟随滚动从待办推进到完成。', '#ffad24', 'service', 'repair', ['开始维修', '更新状态', '完成工单']),
+    feature('repair', '02', '维修处理', 'SERVICE', '记录维修处理进展，跟进任务直到完成。', '#ffad24', 'service', 'repair', ['开始维修', '更新状态', '完成工单']),
     feature('records', '03', '维修记录', 'RECORDS', '处理说明逐行写入并完成归档。', '#b8ff42', 'record', 'repair', ['填写记录', '维修归档']),
     feature('analytics', '04', '个人统计', 'PERSONAL DATA', '工作量、完成率与评价形成同一组刻度。', '#00e7c4', 'analytics', 'analytics', ['工作量统计', '完成率', '服务评价']),
   ],

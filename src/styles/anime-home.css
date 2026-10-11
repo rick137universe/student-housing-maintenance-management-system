@@ -10,3 +10,44 @@ html[data-anime-home-active] { scroll-padding-top: 0; scroll-behavior: auto; }
 
 /* Restore the source document default instead of inheriting Tailwind line-height. */
 html[data-anime-home-active] { line-height: normal; }
+
+/* Public service copy; original animation layout and timing remain intact. */
+html[data-anime-home-active] .dorma-brand{display:block;font-size:2.25rem;line-height:1;font-weight:800;letter-spacing:-.08em;color:var(--hex-fg-1)}
+html[data-anime-home-active] .dorma-brand .dorma-brand-dot{display:inline;color:var(--hex-red-1)}
+html[data-anime-home-active] #intro h2{font-size:clamp(2.6rem,4.1vw,4.7rem);line-height:1.16;letter-spacing:-.04em}
+html[data-anime-home-active] #intro .animation-engine{display:none}
+html[data-anime-home-active] .dorma-entry{cursor:pointer}
+html[data-anime-home-active] #site-menu button.dorma-entry{border:0;background:transparent;color:var(--hex-fg-2);font:inherit;padding:0 .8em}
+html[data-anime-home-active] #site-menu button.dorma-entry:hover{color:var(--hex-fg-1)}
+html[data-anime-home-active] #intro .npm-install{padding:0}
+html[data-anime-home-active] #intro .npm-install code>*{display:none}
+html[data-anime-home-active] .sub-nav pre code{white-space:pre-wrap;font-family:inherit;font-size:1rem;line-height:1.9}
+html[data-anime-home-active] .modules-bundle-size,html[data-anime-home-active] .modules-list .size{visibility:hidden}
+html[data-anime-home-active] .dorma-start-links{grid-template-columns:minmax(220px,420px);justify-content:center}
+html[data-anime-home-active] #get-started h2{font-size:clamp(2.4rem,5vw,5rem);line-height:1.2}
+
+/* Chinese copy uses comfortable leading and a consistent sans-serif fallback. */
+html[data-anime-home-active]{--font-body:"DIN","Microsoft YaHei","PingFang SC",Arial,sans-serif}
+html[data-anime-home-active] .section-text h2{line-height:1.2;letter-spacing:-.02em}
+html[data-anime-home-active] .section-text p{line-height:1.65;font-weight:400}
+html[data-anime-home-active] .feature-links,html[data-anime-home-active] #site-menu .dorma-entry,html[data-anime-home-active] .dorma-start-links{font-family:var(--font-body)}
+html[data-anime-home-active] .sub-nav pre code{font-family:var(--font-body);font-weight:400;line-height:1.8}
+html[data-anime-home-active] #intro .animate-anything-wrapper{width:auto;white-space:nowrap}
+html[data-anime-home-active] #intro .animate-anything-dot{transform:none!important;translate:none!important;scale:1!important;color:inherit!important;right:-.6em;bottom:0}
+html[data-anime-home-active] #intro .heading-links .ui-group{align-items:center;gap:1rem}
+html[data-anime-home-active] #intro pre.npm-install,html[data-anime-home-active] #intro pre.npm-install:not(:last-child){height:3rem;margin:0;padding:0 1.15rem;align-items:center;justify-content:center}
+html[data-anime-home-active] #intro pre.npm-install code{display:flex;align-items:center;justify-content:center;height:3rem;padding:0;font-family:var(--font-body);font-size:var(--text-xxs);font-weight:500;line-height:1.5;color:var(--hex-fg-1)}
+html[data-anime-home-active] #intro .learn-more{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;width:auto;height:3rem;padding:0 1.15rem;font-family:var(--font-body);font-weight:500}
+html[data-anime-home-active] #intro .learn-more .icon~.icon{display:none}
+@media(min-width:900px){html[data-anime-home-active] #intro pre.npm-install{display:flex}}
+
+html[data-anime-home-active] #intro .animate-anything-dot{display:none!important}
+html[data-anime-home-active] #intro .dorma-sentence-period{display:inline;position:static;transform:none!important}
+html[data-anime-home-active] #intro .learn-more .icon{position:static!important;transform:none!important;translate:none!important;scale:1!important;width:1.2em;height:1.2em}
+html[data-anime-home-active] #intro pre.npm-install code{text-decoration:none}
+
+html[data-anime-home-active] #intro pre.npm-install{min-width:8.5rem;flex-shrink:0;box-sizing:border-box}
+html[data-anime-home-active] #intro pre.npm-install code{width:auto!important}
+
+html[data-anime-home-active] #intro pre.npm-install{background:var(--hex-bg-3);border-radius:var(--br-s)}
+html[data-anime-home-active] #intro pre.npm-install code{background:transparent}

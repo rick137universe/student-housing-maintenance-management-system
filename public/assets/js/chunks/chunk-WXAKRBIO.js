@@ -207,3 +207,6 @@ animejs/dist/modules/index.js:
    * @copyright 2026 - Julian Garnier
    *)
 */
+
+// Host routing pauses the original engine without rebuilding its scene.
+export{Ft as dormaEngine,Yi as dormaSiteMenu};
