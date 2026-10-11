@@ -1,0 +1,739 @@
+// Imported page content. Business labels and links will be mapped in the next stage.
+export const animeHomeMarkup = `
+    <header id="site-header" class="layout-container text-ui ui-overlay">
+  <div id="site-header-content">
+    <h1 class="heading-logo header-logo">
+      <a href="/">
+        <img src="/assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118" />
+        <span>Anime.js | JavaScript Animation Engine</span>
+      </a>
+      <label id="docs-versions" class="ui-select ui-input">
+        <select class="ui-input" name="docs-versions" aria-label="Anime.js versions">
+          <option value="/documentation">4.0.0</option>
+          <option value="/v3/documentation">3.2.2</option>
+          <option value="/v2/documentation">2.1.0</option>
+        </select>
+      </label>
+    </h1>
+    <nav id="site-menu">
+      <ul>
+                                        <li><a class="main-nav-link docs-link" data-id="docs" href="https://animejs.com/documentation" title="Documentation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="sidebar" fill="none" fill-rule="evenodd">
+    <path id="rectangle" fill="#FFFFFF" fill-rule="nonzero" d="M16.167 6.125H7.833A3.375 3.375 0 0 0 4.458 9.5v5a3.375 3.375 0 0 0 3.375 3.375h8.334a3.375 3.375 0 0 0 3.375-3.375v-5a3.375 3.375 0 0 0-3.375-3.375zm-8.334 1.75h8.334c.897 0 1.625.728 1.625 1.625v5c0 .897-.728 1.625-1.625 1.625H7.833A1.625 1.625 0 0 1 6.208 14.5v-5c0-.897.728-1.625 1.625-1.625z"/>
+    <polyline id="Path-42" stroke="#FFFFFF" stroke-width="1.75" points="9.5 7.75 9.5 12 9.5 16.25" data-points="13.5 8.75 10.5 12 13.5 15.25"/>
+  </g>
+</svg>
+<span>Docs</span></a></li>
+        <li><a class="main-nav-link" href="https://animejs.com/easing-editor" title="Easing functions editor"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="icon"><path fill="none" stroke="currentColor" stroke-width="1.75" d="M4.5,17 C14.5967876,17 8.37571813,7 19.5,7"/></svg><span>Easings</span></a></li>
+        <li><a class="main-nav-link" href="https://animejs.com/learn" title="Learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="icon">
+  <g fill="none"><path fill="currentColor" d="M16.1666667,6.125 L7.83333333,6.125 C5.9693723,6.125 4.45833333,7.63603897 4.45833333,9.5 L4.45833333,14.5 C4.45833333,16.363961 5.9693723,17.875 7.83333333,17.875 L16.1666667,17.875 C18.0306277,17.875 19.5416667,16.363961 19.5416667,14.5 L19.5416667,9.5 C19.5416667,7.63603897 18.0306277,6.125 16.1666667,6.125 Z M7.83333333,7.875 L16.1666667,7.875 C17.0641294,7.875 17.7916667,8.60253728 17.7916667,9.5 L17.7916667,14.5 C17.7916667,15.3974627 17.0641294,16.125 16.1666667,16.125 L7.83333333,16.125 C6.93587061,16.125 6.20833333,15.3974627 6.20833333,14.5 L6.20833333,9.5 C6.20833333,8.60253728 6.93587061,7.875 7.83333333,7.875 Z"/><path fill="currentColor" fill-rule="evenodd" d="M10,10.0706309 L10,13.9294941 C10,14.2445758 10.2554242,14.5 10.5705059,14.5 C10.6590742,14.5 10.7464261,14.479379 10.8256439,14.4397701 L14.6845071,12.5103385 C14.9663248,12.3694297 15.0805539,12.0267421 14.9396451,11.7449245 C14.8844409,11.634516 14.7949156,11.5449908 14.6845071,11.4897865 L10.8256439,9.56035488 C10.5438263,9.41944606 10.2011387,9.53367523 10.0602299,9.81549288 C10.033824,9.86830478 10.0158571,9.92473182 10.0068132,9.9827243 L10,10.0706309 Z"/></g>
+</svg><span>Learn</span></a></li>
+        <li><a class="main-nav-link nav-link-retractable" href="https://codepen.io/collection/Poerqa?cursor=eyJwYWdlIjoxfQ==/" target="_blank" title="CodePen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="codepen" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+    <path id="Shape" stroke="#FFFFFF" stroke-width="1.75" d="M5 14.355L12 19l7-4.645v-4.71L12 5 5 9.645v4.71zm14 0l-7-4.71-7 4.71m0-4.71l7 4.646 7-4.646M12 5v4.645m0 4.71V19"/>
+  </g>
+</svg>
+<span>Examples</span></a></li>
+        <li><a class="main-nav-link nav-link-retractable" href="https://github.com/juliangarnier/anime" target="_blank" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <path fill="currentColor" d="M12.007 4C7.579 4 4 7.606 4 12.066a8.06 8.06 0 0 0 5.475 7.652c.397.08.543-.173.543-.387 0-.187-.013-.828-.013-1.496-2.227.481-2.691-.961-2.691-.961-.358-.935-.888-1.175-.888-1.175-.73-.495.053-.495.053-.495.808.054 1.233.828 1.233.828.715 1.229 1.869.882 2.333.668.066-.52.278-.881.504-1.082-1.777-.187-3.646-.881-3.646-3.98 0-.88.318-1.602.822-2.163-.08-.2-.358-1.028.08-2.136 0 0 .676-.214 2.2.828a7.698 7.698 0 0 1 2.002-.268 7.7 7.7 0 0 1 2.001.268c1.525-1.042 2.2-.828 2.2-.828.438 1.108.16 1.936.08 2.136.517.561.822 1.282.822 2.164 0 3.098-1.869 3.779-3.659 3.98.292.253.544.734.544 1.495 0 1.082-.013 1.95-.013 2.217 0 .214.146.467.543.387A8.06 8.06 0 0 0 20 12.066C20.013 7.606 16.42 4 12.007 4z"/>
+  </g>
+</svg>
+<span>GitHub</span></a></li>
+        <!-- <li><a class="main-nav-link nav-link-retractable" href="https://github.com/sponsors/juliangarnier" target="_blank" title="Discord"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <path fill="currentColor" d="M17.5446757,7.01094204 C16.5248898,6.54302092 15.4313236,6.19827727 14.2879321,6.00082826 C14.2671096,5.99701756 14.2463096,6.00654094 14.2355828,6.0255877 C14.0949406,6.27573079 13.9391547,6.60206318 13.8300617,6.85855894 C12.6002702,6.67444627 11.3767885,6.67444627 10.1722139,6.85855894 C10.0630984,6.59636177 9.90165617,6.27573079 9.76038294,6.0255877 C9.74965618,6.00717643 9.72885618,5.99765305 9.70803364,6.00082826 C8.56527311,6.19764628 7.47170693,6.54238994 6.45129006,7.01094204 C6.44245625,7.01475049 6.43488442,7.02110542 6.42985907,7.02935331 C4.35559433,10.1282603 3.78736652,13.1509982 4.06612009,16.1362601 C4.06738138,16.1508629 4.07557992,16.1648348 4.08693203,16.1737137 C5.45547262,17.178739 6.78113794,17.7888798 8.08218579,18.1932967 C8.10300833,18.1996516 8.1250703,18.1920347 8.138321,18.1748854 C8.44608438,17.7546038 8.72042803,17.3114488 8.95565056,16.8454207 C8.96953225,16.8181305 8.95628155,16.7857474 8.92790972,16.7749531 C8.4927548,16.6098827 8.07839988,16.4086207 7.67981961,16.1800686 C7.64829285,16.1616573 7.6457689,16.1165644 7.67477172,16.0949756 C7.75864777,16.0321249 7.84254636,15.9667277 7.9226365,15.9006996 C7.93712664,15.8886432 7.95731819,15.8860968 7.97435481,15.8937137 C10.5928562,17.0892291 13.4276955,17.0892291 16.0153011,15.8937137 C16.0323377,15.8854658 16.0525293,15.8880122 16.0676504,15.9000686 C16.1477631,15.9660968 16.2316391,16.0321249 16.3161462,16.0949756 C16.345149,16.1165644 16.343256,16.1616573 16.3117293,16.1800686 C15.913149,16.4130601 15.4987941,16.6098827 15.0630082,16.7743221 C15.0346363,16.7851165 15.0220166,16.8181305 15.0358983,16.8454207 C15.2761687,17.3107953 15.5505124,17.7539502 15.8525969,18.1742544 C15.8652166,18.1920347 15.8879096,18.1996516 15.9087321,18.1932967 C17.2160898,17.7888798 18.5417461,17.178739 19.9102869,16.1737137 C19.9222757,16.1648348 19.9298475,16.1514939 19.9311095,16.1368911 C20.2647207,12.6856011 19.3723264,9.68765183 17.5654757,7.02998429 C17.5610588,7.02110542 17.5535095,7.01475049 17.5446757,7.01094204 Z M9.34668154,14.3185475 C8.55833226,14.3185475 7.90875481,13.5947841 7.90875481,12.7059278 C7.90875481,11.8170715 8.54573508,11.0933081 9.34668154,11.0933081 C10.1539153,11.0933081 10.7972054,11.8234264 10.7845857,12.7059278 C10.7845857,13.5947841 10.1476055,14.3185475 9.34668154,14.3185475 Z M14.6631659,14.3185475 C13.8748392,14.3185475 13.2252617,13.5947841 13.2252617,12.7059278 C13.2252617,11.8170715 13.8622195,11.0933081 14.6631659,11.0933081 C15.4704222,11.0933081 16.1136898,11.8234264 16.1010926,12.7059278 C16.1010926,13.5947841 15.4704222,14.3185475 14.6631659,14.3185475 Z"/>
+</svg>
+<span>Discord</span></a></li> -->
+        <li>
+          <sponsor-button>
+          <a href="https://github.com/sponsors/juliangarnier" class="main-nav-link sponsor-button" target="_blank" title="Sponsor Julian Garnier on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <path fill="currentColor" fill-rule="nonzero" d="M12 18.445a.778.778 0 0 1-.34-.078C11.39 18.235 5 15.077 5 9.889a3.889 3.889 0 0 1 6.638-2.75L12 7.5l.362-.361A3.889 3.889 0 0 1 19 9.889c0 5.17-6.387 8.344-6.66 8.478a.778.778 0 0 1-.34.078z"/>
+  </g>
+</svg>
+            <span>Sponsor</span>
+          </a>
+          </sponsor-button>
+        </li>
+      </ul>
+    </nav>
+    <button id="toggle-site-menu" class="ui-input trigger-pane" title="Toggle site menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="menu" fill="none" fill-rule="evenodd">
+    <rect id="Rectangle" width="16" height="1.75" x="4" y="8" fill="currentColor"/>
+    <rect id="Rectangle-Copy" width="16" height="1.75" x="4" y="14" fill="currentColor"/>
+  </g>
+</svg>
+</button>
+  </div>
+  </header>
+<main id="home" class="layout-container">
+  <section id="intro" data-chapter="intro" data-label="HEADING">
+    <div class="section formatted-text">
+      <div class="section-content">
+        <div class="section-text section-text-short">
+          <h2>All-in-one <br>animation <br>engine<span class="animation-engine red-dot">.</span></h2>
+          <p>A fast and flexible JavaScript <br>library to animate <span  class="animate-anything-wrapper"><span class="animate-anything">the web</span><span class="animate-anything-dot">.</span></span></p>
+          <p></p>
+        </div>
+        <div class="fixed-container heading-links">
+          <div class="layout-container">
+            <div class="ui-group">
+              <pre class="npm-install"><code>npm i animejs</code></pre>
+              <button class="learn-more ui-input ui-button text-ui">Learn more <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="12 18 17.237 12.763 16 11.525 12.875 14.651 12.875 6.763 11.125 6.763 11.125 14.651 8 11.525 6.763 12.763"/>
+  </g>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="12 18 17.237 12.763 16 11.525 12.875 14.651 12.875 6.763 11.125 6.763 11.125 14.651 8 11.525 6.763 12.763"/>
+  </g>
+</svg>
+</button>
+            </div>
+            <div class="heading-sponsors formatted-text">
+              <span class="text-xxs">Sponsored by</span>
+              <sponsors-list path="platinum-sponsors"></sponsors-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+  </section>
+
+  <section id="toolbox" class="section-container section-light" data-chapter="toolbox" data-label="TOOLBOX" data-enter-offset="-=100lvh" data-leave-offset="-=10lvh">
+    <div class="section fixed-section">
+      <div class="section-content">
+        <div class="section-text formatted-text section-text-short">
+          <h2 class="section-heading text-xxl">The complete <br>animator's toolbox</h2>
+          <p class="section-sub-heading">Break free from browser limitations and animate anything on the web with a single API.</p>
+        </div>
+        <div class="toolbox-labels-container layout-container">
+          <div class="toolbox-labels">
+            <ul class="toolbox-labels-left"></ul>
+            <ul class="toolbox-labels-right"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+  </section>
+
+  <section id="features-gallery" data-label="FEATURES">
+    <section id="intuitive" class="section feature-section formatted-text color-getting-started" data-chapter="intuitive" data-demo="intuitive">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Intuitive API</h2>
+              <p>Animate faster with an easy-to-use, yet powerful animation API.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Per property parameters</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Flexible keyframes system</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Built-in easings</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+
+    <section id="composition" class="section feature-section formatted-text color-animation" data-chapter="composition" data-demo="composition">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Enhanced transforms</h2>
+              <p>Smoothly blend individual CSS transform properties with a versatile composition API.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/animation/animatable-properties/css-transforms"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Individual CSS Transforms</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-value-types/function-based"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Function based values</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/animation/tween-parameters/composition"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Blend composition</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+
+    <section id="scroll" class="section feature-section formatted-text color-turquoise" data-chapter="scroll" data-demo="scroll">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Scroll Observer</h2>
+              <p>Synchronise and trigger animations on scroll with the Scroll Observer API.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/events/onscroll/scrollobserver-synchronisation-modes"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Multiple synchronisation modes</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/events/onscroll/scrollobserver-thresholds"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Advanced thresholds</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/events/onscroll/scrollobserver-callbacks"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Complete set of callbacks</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+
+    <section id="staggering" class="section feature-section formatted-text color-utils" data-chapter="staggering" data-demo="staggering">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Advanced staggering</h2>
+              <p>Create stunning effects in seconds with the built-in Stagger utility function.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/stagger/time-staggering"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Time staggering</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/stagger/values-staggering"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Values staggering</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/stagger/timeline-positions-staggering"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Timeline positions staggering</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+
+    <section id="svgUtils" class="section feature-section formatted-text color-svg" data-chapter="svgUtils" data-demo="svgUtils">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>SVG toolset</h2>
+              <p>Morph shapes, follow motion paths, and draw lines easily with the built-in SVG utilities.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/svg/morphto"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Shape morphing</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/svg/createdrawable"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Line drawing</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/svg/createmotionpath"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Motion path</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+
+    <section id="draggable" class="section feature-section formatted-text color-draggable" data-chapter="draggable" data-demo="draggable">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Springs and draggable</h2>
+              <p>Drag, snap, flick and throw HTML elements with the fully-featured Draggable API.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/draggable/draggable-settings"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Versatile settings</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/draggable/draggable-callbacks"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Comprehensive callbacks</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/draggable/draggable-methods"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Useful methods</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div id="draggable-demo" class="feature-section-demo">
+              <div class="draggable-container">
+                <div class="draggable"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <section id="clockwork" class="section feature-section formatted-text color-timeline" data-chapter="clockwork" data-demo="clockwork">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Runs like <br>clockwork</h2>
+              <p>Orchestrate animation sequences and keep callbacks in sync with the powerful Timeline API.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/timeline/add-animations"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Synchronise animations</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/timeline/time-position"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Advanced time positions</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/timeline/timeline-playback-settings"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Playback settings</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+
+    <section id="responsive" class="section feature-section formatted-text color-green" data-chapter="responsive" data-demo="responsive">
+      <div class="section-content">
+          <div class="section-text">
+            <div class="section-text-heading">
+              <h2>Responsive animations</h2>
+              <p>Make animations respond to media queries easily with the Scope API.</p>
+            </div>
+            <ul class="feature-links">
+              <li><a class="text-ui" href="https://animejs.com/documentation/scope/scope-parameters/mediaqueries"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Media queries</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/scope/scope-parameters/root"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Custom root element</a></li>
+              <li><a class="text-ui" href="https://animejs.com/documentation/scope/register-method-function"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Scopped methods</a></li>
+            </ul>
+          </div>
+          <div class="feature-section-demo-wrapper">
+            <div class="feature-section-demo fixed-section"></div>
+          </div>
+      </div>
+    </section>
+  </section>
+  <div class="section-spacer"></div>
+  <section id="modules" class="section-container section-light" data-chapter="modules" data-label="MODULES" data-enter-offset="+=10lvh" data-leave-offset="-=75lvh">
+    <section class="section fixed-section">
+      <div class="section-content">
+        <div class="section-text formatted-text section-text-short">
+          <h2 class="section-heading text-xxl">A lightweight <br>and modular API</h2>
+          <p class="section-sub-heading">Keep your bundle size small by only importing the parts you need.</p>
+        </div>
+      </div>
+    </section>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+  </section>
+
+  <section id="sponsors" class="section formatted-text" data-chapter="sponsors" data-label="SPONSORS">
+    <div class="section-content">
+      <div class="section-text">
+        <h2>Our sponsors</h2>
+        <p>Anime.js is 100% free and is only made possible with the help of our sponsors.</p>
+        <div class="company-sponsors-list">
+          <sponsors-list size="large" boxed path="platinum-sponsors"></sponsors-list>
+        </div>
+        <div class="company-sponsors-list">
+          <sponsors-list size="small" boxed path="silver-sponsors"></sponsors-list>
+        </div>
+        <ul class="feature-links">
+          <li><a class="text-ui" href="https://github.com/sponsors/juliangarnier" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+Become a sponsor</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-spacer"></div>
+    <div class="section-spacer"></div>
+  </section>
+
+  <section id="get-started" data-chapter="get-started" data-label="GET_STARTED">
+    <div class="section-spacer"></div>
+    <section class="section formatted-text">
+      <div class="section-content section-centered">
+        <div class="section-text section-centered">
+          <h2 class="text-xxxl">Start animating</h2>
+          <p>Get started quickly with our in-depth documentation.</p>
+        </div>
+        <ul class="links-list links-list-boxed links-list-grid text-ui">
+          <li><a href="https://animejs.com/documentation/getting-started"><span class="label-dot"></span>Getting started<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/timer"><span class="label-dot"></span>Timer<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/animation"><span class="label-dot"></span>Animation<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/timeline"><span class="label-dot"></span>Timeline<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/animatable"><span class="label-dot"></span>Animatable<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/draggable"><span class="label-dot"></span>Draggable<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/scope"><span class="label-dot"></span>Scope<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/events/onscroll"><span class="label-dot"></span>Scroll<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/svg"><span class="label-dot"></span>SVG<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/utilities"><span class="label-dot"></span>Utils<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/easings"><span class="label-dot"></span>Easings<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <li><a href="https://animejs.com/documentation/web-animation-api"><span class="label-dot"></span>WAAPI<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</a></li>
+          <!-- <li><a class="text-ui docs-info-link" href="https://animejs.com/documentation/engine"><span class="label-dot"></span><span class="label-text">Engine<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
+  </g>
+</svg>
+</span></a></li> -->
+        </ul>
+      </div>
+    </section>
+  </section>
+
+  <div class="sub-nav">
+    <div class="home-progress-card">
+      <div class="scroll-bar">
+        <div class="scroll-cursor"></div>
+        <div class="scroll-cursor-ghost scroll-cursor"></div>
+      </div>
+    </div>
+<pre data-card="intuitive" data-><code>animate('.square', {
+  rotate: 90,
+  loop: true,
+  ease: 'inOutExpo',
+});
+</code></pre>
+<pre data-card="composition"><code>animate('.shape', {
+  x: random(-100, 100),
+  y: random(-100, 100),
+  rotate: random(-180, 180),
+  duration: random(500, 1000),
+  composition: 'blend',
+});
+</code></pre>
+<pre data-card="svgUtils"><code>animate('.car', {
+  ...createMotionPath('.circuit'),
+});
+
+animate(createDrawable('.circuit'), {
+  draw: '0 1',
+});
+
+animate('.circuit-a', {
+  d: morphTo('.circuit-b'),
+});
+</code></pre>
+<pre data-card="scroll"><code>animate(createDrawable('path'), {
+  draw: ['0 0', '0 1', '1 1'],
+  delay: stagger(40),
+  ease: 'inOut(3)',
+  autoplay: onScroll({ sync: true }),
+});
+</code></pre>
+<pre data-card="staggering"><code>const options = {
+  grid: [13, 13],
+  from: 'center',
+};
+
+createTimeline()
+  .add('.dot', {
+    scale: stagger([1.1, .75], options),
+    ease: 'inOutQuad',
+  }, stagger(200, options));
+</code></pre>
+<pre data-card="draggable"><code>createDraggable('.circle', {
+  releaseEase: createSpring({
+    stiffness: 120,
+    damping: 6,
+  })
+});
+</code></pre>
+<pre data-card="clockwork"><code>createTimeline()
+  .add('.tick', {
+    y: '-=6',
+    duration: 50,
+  }, stagger(10))
+  .add('.ticker', {
+    rotate: 360,
+    duration: 1920,
+  }, '<');
+</code></pre>
+<pre data-card="responsive"><code>createScope({
+  mediaQueries: {
+    portrait: '(orientation: portrait)',
+  }
+})
+.add(({ matches }) => {
+  const isPortrait = matches.portrait;
+  createTimeline().add('.circle', {
+    y: isPortrait ? 0 : [-50, 50, -50],
+    x: isPortrait ? [-50, 50, -50] : 0,
+  }, stagger(100));
+});
+</code></pre>
+    <div class="modules-sizes section-card formatted-text" data-card="modules" data-enter-offset="-=50lvh" data-leave-offset="-=150lvh">
+      <div class="box-heading">
+        <h3>Bundle size</h3>
+        <div class="modules-bundle-size"><span class="size">24.50</span> KB</div>
+      </div>
+      <div class="modules-sizes-chart chart">
+        <div data-size="3.50" class="chart-bar module-waapi color-waapi"></div>
+        <div data-size="0.55" class="chart-bar module-timeline color-timeline"></div>
+        <div data-size="0.48" class="chart-bar module-stagger color-utils"></div>
+        <div data-size="0.35" class="chart-bar module-svg color-svg"></div>
+        <div data-size="0.52" class="chart-bar module-spring color-easings"></div>
+        <div data-size="5.60" class="chart-bar module-timer color-timer"></div>
+        <div data-size="4.30" class="chart-bar module-scroll color-events"></div>
+        <div data-size="5.20" class="chart-bar module-animation color-animation"></div>
+        <div data-size="6.41" class="chart-bar module-draggable color-draggable"></div>
+        <div data-size="0.22" class="chart-bar module-scope color-scope"></div>
+      </div>
+      <ul class="modules-list">
+        <li><span class="label-dot color-timer"></span>Timer <span class="size">5.60 KB</span></li>
+        <li><span class="label-dot color-animation"></span>Animation <span class="size">+5.20 KB</span></li>
+        <li><span class="label-dot color-timeline"></span>Timeline <span class="size">+0.55 KB</span></li>
+        <li><span class="label-dot color-animatable"></span>Animatable <span class="size">+0.40 KB</span></li>
+        <li><span class="label-dot color-draggable"></span>Draggable <span class="size">+6.41 KB</span></li>
+        <li><span class="label-dot color-events"></span>Scroll <span class="size">+4.30 KB</span></li>
+        <li><span class="label-dot color-scope"></span>Scope <span class="size">+0.22 KB</span></li>
+        <li><span class="label-dot color-svg"></span>SVG <span class="size">0.35 KB</span></li>
+        <li><span class="label-dot color-utils"></span>Stagger <span class="size">+0.48 KB</span></li>
+        <li><span class="label-dot color-easings"></span>Spring <span class="size">0.52 KB</span></li>
+        <li><span class="label-dot color-waapi"></span>WAAPI <span class="size">3.50 KB</span></li>
+      </ul>
+    </div>
+    <div class="funding-level-box section-card formatted-text" data-card="sponsors" data-enter-offset="-=50lvh" data-leave-offset="-=50lvh">
+      <funding-level path="github-sponsors"></funding-level>
+    </div>
+  </div>
+  <footer id="site-footer" class="layout-container text-ui" data-color="fg">
+  <div id="site-footer-content">
+    <div class="footer-row">
+      <div class="footer-block footer-block-sponsors">
+        <h6 class="links-list-heading">Sponsors</h6>
+        <div id="carbon-responsive" class="carbon-ad">
+  
+</div>
+                  <ul class="links-list">
+                                          <li>  <a
+    class="sponsor"
+    href="https://github.com/sponsors/juliangarnier"
+    target="_blank"
+    title="Become a sponsor"
+    data-url-params=""
+    data-url-params-docs=""
+  >
+          <img
+        src="/assets/images/media/pages/sponsors/platinum-sponsors/ef1c9c6c85-1787698629/sponsor-placeholder.svg"
+        alt="Become a sponsor"
+        width="100"
+        height="100"
+        loading="lazy"
+      >
+        <span>Become a sponsor</span>
+  </a>
+</li>
+                                    </ul>
+              </div>
+      <div class="footer-block footer-block-links">
+        <div class="footer-block">
+          <h6 class="links-list-heading">Site</h6>
+          <ul class="links-list">
+            <li><a href="/" title="Documentation">Home</a></li>
+            <li><a href="https://animejs.com/documentation" title="Documentation">Documentation</a></li>
+            <li><a href="https://animejs.com/easing-editor" title="Easing functions editor">Easings editor</a></li>
+            <li><a href="https://animejs.com/learn" title="Learn">Learn</a></li>
+          </ul>
+        </div>
+        <div class="footer-block">
+          <h6 class="links-list-heading">Socials</h6>
+          <ul class="links-list">
+            <li><a target="_blank" href="https://x.com/juliangarnier">X / Twitter</a></li>
+            <li><a target="_blank" href="https://bsky.app/profile/animejs.com">Bluesky</a></li>
+            <li><a target="_blank" href="https://github.com/juliangarnier/anime">GitHub</a></li>
+            <li><a target="_blank" href="https://codepen.io/collection/Poerqa">CodePen</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-row">
+      <div class="footer-block footer-logo-block">
+        <div class="heading-logo footer-logo">
+          <a href="/">
+            <img src="/assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118" />
+            <span>Anime.js | JavaScript Animation Engine</span>
+          </a>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2026 <a href="https://juliangarnier.com" target="_blank">Julian Garnier</a>
+        </div>
+      </div>
+      <div class="footer-block">
+        <h6 class="links-list-heading">Stay in the loop</h6>
+        <email-signup url="https://buttondown.com/api/emails/embed-subscribe/juliangarnier?tag=footer" class="email-signup-form">
+          <form>
+  <div id="form-fields" class="email-signup-fields is-active">
+    <input class="email-signup-field email-signup-input" type="email" name="email" placeholder="Enter your email" required />
+    <input class="email-signup-field email-signup-submit text-ui" type="submit" value="Subscribe" />
+  </div>
+
+  <div id="success-message" class="email-signup-alert email-signup-success">
+    <p>Thanks! Check your inbox to confirm your subscription.</p>
+  </div>
+
+  <div id="error-message" class="email-signup-alert email-signup-error">
+    <p>Something went wrong. Please try again later or email me directly at <a href="&#x6D;&#x61;&#x69;&#x6C;&#x74;&#x6F;&#x3A;&#x6A;&#x75;&#x6C;&#x69;&#x61;&#x6E;&#x40;&#x61;&#x6E;&#x69;&#x6D;&#x65;&#x6A;&#x73;&#x2E;&#x63;&#x6F;&#x6D;">&#x6A;&#x75;&#x6C;&#x69;&#x61;&#x6E;&#x40;&#x61;&#x6E;&#x69;&#x6D;&#x65;&#x6A;&#x73;&#x2E;&#x63;&#x6F;&#x6D;</a></p>
+  </div>
+</form>        </email-signup>
+      </div>
+    </div>
+  </div>
+</footer>
+</main>
+<div id="engine"></div>
+  `;

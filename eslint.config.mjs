@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "archive/**",
+    // Imported, prebuilt animation runtime and model decoder.
+    "public/assets/js/**",
+    "public/assets/draco/**",
     "next-env.d.ts",
   ]),
 ]);

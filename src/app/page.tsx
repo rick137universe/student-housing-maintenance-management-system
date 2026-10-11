@@ -1,2 +1,2 @@
-import { HomePage } from '@/views/home/HomePage';
-export default function Home() { return <HomePage/>; }
+import { AnimeHomePage } from '@/views/home/AnimeHomePage';
+export default function Home() { return <AnimeHomePage />; }
