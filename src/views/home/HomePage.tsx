@@ -7,7 +7,7 @@ import { ArrowDown, ArrowRight, LogOut, SunMoon } from 'lucide-react';
 import { LensExperience } from '@/components/home/LensExperience';
 import { LensBootIntro } from '@/components/home/LensBootIntro';
 import { LoginDialog } from '@/components/auth/LoginDialog';
-import { readDemoSession, saveDemoSession } from '@/utils/demo-session';
+import { readAuthSession, saveAuthSession } from '@/utils/auth-session';
 import { roleFeatures, type RoleFeature } from '@/data/role-features';
 import type { DemoAccount } from '@/data/accounts';
 import h from './HomePage.module.css';
@@ -40,7 +40,7 @@ export function HomePage() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      setSession(readDemoSession());
+      setSession(readAuthSession());
     });
     return () => window.cancelAnimationFrame(frame);
   }, []);
@@ -141,7 +141,7 @@ export function HomePage() {
   }, [session, features]);
 
   function onSessionChange(account: DemoAccount | null) {
-    saveDemoSession(account);
+    saveAuthSession(account);
     const playIntro = Boolean(account) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setIntroProgress(playIntro ? 0 : 1);
     if (playIntro) setIntroRun(current => current + 1);
@@ -159,7 +159,7 @@ export function HomePage() {
   }
 
   function logout() {
-    saveDemoSession(null);
+    saveAuthSession(null);
     setSession(null);
     setIntroProgress(1);
     setHasScrolled(false);

@@ -1,16 +1,15 @@
 'use client';
 
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
-import { useParams, usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Check, LogOut, Menu, ShieldAlert, X } from 'lucide-react';
-import { ActionWorkspace } from '@/components/workspace/ActionWorkspace';
-import { MaintenanceWorkspace } from '@/components/workspace/MaintenanceWorkspace';
-import { RepairWorkspace } from '@/components/workspace/RepairWorkspace';
-import { readDemoSession, saveDemoSession } from '@/utils/demo-session';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import { ArrowLeft, LogOut, Menu, ShieldAlert, X } from 'lucide-react';
+import { LiveWorkspace } from '@/components/workspace/LiveWorkspace';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { api, saveAuthSession } from '@/utils/auth-session';
 import { featureFor, roleFeatures } from '@/data/role-features';
-import { demoAccounts, type DemoAccount, type RoleId } from '@/data/accounts';
+import { demoAccounts, type RoleId } from '@/data/accounts';
 import s from './WorkspacePage.module.css';
 import { ThemeSelect } from '@/components/theme/ThemeProvider';
 
@@ -20,11 +19,9 @@ export function WorkspacePage() {
   const params = useParams<{ role: string; feature: string; action?: string[] }>();
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [account, setAccount] = useState<DemoAccount | null | undefined>(undefined);
-  const [toast, setToast] = useState('');
-  const detail = searchParams.get('detail') ?? '';
+  const { account } = useAuth();
+  const [error, setError] = useState('');
   const role = validRoles.includes(params.role as RoleId) ? params.role as RoleId : null;
   const feature = role ? featureFor(role, params.feature) : undefined;
   const actionId = pathname.split('/')[4];
@@ -35,24 +32,9 @@ export function WorkspacePage() {
     return () => document.documentElement.removeAttribute('data-dorma-workspace-active');
   }, []);
 
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setAccount(readDemoSession()));
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  function closeDetail() {
-    window.history.replaceState(null, '', pathname);
-  }
-
-  function logout() {
-    saveDemoSession(null);
-    router.push('/');
-  }
-
-  function completeDetail() {
-    setToast(detail + '已完成演示操作');
-    closeDetail();
-    window.setTimeout(() => setToast(''), 2200);
+  async function logout() {
+    try { await api('auth/logout', {method:'POST',body:'{}'}); saveAuthSession(null); router.push('/'); }
+    catch(error) { setError(error instanceof Error ? error.message : '退出失败'); }
   }
 
   if (account === undefined) return <main className={s.loading}>正在确认身份…</main>;
@@ -61,7 +43,7 @@ export function WorkspacePage() {
     <ShieldAlert />
     <p>DORMA / SESSION REQUIRED</p>
     <h1>需要先登录。</h1>
-    <span>请从首页选择演示身份，再进入对应功能。</span>
+    <span>请从首页登录系统账号，再进入对应功能。</span>
     <Link href="/">返回首页登录</Link>
   </main>;
 
@@ -100,26 +82,10 @@ export function WorkspacePage() {
       <main className={s.content}>
         <div className={s.actionTitle}><p>{account.roleName} / {feature.title}</p><h1>{action?.label}</h1><span>{feature.description}</span></div>
         <div className={s.workspaceContent}>
-          {role === 'maintenance' ? <MaintenanceWorkspace featureId={feature.id} actionId={action?.id ?? 'action-1'} /> : role === 'student' && feature.id === 'repair' ? <RepairWorkspace actionId={action?.id ?? 'action-1'} /> : <ActionWorkspace key={feature.id} feature={feature} actionId={action?.id ?? 'action-1'} role={account.role} />}
+          {error && <p role="alert">{error}</p>}
+          <LiveWorkspace key={pathname} account={account} featureId={feature.id} actionId={action?.id ?? 'action-1'} />
         </div>
       </main>
     </div>
-    {detail && <div className={s.drawerBackdrop} onClick={() => {
-      closeDetail();
-    }}>
-      <aside className={s.detailDrawer} onClick={event => event.stopPropagation()}>
-        <header><div><p>BUSINESS DETAIL</p><h2>{detail}</h2></div><button onClick={() => {
-          closeDetail();
-        }}><X size={18} /></button></header>
-        <section>
-          <label>当前功能<strong>{action?.label}</strong></label>
-          <label>操作身份<strong>{account.displayName} / {account.roleName}</strong></label>
-          <label>业务状态<strong>前端演示数据</strong></label>
-        </section>
-        <div className={s.drawerData}><span>01</span><p>本页面已接入独立地址和可见详情层。后端接口完成后，这里直接替换为真实表单与业务记录。</p></div>
-        <button className={s.completeButton} onClick={completeDetail}><Check size={15} />确认演示操作</button>
-      </aside>
-    </div>}
-    {toast && <p className={s.toast}>{toast}</p>}
   </div>;
 }

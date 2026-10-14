@@ -6,7 +6,7 @@ import { LoginDialog } from "@/components/auth/LoginDialog";
 import { useRouter } from 'next/navigation';
 import type { DemoAccount } from "@/data/accounts";
 import { roleFeatures } from "@/data/role-features";
-import { readDemoSession, saveDemoSession } from "@/utils/demo-session";
+import { readAuthSession, saveAuthSession } from "@/utils/auth-session";
 
 const runtimeSrc =
   "/assets/js/home.js";
@@ -26,7 +26,7 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
   const [portalOpen, setPortalOpen] = useState(false);
 
   function enterWorkspace(account: DemoAccount) {
-    saveDemoSession(account);
+    saveAuthSession(account);
     const first = roleFeatures[account.role][0];
     router.push(`/workspace/${account.role}/${first.id}/${first.actions[0].id}`);
   }
@@ -64,10 +64,11 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
     });
 
     const syncEntryLabels = () => {
-      const labelText = readDemoSession() ? "进入工作台" : "登录";
+      const labelText = readAuthSession() ? "进入工作台" : "登录";
       document.querySelectorAll<HTMLElement>("[data-dorma-entry-label]")
         .forEach(label => { label.textContent = labelText; });
     };
+    window.addEventListener("dorma-auth-changed", syncEntryLabels);
     const frame = window.requestAnimationFrame(() => { syncEntryLabels(); window.dispatchEvent(new Event("resize")); });
     const activateEntry = (event: Event) => {
       const entry = event.target instanceof Element ? event.target.closest("[data-dorma-entry]") : null;
@@ -75,7 +76,7 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
       if (event instanceof KeyboardEvent && (entry.tagName !== "PRE" || !["Enter", " "].includes(event.key))) return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      const account = readDemoSession();
+      const account = readAuthSession();
       if (account) {
         const first = roleFeatures[account.role][0];
         router.push(`/workspace/${account.role}/${first.id}/${first.actions[0].id}`);
@@ -126,6 +127,7 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
 
     return () => {
       window.cancelAnimationFrame(frame);
+      window.removeEventListener("dorma-auth-changed", syncEntryLabels);
       document.removeEventListener("click", activateEntry, true);
       document.removeEventListener("keydown", activateEntry, true);
       form?.removeEventListener("submit", showDemoFeedback, true);

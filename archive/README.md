@@ -1,5 +1,7 @@
 # 早期原型资料
 
+`src/demo-workspace/` 保存后端接入前的三个模拟业务组件。现用工作台已统一使用 `src/components/workspace/LiveWorkspace.tsx` 调用真实后端，这些归档组件不参与构建。
+
 此目录保存历史设计参考和实验实现，不参与当前应用构建和日常验证。当前页面主体位于仓库的 `src/views/`，界面组件位于 `src/components/`。
 
 | 目录 | 内容 |

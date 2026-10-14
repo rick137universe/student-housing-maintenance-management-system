@@ -48,8 +48,17 @@ export const roleFeatures: Record<RoleId, RoleFeature[]> = {
     feature('reports', '04', '统计报表', 'REPORTS', '运营指标被压缩为清晰的线与弧。', '#00e7c4', 'analytics', 'analytics', ['运营统计', '维修统计', '导出报表']),
     feature('permissions', '05', '权限管理', 'ACCESS', '四种身份只连接各自被授权的功能。', '#50a8ff', 'permissions', 'system', ['用户账号', '角色权限', '权限审计']),
     feature('backup', '06', '备份恢复', 'BACKUP', '数据环完成复制，也能沿时间轴返回。', '#a889ff', 'backup', 'system', ['备份策略', '立即备份', '数据恢复']),
+    feature('billing', '07', '账单管理', 'BILLING', '生成、维护账单并核对缴费结果。', '#50a8ff', 'ledger', 'payment', ['账单生成', '账单维护', '缴费流水']),
+    feature('announcements', '08', '公告管理', 'ANNOUNCEMENTS', '发布公寓公告与服务信息。', '#50a8ff', 'broadcast', 'personal', ['公告发布']),
   ],
 };
+
+for (const role of ['dormManager','maintenance','admin'] as const) {
+  roleFeatures[role].push(feature('personal','09','个人中心','PROFILE','维护个人资料、密码和通知。','#888888','identity','personal',['查看个人信息','修改个人信息','修改登录密码']));
+}
+for (const role of ['student','dormManager','maintenance','admin'] as const) {
+  roleFeatures[role].push(feature('notifications','10','个人消息','MESSAGES','接收业务进度与待办提醒。','#888888','broadcast','personal',['消息通知']));
+}
 
 function feature(id: string, index: string, title: string, eyebrow: string, description: string, color: string, motion: MotionKind, module: ModuleId, labels: string[]): RoleFeature {
   return { id, index, title, eyebrow, description, color, motion, module, actions: labels.map((label, actionIndex) => ({ id: 'action-' + (actionIndex + 1), label })) };

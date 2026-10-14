@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowRight, Building2, ChevronRight, HardHat, KeyRound, ShieldCheck, UsersRound, X, type LucideIcon } from 'lucide-react';
 import { demoAccounts, type DemoAccount } from '@/data/accounts';
+import { api, saveAuthSession } from '@/utils/auth-session';
 import s from './LoginDialog.module.css';
 
 interface Props {
@@ -24,6 +25,7 @@ export function LoginDialog({ open, onClose, onSessionChange, appearance = 'defa
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     const element = dialog.current;
@@ -34,20 +36,22 @@ export function LoginDialog({ open, onClose, onSessionChange, appearance = 'defa
 
   function fillDemo(account: DemoAccount) {
     setUsername(account.username);
-    setPassword(account.password);
+    setPassword('');
     setError('');
   }
 
-  function login(event: FormEvent<HTMLFormElement>) {
+  async function login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const account = demoAccounts.find(item => item.username === username.trim() && item.password === password);
-    if (!account) {
-      setError('账号或密码不正确。可点击下方演示身份自动填入。');
-      return;
-    }
-    onSessionChange(account);
-    setError('');
-    dialog.current?.close();
+    setPending(true);
+    try {
+      const result = await api<DemoAccount>('auth/login', {method:'POST',body:JSON.stringify({username:username.trim(),password})});
+      saveAuthSession(result.data);
+      onSessionChange(result.data);
+      setError('');
+      setPassword('');
+      dialog.current?.close();
+    } catch (error) { setError(error instanceof Error ? error.message : '登录失败'); }
+    finally { setPending(false); }
   }
 
   return <dialog
@@ -62,7 +66,7 @@ export function LoginDialog({ open, onClose, onSessionChange, appearance = 'defa
       <section className={s.loginBrand}>
         <button className={s.closeLight} onClick={() => dialog.current?.close()} aria-label="关闭登录"><X /></button>
         <h2 id="portal-title">进入你的<br />公寓工作台。</h2>
-        <p>账号决定你能看到的数据与操作。这里用演示账号模拟基于角色的权限控制。</p>
+        <p>使用系统账号登录。数据与操作由服务端根据你的身份和授权范围校验。</p>
       </section>
       <section className={s.loginPanel}>
         <button className={s.closeDark} onClick={() => dialog.current?.close()} aria-label="关闭登录"><X /></button>
@@ -71,10 +75,10 @@ export function LoginDialog({ open, onClose, onSessionChange, appearance = 'defa
           <label>账号<input autoFocus autoComplete="username" value={username} onChange={event => setUsername(event.target.value)} placeholder="学号 / 工号 / 管理员账号" /></label>
           <label>密码<input type="password" autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} placeholder="请输入密码" /></label>
           {error && <p className={s.loginError} role="alert">{error}</p>}
-          <button className={s.loginButton} type="submit">登录工作台 <ArrowRight size={17} /></button>
+          <button className={s.loginButton} type="submit" disabled={pending}>{pending?'正在登录…':'登录工作台'} <ArrowRight size={17} /></button>
         </form>
         <div className={s.demoAccounts}>
-          <div className={s.demoHeader}><span>演示账号</span><small>点击身份自动填入</small></div>
+            <div className={s.demoHeader}><span>课程样例账号</span><small>点击身份填入用户名</small></div>
           <div className={s.demoGrid}>
             {demoAccounts.map(item => {
               const Icon = roleIcons[item.role];
@@ -83,7 +87,7 @@ export function LoginDialog({ open, onClose, onSessionChange, appearance = 'defa
               </button>;
             })}
           </div>
-          <p>四组账号的演示密码均为 <code>Dorma2026</code></p>
+          <p>请输入初始化时设置的账号密码。</p>
         </div>
       </section>
     </div>

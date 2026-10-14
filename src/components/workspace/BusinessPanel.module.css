@@ -5,4 +5,5 @@
 .profile{display:grid;gap:0;margin:0}.profile>div{display:grid;grid-template-columns:160px 1fr;padding:22px 0;border-bottom:1px solid var(--border)}.profile dt{color:var(--muted-ink);font-size:13px}.profile dd{margin:0;font-size:16px}.tableScroll{overflow:auto;margin-top:24px}.businessTable{width:100%;border-collapse:collapse;text-align:left;min-width:550px}.businessTable th{color:var(--muted-ink);font-weight:400;font-size:12px;padding:14px 12px;border-bottom:1px solid var(--border)}.businessTable td{font-size:14px;padding:20px 12px;border-bottom:1px solid var(--border)}.businessTable tbody tr:hover{background:var(--surface-inset)}.panel .search{max-width:320px}.overview strong{font-size:25px}.panel>footer{margin-top:26px}
 
 /* Stack labels above values so mobile metrics cannot squeeze Chinese text. */
+.businessTable,.businessTable td{color:var(--ink)}.businessTable th{color:var(--muted-ink)}
 @media(max-width:680px){.overview{grid-template-columns:repeat(3,minmax(0,1fr))}.overview>div{min-width:0;flex-direction:column;align-items:flex-start;gap:6px}.overview span,.overview strong{white-space:nowrap}.overview strong{font-size:clamp(16px,5vw,22px)}}

@@ -1,156 +1,96 @@
-# Dorma · 学生公寓住宿与报修管理系统前端
+# Dorma 学生公寓住宿与报修管理系统
 
-> **公共业务首页第一版（2026-10-11）：** 保留 Anime Clone 的原镜头动画、段落顺序、时序及分辨率，公共介绍分为系统介绍、住宿服务、报修服务、信息与提醒。顶部与末尾的登录入口复用演示登录；登录后进入当前身份的第一个功能。赞助区域及部分原页脚暂时保留。
+Dorma 使用 Next.js、TypeScript 和 PostgreSQL，实现学生、宿管人员、维修人员及管理员四类角色的住宿管理、账单缴费、报修维修与系统管理。公共首页沿用现有动画，工作台通过同源 API 读取和修改数据库。
 
-Dorma 是面向学生、宿管人员、维修人员和系统管理员的校园住宿服务**前端演示项目**。当前版本具备四类身份的登录演示、20 个功能分组和 57 个操作入口。公共首页展示通用服务场景；登录后进入当前身份专属的业务详情页，左侧菜单直接访问授权功能。
+当前为课程本地运行版本：业务数据真实持久化，在线支付采用测试支付，不产生真实扣款；备份调用 PostgreSQL 工具，恢复创建独立数据库副本。
 
-> **当前阶段：可运行的交互原型。** 页面中的账号、账单、床位、工单和统计指标来自前端模拟数据。部分操作能更新当前页面状态，但没有真实身份认证、业务 API、数据库持久化或支付、备份服务。功能入口数量不代表业务流程已经完成。
+## 技术与目录
 
-本文档依据 2026-10-11 的仓库代码编写，描述当前可从首页进入的版本。早期设计、旧版组件和一次性脚本集中在 `archive/`；它们不参与当前应用构建。早期 QA 截图保留在 Git 历史中，新的本地 QA 产物放在被忽略的 `docs/qa/`。
+使用 Next.js 16.3.5 App Router、React 19、TypeScript、CSS Modules、Tailwind CSS 4、pg、Zod。认证采用加盐 scrypt 和数据库会话，后台任务由独立 TypeScript 工作进程执行。开发要求 Node.js 24+、npm、PostgreSQL 18，以及本机 pg_dump/pg_restore。浏览器验收使用 Playwright 和 Microsoft Edge。
 
-## 开发语言与技术栈
-
-| 类别 | 当前使用情况 |
-| --- | --- |
-| TypeScript / TSX | 主要开发语言；用于 Next.js 页面、React 组件、演示数据、类型定义和 `next.config.ts`。 |
-| CSS | `src/styles/globals.css` 提供全局样式；各功能目录中的 `*.module.css` 提供组件级样式。 |
-| JavaScript / JSON | `.mjs` 文件配置 ESLint 和 PostCSS；`package.json`、`tsconfig.json` 等管理依赖和工具配置。原动画通过 `public/assets/js/home.js` 及其分包加载。 |
-| HTML / SVG | 业务页面使用 TSX；公共首页保留捕获的 HTML 模板、SVG 与 WebGL 场景。 |
-
-当前应用基于 **Next.js 16.3.5（App Router）**、**React 19.2.4** 和 **TypeScript 5**。样式主要使用 CSS Modules，并通过 PostCSS 接入 **Tailwind CSS 4**；界面图标使用 **Lucide React**。公共首页使用原生 Anime.js / Three.js WebGL 运行资源、SVG 与 CSS 动画，保持原时序和分辨率；稳定的页面属性隔离样式，避免逐帧进行昂贵的关系选择器匹配。演示登录使用浏览器 `sessionStorage`，主题选择使用 `localStorage`。
-
-仓库还配置了 shadcn 组件生成器，并保留一个基于 Base UI 的按钮组件；当前业务页面未引用该按钮。公共首页的动画运行时已打包在 `public/assets/js/`，配套资源包括字体、图片、GLB 模型和 Draco 解码文件；React 接入组件负责启动原脚本及连接登录入口。根布局保留已启动的首页场景，隐藏时暂停引擎；详情页外壳也由根布局保留，跨功能只更新业务内容，避免导航重新挂载。项目目前只有前端演示代码，没有后端服务、数据库或正式 API 集成。开发环境要求 Node.js 24 或以上，使用 npm 和 `package-lock.json` 管理依赖；ESLint、TypeScript 类型检查与 Next.js 构建用于代码验证。
-
-## 本地运行与检查
-
-需要 Node.js 24 或以上，依赖版本由 `package-lock.json` 锁定。
-
-```powershell
-npm ci
-npm run dev -- --port 3100
+```text
+src/
+├─ app/                 页面路由、布局及 api/v1 接口入口
+├─ views/               首页和工作台页面主体
+├─ components/          登录、认证状态、主题及业务界面
+├─ data/                菜单、页面与接口对应、首页图形
+├─ server/              数据访问、权限、业务事务和任务进程
+├─ types/               前后端共享的非敏感类型
+├─ utils/               客户端请求与会话展示、类名工具
+└─ styles/              全局及首页样式
+database/               初始结构、增量迁移与数据库说明
+scripts/                迁移、初始化、任务、生产启动与维护命令
+tests/                  独立数据库集成测试及浏览器回归
+docs/                   接口和需求说明；本地截图位于被忽略的 qa/
+public/assets/          网站字体、图片、模型及原首页动画运行时
+archive/                历史源码、模拟业务组件、研究与一次性脚本
 ```
 
-浏览器打开 <http://localhost:3100>。生产构建与代码检查使用：
+React 组件使用 PascalCase，普通工具和数据文件使用 kebab-case；CSS Modules 紧邻组件。跨分类导入使用 @/，同目录引用使用相对路径。数据库代码只能从服务端导入；浏览器不包含数据库连接凭据。
+
+## 本地启动
+
+1. 安装依赖：`npm ci`。
+2. 复制 `.env.example` 为 `.env.local`，配置数据库、维护连接、样例密码和备份目录。`.env.local` 不纳入 Git。
+3. 全新环境先以管理员连接执行 `database/000_create_database.sql`；已有本机数据库无需再次建库。
+4. 执行 `npm run db:migrate`。需要分离运行账号时执行 `npx tsx scripts/setup-roles.ts`，它会在本机配置最小权限应用账号和具备 CREATEDB 的维护账号。
+5. 显式执行 `npm run db:seed` 初始化课程样例；重复执行不清空或覆盖已有业务记录。
+6. 启动网页：`npm run dev -- --hostname localhost`（默认3100端口）。
+7. 在另一终端启动任务进程：`npm run jobs`。
+
+访问 http://localhost:3100。APP_ORIGIN 必须与实际浏览器访问地址一致。数据库和 PostgreSQL 工具路径按本机安装调整；备份目录应位于数据库数据目录之外，并限制本机访问权限。
+
+本机数据库已执行后端迁移并初始化课程样例，应用使用独立的 dorma_app 账号，后台恢复使用 dorma_ops 账号。连接密码只保存在本机配置。
+
+| 样例身份 | 用户名 |
+| --- | --- |
+| 学生 | 202602341 |
+| 宿管人员 | dm0301 |
+| 维修人员 | wx008 |
+| 管理员 | admin |
+
+样例密码使用初始化时设置的 SEED_PASSWORD。登录弹层只填入用户名，不在客户端保存或自动填入密码。其他样例身份包含第二位宿管、第二位维修人员和其他学生，用于验证数据隔离。
+
+## 已实现的业务
+
+| 模块 | 当前能力 |
+| --- | --- |
+| 个人中心 | 真实登录退出、个人资料、修改密码、消息及已读状态 |
+| 基础信息 | 学生、楼栋、房间、床位维护；服务端分页搜索；CSV 模板、原子导入与导出 |
+| 住宿业务 | 入住申请审核及自动/手动分床；调宿和退宿事务；完整入住历史；性别和容量限制 |
+| 床位状态 | 状态随入住同步、停用校验、资源异常报告 |
+| 账单缴费 | 固定月费配置、批次生成、账单维护、测试分批支付及幂等处理、核对与站内催缴 |
+| 报修维修 | 提交、初审驳回/通过、派工、接单、维修进展与等待配件、完工及1～5星评价 |
+| 统计分析 | 实际入住率、空床、欠费、报修完成率、维修工作量和评价汇总；筛选及 CSV 导出 |
+| 系统管理 | 账号、权限、楼栋范围、公告、参数、审计、备份策略、真实备份与独立恢复验证 |
+
+原57个业务入口保留，并新增管理员账单/公告、员工个人中心和四类消息入口，共74个页面入口。地址仍为 `/workspace/{role}/{feature}/{action}`，对应清单由 `src/data/workspace-actions.ts` 管理。
+
+学生仅访问本人业务；宿管访问负责/获授权楼栋；维修人员访问获派工单；管理员按全局权限管理。授权检查在服务端执行，浏览器存储或URL中的角色不能授予权限。
+
+## 验证和生产运行
 
 ```powershell
 npm run check
+npm run test:integration
+npm run test:e2e
+npm run build
+npm start
 ```
 
-该命令依次执行 ESLint、TypeScript 类型检查和 Next.js 生产构建。也可分别运行 `npm run lint`、`npm run typecheck`、`npm run build`。当前 `next.config.ts` 启用了 `output: "standalone"`，但 `npm run start` 仍调用 `next start`，运行时会出现不兼容提示；生产部署应使用构建生成的 `.next/standalone/server.js`，并按 Next.js 的 standalone 部署说明提供静态资源。
+`check` 依次执行 ESLint、TypeScript 和生产构建。集成测试创建唯一命名的独立测试库，验证迁移、初始化、真实接口、权限、并发、事务、备份及隔离恢复，完成后清理这些测试库；浏览器测试还覆盖74个页面、四类登录退出、桌面/手机和浅深主题。测试需要 DATABASE_ADMIN_URL、已配置的应用/维护角色和本机 Microsoft Edge，不使用当前业务库写入测试数据。
 
-本次版本执行 `npm run check` 并进行浏览器回归：四类身份登录、全部 57 个操作入口、刷新与浏览器前进后退、退出登录和跨角色访问拦截；检查桌面与手机布局、主题切换及返回首页的动画初始化。这些检查不代表完整业务链路或后端权限已实现。
+2026-10-14 验收通过104项集成检查及74个页面浏览器回归，覆盖并发抢床/付款、跨角色业务、权限即时变更、CSV整体回滚、实际备份、独立恢复及损坏备份拒绝。ESLint、TypeScript与生产构建通过；本地截图位于被忽略的 docs/qa/backend/。
 
-## 如何体验当前版本
+生产使用 standalone 输出；`npm start` 会准备 public 与静态资源并启动 standalone server，默认3100端口。任务进程继续单独运行 `npm run jobs`，运行环境需保留依赖、脚本和本机配置。健康接口 `/api/v1/health` 能报告数据库连接和工作进程心跳；工作进程未运行时，备份任务会留在队列。
 
-点击首页顶部「登录」或首屏「登录工作台」，选择身份自动填入演示账号，再点击登录。有演示会话时顶部显示「进入工作台」。四个演示账号的密码均为 `Dorma2026`：
+## 文档与边界
 
-| 身份 | 用户名 | 工作台功能分组 |
-| --- | --- | ---: |
-| 学生 | `202602341` | 5 |
-| 宿管人员 | `dm0301` | 5 |
-| 维修人员 | `wx008` | 4 |
-| 系统管理员 | `admin` | 6 |
+- [数据库与迁移说明](database/README.md)
+- [接口、页面对应和业务规则](docs/backend-api.md)
+- [原需求映射](docs/requirements-map.md)
+- [历史资料索引](archive/README.md)
 
-登录成功后进入当前身份第一个功能的第一个操作。工作台采用左侧角色功能菜单、右侧业务内容的布局，手机端通过「功能菜单」展开导航。详情页地址保持 `/workspace/{role}/{feature}/{action}`，例如 `/workspace/student/repair/action-1` 是学生「提交报修」页。工作台内部使用无刷新路由切换，左侧导航保持挂载，支持刷新及浏览器前进后退；首页与工作台之间使用客户端路由切换。原首页场景由根布局保留，离开时暂停引擎及滚动回调，返回时恢复，避免重新加载动画资源。公共首页不展示角色专属数据或管理操作。
+当前没有真实支付商户、短信或邮件发送、退款冲正、工单接单后的改派和覆盖式数据库恢复。通知采用站内消息。恢复副本需要维护人员验证后再手工调整应用连接。
 
-工作台顶部支持「跟随系统 / 浅色 / 深色」主题；公共首页保留原动画的深色外观；工作台浅色模式使用黑白灰。主题选项保存在浏览器 `localStorage`；演示身份保存在 `sessionStorage`，退出登录或结束当前浏览器会话后需要重新登录。详情页有基于演示角色的前端访问拦截，但它不构成正式系统的权限保护。
-
-## 功能进展
-
-下表以**当前可从首页进入的界面**为准。「局部交互」表示页面内能看到状态变化，通常在刷新后丢失；「表单演示」表示能填写并得到提示，但不生成真实业务记录；「列表展示」表示可查看模拟数据，部分列表支持关键词搜索。
-
-| 身份 | 功能分组 | 当前已有的能力 | 主要待完成事项 |
-| --- | --- | --- | --- |
-| 学生 | 个人信息 | 查看资料；修改资料、密码表单演示 | 资料未完整保存，密码不影响登录凭证 |
-| 学生 | 住宿业务 | 入住、调宿、退宿申请表单演示 | 申请记录、审核进度、床位联动 |
-| 学生 | 缴费管理 | 查看账单、模拟缴费、缴费记录展示 | 支付接入；缴费状态与账单、记录、统计同步 |
-| 学生 | 报修服务 | 报修表单、固定进度时间线、星级评价局部交互 | 新工单生成、跨角色流转、真实进度与评价关联 |
-| 学生 | 公告查看 | 公寓通知和缴费提醒列表 | 公告详情、阅读状态与通知服务 |
-| 宿管人员 | 基础信息 | 学生、房间、床位列表 | 数据增删改与关联校验 |
-| 宿管人员 | 住宿事务 | 入住分配、退宿登记表单；调宿申请列表 | 真实审核、入住退宿记录与床位变化 |
-| 宿管人员 | 床位状态 | 床位总览、状态更新表单、异常列表 | 状态持久化、重复分配及异常校验 |
-| 宿管人员 | 报修初审 | 待初审、上报、驳回记录列表 | 逐单审核、上报和驳回操作 |
-| 宿管人员 | 账单核对 | 账单、欠费、催缴记录列表 | 核对确认、催缴发送与结果更新 |
-| 维修人员 | 工单接收 | 固定工单的查看、确认接单及局部状态更新 | 接收真实派工与持久化 |
-| 维修人员 | 维修处理 | 开始维修、更新状态、确认完工的局部交互 | 完整字段保存、状态约束、与学生进度同步 |
-| 维修人员 | 维修记录 | 填写记录并在归档页查看本次记录 | 持久化、与工单及完工状态关联 |
-| 维修人员 | 个人统计 | 工作量、完成率和评价展示 | 从实际工单与评价计算指标 |
-| 系统管理员 | 基础数据 | 模拟数据列表、CSV 文件选择、演示数据 CSV 下载 | 导入解析与校验、数据维护接口 |
-| 系统管理员 | 流程管控 | 分床、住宿、缴费规则配置表单 | 规则保存及在业务流程中生效 |
-| 系统管理员 | 报修派工 | 待派工列表、人工选择维修人员的表单 | 实际派工、匹配规则及工单同步 |
-| 系统管理员 | 统计报表 | 固定指标、维修统计、演示数据 CSV 下载 | 实时统计、筛选与报表生成 |
-| 系统管理员 | 权限管理 | 账号与审计列表、角色权限表单 | 账号管理、后端授权及真实审计 |
-| 系统管理员 | 备份恢复 | 策略表单、模拟备份状态和恢复点列表 | 真实备份任务、校验及恢复 |
-
-**目前没有跨角色的完整业务链路。** 例如，学生提交报修不会自动进入宿管初审；管理员的演示派工不会进入维修人员工单；维修完工也不会更新学生的进度。入住、调宿和退宿同样不会改变床位数据。
-
-一些局部交互也尚未共享状态：学生点击「确认模拟缴费」后，该页面显示「已缴清」，但「本月待缴」指标和「缴费记录」仍展示原来的模拟数据。后续对接需要明确统一的数据来源和操作后的刷新规则。
-
-## 项目结构与文件定位
-
-源码按文件职责分类，以路由、页面、组件、数据、工具、样式为入口。`app/` 遵循 Next.js App Router 约定；其余分类是本项目的维护约定，并非框架强制结构。
-
-```text
-项目根目录/
-├─ src/
-│  ├─ app/                     路由入口、根布局与 favicon.ico
-│  │  └─ workspace/[role]/[feature]/[[...action]]/
-│  ├─ views/                   页面主体，组合组件与页面状态
-│  │  ├─ home/                 AnimeHomePage.tsx；保留旧 HomePage.tsx
-│  │  └─ workspace/            WorkspacePage.tsx 及页面样式
-│  ├─ components/              界面组件及紧邻组件的 CSS Modules
-│  │  ├─ auth/                 LoginDialog 登录弹层
-│  │  ├─ home/                 AnimeHome.tsx 原页面接入；保留 Lens 组件
-│  │  ├─ workspace/            业务表单、列表、切换组件及共用样式
-│  │  ├─ theme/                ThemeProvider、useTheme、ThemeSelect
-│  │  └─ ui/                   shadcn 基础组件
-│  ├─ data/                    演示账号、模拟内容、角色菜单
-│  │  └─ graphics/             route-path.ts、sphere-paths.ts
-│  ├─ utils/                   demo-session.ts、class-names.ts
-│  └─ styles/                  globals.css 与 anime-*.css
-├─ public/assets/              原动画 JS 分包、模型、图片、字体与解码文件
-├─ docs/                       当前文档，requirements-map.md 为需求映射
-├─ archive/                    历史资料，不参与当前应用构建
-│  ├─ README.md                归档索引及使用边界
-│  ├─ src/                     历史原型源码
-│  ├─ docs/                    历史研究、设计说明与 output-plan.json
-│  ├─ scripts/                 历史一次性脚本
-│  └─ assets/images/
-│     ├─ reference/            原参考截图
-│     └─ revision-2/           第二版设计截图
-├─ README.md
-└─ 标准工具配置文件
-```
-
-| 要修改的内容 | 文件入口 |
-| --- | --- |
-| 公共首页入口、文案与登录连接 | `src/views/home/AnimeHomePage.tsx`、`src/data/anime-home-markup.ts`、`src/components/home/AnimeHome.tsx` |
-| 公共首页原动画与样式 | `public/assets/js/home.js` 及分包、`src/styles/anime-*.css`；旧 Lens 组件保留 |
-| 登录弹层与演示身份 | `src/components/auth/LoginDialog.tsx`、`src/data/accounts.ts` |
-| 业务路由解析、角色访问拦截与左侧菜单 | `src/views/workspace/WorkspacePage.tsx` |
-| 通用表单与列表 | `src/components/workspace/ActionWorkspace.tsx` |
-| 学生报修、维修人员工单交互 | `src/components/workspace/RepairWorkspace.tsx`、`MaintenanceWorkspace.tsx` |
-| 角色菜单、功能及操作 ID | `src/data/role-features.ts` |
-| 通用模拟业务内容 | `src/data/module-content.ts` |
-| 演示会话存取 | `src/utils/demo-session.ts` |
-| 主题状态和主题选择控件 | `src/components/theme/ThemeProvider.tsx` |
-| 全局样式、类名合并工具 | `src/styles/globals.css`、`src/utils/class-names.ts` |
-
-`src/app/` 只承接路由、布局和框架约定资源，页面主体从 `views/` 导入。路由嵌套对应实际 URL，不为减少层级而压平。旧版 `RolePortal`、`ModulePage`、`ResidenceEngine` 等源码统一保存在 `archive/src/`，具体内容参见 [归档索引](archive/README.md)。
-
-命名与引用约定：React 页面和组件使用 PascalCase（例如 `WorkspacePage.tsx`）；普通数据、工具文件使用 kebab-case（例如 `demo-session.ts`）；组件和页面样式使用同名 `*.module.css` 并紧邻使用者，工作台共用样式为 `BusinessPanel.module.css`。Next.js 的 `page.tsx`、`layout.tsx` 等约定文件名保持不变。跨分类导入使用 `@/`，同目录引用使用相对路径；shadcn 的样式和工具别名在 `components.json` 中同步配置。只有实际出现相应代码时才新增 `api`、`services`、`hooks`、`types` 等目录。
-
-根目录的 `.ts`、`.json`、`.mjs` 是文件格式，不是统一的职责分类。`package.json`、锁文件及 Next.js、TypeScript、ESLint、PostCSS、shadcn 配置保留在根目录，遵循工具的常见发现方式；README、`.gitignore`、工具指令文件也保留在此处。自动生成的 `next-env.d.ts`、依赖、构建结果和本地 QA 产物由 `.gitignore` 排除。
-
-网站字体放在 `public/assets/fonts/`，原动画图片位于 `public/assets/images/`，模型位于 `public/assets/models/`。favicon 依照 Next.js 图标约定留在 `src/app/`，TSX 中的 SVG 动画继续作为源码维护。历史参考图统一放在 `archive/assets/images/`，与网站公开资源分开。
-
-## 已知边界与后续对接
-
-- **认证与授权：** 账号密码硬编码在前端，`sessionStorage` 只保存角色标识。正式系统需要后端认证、会话管理和服务端数据权限校验。
-- **业务数据：** 当前列表、指标和部分时间线由 `src/data/module-content.ts`、`src/components/workspace/ActionWorkspace.tsx` 及各业务组件内的固定数据提供；页面修改大多不会持久化。
-- **状态流转：** 需统一住宿申请、床位、报修工单和账单的状态定义，并确定每个角色的可执行操作及操作后的数据变化。
-- **外部服务：** 在线缴费、消息催缴、批量导入、真实派工、备份恢复尚未接入相应服务。CSV 导出仅下载前端演示数据。
-- **生产启动配置：** `package.json` 中的 `start` 脚本与 `next.config.ts` 的 standalone 输出不一致，后续应统一部署方式并验证生产启动。
-- **测试与文档：** `archive/scripts/` 中的早期 QA 脚本含作者机器上的绝对 Playwright 路径与旧版页面选择器，已归档且不作为当前验收命令。`docs/qa/` 用于本地生成的截图和结果，已从 Git 跟踪中移除。当前版本尚缺可跨机器运行的完整业务验收测试，以及接口、字段、权限和状态流转文档。
-
-协作时，先以 `src/data/role-features.ts` 作为当前菜单与路径的入口清单；修改功能 ID 或操作 ID 时同步检查详情页链接。新增业务数据和接口前，建议先约定各角色共用的记录 ID、状态、字段及更新规则，再逐条打通业务链路。提交前运行 `npm run check`；若改动了交互或样式，还需按实际入口在浏览器复核。
+密码与会话凭据不进入 Git，依赖、构建目录、备份文件和本地 QA 产物也被忽略。业务角色不是 PostgreSQL 登录角色；数据库未启用行级安全策略，业务访问隔离由后端权限与查询范围共同实现。

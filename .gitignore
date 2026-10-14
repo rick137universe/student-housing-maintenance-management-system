@@ -5,6 +5,7 @@ node_modules/
 
 # Build outputs and caches
 .next/
+.next-integration/
 out/
 build/
 dist/
