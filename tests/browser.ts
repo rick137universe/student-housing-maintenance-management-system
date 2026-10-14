@@ -9,7 +9,7 @@ export async function browserRegression(origin:string,password:string){
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
  try{
-  for(const [role,username] of [['student','202602341'],['dormManager','dm0301'],['maintenance','wx008'],['admin','admin']] as [RoleId,string][]){
+  for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
    const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
    await page.goto(origin);await page.locator('[data-dorma-entry]').first().click();
    const dialog=page.getByRole('dialog');await dialog.getByLabel('账号',{exact:true}).fill(username);await dialog.getByLabel('密码',{exact:true}).fill(password);await dialog.getByRole('button',{name:'登录工作台',exact:true}).click();

@@ -4,6 +4,8 @@
 
 ## 认证与响应
 
+学生用户名以 `stu` 开头，维修人员用户名以 `mt` 开头。迁移 `006_account_usernames` 将已有学生用户名加上 `stu`，将维修人员的 `wx` 前缀替换为 `mt`；新增账号和角色变更也由数据库触发器规范前缀，避免重复添加。学号、账号 ID、密码和业务关联保持不变，登录使用迁移后的用户名。
+
 `POST auth/login` 接收 `{username,password}`，返回账号和 CSRF 令牌，同时设置 HttpOnly 会话 Cookie。`GET auth/me` 读取当前账号，`POST auth/logout` 退出。会话保存8小时；密码、角色或账号状态改变会撤销相关会话。密码使用随机盐 scrypt（N=131072，r=8，p=1）。
 
 所有写请求必须来自 `APP_ORIGIN`，登录后的写请求额外带 `X-CSRF-Token`。Cookie 在 HTTPS 下启用 Secure，使用 SameSite=Lax。开发直连默认不信任代理头；只有受控反向代理配置正确时才设置 `TRUST_PROXY=true`。登录失败按账号和来源在15分钟窗口限流。

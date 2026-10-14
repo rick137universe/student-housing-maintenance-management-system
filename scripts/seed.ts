@@ -9,9 +9,9 @@ await transaction(async c => {
   await query('SELECT pg_advisory_xact_lock(7914331)',[],c);
   for (const [id,name,gender,college] of [['202602341','林晓屿','male','计算机学院'],['202602114','刘知行','male','计算机学院'],['202602115','陈嘉禾','female','外国语学院'],['202602116','周子涵','male','计算机学院']]) {
     await query(`INSERT INTO students(student_number,full_name,gender,college,grade,phone,password_hash) VALUES($1,$2,$3,$4,'2026','13800000000',$5) ON CONFLICT DO NOTHING`,[id,name,gender,college,hash],c);
-    await query(`INSERT INTO user_accounts(username,full_name,role,student_number) VALUES($1,$2,'student',$1) ON CONFLICT DO NOTHING`,[id,name],c);
+    await query(`INSERT INTO user_accounts(username,full_name,role,student_number) VALUES($1,$2,'student',$3) ON CONFLICT DO NOTHING`,['stu'+id,name,id],c);
   }
-  for (const [username,name,role] of [['dm0301','周老师','dorm_manager'],['dm0401','李老师','dorm_manager'],['wx008','陈师傅','maintenance'],['wx009','赵师傅','maintenance'],['admin','系统管理员','admin']])
+  for (const [username,name,role] of [['dm0301','周老师','dorm_manager'],['dm0401','李老师','dorm_manager'],['mt008','陈师傅','maintenance'],['mt009','赵师傅','maintenance'],['admin','系统管理员','admin']])
     await query(`INSERT INTO user_accounts(username,full_name,role,password_hash,account_status) VALUES($1,$2,$3,$4,'active') ON CONFLICT DO NOTHING`,[username,name,role,hash],c);
   const accounts = (await query('SELECT account_id,username FROM user_accounts',[],c)).rows;
   const id = (name:string) => accounts.find(a=>a.username===name)!.account_id;
@@ -32,7 +32,7 @@ await transaction(async c => {
     for (const student of ['202602341','202602114','202602115']) await query(`INSERT INTO accommodation_bills(student_number,billing_period,accommodation_fee,utility_fee,due_date) VALUES($1,to_char(CURRENT_DATE,'YYYY-MM'),800,128.60,CURRENT_DATE+14)`,[student],c);
     for (const [status,room,student,description] of [['pending_review','NY3-502','202602341','卫生间水龙头漏水'],['pending_dispatch','NY3-302','202602114','空调无法启动'],['dispatched','NY3-502','202602341','桌灯故障'],['completed','NY3-502','202602341','门锁更换']]) {
       const repair = (await query(`INSERT INTO repair_requests(student_number,room_id,fault_type,fault_description,repair_status,contact_phone) VALUES($1,$2,'水电设施',$3,$4,'13800000000') RETURNING repair_id`,[student,room,description,status],c)).rows[0];
-      if (['dispatched','completed'].includes(status)) await query(`INSERT INTO maintenance_records(repair_id,technician_account_id,dispatcher_account_id,maintenance_at,completed_at,processing_description) VALUES($1,$2,$3,$4,$5,$6)`,[repair.repair_id,id('wx008'),id('admin'),status==='completed'?new Date():null,status==='completed'?new Date():null,status==='completed'?'更换部件并测试完成':null],c);
+      if (['dispatched','completed'].includes(status)) await query(`INSERT INTO maintenance_records(repair_id,technician_account_id,dispatcher_account_id,maintenance_at,completed_at,processing_description) VALUES($1,$2,$3,$4,$5,$6)`,[repair.repair_id,id('mt008'),id('admin'),status==='completed'?new Date():null,status==='completed'?new Date():null,status==='completed'?'更换部件并测试完成':null],c);
       await query('INSERT INTO maintenance_updates(repair_id,actor_account_id,status,description) VALUES($1,$2,$3,$4)',[repair.repair_id,id('admin'),status,'课程样例初始化'],c);
     }
     await query(`INSERT INTO announcements(title,content,announcement_type,publisher_account_id) VALUES('欢迎入住校园公寓','请及时查看住宿、账单与报修进度。','公寓通知',$1)`,[id('admin')],c);

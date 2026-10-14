@@ -34,12 +34,14 @@ try{
  server=spawn(process.execPath,['node_modules/next/dist/bin/next','dev','--hostname','localhost','--port','3101'],{env,windowsHide:true,stdio:['ignore','pipe','pipe']});server.stdout!.on('data',b=>serverLog+=b);server.stderr!.on('data',b=>serverLog+=b);
  for(let i=0;i<90;i++){try{if((await fetch(origin+'/api/v1/health')).ok)break;}catch{}if(i===89)throw new Error('测试服务未启动：'+serverLog);await new Promise(r=>setTimeout(r,1000));}
  const student=new Session(),manager=new Session(),technician=new Session(),administrator=new Session(),second=new Session(),female=new Session(),incoming=new Session();
- for(const [session,username] of [[student,'202602341'],[manager,'dm0301'],[technician,'wx008'],[administrator,'admin'],[second,'202602114'],[female,'202602115'],[incoming,'202602116']] as const)await session.login(username);
+ for(const [session,username] of [[student,'stu202602341'],[manager,'dm0301'],[technician,'mt008'],[administrator,'admin'],[second,'stu202602114'],[female,'stu202602115'],[incoming,'stu202602116']] as const)await session.login(username);
+ const legacy=new Session();for(const username of ['202602341','wx008'])await legacy.request('auth/login','POST',{username,password:env.SEED_PASSWORD},401);checks+=2;
+ assert.equal((await testPool.query("SELECT count(*) FROM housing.user_accounts WHERE (role='student' AND username NOT LIKE 'stu%') OR (role='maintenance' AND username NOT LIKE 'mt%')")).rows[0].count,'0');checks++;
  const pairs:[Session,RoleId][]=[[student,'student'],[manager,'dormManager'],[technician,'maintenance'],[administrator,'admin']];
  for(const [session,role] of pairs)for(const feature of roleFeatures[role])for(const action of feature.actions){const spec=workspaceSpec(role,feature.id,action.id);const params=new URLSearchParams(spec.query);await session.request(spec.resource+'?'+params);checks++;}
  console.log('四类角色全部页面数据接口通过');
  await administrator.request('students','POST',{student_number:'RACE001',full_name:'并发学生',gender:'male',college:'计算机',grade:'2026',password:env.SEED_PASSWORD});
- const race=new Session();await race.login('RACE001');const raceApp=(await race.request('applications','POST',{preferredBuildingId:'NY3'})).data;
+ const race=new Session();await race.login('stuRACE001');const raceApp=(await race.request('applications','POST',{preferredBuildingId:'NY3'})).data;
  const incomingApp=(await incoming.request('applications')).data[0];
  const allocations=await Promise.all([manager.request(`applications/${raceApp.application_id}/review`,'POST',{decision:'approve',bedId:'NY3-102-01'},[200,409]),manager.request(`applications/${incomingApp.application_id}/review`,'POST',{decision:'approve',bedId:'NY3-102-01'},[200,409])]);
  assert.deepEqual(allocations.map(r=>r.status).sort(),[200,409]);
@@ -65,7 +67,7 @@ try{
  const generated=(await administrator.request('bills/generate','POST',{period:'2026-10'})).data;assert.equal((await administrator.request('bills/generate','POST',{period:'2026-10'})).data.batch_id,generated.batch_id);checks++;
  const repair=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'水电设施',description:'集成测试水龙头',phone:'13800000001'})).data;
  await second.request('repairs/'+repair.repair_id,'GET',undefined,404);await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{},403);
- await manager.request(`repairs/${repair.repair_id}/review`,'POST',{decision:'approve'});await administrator.request(`repairs/${repair.repair_id}/dispatch`,'POST',{technicianId:(await testPool.query("SELECT account_id FROM housing.user_accounts WHERE username='wx008'")).rows[0].account_id});
+ await manager.request(`repairs/${repair.repair_id}/review`,'POST',{decision:'approve'});await administrator.request(`repairs/${repair.repair_id}/dispatch`,'POST',{technicianId:(await testPool.query("SELECT account_id FROM housing.user_accounts WHERE username='mt008'")).rows[0].account_id});
  await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{});await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{},409);await technician.request(`repairs/${repair.repair_id}/start`,'POST',{});
  await technician.request(`repairs/${repair.repair_id}/progress`,'POST',{status:'waiting_parts',note:'等待零件'});await technician.request(`repairs/${repair.repair_id}/progress`,'POST',{status:'in_progress',note:'零件到达'});
  await technician.request(`repairs/${repair.repair_id}/complete`,'POST',{note:'更换完成且测试通过',hours:1.5,materials:'密封圈1个'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5,note:'测试评价'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5},409);
