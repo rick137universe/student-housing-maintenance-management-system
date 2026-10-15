@@ -1,4 +1,4 @@
-import {chromium} from '@playwright/test';
+import {chromium,expect} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {mkdir} from 'node:fs/promises';
 import {roleFeatures} from '../src/data/role-features';
@@ -11,7 +11,15 @@ export async function browserRegression(origin:string,password:string){
  try{
   for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
    const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
-   await page.goto(origin);await page.locator('[data-dorma-entry]').first().click();
+   await page.goto(origin);
+   const accountButton=page.locator('[data-dorma-account]');
+   await expect(page.locator('#site-header')).toHaveCSS('opacity','1');
+   await expect(accountButton.locator('.dorma-account-label')).toHaveCSS('display','grid');
+   await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText('未登录');
+   await accountButton.hover();await expect(accountButton.locator('[data-dorma-account-action]')).toBeVisible();
+   await expect(accountButton.locator('[data-dorma-account-action]')).toHaveText('前往登录');
+   await expect(accountButton.locator('[data-dorma-account-name]')).toBeHidden();
+   await accountButton.focus();await page.keyboard.press('Enter');
    const dialog=page.getByRole('dialog');await dialog.getByLabel('账号',{exact:true}).fill(username);await dialog.getByLabel('密码',{exact:true}).fill(password);await dialog.getByRole('button',{name:'登录工作台',exact:true}).click();
    await page.waitForURL('**/workspace/**');await page.getByRole('button',{name:'刷新',exact:true}).waitFor();
    for(const feature of roleFeatures[role])for(const action of feature.actions){
@@ -29,7 +37,18 @@ export async function browserRegression(origin:string,password:string){
     await page.goto(`${origin}/workspace/student/personal/action-2`);await page.getByRole('button',{name:'修改资料',exact:true}).click();await page.getByRole('dialog').getByLabel('姓名',{exact:true}).fill('林晓屿');await page.getByRole('dialog').getByRole('button',{name:'确认提交',exact:true}).click();await page.getByText('操作已保存。',{exact:true}).waitFor();
     await page.reload();await page.getByRole('button',{name:'修改资料',exact:true}).waitFor();assert.equal(await page.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0);
    }
-   await page.getByRole('button',{name:'退出登录',exact:true}).click();await page.waitForURL(origin+'/');
+   const me=await (await page.request.get(origin+'/api/v1/auth/me')).json();
+   await page.goto(origin);await page.mouse.move(0,500);
+   // The source template puts navigation inside the menu on narrow screens.
+   if(page.viewportSize()!.width<900)await page.getByRole('button',{name:'展开导航',exact:true}).click();
+   await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText(me.data.displayName);
+   await expect(accountButton.locator('[data-dorma-account-name]')).toBeVisible();
+   await accountButton.hover();await expect(accountButton.locator('[data-dorma-account-action]')).toHaveText('退出登录');
+   await expect(accountButton.locator('[data-dorma-account-action]')).toBeVisible();
+   await page.screenshot({path:`docs/qa/backend/${role}-home-account.png`,fullPage:false});
+   await accountButton.click();await page.mouse.move(0,500);
+   await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText('未登录');
+   assert.equal((await page.request.get(origin+'/api/v1/auth/me')).status(),401);
    await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await page.getByRole('heading',{name:'需要先登录。'}).waitFor();
    await context.close();
   }

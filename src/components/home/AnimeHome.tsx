@@ -6,7 +6,7 @@ import { LoginDialog } from "@/components/auth/LoginDialog";
 import { useRouter } from 'next/navigation';
 import type { DemoAccount } from "@/data/accounts";
 import { roleFeatures } from "@/data/role-features";
-import { readAuthSession, saveAuthSession } from "@/utils/auth-session";
+import { api, readAuthSession, saveAuthSession } from "@/utils/auth-session";
 
 const runtimeSrc =
   "/assets/js/home.js";
@@ -24,6 +24,7 @@ const CapturedPage = memo(function CapturedPage({ markup }: AnimeHomeProps) {
 export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
   const router = useRouter();
   const [portalOpen, setPortalOpen] = useState(false);
+  const [accountError, setAccountError] = useState('');
 
   function enterWorkspace(account: DemoAccount) {
     saveAuthSession(account);
@@ -64,13 +65,48 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
     });
 
     const syncEntryLabels = () => {
-      const labelText = readAuthSession() ? "进入工作台" : "登录";
+      const account = readAuthSession();
+      const labelText = account ? "进入工作台" : "登录";
       document.querySelectorAll<HTMLElement>("[data-dorma-entry-label]")
         .forEach(label => { label.textContent = labelText; });
+      const button = document.querySelector<HTMLButtonElement>('[data-dorma-account]');
+      const name = button?.querySelector('[data-dorma-account-name]');
+      const action = button?.querySelector('[data-dorma-account-action]');
+      if (name) name.textContent = account?.displayName ?? '未登录';
+      if (action) action.textContent = account ? '退出登录' : '前往登录';
+      button?.setAttribute('aria-label', account ? `${account.displayName}，退出登录` : '前往登录');
     };
     window.addEventListener("dorma-auth-changed", syncEntryLabels);
     const frame = window.requestAnimationFrame(() => { syncEntryLabels(); window.dispatchEvent(new Event("resize")); });
+    let logoutPending = false;
+    const activateAccount = async () => {
+      if (logoutPending) return;
+      setAccountError('');
+      if (!readAuthSession()) { setPortalOpen(true); return; }
+      const button = document.querySelector<HTMLButtonElement>('[data-dorma-account]');
+      logoutPending = true;
+      if (button) { button.disabled = true; button.setAttribute('aria-busy', 'true'); }
+      try {
+        await api('auth/logout', { method: 'POST' });
+        saveAuthSession(null);
+        setPortalOpen(false);
+      } catch (error) {
+        setAccountError(error instanceof Error ? error.message : '退出失败，请重试');
+      } finally {
+        logoutPending = false;
+        if (button) { button.disabled = false; button.removeAttribute('aria-busy'); }
+      }
+    };
     const activateEntry = (event: Event) => {
+      const accountButton = event.target instanceof Element ? event.target.closest('[data-dorma-account]') : null;
+      if (accountButton) {
+        // Native buttons already translate Enter and Space into click events.
+        if (event instanceof KeyboardEvent) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        void activateAccount();
+        return;
+      }
       const entry = event.target instanceof Element ? event.target.closest("[data-dorma-entry]") : null;
       if (!entry) return;
       if (event instanceof KeyboardEvent && (entry.tagName !== "PRE" || !["Enter", " "].includes(event.key))) return;
@@ -142,6 +178,7 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
 
   return <div hidden={!active} inert={!active}>
     <CapturedPage markup={markup} />
+    {accountError && <p className="dorma-account-error" role="alert">{accountError}</p>}
     <LoginDialog open={portalOpen} onClose={() => setPortalOpen(false)} onSessionChange={enterWorkspace} appearance="anime" />
   </div>;
 }

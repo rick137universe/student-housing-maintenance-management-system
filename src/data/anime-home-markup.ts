@@ -17,7 +17,6 @@ export const animeHomeMarkup = `
     </h1>
     <nav id="site-menu">
       <ul>
-                                        <li><button type="button" class="main-nav-link dorma-entry" data-dorma-entry data-dorma-entry-label>登录</button></li>
         <li><a class="main-nav-link nav-link-retractable" href="https://codepen.io/collection/Poerqa?cursor=eyJwYWdlIjoxfQ==/" target="_blank" title="CodePen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g id="codepen" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
     <path id="Shape" stroke="#FFFFFF" stroke-width="1.75" d="M5 14.355L12 19l7-4.645v-4.71L12 5 5 9.645v4.71zm14 0l-7-4.71-7 4.71m0-4.71l7 4.646 7-4.646M12 5v4.645m0 4.71V19"/>
@@ -36,14 +35,14 @@ export const animeHomeMarkup = `
 <span>Discord</span></a></li> -->
         <li>
           <sponsor-button>
-          <a href="https://github.com/sponsors/juliangarnier" class="main-nav-link sponsor-button" target="_blank" title="Sponsor Julian Garnier on GitHub">
+          <button type="button" class="main-nav-link sponsor-button dorma-account" data-dorma-account aria-label="前往登录">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <path fill="currentColor" fill-rule="nonzero" d="M12 18.445a.778.778 0 0 1-.34-.078C11.39 18.235 5 15.077 5 9.889a3.889 3.889 0 0 1 6.638-2.75L12 7.5l.362-.361A3.889 3.889 0 0 1 19 9.889c0 5.17-6.387 8.344-6.66 8.478a.778.778 0 0 1-.34.078z"/>
   </g>
 </svg>
-            <span>Sponsor</span>
-          </a>
+            <span class="dorma-account-label"><span data-dorma-account-name>未登录</span><span data-dorma-account-action>前往登录</span></span>
+          </button>
           </sponsor-button>
         </li>
       </ul>
