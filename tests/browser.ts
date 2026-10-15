@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import {mkdir} from 'node:fs/promises';
 import {roleFeatures} from '../src/data/role-features';
 import type {RoleId} from '../src/types/auth';
+import {verifyLoginTemplate} from './login-template';
 
 export async function browserRegression(origin:string,password:string){
+ await verifyLoginTemplate();
  const browser=await chromium.launch({channel:'msedge',headless:true});
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
@@ -21,32 +23,30 @@ export async function browserRegression(origin:string,password:string){
    await expect(accountButton.locator('[data-dorma-account-name]')).toBeHidden();
    await accountButton.focus();await page.keyboard.press('Enter');
    await page.waitForURL(origin+'/login');
-   await page.locator('#login-title').waitFor();
-   await expect(page.locator('[data-dorma-login] .login-header')).toHaveCSS('opacity','1');
+   const loginPage=page.frameLocator('[data-dorma-login-frame]');
+   const loginForm=loginPage.frameLocator('iframe[title="账号登录"]');
+   await expect(loginPage.locator('#learn')).toHaveClass(/is-ready/);
+   await expect(loginPage.locator('#site-header')).toBeVisible();
+   assert.equal(await loginPage.locator('#site-menu .main-nav-link').count(),6);
+   await expect(loginPage.locator('#site-footer .footer-logo')).toHaveCount(1);
    if(role==='student'){
-    await page.getByRole('button',{name:'学生',exact:true}).click();
-    await expect(page.getByLabel('账号',{exact:true})).toHaveValue(username);
-    await expect(page.getByLabel('密码',{exact:true})).toHaveValue('');
-    await page.getByLabel('密码',{exact:true}).fill('WrongPassword2026');
-    await page.getByRole('button',{name:'显示密码',exact:true}).click();
-    await expect(page.getByLabel('密码',{exact:true})).toHaveAttribute('type','text');
-    await page.getByRole('button',{name:'隐藏密码',exact:true}).click();
-    await page.getByRole('button',{name:'登录工作台',exact:true}).click();
-    await page.getByRole('alert').waitFor();
+    await loginForm.getByLabel(/账号/).fill(username);
+    await loginForm.getByLabel(/密码/).fill('WrongPassword2026');
+    await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
+    await loginForm.getByRole('alert').waitFor();
     assert.equal(new URL(page.url()).pathname,'/login');
-    await page.getByRole('button',{name:'学生',exact:true}).click();
+    await loginForm.getByLabel(/密码/).fill('');
     for(const [size,width,height] of [['desktop',1440,1000],['mobile',390,844]] as const){
      await page.setViewportSize({width,height});
-     for(const theme of ['light','dark'] as const){
-      await page.emulateMedia({colorScheme:theme});
-      await expect(page.locator('html')).toHaveAttribute('data-theme',theme);
-      await page.screenshot({path:`docs/qa/backend/login-${size}-${theme}.png`,fullPage:true});
-      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'login overflow');
-     }
+     await loginPage.locator('#site-header').scrollIntoViewIfNeeded();
+     await page.screenshot({path:`docs/qa/backend/login-${size}-top.png`});
+     await loginPage.locator('#site-footer').scrollIntoViewIfNeeded();
+     await page.screenshot({path:`docs/qa/backend/login-${size}-footer.png`});
+     assert.equal(await loginPage.locator('html').evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'login overflow');
     }
     await page.setViewportSize({width:1440,height:1000});
    }
-   await page.getByLabel('账号',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByRole('button',{name:'登录工作台',exact:true}).click();
+   await loginForm.getByLabel(/账号/).fill(username);await loginForm.getByLabel(/密码/).fill(password);await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
    await page.waitForURL('**/workspace/**');await page.getByRole('button',{name:'刷新',exact:true}).waitFor();
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){

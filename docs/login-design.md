@@ -1,14 +1,28 @@
-# 独立登录页的设计来源
+# 登录页：直接复制 Learn 页面
 
-页面地址为 `/login`，通过现有 `/api/v1/auth/login` 登录，成功后进入该身份的工作台。已登录访问登录页会进入自己的工作台。
+登录地址仍为 /login。本版弃用上一次重绘的界面，从母版完整 HTML 重新复制后做局部删改。
 
-设计基于只读母版 `D:/Development/Anime.js/public/sites/animejs-com-23cc7dc7/learn-eabea785/`：
+## 复制范围
 
-- 从 `assets/css/learn.css` 复制到 `src/views/auth/learn-base.css`，增加 `[data-dorma-login]` 作用域，把网格颜色改为主题变量。保留原有中央排版、网格、标题与订阅区的结构和样式。
-- 参照 `index.html` 的 `learn`、`learn-animejs`、`learn-header`、`learn-header-text`、`learn-email-signup` 结构，在 `LoginPage.tsx` 中改为 React 登录界面。
-- 参照 `assets/js/learn.js` 的文字和表单先后淡入顺序，用可清理且支持减少动态效果的 CSS 动画实现入场，不加载其整套网站脚本。
-- `login.css` 只负责认证表单、中文排版、Dorma 品牌和浅深主题的适配。字体使用项目内已有字体，无需重复复制。
+母版只读路径：D:/Development/Anime.js/public/sites/animejs-com-23cc7dc7/learn-eabea785/。
 
-课程视频、课程订阅 iframe、广告脚本、页脚赞助资源与登录无关，因此未复制。原 `LoginDialog` 及其 CSS 已删除，首页入口和未登录工作台入口统一指向 `/login`。页面不读取母版路径、不使用 iframe，也不向课程订阅服务发送请求。
+项目内副本：public/assets/login/。包含完整 index.html、原版 core.css 与 learn.css、四个原版 JavaScript 文件、字体、图标、页脚赞助图、所需 JSON 和原版 waitlist.html 表单。
 
-母版文件未修改。复制的样式沿用母版项目的 MIT 许可（Copyright (c) 2025 JCodesMore；完整许可见项目根目录 LICENSE）。
+母版的 LearnMirror 本身通过 iframe 承载独立 HTML。本项目沿用这一方式，完整页面运行在自己的文档中，因此不受首页动画、全局 CSS 或工作台主题覆盖。没有重写导航、页脚、网格、阴影、字号或断点；沿用母版原有深色外观。
+
+## 仅有的删改
+
+- 原标题和两段课程说明，在原位置替换为系统名称、登录用途和找回密码说明；不添加装饰性英文小字或身份列表。
+- 原订阅区标题及说明替换为账号登录说明。直接修改复制的 waitlist.html：邮箱输入改为账号，增加密码输入，原订阅按钮改为登录；保留白色表单、圆角、颜色和字体。容器按母版桌面实测宽度约 29rem 保持原宽度（手机不超出父容器），避免中文说明变短后容器自然收窄；内层框架仅为多出的密码字段及错误信息调整高度。
+- 删除课程视频及 Coming soon 文案。不复制该视频。
+- 完整保留原版头部与页脚的结构、Logo、文字、链接组及订阅区域。Home 返回系统首页；Learn 指向 /login；本项目没有实现的 Docs 和 Easings 跳转原网站对应地址，避免落入 404。
+- 只去掉广告网络脚本。页脚订阅表单保留原样，但拦截提交并提示使用上方登录表单，不向第三方发送邮箱。
+- 添加 login-form.js 接入同源认证 API，添加 login-bridge.js 处理文档之间的成功通知及表单高度。消息同时校验来源和窗口对象；主应用通过 auth/me 重新读取身份，不信任消息里的账号数据。密码不通过窗口消息传递、不保存到浏览器存储。
+
+## 校验
+
+login-template-source.json 记录复制时母版文件的 SHA-256，以及完整头部和页脚的标准化摘要。tests/login-template.ts 校验未修改资源的字节一致性，以及头部和页脚只存在上述链接与广告脚本调整。
+
+浏览器回归检查完整导航及页脚、桌面和手机布局、错误密码、四类账号登录、已登录重定向、退出与工作台。截图仅保存在被忽略的 docs/qa/ 下。
+
+母版未修改。复制资源沿用母版项目的 MIT 许可（Copyright (c) 2025 JCodesMore，完整许可见项目根目录 LICENSE）。

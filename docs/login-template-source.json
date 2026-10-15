@@ -1,0 +1,30 @@
+{
+  "source": "Anime.js learn-eabea785",
+  "sha256": {
+    "index.html": "92f9f9cd36ab352fe9f143757522aef61c4f853aef441848ff0ebdc11fdc0ec5",
+    "assets/css/core.css": "7cd4a15f06240e609de9094bd1918099ba9ecb8caf285c00c8faaf68d89a0f85",
+    "assets/css/learn.css": "925ffd460470e1d115df865c0fc62921656aace061479062d47c8b681bbc60fc",
+    "assets/js/learn.js": "4c712b5e89a4d3ba4563b2bde6949fcb146855526b912fdbc5dba930d29dc1ab",
+    "assets/js/chunks/chunk-WXAKRBIO.js": "907e3832766f68caaec405482f693f47ce3932e41869538aeeb84ae7eebdf38f",
+    "assets/js/chunks/chunk-FX45FQRC.js": "7c67b42e5bc78af3ad025f75cb27341a4ecd6e30691ed14bf44ed0744b1c5d7f",
+    "assets/js/chunks/chunk-DCANE7XH.js": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7",
+    "assets/fonts/BerkeleyMono-Italic.woff2": "85f6f2bb1b006bf6182806f32cc178cdd6a046029769cc86f7ea7069dd12c00f",
+    "assets/fonts/BerkeleyMono-Regular.woff2": "cf58b76a957314940837e6df57432ea04069f558ce2ccab1da7c89f5753f987e",
+    "assets/fonts/Digital-7MonoItalic.woff2": "b158e26c073fd41f817b662b8909e0a5b7d3285b273d50ee5cc83dac34d433db",
+    "assets/fonts/DINish[slnt,wdth,wght].woff2": "89ccc932d2b4efda7ff5f6644195d7eb2660bba6aae50782b084428f075c1d98",
+    "assets/images/anime-js-logo-v4.svg": "ad55a2db1f323c48db12db2a507d330c68b926c16215ee523ef7d92d8d9fb636",
+    "assets/images/favicon.png": "f85cb516d39dc05b4bb3c14ea20d66ccc479e825ab05f1ebf79a12bec1df6cda",
+    "assets/images/icons/drop-down.svg": "55a9a3ca535437414c3aff14073dd1457644f78f22ccb1225192bc2a26ab1afa",
+    "assets/json/easings.json": "45a4a0d7d6103ee843b89cc44165932bb695310c3637652e1d74baba53cdd679",
+    "assets/json/sponsors-github-sponsors.json": "f70d521d663108c1f340c9cf3c9b2a4a7f6e39019514dcbb5174bb44d9460018",
+    "assets/json/sponsors-gold-sponsors.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "assets/json/sponsors-platinum-sponsors.json": "3c6e34d57075a0feaa18028debe132aa1e61fbf748204678424e7d521cab943e",
+    "assets/json/sponsors-silver-sponsors.json": "f755c8f5dbe06edbf153f91236ece624996aeb8a486f89c64dcadcefdba08aec",
+    "assets/html/waitlist.html": "90e1bfcc45b0fb1ea3280acd3bb42e7ed642e2a0f57a8cc9e39d45f7ed28ed55",
+    "media/pages/sponsors/platinum-sponsors/ef1c9c6c85-1787698629/sponsor-placeholder.svg": "f2dfce93bb0f006e4e3a88ad8a7e1fea61fbe61d944160f269659f25372870f8"
+  },
+  "fragments": {
+    "header": "82a9c4ab96ca8e01e8fb1893338bf1315cd22698d50d3f8a40baff1bb18ebab6",
+    "footer": "90ad538f7ee11ded8566d371b8bca29d297ad87ef452c8ed416450ddb85b63b2"
+  }
+}

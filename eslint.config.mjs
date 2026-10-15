@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     "archive/**",
     // Imported, prebuilt animation runtime and model decoder.
     "public/assets/js/**",
+    "public/assets/login/assets/js/learn.js",
+    "public/assets/login/assets/js/chunks/**",
     "public/assets/draco/**",
     "next-env.d.ts",
   ]),
