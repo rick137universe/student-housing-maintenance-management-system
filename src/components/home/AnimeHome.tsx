@@ -2,9 +2,7 @@
 
 
 import { memo, useLayoutEffect, useState } from "react";
-import { LoginDialog } from "@/components/auth/LoginDialog";
 import { useRouter } from 'next/navigation';
-import type { DemoAccount } from "@/data/accounts";
 import { roleFeatures } from "@/data/role-features";
 import { api, readAuthSession, saveAuthSession } from "@/utils/auth-session";
 
@@ -23,14 +21,8 @@ const CapturedPage = memo(function CapturedPage({ markup }: AnimeHomeProps) {
 
 export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
   const router = useRouter();
-  const [portalOpen, setPortalOpen] = useState(false);
   const [accountError, setAccountError] = useState('');
 
-  function enterWorkspace(account: DemoAccount) {
-    saveAuthSession(account);
-    const first = roleFeatures[account.role][0];
-    router.push(`/workspace/${account.role}/${first.id}/${first.actions[0].id}`);
-  }
   useLayoutEffect(() => {
     const host = window as typeof window & { dormaHomeActive?: boolean; dormaHomeRuntime?: { setActive(active: boolean): void } };
     host.dormaHomeActive = active;
@@ -82,14 +74,13 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
     const activateAccount = async () => {
       if (logoutPending) return;
       setAccountError('');
-      if (!readAuthSession()) { setPortalOpen(true); return; }
+      if (!readAuthSession()) { router.push('/login'); return; }
       const button = document.querySelector<HTMLButtonElement>('[data-dorma-account]');
       logoutPending = true;
       if (button) { button.disabled = true; button.setAttribute('aria-busy', 'true'); }
       try {
         await api('auth/logout', { method: 'POST' });
         saveAuthSession(null);
-        setPortalOpen(false);
       } catch (error) {
         setAccountError(error instanceof Error ? error.message : '退出失败，请重试');
       } finally {
@@ -116,7 +107,7 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
       if (account) {
         const first = roleFeatures[account.role][0];
         router.push(`/workspace/${account.role}/${first.id}/${first.actions[0].id}`);
-      } else setPortalOpen(true);
+      } else router.push('/login');
     };
     // Capture also prevents the original install-command copy action.
     document.addEventListener("click", activateEntry, true);
@@ -179,6 +170,5 @@ export function AnimeHome({ markup, active = true }: AnimeHomeProps) {
   return <div hidden={!active} inert={!active}>
     <CapturedPage markup={markup} />
     {accountError && <p className="dorma-account-error" role="alert">{accountError}</p>}
-    <LoginDialog open={portalOpen} onClose={() => setPortalOpen(false)} onSessionChange={enterWorkspace} appearance="anime" />
   </div>;
 }

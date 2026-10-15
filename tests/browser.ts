@@ -20,8 +20,35 @@ export async function browserRegression(origin:string,password:string){
    await expect(accountButton.locator('[data-dorma-account-action]')).toHaveText('前往登录');
    await expect(accountButton.locator('[data-dorma-account-name]')).toBeHidden();
    await accountButton.focus();await page.keyboard.press('Enter');
-   const dialog=page.getByRole('dialog');await dialog.getByLabel('账号',{exact:true}).fill(username);await dialog.getByLabel('密码',{exact:true}).fill(password);await dialog.getByRole('button',{name:'登录工作台',exact:true}).click();
+   await page.waitForURL(origin+'/login');
+   await page.locator('#login-title').waitFor();
+   await expect(page.locator('[data-dorma-login] .login-header')).toHaveCSS('opacity','1');
+   if(role==='student'){
+    await page.getByRole('button',{name:'学生',exact:true}).click();
+    await expect(page.getByLabel('账号',{exact:true})).toHaveValue(username);
+    await expect(page.getByLabel('密码',{exact:true})).toHaveValue('');
+    await page.getByLabel('密码',{exact:true}).fill('WrongPassword2026');
+    await page.getByRole('button',{name:'显示密码',exact:true}).click();
+    await expect(page.getByLabel('密码',{exact:true})).toHaveAttribute('type','text');
+    await page.getByRole('button',{name:'隐藏密码',exact:true}).click();
+    await page.getByRole('button',{name:'登录工作台',exact:true}).click();
+    await page.getByRole('alert').waitFor();
+    assert.equal(new URL(page.url()).pathname,'/login');
+    await page.getByRole('button',{name:'学生',exact:true}).click();
+    for(const [size,width,height] of [['desktop',1440,1000],['mobile',390,844]] as const){
+     await page.setViewportSize({width,height});
+     for(const theme of ['light','dark'] as const){
+      await page.emulateMedia({colorScheme:theme});
+      await expect(page.locator('html')).toHaveAttribute('data-theme',theme);
+      await page.screenshot({path:`docs/qa/backend/login-${size}-${theme}.png`,fullPage:true});
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'login overflow');
+     }
+    }
+    await page.setViewportSize({width:1440,height:1000});
+   }
+   await page.getByLabel('账号',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByRole('button',{name:'登录工作台',exact:true}).click();
    await page.waitForURL('**/workspace/**');await page.getByRole('button',{name:'刷新',exact:true}).waitFor();
+   await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
     await page.getByRole('button',{name:'刷新',exact:true}).waitFor();

@@ -43,8 +43,8 @@ export function WorkspacePage() {
     <ShieldAlert />
     <p>DORMA / SESSION REQUIRED</p>
     <h1>需要先登录。</h1>
-    <span>请从首页登录系统账号，再进入对应功能。</span>
-    <Link href="/">返回首页登录</Link>
+    <span>请登录系统账号，再进入对应功能。</span>
+    <Link href="/login">前往登录</Link>
   </main>;
 
   if (account.role !== role || !roleFeatures[account.role].some(item => item.id === feature.id)) return <main className={s.denied}>

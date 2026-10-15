@@ -123,17 +123,17 @@ export const animeHomeMarkup = `
               <p>从入住申请到住宿登记，让校园生活从清楚的安排开始。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>了解住宿服务</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>入住事项</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -154,17 +154,17 @@ export const animeHomeMarkup = `
               <p>入住、调宿与退宿，一条连续的住宿轨道，让每次变更都有记录。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>入住与调宿</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>退宿事项</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -185,17 +185,17 @@ export const animeHomeMarkup = `
               <p>水电、家具或公共设施出现问题，描述故障并提交报修，让处理有据可依。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>提交问题</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>补充故障说明</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -216,17 +216,17 @@ export const animeHomeMarkup = `
               <p>从问题提交到维修完成，沿着处理流程了解当前进度。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>了解处理流程</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>跟进维修进度</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -247,17 +247,17 @@ export const animeHomeMarkup = `
               <p>问题记录、处理说明与维修结果，共同串起一次完整的服务。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>问题记录</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>处理说明</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -278,17 +278,17 @@ export const animeHomeMarkup = `
               <p>确认维修结果，记录服务体验，让后续服务更贴近实际需要。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>确认维修结果</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>服务评价</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -313,17 +313,17 @@ export const animeHomeMarkup = `
               <p>公寓通知与日常提醒，让需要关注的事项在同一个入口汇集。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>公寓通知</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>服务提醒</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -344,17 +344,17 @@ export const animeHomeMarkup = `
               <p>了解账期、待办事项与缴费记录，按自己的节奏安排校园生活。</p>
             </div>
             <ul class="feature-links">
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>了解缴费事项</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
 </svg>账单与记录</a></li>
-              <li><a class="text-ui" href="#login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+              <li><a class="text-ui" href="/login" data-dorma-entry><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
     <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/>
   </g>
@@ -416,7 +416,7 @@ Become a sponsor</a></li>
           <h2 class="text-xxxl">登录，进入你的工作台</h2>
           <p>使用自己的身份登录，找到属于你的住宿服务与日常工作。</p>
         </div>
-        <ul class="links-list links-list-boxed links-list-grid text-ui dorma-start-links"><li><a href="#login" data-dorma-entry><span class="label-dot"></span><span data-dorma-entry-label>登录工作台</span><span aria-hidden="true">→</span></a></li></ul>
+        <ul class="links-list links-list-boxed links-list-grid text-ui dorma-start-links"><li><a href="/login" data-dorma-entry><span class="label-dot"></span><span data-dorma-entry-label>登录工作台</span><span aria-hidden="true">→</span></a></li></ul>
       </div>
     </section>
   </section>

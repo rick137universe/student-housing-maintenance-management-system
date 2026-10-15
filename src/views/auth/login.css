@@ -1,0 +1,49 @@
+/* Login-specific adaptations layered over the copied Learn layout. */
+[data-dorma-login]{--margin-s:1rem;--margin-m:1.5rem;--margin-l:2rem;--margin-xxxl:4rem;--br-l:.75rem;--hex-bg-3:#2c2a28;--hex-fg-1:#f6f4f2;--hex-fg-2:#cccac8;--hex-fg-3:#85827e;--login-bg:#252423;--login-line:#484541;--login-input:#252423;--login-accent:#ff4b4b;--learn-grid-strong:rgba(255,255,255,.025);--learn-grid-soft:rgba(255,255,255,.0125);min-height:100svh;overflow:clip;background:var(--login-bg);color:var(--hex-fg-1);font-family:DINish,'Microsoft YaHei','PingFang SC',sans-serif;color-scheme:dark}
+[data-theme='light'] [data-dorma-login]{--hex-bg-3:#e9e6e2;--hex-fg-1:#252423;--hex-fg-2:#57534e;--hex-fg-3:#706b65;--login-bg:#f6f4f2;--login-line:#ccc8c2;--login-input:#f6f4f2;--login-accent:#c83232;--learn-grid-strong:rgba(0,0,0,.04);--learn-grid-soft:rgba(0,0,0,.02);color-scheme:light}
+[data-dorma-login] .login-header{height:72px;padding:0 clamp(20px,3vw,48px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--login-line)}
+[data-dorma-login] .login-brand{font-size:34px;letter-spacing:-2px;font-weight:900;line-height:1;text-transform:uppercase}
+[data-dorma-login] .login-brand span,[data-dorma-login] .login-dot{color:var(--login-accent)}
+[data-dorma-login] .login-back{display:inline-flex;align-items:center;gap:8px;color:var(--hex-fg-2);font-size:13px;padding:10px 0}
+[data-dorma-login] .login-back:hover{color:var(--hex-fg-1)}
+[data-dorma-login] #learn{position:relative;min-height:calc(100svh - 132px)}
+[data-dorma-login] #learn-animejs{width:100%}
+[data-dorma-login] #learn-animejs .section-content{padding-top:60px;padding-bottom:40px}
+[data-dorma-login] .learn-header-text{max-width:100%}
+[data-dorma-login] .learn-header-text p{margin:0 auto 12px;line-height:1.7}
+[data-dorma-login] .learn-header-text .login-eyebrow{font-size:11px;letter-spacing:3px;margin-bottom:24px;color:var(--hex-fg-3)}
+[data-dorma-login] .login-title{color:var(--hex-fg-1);font-size:clamp(42px,5.8vw,76px);font-weight:800;letter-spacing:-.055em;line-height:1.12;margin:0 0 24px}
+[data-dorma-login] .learn-header-text .text-l{font-size:clamp(15px,2vw,19px);color:var(--hex-fg-2)}
+[data-dorma-login] .learn-header-text p:last-child{font-size:13px;color:var(--hex-fg-3)}
+[data-dorma-login] .learn-email-signup{width:min(100%,440px);margin-top:32px;margin-bottom:24px;padding:28px;text-align:left;box-shadow:0 0 0 1px var(--login-line)}
+[data-dorma-login] .learn-email-signup h2{font-size:15px;line-height:1.6;font-weight:500;margin:0 0 24px;color:var(--hex-fg-3)}
+[data-dorma-login] .learn-email-signup h2 span{color:var(--hex-fg-1)}
+[data-dorma-login] fieldset{border:0;min-width:0;margin:0;padding:0}
+[data-dorma-login] label{display:block;font-size:12px;margin:18px 0 8px;color:var(--hex-fg-2)}
+[data-dorma-login] label:first-child{margin-top:0}
+[data-dorma-login] input{width:100%;height:48px;border:1px solid var(--login-line);border-radius:4px;padding:0 13px;background:var(--login-input);color:var(--hex-fg-1);font-size:16px}
+[data-dorma-login] input::placeholder{color:var(--hex-fg-3);font-size:13px}
+[data-dorma-login] input:focus-visible{outline:1px solid var(--hex-fg-2);outline-offset:2px}
+[data-dorma-login] .login-password-field{position:relative}
+[data-dorma-login] .login-password-field input{padding-right:48px}
+[data-dorma-login] .login-password-toggle{position:absolute;right:3px;top:3px;width:42px;height:42px;display:grid;place-items:center;border:0;background:transparent;color:var(--hex-fg-3)}
+[data-dorma-login] .login-password-toggle:hover{color:var(--hex-fg-1)}
+[data-dorma-login] .login-submit{margin-top:24px;width:100%;height:48px;border:0;border-radius:4px;display:flex;justify-content:space-between;align-items:center;padding:0 16px;background:var(--hex-fg-1);color:var(--login-bg);font-size:14px;font-weight:600;transition:opacity .2s}
+[data-dorma-login] .login-submit:hover{opacity:.85}
+[data-dorma-login] fieldset:disabled{opacity:.6}
+[data-dorma-login] .learn-email-signup .login-error{max-width:none;margin:14px 0 0;text-align:left;color:var(--login-accent);font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+[data-dorma-login] .login-samples{margin-top:24px;padding-top:20px;border-top:1px solid var(--login-line)}
+[data-dorma-login] .login-samples p{max-width:none;display:flex;justify-content:space-between;gap:8px;margin:0 0 12px;text-align:left;font-size:11px;color:var(--hex-fg-2)}
+[data-dorma-login] .login-samples p span{color:var(--hex-fg-3)}
+[data-dorma-login] .login-samples>div{display:flex;flex-wrap:wrap;gap:6px}
+[data-dorma-login] .login-samples button{flex:1;white-space:nowrap;padding:8px 6px;border:1px solid var(--login-line);border-radius:4px;background:transparent;color:var(--hex-fg-2);font-size:11px;transition:background .2s,color .2s}
+[data-dorma-login] .login-samples button:hover,[data-dorma-login] .login-samples button[aria-pressed=true]{background:var(--hex-fg-1);color:var(--login-bg)}
+[data-dorma-login] .login-samples small{display:block;margin-top:12px;font-size:11px;color:var(--hex-fg-3)}
+[data-dorma-login] .login-footnote{font-size:11px;letter-spacing:1px;color:var(--hex-fg-3);margin:0}
+[data-dorma-login] .login-footer{display:flex;justify-content:space-between;gap:16px;padding:22px clamp(20px,3vw,48px);font-size:10px;color:var(--hex-fg-3);border-top:1px solid var(--login-line)}
+[data-dorma-login] :focus-visible{outline-color:var(--hex-fg-1)}
+@keyframes learn-login-enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:no-preference){[data-dorma-login] .learn-header-text{animation:learn-login-enter .8s cubic-bezier(.2,.8,.2,1) both}[data-dorma-login] .learn-email-signup{animation:learn-login-enter .8s .1s cubic-bezier(.2,.8,.2,1) both}[data-dorma-login] .login-footnote{animation:learn-login-enter .8s .2s cubic-bezier(.2,.8,.2,1) both}}
+@media(max-width:499px){[data-dorma-login] .login-header{height:64px}[data-dorma-login] .login-brand{font-size:30px}[data-dorma-login] #learn-animejs .section-content{padding-top:40px}[data-dorma-login] .learn-email-signup{padding:22px;margin-top:24px}[data-dorma-login] .login-footer{flex-direction:column;gap:6px}[data-dorma-login] .learn-header-text p:last-child{font-size:12px}}
+
+[data-dorma-login] .login-title-word{display:inline-block}

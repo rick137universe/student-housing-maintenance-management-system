@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { ArrowDown, ArrowRight, LogOut, SunMoon } from 'lucide-react';
 import { LensExperience } from '@/components/home/LensExperience';
 import { LensBootIntro } from '@/components/home/LensBootIntro';
-import { LoginDialog } from '@/components/auth/LoginDialog';
 import { readAuthSession, saveAuthSession } from '@/utils/auth-session';
 import { roleFeatures, type RoleFeature } from '@/data/role-features';
 import type { DemoAccount } from '@/data/accounts';
@@ -16,12 +15,11 @@ import { useTheme } from '@/components/theme/ThemeProvider';
 export function HomePage() {
   const router = useRouter();
   const [session, setSession] = useState<DemoAccount | null>(null);
-  const [portalOpen, setPortalOpen] = useState(false);
   const [panelReady, setPanelReady] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
-  const [introRun, setIntroRun] = useState(0);
+  const [introRun] = useState(0);
   const [introProgress, setIntroProgress] = useState(1);
   const { mode: themeMode, resolved: resolvedTheme, setMode: changeTheme } = useTheme();
   const scrollTrack = useRef<HTMLElement>(null);
@@ -140,17 +138,6 @@ export function HomePage() {
     return () => observer.disconnect();
   }, [session, features]);
 
-  function onSessionChange(account: DemoAccount | null) {
-    saveAuthSession(account);
-    const playIntro = Boolean(account) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    setIntroProgress(playIntro ? 0 : 1);
-    if (playIntro) setIntroRun(current => current + 1);
-    setSession(account);
-    setHasScrolled(false);
-    setProgress(0);
-    window.scrollTo({ top: 0 });
-  }
-
   function openAction(actionId: string) {
     if (!session || transitioning) return;
     setTransitioning(true);
@@ -179,7 +166,7 @@ export function HomePage() {
       </nav>}
       <div className={h.identity}>
         <div className={h.themeSwitch} aria-label="主题选择"><SunMoon size={13} />{(['system', 'light', 'dark'] as const).map(item => <button key={item} data-active={themeMode === item} onClick={() => changeTheme(item)}>{item === 'system' ? '跟随系统' : item === 'light' ? '浅色' : '深色'}</button>)}</div>
-        {session ? <><span>{session.displayName} / {session.roleName}</span><button onClick={logout}><LogOut size={14} />退出</button></> : <button onClick={() => setPortalOpen(true)}>登录工作台 <ArrowRight size={14} /></button>}
+        {session ? <><span>{session.displayName} / {session.roleName}</span><button onClick={logout}><LogOut size={14} />退出</button></> : <button onClick={() => router.push('/login')}>登录工作台 <ArrowRight size={14} /></button>}
       </div>
     </header>
 
@@ -188,7 +175,7 @@ export function HomePage() {
         <div className={h.copy} data-scroll-copy="true">
           <h1>{session ? <AnimatedLabel text={feature.title} /> : <>一枚镜头，<br />看见你的日常。</>}</h1>
           <span>{session ? <AnimatedLabel text={feature.description} /> : '登录后，镜头只加载与你身份相关的业务。滚动、刻度与功能动画会沿同一条时间轴运行。'}</span>
-          {!session && <button onClick={() => setPortalOpen(true)}>选择身份并登录 <ArrowRight size={16} /></button>}
+          {!session && <button onClick={() => router.push('/login')}>选择身份并登录 <ArrowRight size={16} /></button>}
           {session && <span className={h.scrollHint}>滚动控制动画 <ArrowDown size={14} /></span>}
         </div>
       </section>)}
@@ -223,7 +210,6 @@ export function HomePage() {
 
     </div>
 
-    <LoginDialog open={portalOpen} onClose={() => setPortalOpen(false)} onSessionChange={onSessionChange} />
   </div>;
 }
 
