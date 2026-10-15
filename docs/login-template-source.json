@@ -25,6 +25,7 @@
   },
   "fragments": {
     "header": "82a9c4ab96ca8e01e8fb1893338bf1315cd22698d50d3f8a40baff1bb18ebab6",
-    "footer": "90ad538f7ee11ded8566d371b8bca29d297ad87ef452c8ed416450ddb85b63b2"
+    "footer": "90ad538f7ee11ded8566d371b8bca29d297ad87ef452c8ed416450ddb85b63b2",
+    "headerWithoutAccountButton": "4361b7d5a886b46426a9e61c44697e4229d602aea5e3048851e590ef3957d085"
   }
 }

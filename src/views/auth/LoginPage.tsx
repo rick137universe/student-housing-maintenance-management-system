@@ -21,13 +21,13 @@ export function LoginPage() {
   }, [account, router]);
 
   useEffect(() => {
-    const onLogin = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow || event.data?.type !== 'dorma-login-success') return;
+    const onSessionChange = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow || !['dorma-login-success', 'dorma-session-changed'].includes(event.data?.type)) return;
       // Resolve the identity from the server instead of trusting message data.
       void refreshRef.current();
     };
-    window.addEventListener('message', onLogin);
-    return () => window.removeEventListener('message', onLogin);
+    window.addEventListener('message', onSessionChange);
+    return () => window.removeEventListener('message', onSessionChange);
   }, []);
 
   return <main className={s.page}>

@@ -27,6 +27,14 @@ export async function browserRegression(origin:string,password:string){
    const loginForm=loginPage.frameLocator('iframe[title="账号登录"]');
    await expect(loginPage.locator('#learn')).toHaveClass(/is-ready/);
    await expect(loginPage.locator('#site-header')).toBeVisible();
+   const loginAccountButton=loginPage.locator('[data-dorma-account]');
+   await expect(loginAccountButton.locator('[data-dorma-account-name]')).toHaveText('未登录');
+   await loginAccountButton.hover();
+   await expect(loginAccountButton.locator('[data-dorma-account-action]')).toHaveText('前往登录');
+   await expect(loginAccountButton.locator('[data-dorma-account-action]')).toHaveCSS('opacity','1');
+   await loginAccountButton.click();
+   await expect(loginPage.locator('#site-menu')).not.toHaveClass(/is-active/);
+   await expect(loginForm.locator('#username')).toBeFocused();
    assert.equal(await loginPage.locator('#site-menu .main-nav-link').count(),6);
    await expect(loginPage.locator('#site-footer .footer-logo')).toHaveCount(1);
    if(role==='student'){
@@ -80,6 +88,22 @@ export async function browserRegression(origin:string,password:string){
    await context.close();
   }
   // 首页在真实会话退出后的公共页面仍保持可访问。
+  for(const width of [1440,390]){
+   const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});
+   const response=await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username:'admin',password}});
+   assert.equal(response.status(),200);const loggedIn=await response.json();
+   // Inspect the copied document directly; /login itself redirects active sessions.
+   const page=await context.newPage();await page.goto(origin+'/assets/login/index.html');
+   const account=page.locator('[data-dorma-account]');
+   await expect(account.locator('[data-dorma-account-name]')).toHaveText(loggedIn.data.displayName);
+   if(width<900)await page.locator('#toggle-site-menu').click();
+   await account.hover();await expect(account.locator('[data-dorma-account-action]')).toHaveText('退出登录');
+   await expect(account.locator('[data-dorma-account-action]')).toHaveCSS('opacity','1');
+   await account.click();await expect(account.locator('[data-dorma-account-name]')).toHaveText('未登录');
+   assert.equal((await context.request.get(origin+'/api/v1/auth/me')).status(),401);
+   await page.reload();await expect(account.locator('[data-dorma-account-name]')).toHaveText('未登录');
+   await context.close();
+  }
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}
