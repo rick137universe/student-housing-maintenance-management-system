@@ -55,10 +55,12 @@ html[data-anime-home-active] #intro pre.npm-install code{background:transparent}
 /* Keep the template's sponsor animation; reserve both labels to avoid hover shifts. */
 html[data-anime-home-active] #site-menu .dorma-account{border:0;background:transparent;font:inherit;cursor:pointer}
 html[data-anime-home-active] #site-menu sponsor-button button.dorma-account .dorma-account-label{display:grid;max-width:12rem;font-family:var(--font-body);text-transform:none}
-html[data-anime-home-active] .dorma-account-label>span{grid-area:1/1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-html[data-anime-home-active] .dorma-account [data-dorma-account-action]{visibility:hidden}
-html[data-anime-home-active] .dorma-account:is(:hover,:focus-visible) [data-dorma-account-name]{visibility:hidden}
-html[data-anime-home-active] .dorma-account:is(:hover,:focus-visible) [data-dorma-account-action]{visibility:visible}
+html[data-anime-home-active] .dorma-account-label>span{grid-area:1/1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .22s ease,visibility 0s .22s}
+html[data-anime-home-active] .dorma-account [data-dorma-account-name]{opacity:1;visibility:visible;transition-delay:0s}
+html[data-anime-home-active] .dorma-account [data-dorma-account-action]{opacity:0;visibility:hidden}
+html[data-anime-home-active] .dorma-account:is(:hover,:focus-visible) [data-dorma-account-name]{opacity:0;visibility:hidden;transition-delay:0s,.22s}
+html[data-anime-home-active] .dorma-account:is(:hover,:focus-visible) [data-dorma-account-action]{opacity:1;visibility:visible;transition-delay:0s}
+@media(prefers-reduced-motion:reduce){html[data-anime-home-active] .dorma-account-label>span{transition:none!important}}
 html[data-anime-home-active] .dorma-account:disabled{cursor:wait;opacity:.6}
 html[data-anime-home-active] .dorma-account-error{position:fixed;top:var(--site-header-height);right:1rem;z-index:10000;max-width:calc(100vw - 2rem);padding:1rem;color:var(--hex-red-1);background:var(--hex-bg-2);border:1px solid var(--hex-red-3);border-radius:var(--br-s)}
 
