@@ -1,0 +1,2 @@
+# Preserve the exact bytes of copied Learn resources, including line endings.
+public/assets/login/** -text
