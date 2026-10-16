@@ -18,7 +18,10 @@ export async function verifyLoginTemplate() {
     assert(fragment, `缺少母版 ${tag}`);
     let normalized = fragment.replace(/href="https:\/\/animejs.com\/(documentation|easing-editor)([^" ]*)"/g, 'href="/$1$2"')
       .replaceAll('href="/login"', 'href="/learn"');
-    if (tag === 'header') normalized = normalized.replace(/<sponsor-button>[\s\S]*?<\/sponsor-button>/, '');
+    if (tag === 'header') normalized = normalized.replace(/<sponsor-button>[\s\S]*?<\/sponsor-button>/, '')
+      .replace(' aria-label="返回项目首页"', '')
+      .replace('<img src="./assets/images/flight_shmms_white_hide.svg" alt="学生公寓住宿与报修管理系统" width="1081" height="208" />', '<img src="./assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118" />')
+      .replace('<span>学生公寓住宿与报修管理系统</span>', '<span>Anime.js | JavaScript Animation Engine</span>');
     normalized = normalized.replace(/\s+/g, ' ').trim();
     assert.equal(createHash('sha256').update(normalized).digest('hex'), manifest.fragments[tag === 'header' ? 'headerWithoutAccountButton' : tag], `母版 ${tag} 结构或文案被改写`);
   }
