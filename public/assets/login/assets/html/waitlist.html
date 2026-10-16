@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>账号登录</title>
   <style>
+    @font-face { font-family: DIN; src: url(../fonts/DINish[slnt,wdth,wght].woff2) format("woff2"); font-variation-settings: "wdth" 125; font-weight: 100 900; font-stretch: 50% 125%; font-style: oblique 0deg 12deg; font-display: swap; }
+    :root { --font-body: "DIN", Helvetica Neue, Helvetica, Arial, sans-serif; }
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; }
     body { display: flex; align-items: center; justify-content: center; padding: 20px; background: #252423; color: #cccac8; color-scheme: dark; font-family: Inter, system-ui, Arial, sans-serif; }
@@ -13,10 +15,10 @@
     input { display: block; width: 100%; height: 46px; padding: 10px 20px; border: 1px solid #4a4745; border-radius: 24px; background: #252423; color: #f6f4f2; font: 500 16px Inter, system-ui, Arial, sans-serif; outline: none; }
     input::placeholder { color: #85827e; }
     input:focus { border-color: #FF4B4B; }
-    button { display: block; width: 100%; height: 40px; margin-top: 20px; border: 0; border-radius: 24px; background: #FF4B4B; color: #f6f4f2; font: 400 14px Inter, system-ui, Arial, sans-serif; cursor: pointer; }
+    button { display: block; width: 100%; height: 40px; margin-top: 20px; border: 0; border-radius: 24px; background: #4B2A29; color: #FF4B4B; font: 600 14px var(--font-body); font-variation-settings: "wdth" 125; -webkit-font-smoothing: antialiased; cursor: pointer; }
     .button-label { display: inline-block; transition: color .125s ease, filter .125s ease; }
-    button:enabled:is(:hover, :focus-visible) .button-label { color: white; mix-blend-mode: plus-lighter; filter: drop-shadow(0 0 3px #5c2d2c); }
-    button:disabled { background: #FF4B4B; cursor: not-allowed; }
+    button:enabled:is(:hover, :focus-visible) .button-label { mix-blend-mode: plus-lighter; filter: drop-shadow(0 0 3px #5c2d2c); }
+    button:disabled { background: #4B2A29; cursor: not-allowed; }
     form[aria-busy="true"] button:disabled { cursor: wait; }
     @media (prefers-reduced-motion: reduce) { .button-label { transition: none; } }
   </style>
