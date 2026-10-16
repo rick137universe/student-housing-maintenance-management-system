@@ -4,8 +4,8 @@ export const animeHomeMarkup = `
   <div id="site-header-content">
     <h1 class="heading-logo header-logo">
       <a href="/">
-        <strong class="dorma-brand">dorma<span class="dorma-brand-dot">.</span></strong>
-        <span>Dorma · 学生公寓住宿与报修管理系统</span>
+        <img src="/assets/login/assets/images/flight_shmms_white.svg" alt="学生公寓住宿与报修管理系统" width="1081" height="208" />
+        <span>学生公寓住宿与报修管理系统</span>
       </a>
       <label id="docs-versions" class="ui-select ui-input">
         <select class="ui-input" name="docs-versions" aria-label="Anime.js versions">

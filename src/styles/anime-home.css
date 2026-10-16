@@ -12,8 +12,6 @@ html[data-anime-home-active] { scroll-padding-top: 0; scroll-behavior: auto; }
 html[data-anime-home-active] { line-height: normal; }
 
 /* Public service copy; original animation layout and timing remain intact. */
-html[data-anime-home-active] .dorma-brand{display:block;font-size:2.25rem;line-height:1;font-weight:800;letter-spacing:-.08em;color:var(--hex-fg-1)}
-html[data-anime-home-active] .dorma-brand .dorma-brand-dot{display:inline;color:var(--hex-red-1)}
 html[data-anime-home-active] #intro h2{font-size:clamp(2.6rem,4.1vw,4.7rem);line-height:1.16;letter-spacing:-.04em}
 html[data-anime-home-active] #intro .animation-engine{display:none}
 html[data-anime-home-active] .dorma-entry{cursor:pointer}
