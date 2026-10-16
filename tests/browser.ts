@@ -4,9 +4,11 @@ import {mkdir} from 'node:fs/promises';
 import {roleFeatures} from '../src/data/role-features';
 import type {RoleId} from '../src/types/auth';
 import {verifyLoginTemplate} from './login-template';
+import {verifyHomeTemplate} from './home-template';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
+ await verifyHomeTemplate();
  const browser=await chromium.launch({channel:'msedge',headless:true});
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
@@ -14,8 +16,10 @@ export async function browserRegression(origin:string,password:string){
   for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
    const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
    await page.goto(origin);
-   const accountButton=page.locator('[data-dorma-account]');
-   await expect(page.locator('#site-header')).toHaveCSS('opacity','1');
+   const homePage=page.frameLocator('[data-dorma-home-frame]');
+   const accountButton=homePage.locator('[data-dorma-account]');
+   await expect(homePage.locator('.page')).toHaveClass(/is-ready/,{timeout:60000});
+   await expect(homePage.locator('#site-header')).toHaveCSS('opacity','1',{timeout:15000});
    await expect(accountButton.locator('.dorma-account-label')).toHaveCSS('display','grid');
    await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText('未登录');
    await accountButton.hover();await expect(accountButton.locator('[data-dorma-account-action]')).toBeVisible();
@@ -74,8 +78,10 @@ export async function browserRegression(origin:string,password:string){
    }
    const me=await (await page.request.get(origin+'/api/v1/auth/me')).json();
    await page.goto(origin);await page.mouse.move(0,500);
+   await expect(homePage.locator('.page')).toHaveClass(/is-ready/,{timeout:60000});
+   await expect(homePage.locator('#site-header')).toHaveCSS('opacity','1',{timeout:15000});
    // The source template puts navigation inside the menu on narrow screens.
-   if(page.viewportSize()!.width<900)await page.getByRole('button',{name:'展开导航',exact:true}).click();
+   if(page.viewportSize()!.width<900)await homePage.locator('#toggle-site-menu').click();
    await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText(me.data.displayName);
    await expect(accountButton.locator('[data-dorma-account-name]')).toBeVisible();
    await accountButton.hover();await expect(accountButton.locator('[data-dorma-account-action]')).toHaveText('退出登录');

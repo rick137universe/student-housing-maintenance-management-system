@@ -1,0 +1,3 @@
+:global(html:has([data-dorma-home-frame])){overflow:hidden;scrollbar-gutter:auto}
+.page{position:fixed;inset:0;background:#252423}
+.frame{display:block;width:100%;height:100dvh;border:0}

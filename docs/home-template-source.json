@@ -1,0 +1,159 @@
+{
+  "source": "Anime.js root-8a5edab2",
+  "sha256": {
+    "assets/css/core.css": "7cd4a15f06240e609de9094bd1918099ba9ecb8caf285c00c8faaf68d89a0f85",
+    "assets/css/home.css": "51206a82cb6a23860336952c4e5076ba3707a0bb3985217e99437abdc95e330a",
+    "assets/draco/draco_decoder.js": "30e4d486fa020737af10e3c56197693e5b904bdc05b8bfa5d7b06751dec6da04",
+    "assets/draco/draco_decoder.wasm": "c55a594e8ffd18426d36b27fea9618af3df5e173640a3e56d46f09d76f0574f2",
+    "assets/draco/draco_wasm_wrapper.js": "e8049906ef3f8f75d3456c22a3f31bfdfe5b5b5bd09ccdec613b9e9a49d554d8",
+    "assets/fonts/BerkeleyMono-Italic.woff2": "85f6f2bb1b006bf6182806f32cc178cdd6a046029769cc86f7ea7069dd12c00f",
+    "assets/fonts/BerkeleyMono-Regular.woff2": "cf58b76a957314940837e6df57432ea04069f558ce2ccab1da7c89f5753f987e",
+    "assets/fonts/Digital-7MonoItalic.woff2": "b158e26c073fd41f817b662b8909e0a5b7d3285b273d50ee5cc83dac34d433db",
+    "assets/fonts/DINish[slnt,wdth,wght].woff2": "89ccc932d2b4efda7ff5f6644195d7eb2660bba6aae50782b084428f075c1d98",
+    "assets/images/anime-js-logo-v4.svg": "ad55a2db1f323c48db12db2a507d330c68b926c16215ee523ef7d92d8d9fb636",
+    "assets/images/favicon.png": "f85cb516d39dc05b4bb3c14ea20d66ccc479e825ab05f1ebf79a12bec1df6cda",
+    "assets/images/icons/drop-down.svg": "55a9a3ca535437414c3aff14073dd1457644f78f22ccb1225192bc2a26ab1afa",
+    "assets/js/chunks/chunk-CKCSI7LY.js": "05c62e7b372eed2cc3aaabfb017444fa57c22cd136e468c7279a7025dd6a3ca6",
+    "assets/js/chunks/chunk-CPVC3KGU.js": "29b361892842eb6bd2cfaa442a8628a6fab4a94d9aea500925bcc664f6c70b12",
+    "assets/js/chunks/chunk-DCANE7XH.js": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7",
+    "assets/js/chunks/chunk-FX45FQRC.js": "7c67b42e5bc78af3ad025f75cb27341a4ecd6e30691ed14bf44ed0744b1c5d7f",
+    "assets/js/chunks/chunk-N6I4AEHZ.js": "ffd98a5d1f4abd69722522989cb410f942db5f725509cbc297436f73254681c5",
+    "assets/js/chunks/chunk-WQVFBASJ.js": "53d0556a2e1f0281b95af6416a7691b3e111195c27181ede071fda73cee521ae",
+    "assets/js/chunks/chunk-WXAKRBIO.js": "907e3832766f68caaec405482f693f47ce3932e41869538aeeb84ae7eebdf38f",
+    "assets/js/chunks/debug-CBQ742GO.js": "b6b7adb1427092ed536063507e7dc252d3df874ecef811f2569557756bf741ad",
+    "assets/js/home.js": "b1765a91ec40fa1264e6e622e5a598acb54f7b061265cb9a4ac77fc74a625d4d",
+    "assets/json/easings.json": "45a4a0d7d6103ee843b89cc44165932bb695310c3637652e1d74baba53cdd679",
+    "assets/json/sponsors-github-sponsors.json": "45e99c81a1c696c0958321a35f1fd3ecaea3bc280245ba320ca4e633379c4aa7",
+    "assets/json/sponsors-gold-sponsors.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "assets/json/sponsors-platinum-sponsors.json": "3c6e34d57075a0feaa18028debe132aa1e61fbf748204678424e7d521cab943e",
+    "assets/json/sponsors-silver-sponsors.json": "f755c8f5dbe06edbf153f91236ece624996aeb8a486f89c64dcadcefdba08aec",
+    "assets/models/module-animate-01.glb": "48536239a13f04c1aaefc4ed80ebfc40330550598d1a5b74cb8cd4d0d32e714a",
+    "assets/models/module-draggable-01.glb": "28d39d40f085aa29bb50ec762a0759af57c143aa573ae5d24382396c91facc12",
+    "assets/models/module-draggable-02.glb": "55cd621ca36513197532209864a9a857b2b70cefcffbb11d2dfc0ef0090cd455",
+    "assets/models/module-easing-01.glb": "e8f8a41e61e1079eb5cb110cbb000907403a1927ca9a23aefc960f7a9896fb20",
+    "assets/models/module-engine-01.glb": "1eb8b022ffb0dc102cd22cfa278becfc5c5661def42c29b9c90d26f8b66eafdf",
+    "assets/models/module-renderer-01.glb": "c18bdfeee5a2fda45d5717e412caa616f16e58db91e71dc8e95e8e7c6dd34a28",
+    "assets/models/module-scope-01.glb": "b2428f5f21ee3eb2a11c67a2dd0767edf7118185fd34f862fc621110222b541e",
+    "assets/models/module-scroll-01.glb": "99c8c5c6d225a751fab0c3442d8edd0109055b8e51a52aef4a66d71b048c5976",
+    "assets/models/module-shield-01.glb": "193a1116a855d79a21dc4b9906e70a62fb20bcc168f19901a6aae26838c32c64",
+    "assets/models/module-shield-02.glb": "f3e1cdc8a07f8f2ffe8fde8a76a8566aaa047b6911057576e7aacae9ee75737a",
+    "assets/models/module-spring-01.glb": "78fc9804e648817a23808da73658ceaf9a90688c7d43f91f23185d5632b45041",
+    "assets/models/module-stagger-01.glb": "48493cd781a16dafa7a038564d3421a8235e73e1efdddd0c88c1879b003b58f8",
+    "assets/models/module-stagger-02.glb": "074b66acab13a4215e14a1c069a490537b9a754ac12b66d282044738dfde53c6",
+    "assets/models/module-svg-01.glb": "4f7286e86db3f2176f1ab7aa7f13275dda8d5b3949168ddba93c476511b527c5",
+    "assets/models/module-timeline-01.glb": "61c49c73a216abe8411f62fd51117b8ad5c2df11814b89cae2962c924b82b969",
+    "assets/models/module-timeline-02.glb": "4e69c3b112397004ff47c05ee1d14b1e7a49e6363843cc1626f8087a125c5aa8",
+    "assets/models/module-timer-01.glb": "e1d83f0f2d757965cab20e85959de081c89b905863bf0a3b02e6304b2bd51376",
+    "assets/models/module-timer-02.glb": "a7e38507d3d74286515b0a025c9cf5abd1e88068b9de5d3ed522f3b224da6767",
+    "assets/models/module-timer-03.glb": "1c0bcf3375e2f5a4cba0fad01bcffd854de030636c444d2bc0ea320afa97ad01",
+    "assets/models/module-timer-04.glb": "1412f56e33cefdae6bd13e4847740ffd0bfd921e47e485f1a16c42c720e9d3ac",
+    "assets/models/module-timer-05.glb": "18eca141cd530fee47ca23e788b681e591fbeab018491b5a467d6a73319a273f",
+    "assets/models/module-waapi-01.glb": "70722a66af224309f5f329d030e38b2dad362890db71099df90a11b6d0a0966d",
+    "index.html": "5ec18737444866a495f46f76792c889cc9f6ad80f9b19af9da5d16a95f0ed992",
+    "media/pages/sponsors/platinum-sponsors/ef1c9c6c85-1787698629/sponsor-placeholder.svg": "f2dfce93bb0f006e4e3a88ad8a7e1fea61fbe61d944160f269659f25372870f8",
+    "media/pages/sponsors/silver-sponsors/49214d1e15-1787698629/testmu-ai-logomark.svg": "5a68c804eab4bd2a9a2f8656919c2fd2dbd821b7f3cce18dea8cd4b081b1e773"
+  },
+  "fragments": {
+    "header": "31faf4f02278040ff366319085aff774211b378f74f0f39ed11e225595a4232d",
+    "footer": "ede60bf4868c9281e0035fa80f09b37624853fc0cdc39daf3f3a6e60d122d87c"
+  },
+  "sections": [
+    {
+      "id": "intro",
+      "className": "",
+      "style": null
+    },
+    {
+      "id": "toolbox",
+      "className": "section-container section-light",
+      "style": null
+    },
+    {
+      "id": "features-gallery",
+      "className": "",
+      "style": null
+    },
+    {
+      "id": "intuitive",
+      "className": "section feature-section formatted-text color-getting-started",
+      "style": null
+    },
+    {
+      "id": "composition",
+      "className": "section feature-section formatted-text color-animation",
+      "style": null
+    },
+    {
+      "id": "scroll",
+      "className": "section feature-section formatted-text color-turquoise",
+      "style": null
+    },
+    {
+      "id": "staggering",
+      "className": "section feature-section formatted-text color-utils",
+      "style": null
+    },
+    {
+      "id": "svgUtils",
+      "className": "section feature-section formatted-text color-svg",
+      "style": null
+    },
+    {
+      "id": "draggable",
+      "className": "section feature-section formatted-text color-draggable",
+      "style": null
+    },
+    {
+      "id": "clockwork",
+      "className": "section feature-section formatted-text color-timeline",
+      "style": null
+    },
+    {
+      "id": "responsive",
+      "className": "section feature-section formatted-text color-green",
+      "style": null
+    },
+    {
+      "id": "modules",
+      "className": "section-container section-light",
+      "style": null
+    },
+    {
+      "id": "",
+      "className": "section fixed-section",
+      "style": null
+    },
+    {
+      "id": "sponsors",
+      "className": "section formatted-text",
+      "style": null
+    },
+    {
+      "id": "get-started",
+      "className": "",
+      "style": null
+    },
+    {
+      "id": "",
+      "className": "section formatted-text",
+      "style": null
+    }
+  ],
+  "moduleNames": {
+    "timer": "服务提醒",
+    "animation": "住宿服务",
+    "timeline": "处理进展",
+    "animatable": "个人记录",
+    "draggable": "服务反馈",
+    "scroll": "公寓通知",
+    "scope": "个人工作台",
+    "svg": "问题记录",
+    "stagger": "维修跟进",
+    "spring": "生活服务",
+    "waapi": "信息汇集",
+    "easings": "服务反馈",
+    "utils": "日常提醒",
+    "engine": "服务协作图示",
+    "getting started": "登录工作台"
+  }
+}

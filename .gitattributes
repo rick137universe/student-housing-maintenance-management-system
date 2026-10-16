@@ -1,2 +1,5 @@
 # Preserve the exact bytes of copied Learn resources, including line endings.
 public/assets/login/** -text
+public/assets/home/** -text
+# Keep original shader whitespace in the copied vendor bundle.
+public/assets/home/assets/js/chunks/chunk-CPVC3KGU.js -whitespace

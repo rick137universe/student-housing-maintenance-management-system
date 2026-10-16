@@ -1,0 +1,17 @@
+    <a
+    class="sponsor"
+    href="https://github.com/sponsors/juliangarnier"
+    target="_blank"
+    title="Become a sponsor"
+    data-url-params=""
+    data-url-params-docs=""
+  >
+          <img
+        src="./media/pages/sponsors/platinum-sponsors/ef1c9c6c85-1787698629/sponsor-placeholder.svg"
+        alt="Become a sponsor"
+        width="100"
+        height="100"
+        loading="lazy"
+      >
+        <span>Become a sponsor</span>
+  </a>
