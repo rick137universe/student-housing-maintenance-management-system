@@ -13,8 +13,12 @@
     input { display: block; width: 100%; height: 46px; padding: 10px 20px; border: 1px solid #4a4745; border-radius: 24px; background: #252423; color: #f6f4f2; font: 500 16px Inter, system-ui, Arial, sans-serif; outline: none; }
     input::placeholder { color: #85827e; }
     input:focus { border-color: #FF4B4B; }
-    button { display: block; width: 100%; height: 40px; margin-top: 20px; border: 0; border-radius: 24px; background: #FF4B4B; color: white; font: 400 14px Inter, system-ui, Arial, sans-serif; cursor: pointer; }
-    button:disabled { background: #FF4B4B; cursor: default; }
+    button { display: block; width: 100%; height: 40px; margin-top: 20px; border: 0; border-radius: 24px; background: #FF4B4B; color: #f6f4f2; font: 400 14px Inter, system-ui, Arial, sans-serif; cursor: pointer; }
+    .button-label { display: inline-block; transition: color .125s ease, filter .125s ease; }
+    button:enabled:is(:hover, :focus-visible) .button-label { color: white; mix-blend-mode: plus-lighter; filter: drop-shadow(0 0 3px #5c2d2c); }
+    button:disabled { background: #FF4B4B; cursor: not-allowed; }
+    form[aria-busy="true"] button:disabled { cursor: wait; }
+    @media (prefers-reduced-motion: reduce) { .button-label { transition: none; } }
   </style>
 </head>
 <body>
@@ -24,7 +28,7 @@
     <label for="password" style="margin-top:16px">密码 <span aria-hidden="true">*</span></label>
     <input id="password" name="password" type="password" placeholder="请输入密码" autocomplete="current-password" maxlength="128" required>
     <p id="login-error" role="alert" hidden style="margin:12px 0 0;font-size:14px;color:#ff7d7d;overflow-wrap:anywhere"></p>
-    <button type="submit" disabled>登录工作台</button>
+    <button type="submit" disabled><span class="button-label">登录工作台</span></button>
   </form>
   <script src="../js/login-form.js" type="module"></script>
 </body>
