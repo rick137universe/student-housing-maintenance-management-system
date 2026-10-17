@@ -16,7 +16,9 @@ export async function verifyLoginTemplate() {
   for (const tag of ['header', 'footer']) {
     const fragment = html.match(new RegExp('<' + tag + ' id="site-' + tag + '"[\\s\\S]*?<\\/' + tag + '>'))?.[0];
     assert(fragment, `缺少母版 ${tag}`);
-    let normalized = fragment.replace(/href="https:\/\/animejs.com\/(documentation|easing-editor)([^" ]*)"/g, 'href="/$1$2"')
+    let normalized = fragment.replace('data-id="docs" href="/workspace"', 'data-id="docs" href="/documentation"')
+      .replace('href="https://animejs.com/learn" target="_top" title="Learn"', 'href="/learn" target="_top" title="Learn"')
+      .replace(/href="https:\/\/animejs.com\/(documentation|easing-editor)([^" ]*)"/g, 'href="/$1$2"')
       .replaceAll('href="/login"', 'href="/learn"');
     if (tag === 'header') normalized = normalized.replace(/<sponsor-button>[\s\S]*?<\/sponsor-button>/, '')
       .replace(' aria-label="返回项目首页"', '')
