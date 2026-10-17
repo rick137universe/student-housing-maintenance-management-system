@@ -42,10 +42,11 @@ button.addEventListener('click', async () => {
   } finally { pending = false; button.disabled = false; button.removeAttribute('aria-busy'); }
 });
 const activateEntry = event => {
-  const target = event.target instanceof Element ? event.target.closest('[data-dorma-entry]') : null;
+  const target = event.target instanceof Element ? event.target.closest('[data-dorma-entry], #site-menu a[data-id="docs"]') : null;
   if (!target) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (event.type === 'click' && event.button !== 0)) return;
   if (event.type === 'keydown' && (target.tagName !== 'PRE' || !['Enter', ' '].includes(event.key))) return;
-  event.preventDefault(); event.stopImmediatePropagation(); enter(account ? 'workspace' : 'login');
+  event.preventDefault(); event.stopImmediatePropagation(); enter(account || target.matches('#site-menu a[data-id="docs"]') ? 'workspace' : 'login');
 };
 document.addEventListener('click', activateEntry, true);
 document.addEventListener('keydown', activateEntry, true);

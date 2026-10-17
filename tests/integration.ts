@@ -10,6 +10,7 @@ import { readFile,writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { QueryResultRow } from 'pg';
 import { browserRegression } from './browser';
+import { workspacePath } from '../src/utils/workspace-route';
 
 const name=`dorma_test_${Date.now()}_${randomBytes(3).toString('hex')}`;
 const admin=new Pool({connectionString:process.env.DATABASE_ADMIN_URL});
@@ -38,6 +39,8 @@ try{
  const legacy=new Session();for(const username of ['202602341','wx008'])await legacy.request('auth/login','POST',{username,password:env.SEED_PASSWORD},401);checks+=2;
  assert.equal((await testPool.query("SELECT count(*) FROM housing.user_accounts WHERE (role='student' AND username NOT LIKE 'stu%') OR (role='maintenance' AND username NOT LIKE 'mt%')")).rows[0].count,'0');checks++;
  const pairs:[Session,RoleId][]=[[student,'student'],[manager,'dormManager'],[technician,'maintenance'],[administrator,'admin']];
+ for(const [session,role] of pairs){const entry=await fetch(origin+'/workspace?role=admin',{headers:{Cookie:session.cookie},redirect:'manual'});assert.equal(entry.status,307);assert.equal(entry.headers.get('location'),workspacePath(role));assert.equal(await entry.text(),'');assert.equal(entry.headers.get('cache-control'),'no-store');checks++;}
+ for(const cookie of ['', 'dorma_session=invalid-session']){const entry=await fetch(origin+'/workspace',{headers:{Cookie:cookie},redirect:'manual'});assert.equal(entry.status,307);assert.equal(entry.headers.get('location'),'/login');assert.equal(await entry.text(),'');checks++;}
  for(const [session,role] of pairs)for(const feature of roleFeatures[role])for(const action of feature.actions){const spec=workspaceSpec(role,feature.id,action.id);const params=new URLSearchParams(spec.query);await session.request(spec.resource+'?'+params);checks++;}
  console.log('四类角色全部页面数据接口通过');
  await administrator.request('students','POST',{student_number:'RACE001',full_name:'并发学生',gender:'male',college:'计算机',grade:'2026',password:env.SEED_PASSWORD});

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { roleFeatures } from '@/data/role-features';
+import { workspacePath } from '@/utils/workspace-route';
 import { api, saveAuthSession } from '@/utils/auth-session';
 import type { Account } from '@/types/auth';
 import s from './AnimeHome.module.css';
@@ -11,9 +11,14 @@ import s from './AnimeHome.module.css';
 export function AnimeHome() {
   const router = useRouter();
   const frame = useRef<HTMLIFrameElement>(null);
-  const { refresh } = useAuth();
+  const { account, refresh } = useAuth();
   const refreshRef = useRef(refresh);
   useEffect(() => { refreshRef.current = refresh; }, [refresh]);
+  useEffect(() => {
+    if (!account) return;
+    router.prefetch(workspacePath(account.role));
+    void import('@/views/workspace/WorkspacePage');
+  }, [account, router]);
   useEffect(() => {
     const receive = async (event: MessageEvent) => {
       if (event.origin !== location.origin || event.source !== frame.current?.contentWindow) return;
@@ -24,8 +29,7 @@ export function AnimeHome() {
       try {
         const result = await api<Account>('auth/me');
         saveAuthSession(result.data);
-        const first = roleFeatures[result.data.role][0];
-        router.push('/workspace/' + result.data.role + '/' + first.id + '/' + first.actions[0].id);
+        router.push(workspacePath(result.data.role));
       } catch { router.push('/login'); }
     };
     window.addEventListener('message', receive);

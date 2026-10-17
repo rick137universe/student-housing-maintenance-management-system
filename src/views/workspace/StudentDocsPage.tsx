@@ -7,6 +7,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { DocsWorkspace } from '@/components/workspace/LiveWorkspace';
 import entries from '@/data/student-docs.json';
 import type { Account } from '@/types/auth';
+import { workspacePath } from '@/utils/workspace-route';
 import s from './StudentDocsPage.module.css';
 
 export function StudentDocsPage({ account, featureId, actionId }: { account: Account; featureId: string; actionId: string }) {
@@ -22,7 +23,7 @@ export function StudentDocsPage({ account, featureId, actionId }: { account: Acc
       if (event.origin !== location.origin || event.source !== frame.current?.contentWindow) return;
       if (event.data?.type === 'dorma-student-logout') { void refreshRef.current().then(() => router.push('/')); return; }
       if (event.data?.type === 'dorma-student-login') { router.push('/login'); return; }
-      if (event.data?.type === 'dorma-student-workspace') { router.push('/workspace'); return; }
+      if (event.data?.type === 'dorma-student-workspace') { router.push(workspacePath(account.role)); return; }
       if (event.data?.type !== 'dorma-student-page') return;
       const entry = entries.find(e => e.id === event.data.id);
       const target = frame.current?.contentDocument?.querySelector('[data-dorma-business]');
@@ -32,7 +33,7 @@ export function StudentDocsPage({ account, featureId, actionId }: { account: Acc
     };
     window.addEventListener('message', receive);
     return () => window.removeEventListener('message', receive);
-  }, [router]);
+  }, [router, account.role]);
   return <main className={s.page}>
     <iframe ref={frame} className={s.frame} data-dorma-student-frame src={src} title="学生工作台" />
     {view && createPortal(<DocsWorkspace key={view.entry.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} />, view.target)}

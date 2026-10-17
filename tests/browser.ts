@@ -92,6 +92,25 @@ export async function browserRegression(origin:string,password:string){
    if(page.viewportSize()!.width<900)await homePage.locator('#toggle-site-menu').click();
    await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText(me.data.displayName);
    await expect(accountButton.locator('[data-dorma-account-name]')).toBeVisible();
+   // Slow identity checks must leave the current page visible, without a
+   // document reload or a rendered /workspace intermediary.
+   let releaseEntry!:()=>void;
+   const entryGate=new Promise<void>(resolve=>{releaseEntry=resolve;});
+   await page.route('**/api/v1/auth/me',async route=>{await entryGate;await route.continue();});
+   const documents:string[]=[];
+   const trackDocument=(request:import('@playwright/test').Request)=>{if(request.isNavigationRequest()&&request.frame()===page.mainFrame())documents.push(request.url());};
+   page.on('request',trackDocument);
+   await homePage.locator('#site-menu a[data-id="docs"]').click();
+   await page.waitForTimeout(300);
+   await expect(page.locator('[data-dorma-home-frame]')).toBeVisible();
+   await expect(page.getByText('正在进入工作台…',{exact:true})).toHaveCount(0);
+   releaseEntry();
+   await page.waitForURL(`**/workspace/${role}/**`);
+   await page.unroute('**/api/v1/auth/me');page.off('request',trackDocument);
+   assert.deepEqual(documents,[],`${role} Docs should use client navigation`);
+   await page.goto(origin);
+   await expect(homePage.locator('#site-header')).toHaveCSS('opacity','1',{timeout:15000});
+   if(page.viewportSize()!.width<900)await homePage.locator('#toggle-site-menu').click();
    await accountButton.hover();await expect(accountButton.locator('[data-dorma-account-action]')).toHaveText('退出登录');
    await expect(accountButton.locator('[data-dorma-account-action]')).toBeVisible();
    await page.screenshot({path:`docs/qa/backend/${role}-home-account.png`,fullPage:false});

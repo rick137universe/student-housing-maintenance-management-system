@@ -1,5 +1,11 @@
 const formFrame = document.querySelector('.signup-iframe');
 const accountButton = document.querySelector('[data-dorma-account]');
+document.addEventListener('click', event => {
+  if (parent === window || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+  if (!event.target.closest('#site-menu a[data-id="docs"]')) return;
+  event.preventDefault(); event.stopImmediatePropagation();
+  parent.postMessage({ type: 'dorma-workspace-entry' }, location.origin);
+}, true);
 let account = null;
 let pending = false;
 let revision = 0;
