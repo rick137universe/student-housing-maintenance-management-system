@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {expect,type Page} from '@playwright/test';
 import entries from '../src/data/student-docs.json';
+import {studentPages} from '../src/data/student-pages';
 
 export async function studentThemeRegression(page:Page){
  const frame=page.frameLocator('[data-dorma-student-frame]');
@@ -31,7 +32,7 @@ export async function studentThemeRegression(page:Page){
  await expect(results).not.toHaveCount(0);
  for(let index=0;index<await results.count();index++){
   const result=results.nth(index),href=await result.getAttribute('href');
-  const entry=entries.find(entry=>entry.url===new URL(href!,page.url()).pathname);assert(entry);
+  const entry=studentPages.find(entry=>entry.url===new URL(href!,page.url()).pathname);assert(entry);
   await expect(result).toHaveClass(new RegExp('color-'+palette[entry.color]));
   const stripe=await result.evaluate(el=>getComputedStyle(el,'::before').backgroundColor);
   const active=(await result.getAttribute('class'))!.includes('is-active');

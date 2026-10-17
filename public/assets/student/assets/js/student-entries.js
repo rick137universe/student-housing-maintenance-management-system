@@ -3,6 +3,16 @@ const entries = [
     "feature": "personal",
     "group": "个人信息",
     "color": 0,
+    "label": "个人信息",
+    "id": "getting-started",
+    "action": "overview",
+    "url": "/workspace/student/personal",
+    "description": "查看和维护个人资料、联系方式与登录密码。"
+  },
+  {
+    "feature": "personal",
+    "group": "个人信息",
+    "color": 0,
     "label": "查看个人信息",
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
@@ -28,6 +38,16 @@ const entries = [
     "action": "action-3",
     "url": "/workspace/student/personal/action-3",
     "description": "修改密码后，需要重新登录。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
+    "label": "住宿业务",
+    "id": "timer",
+    "action": "overview",
+    "url": "/workspace/student/accommodation",
+    "description": "提交入住、调宿和退宿申请，查询办理结果。"
   },
   {
     "feature": "accommodation",
@@ -63,6 +83,16 @@ const entries = [
     "feature": "payment",
     "group": "缴费管理",
     "color": 2,
+    "label": "缴费管理",
+    "id": "animation",
+    "action": "overview",
+    "url": "/workspace/student/payment",
+    "description": "查询账单、办理测试支付并查看缴费记录。"
+  },
+  {
+    "feature": "payment",
+    "group": "缴费管理",
+    "color": 2,
     "label": "查看账单",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
@@ -88,6 +118,16 @@ const entries = [
     "action": "action-3",
     "url": "/workspace/student/payment/action-3",
     "description": "查询已经入账的缴费记录。"
+  },
+  {
+    "feature": "repair",
+    "group": "报修服务",
+    "color": 3,
+    "label": "报修服务",
+    "id": "timeline",
+    "action": "overview",
+    "url": "/workspace/student/repair",
+    "description": "提交报修、跟进维修进度并评价服务。"
   },
   {
     "feature": "repair",
@@ -123,6 +163,16 @@ const entries = [
     "feature": "announcements",
     "group": "公告查看",
     "color": 4,
+    "label": "公告查看",
+    "id": "animatable",
+    "action": "overview",
+    "url": "/workspace/student/announcements",
+    "description": "查看公寓公告与缴费提醒。"
+  },
+  {
+    "feature": "announcements",
+    "group": "公告查看",
+    "color": 4,
     "label": "公寓通知",
     "id": "text-splittext",
     "action": "action-1",
@@ -138,6 +188,16 @@ const entries = [
     "action": "action-2",
     "url": "/workspace/student/announcements/action-2",
     "description": "查看缴费事项与催缴通知。"
+  },
+  {
+    "feature": "notifications",
+    "group": "个人消息",
+    "color": 5,
+    "label": "个人消息",
+    "id": "draggable",
+    "action": "overview",
+    "url": "/workspace/student/notifications",
+    "description": "查看业务通知并标记已读。"
   },
   {
     "feature": "notifications",

@@ -56,7 +56,7 @@ export function WorkspacePage() {
     <Link href="/">返回首页</Link>
   </main>;
 
-  if (role === 'student') return <StudentDocsPage account={account} featureId={feature.id} actionId={action?.id ?? 'action-1'} />;
+  if (role === 'student') return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? action?.id ?? 'action-1' : 'overview'} />;
 
   return <div className={s.page}>
     <header className={s.topbar}>

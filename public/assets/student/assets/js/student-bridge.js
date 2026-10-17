@@ -9,8 +9,39 @@ const info = document.querySelector('#docs-info .docs-info');
 info.dataset.id = initial.id; info.dataset.color = initial.color;
 info.querySelector('h1 a').textContent = initial.label;
 info.querySelector('h1 a').href = initial.url;
+info.querySelector('h1 a').title = initial.label;
 info.querySelector('h1').dataset.color = initial.color;
 info.querySelector('[data-dorma-description]').textContent = initial.description;
+const palette = ['red', 'corail', 'orange', 'yellow', 'citrus', 'lime'];
+const moduleLinks = info.querySelector('[data-student-module-links]');
+if (initial.action === 'overview') {
+  info.querySelector('[data-dorma-business]')?.remove();
+  const template = moduleLinks.firstElementChild;
+  moduleLinks.replaceChildren(...entries.filter(entry => entry.feature === initial.feature && entry.action !== 'overview').map(entry => {
+    const item = template.cloneNode(true), link = item.querySelector('a');
+    link.href = entry.url; link.title = entry.label; link.dataset.id = entry.id; link.dataset.color = entry.color;
+    link.className = 'text-ui color-' + palette[entry.color];
+    for (const node of [...link.childNodes]) if (node.nodeType === Node.TEXT_NODE) node.remove();
+    link.prepend(entry.label);
+    return item;
+  }));
+} else {
+  info.querySelector('h6.links-list-heading')?.remove();
+  moduleLinks.remove();
+}
+const position = entries.indexOf(initial);
+for (const [direction, neighbor, heading] of [
+  ['prev', entries[position - 1], info.querySelector('.prev-next-heading').children[0]],
+  ['next', entries[position + 1], info.querySelector('.prev-next-heading').children[1]],
+]) {
+  heading.textContent = neighbor ? (direction === 'prev' ? '上一个' : '下一个') : '';
+  const link = info.querySelector('.' + direction + '-link a');
+  if (!neighbor) { link.remove(); continue; }
+  link.href = neighbor.url; link.title = neighbor.label; link.dataset.id = neighbor.id; link.dataset.color = neighbor.color;
+  link.className = 'text-ui color-' + palette[neighbor.color];
+  for (const node of [...link.childNodes]) if (node.nodeType === Node.TEXT_NODE) node.remove();
+  if (direction === 'prev') link.append(neighbor.label); else link.prepend(neighbor.label);
+}
 document.title = initial.label + ' · 学生工作台';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
 document.querySelector('#toggle-search').title = '搜索学生服务';
@@ -38,12 +69,6 @@ window.addEventListener('load', () => {
   announce();
 });
 document.addEventListener('click', event => {
-  const group = event.target.closest('#docs-sidebar .docs-group-link');
-  if (group && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && event.button === 0) {
-    event.preventDefault(); event.stopImmediatePropagation();
-    group.parentElement.querySelector(':scope > ul > li > a.docs-link')?.click();
-    return;
-  }
   if (event.target.closest('#site-menu a[data-id="docs"]')) {
     event.preventDefault(); event.stopImmediatePropagation();
     parent.postMessage({ type: 'dorma-student-workspace' }, location.origin);
