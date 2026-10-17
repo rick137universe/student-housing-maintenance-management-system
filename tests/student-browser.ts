@@ -24,7 +24,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     const frame = page.frameLocator('[data-dorma-student-frame]');
     async function go(feature: string, action: number) {
       await page.goto(`${origin}/workspace/student/${feature}/action-${action}`);
-      await frame.getByRole('button', { name: '刷新', exact: true }).waitFor();
+      await frame.locator('[data-dorma-live-workspace]').waitFor();
       await frame.getByText('正在读取…', { exact: true }).waitFor({ state: 'hidden' });
     }
     async function submit() { await frame.getByRole('button', { name: '确认提交', exact: true }).click(); await frame.getByText('操作已保存。', { exact: true }).waitFor(); }
@@ -67,7 +67,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await expect(frame.locator('#docs-sidebar')).toHaveClass(/is-active/);
     assert.equal(await frame.locator('html').evaluate(el => el.scrollWidth > innerWidth), false);
     await page.screenshot({ path: 'docs/qa/backend/student-native-mobile-menu.png' });
-    await page.setViewportSize({ width: 1440, height: 1000 }); await page.reload(); await frame.getByRole('button', { name: '刷新', exact: true }).waitFor();
+    await page.setViewportSize({ width: 1440, height: 1000 }); await page.reload(); await frame.locator('[data-dorma-live-workspace]').waitFor();
     await frame.locator('[data-dorma-account]').click(); await expect(page).toHaveURL(origin + '/'); assert.equal((await student.context.request.get(origin + '/api/v1/auth/me')).status(), 401);
     assert.deepEqual(errors, []);
     console.log('学生 Docs 业务回归通过：15 入口切换、搜索、入住/调宿/退宿、部分支付、报修/进度/评价、消息已读及退出。');

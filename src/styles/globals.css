@@ -36,4 +36,4 @@ html:has(main[aria-label="Dorma 角色功能镜头"]){overflow-y:scroll;scrollba
 html{scrollbar-gutter:stable}
 
 /* Short lists and long forms must use the same viewport width. */
-html[data-dorma-workspace-active]{overflow-y:scroll!important;scrollbar-gutter:stable}
+html[data-dorma-workspace-active]:not(:has([data-dorma-student-frame])){overflow-y:scroll!important;scrollbar-gutter:stable}

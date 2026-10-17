@@ -62,15 +62,15 @@ export async function browserRegression(origin:string,password:string){
     await page.setViewportSize({width:1440,height:1000});
    }
    await loginForm.getByLabel(/账号/).fill(username);await loginForm.getByLabel(/密码/).fill(password);await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
-   await page.waitForURL('**/workspace/**');const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):page;await workspace.getByRole('button',{name:'刷新',exact:true}).waitFor();
+   await page.waitForURL('**/workspace/**');const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):page;await workspace.locator('[data-dorma-live-workspace]').waitFor();
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
-    await workspace.getByRole('button',{name:'刷新',exact:true}).waitFor();
+    await workspace.locator('[data-dorma-live-workspace]').waitFor();
     await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});
     assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0,`${role}/${feature.id}/${action.id}`);visited++;
    }
-   const first=roleFeatures[role][0];await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});await workspace.getByRole('button',{name:'刷新',exact:true}).waitFor();
+   const first=roleFeatures[role][0];await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});await workspace.locator('[data-dorma-live-workspace]').waitFor();
    for(const [size,width,height] of [['desktop',1440,1000],['mobile',390,844]] as const){
     await page.setViewportSize({width,height});
     if(role==='student'){

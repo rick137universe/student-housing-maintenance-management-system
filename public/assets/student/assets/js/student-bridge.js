@@ -32,7 +32,11 @@ const announce = () => {
   if (entries.some(entry => entry.id === id)) parent.postMessage({ type: 'dorma-student-page', id }, location.origin);
 };
 new MutationObserver(announce).observe(document.querySelector('#docs-info'), { childList: true });
-window.addEventListener('load', announce);
+window.addEventListener('load', () => {
+  // The copied core initializes this widget before the document load event.
+  document.querySelector('#docs-versions')?.remove();
+  announce();
+});
 document.addEventListener('click', event => {
   if (event.target.closest('#site-menu a[data-id="docs"]')) {
     event.preventDefault(); event.stopImmediatePropagation();
