@@ -1,5 +1,15 @@
 const entries = [
   {
+    "feature": "overview",
+    "group": "学生工作台",
+    "color": 0,
+    "label": "学生工作台",
+    "id": "docs",
+    "action": "overview",
+    "url": "/workspace/student",
+    "description": "查看个人信息，办理住宿、缴费与报修业务。"
+  },
+  {
     "feature": "personal",
     "group": "个人信息",
     "color": 0,

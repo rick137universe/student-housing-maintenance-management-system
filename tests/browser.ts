@@ -7,6 +7,7 @@ import {verifyLoginTemplate} from './login-template';
 import {verifyHomeTemplate} from './home-template';
 import {verifyStudentTemplate} from './student-template';
 import {studentDocsRegression} from './student-browser';
+import {workspacePath} from '../src/utils/workspace-route';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
@@ -62,7 +63,9 @@ export async function browserRegression(origin:string,password:string){
     await page.setViewportSize({width:1440,height:1000});
    }
    await loginForm.getByLabel(/账号/).fill(username);await loginForm.getByLabel(/密码/).fill(password);await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
-   await page.waitForURL('**/workspace/**');const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):page;await workspace.locator('[data-dorma-live-workspace]').waitFor();
+   await page.waitForURL(origin+workspacePath(role));const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):page;
+   if(role==='student')await expect(workspace.locator('[data-student-module-links] a')).toHaveCount(6);
+   else await workspace.locator('[data-dorma-live-workspace]').waitFor();
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
@@ -105,7 +108,7 @@ export async function browserRegression(origin:string,password:string){
    await expect(page.locator('[data-dorma-home-frame]')).toBeVisible();
    await expect(page.getByText('正在进入工作台…',{exact:true})).toHaveCount(0);
    releaseEntry();
-   await page.waitForURL(`**/workspace/${role}/**`);
+   await page.waitForURL(origin+workspacePath(role));
    await page.unroute('**/api/v1/auth/me');page.off('request',trackDocument);
    assert.deepEqual(documents,[],`${role} Docs should use client navigation`);
    await page.goto(origin);

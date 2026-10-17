@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import entries from '../src/data/student-docs.json';
-import {studentPages} from '../src/data/student-pages';
+import {studentPages,studentOverview} from '../src/data/student-pages';
+import modules from '../src/data/student-modules.json';
 import { roleFeatures } from '../src/data/role-features';
 
 export async function verifyStudentTemplate() {
@@ -17,7 +18,8 @@ export async function verifyStudentTemplate() {
   const html=await readFile('public/assets/student/index.html','utf8');
   const sidebar=html.match(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/)?.[0];assert(sidebar);
   const links=[...sidebar.matchAll(/<a class="docs-link[^"]*"[^>]*data-id="([^"]+)"/g)].map(match=>match[1]);
-  assert.equal(links.length,studentPages.length,'每个模块及功能应有独立侧栏链接');
+  assert.equal(links.length,studentPages.length-1,'每个模块及功能应有独立侧栏链接');
+  assert(html.includes(`href="${studentOverview.url}"`) && html.includes('data-id="docs"'),'总导航使用母版顶部 Docs 入口');
   assert.equal(new Set(links).size,links.length,'功能标识不能与模块标题重复');
   const children=[...sidebar.matchAll(/<li class="([^"]*docs-action[^"]*)"/g)];assert.equal(children.length,entries.length);
   for(const child of children)assert.match(child[1].split(/\s+/)[2],/^color-/, '搜索依赖子功能的第三个class读取主题');
@@ -30,12 +32,12 @@ export async function verifyStudentTemplate() {
     if(entry.action==='overview'){
       assert(list);assert(!page.includes('data-dorma-business'));
       const targets=[...list.matchAll(/data-id="([^"]+)"/g)].map(match=>match[1]);
-      assert.deepEqual(targets,entries.filter(action=>action.feature===entry.feature).map(action=>action.id));
+      assert.deepEqual(targets,entry.id===studentOverview.id ? modules.map(group=>group.id) : entries.filter(action=>action.feature===entry.feature).map(action=>action.id));
     }else{assert.equal(list,undefined);assert(page.includes('data-dorma-business'));}
     for(const [direction,neighbor] of [['prev',studentPages[index-1]],['next',studentPages[index+1]]] as const){
       const link=page.match(new RegExp(`<li class="${direction}-link">([\\s\\S]*?)<\\/li>`))?.[1];assert(link!==undefined);
       if(neighbor)assert(link.includes(`data-id="${neighbor.id}"`));else assert(!link.includes('<a'));
     }
   }
-  console.log(`学生 Docs 校验通过：${count} 个原始资源逐字节一致，6 个模块总览、15 个业务页及相邻导航完整。`);
+  console.log(`学生 Docs 校验通过：${count} 个原始资源逐字节一致，总导航、6 个模块总览、15 个业务页及相邻导航完整。`);
 }

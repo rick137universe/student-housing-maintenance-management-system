@@ -17,14 +17,14 @@ import { StudentDocsPage } from './StudentDocsPage';
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
 export function WorkspacePage() {
-  const params = useParams<{ role: string; feature: string; action?: string[] }>();
+  const params = useParams<{ role: string; feature?: string; action?: string[] }>();
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const { account } = useAuth();
   const [error, setError] = useState('');
   const role = validRoles.includes(params.role as RoleId) ? params.role as RoleId : null;
-  const feature = role ? featureFor(role, params.feature) : undefined;
+  const feature = role && params.feature ? featureFor(role, params.feature) : undefined;
   const actionId = pathname.split('/')[4];
   const action = feature?.actions.find(item => item.id === actionId) ?? feature?.actions[0];
 
@@ -39,6 +39,10 @@ export function WorkspacePage() {
   }
 
   if (account === undefined) return <main className={s.loading}>正在确认身份…</main>;
+
+  if (account?.role === 'student' && role === 'student' && !params.feature) {
+    return <StudentDocsPage account={account} featureId="overview" actionId="overview" />;
+  }
 
   if (!account || !role || !feature) return <main className={s.denied}>
     <ShieldAlert />

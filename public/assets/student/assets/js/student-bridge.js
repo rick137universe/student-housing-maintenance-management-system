@@ -17,7 +17,11 @@ const moduleLinks = info.querySelector('[data-student-module-links]');
 if (initial.action === 'overview') {
   info.querySelector('[data-dorma-business]')?.remove();
   const template = moduleLinks.firstElementChild;
-  moduleLinks.replaceChildren(...entries.filter(entry => entry.feature === initial.feature && entry.action !== 'overview').map(entry => {
+  const targets = initial.id === 'docs'
+    ? entries.filter(entry => entry.id !== 'docs' && entry.action === 'overview')
+    : entries.filter(entry => entry.feature === initial.feature && entry.action !== 'overview');
+  info.querySelector('h6.links-list-heading').textContent = initial.id === 'docs' ? '功能模块' : '本模块功能';
+  moduleLinks.replaceChildren(...targets.map(entry => {
     const item = template.cloneNode(true), link = item.querySelector('a');
     link.href = entry.url; link.title = entry.label; link.dataset.id = entry.id; link.dataset.color = entry.color;
     link.className = 'text-ui color-' + palette[entry.color];
@@ -68,12 +72,6 @@ window.addEventListener('load', () => {
   document.querySelector('#docs-versions')?.remove();
   announce();
 });
-document.addEventListener('click', event => {
-  if (event.target.closest('#site-menu a[data-id="docs"]')) {
-    event.preventDefault(); event.stopImmediatePropagation();
-    parent.postMessage({ type: 'dorma-student-workspace' }, location.origin);
-  }
-}, true);
 const button = document.querySelector('[data-dorma-account]');
 let account = null;
 let pending = false;

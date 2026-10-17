@@ -1,5 +1,6 @@
 // Application routes supplied to the unchanged Docs runtime.
 const routes = {
+  "/workspace/student": "/assets/student/pages/overview-overview.html",
   "/workspace/student/personal": "/assets/student/pages/personal-overview.html",
   "/workspace/student/personal/action-1": "/assets/student/pages/personal-action-1.html",
   "/workspace/student/personal/action-2": "/assets/student/pages/personal-action-2.html",

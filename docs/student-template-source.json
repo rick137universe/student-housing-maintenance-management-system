@@ -242,5 +242,15 @@
       "url": "/workspace/student/notifications",
       "description": "查看业务通知并标记已读。"
     }
-  ]
+  ],
+  "overview": {
+    "feature": "overview",
+    "group": "学生工作台",
+    "color": 0,
+    "label": "学生工作台",
+    "id": "docs",
+    "action": "overview",
+    "url": "/workspace/student",
+    "description": "查看个人信息，办理住宿、缴费与报修业务。"
+  }
 }
