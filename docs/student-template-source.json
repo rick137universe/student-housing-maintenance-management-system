@@ -1,0 +1,169 @@
+{
+  "source": "D:/Development/Anime.js/public/sites/animejs-com-23cc7dc7/documentation-ec29569f/",
+  "sha256": {
+    "css/core.css": "7cd4a15f06240e609de9094bd1918099ba9ecb8caf285c00c8faaf68d89a0f85",
+    "css/docs.css": "f91f70e570ff0b55ba98ee117bc86cdfdf9980c8e6ad91adb4f98d023bee885c",
+    "fonts/BerkeleyMono-Italic.woff2": "85f6f2bb1b006bf6182806f32cc178cdd6a046029769cc86f7ea7069dd12c00f",
+    "fonts/BerkeleyMono-Regular.woff2": "cf58b76a957314940837e6df57432ea04069f558ce2ccab1da7c89f5753f987e",
+    "fonts/Digital-7MonoItalic.woff2": "b158e26c073fd41f817b662b8909e0a5b7d3285b273d50ee5cc83dac34d433db",
+    "fonts/DINish[slnt,wdth,wght].woff2": "89ccc932d2b4efda7ff5f6644195d7eb2660bba6aae50782b084428f075c1d98",
+    "html/documentation-demos.html": "9fff80ec045aa8d796ec4fea9f9d82dea3c32c8edc3d7eb12b40e77724e07343",
+    "images/anime-js-logo-v4.svg": "ad55a2db1f323c48db12db2a507d330c68b926c16215ee523ef7d92d8d9fb636",
+    "images/favicon.png": "f85cb516d39dc05b4bb3c14ea20d66ccc479e825ab05f1ebf79a12bec1df6cda",
+    "images/icons/drop-down.svg": "55a9a3ca535437414c3aff14073dd1457644f78f22ccb1225192bc2a26ab1afa",
+    "images/icons/triangle.svg": "1b265b1da392dee7e217bb4f0ed1b8e41c24cc97d013e9884e62c73a1b22b56d",
+    "js/chunks/chunk-CPVC3KGU.js": "29b361892842eb6bd2cfaa442a8628a6fab4a94d9aea500925bcc664f6c70b12",
+    "js/chunks/chunk-DCANE7XH.js": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7",
+    "js/chunks/chunk-E4BKOIOO.js": "655aa34b0d26e081801debac93214008831ad4f4c15ac89a4722e229b3b944ec",
+    "js/chunks/chunk-FX45FQRC.js": "7c67b42e5bc78af3ad025f75cb27341a4ecd6e30691ed14bf44ed0744b1c5d7f",
+    "js/chunks/chunk-N6I4AEHZ.js": "ffd98a5d1f4abd69722522989cb410f942db5f725509cbc297436f73254681c5",
+    "js/chunks/chunk-WQVFBASJ.js": "53d0556a2e1f0281b95af6416a7691b3e111195c27181ede071fda73cee521ae",
+    "js/chunks/chunk-WXAKRBIO.js": "907e3832766f68caaec405482f693f47ce3932e41869538aeeb84ae7eebdf38f",
+    "js/chunks/demo-three-UEGN5M7G.js": "59805cba793ee4bef31751bbd54a17a23476d31910ed6bf8a8deac2353cb5bc5",
+    "js/chunks/three-BFD54ARY.js": "96944ee1fe36d55dbf50587019d1caacbfb4c57c73a499080e45f4d519afddd0",
+    "js/docs.js": "6493180959ffcaea70b7bc09dc91e54b2626ca061df4b3a518da596fe1a0d59e",
+    "js/documentation-archive-map.js": "3b02015f76fac8df765714118c6bd00219e6a70407f4467c9d468dd3daa28cf8",
+    "json/easings.json": "45a4a0d7d6103ee843b89cc44165932bb695310c3637652e1d74baba53cdd679",
+    "json/sponsors-github-sponsors.json": "bcd0d36adcf79e8246c1613536417635ee2007029220bbf42564b76a20e8e468",
+    "json/sponsors-gold-sponsors.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json/sponsors-platinum-sponsors.json": "bf7945bfad2085c192221e503e87d259665a20e162b56e7c3d5becd37586f750",
+    "json/sponsors-silver-sponsors.json": "4d2b1cd45cce226f90878d1a8db3989c009c0174235ffd61ce55d3b4815b8a75"
+  },
+  "entries": [
+    {
+      "feature": "personal",
+      "group": "个人信息",
+      "color": 0,
+      "label": "查看个人信息",
+      "id": "animation-animatable-properties-css-properties",
+      "action": "action-1",
+      "url": "/workspace/student/personal/action-1"
+    },
+    {
+      "feature": "personal",
+      "group": "个人信息",
+      "color": 0,
+      "label": "修改个人信息",
+      "id": "animatable-animatable-methods-setters",
+      "action": "action-2",
+      "url": "/workspace/student/personal/action-2"
+    },
+    {
+      "feature": "personal",
+      "group": "个人信息",
+      "color": 0,
+      "label": "修改登录密码",
+      "id": "animation-animatable-properties-html-attributes",
+      "action": "action-3",
+      "url": "/workspace/student/personal/action-3"
+    },
+    {
+      "feature": "accommodation",
+      "group": "住宿业务",
+      "color": 2,
+      "label": "入住申请",
+      "id": "animation-animatable-properties-css-transforms",
+      "action": "action-1",
+      "url": "/workspace/student/accommodation/action-1"
+    },
+    {
+      "feature": "accommodation",
+      "group": "住宿业务",
+      "color": 2,
+      "label": "调宿申请",
+      "id": "timeline-add-animations",
+      "action": "action-2",
+      "url": "/workspace/student/accommodation/action-2"
+    },
+    {
+      "feature": "accommodation",
+      "group": "住宿业务",
+      "color": 2,
+      "label": "退宿申请",
+      "id": "animation-animation-playback-settings-reversed",
+      "action": "action-3",
+      "url": "/workspace/student/accommodation/action-3"
+    },
+    {
+      "feature": "payment",
+      "group": "缴费管理",
+      "color": 7,
+      "label": "查看账单",
+      "id": "timer-timer-playback-settings-duration",
+      "action": "action-1",
+      "url": "/workspace/student/payment/action-1"
+    },
+    {
+      "feature": "payment",
+      "group": "缴费管理",
+      "color": 7,
+      "label": "在线缴费",
+      "id": "animation-animation-callbacks-oncomplete",
+      "action": "action-2",
+      "url": "/workspace/student/payment/action-2"
+    },
+    {
+      "feature": "payment",
+      "group": "缴费管理",
+      "color": 7,
+      "label": "缴费记录",
+      "id": "timeline-add-timers",
+      "action": "action-3",
+      "url": "/workspace/student/payment/action-3"
+    },
+    {
+      "feature": "repair",
+      "group": "报修服务",
+      "color": 8,
+      "label": "提交报修",
+      "id": "animation-animation-methods-refresh",
+      "action": "action-1",
+      "url": "/workspace/student/repair/action-1"
+    },
+    {
+      "feature": "repair",
+      "group": "报修服务",
+      "color": 8,
+      "label": "查看进度",
+      "id": "timeline-timeline-methods-seek",
+      "action": "action-2",
+      "url": "/workspace/student/repair/action-2"
+    },
+    {
+      "feature": "repair",
+      "group": "报修服务",
+      "color": 8,
+      "label": "服务评价",
+      "id": "utilities-stagger-stagger-parameters-stagger-grid",
+      "action": "action-3",
+      "url": "/workspace/student/repair/action-3"
+    },
+    {
+      "feature": "announcements",
+      "group": "公告查看",
+      "color": 11,
+      "label": "公寓通知",
+      "id": "text-splittext",
+      "action": "action-1",
+      "url": "/workspace/student/announcements/action-1"
+    },
+    {
+      "feature": "announcements",
+      "group": "公告查看",
+      "color": 11,
+      "label": "缴费提醒",
+      "id": "timer-timer-callbacks-oncomplete",
+      "action": "action-2",
+      "url": "/workspace/student/announcements/action-2"
+    },
+    {
+      "feature": "notifications",
+      "group": "个人消息",
+      "color": 12,
+      "label": "消息通知",
+      "id": "timeline-call-functions",
+      "action": "action-1",
+      "url": "/workspace/student/notifications/action-1"
+    }
+  ]
+}

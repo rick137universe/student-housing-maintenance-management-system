@@ -1,0 +1,152 @@
+[
+  {
+    "feature": "personal",
+    "group": "个人信息",
+    "color": 0,
+    "label": "查看个人信息",
+    "id": "animation-animatable-properties-css-properties",
+    "action": "action-1",
+    "url": "/workspace/student/personal/action-1",
+    "description": "查看账号资料和当前住宿记录。"
+  },
+  {
+    "feature": "personal",
+    "group": "个人信息",
+    "color": 0,
+    "label": "修改个人信息",
+    "id": "animatable-animatable-methods-setters",
+    "action": "action-2",
+    "url": "/workspace/student/personal/action-2",
+    "description": "修改姓名、联系电话及邮箱。"
+  },
+  {
+    "feature": "personal",
+    "group": "个人信息",
+    "color": 0,
+    "label": "修改登录密码",
+    "id": "animation-animatable-properties-html-attributes",
+    "action": "action-3",
+    "url": "/workspace/student/personal/action-3",
+    "description": "修改密码后，需要重新登录。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 2,
+    "label": "入住申请",
+    "id": "animation-animatable-properties-css-transforms",
+    "action": "action-1",
+    "url": "/workspace/student/accommodation/action-1",
+    "description": "提交入住申请，选择意向楼栋并查看审核结果。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 2,
+    "label": "调宿申请",
+    "id": "timeline-add-animations",
+    "action": "action-2",
+    "url": "/workspace/student/accommodation/action-2",
+    "description": "提交调宿意向，审核通过后完成床位变更。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 2,
+    "label": "退宿申请",
+    "id": "animation-animation-playback-settings-reversed",
+    "action": "action-3",
+    "url": "/workspace/student/accommodation/action-3",
+    "description": "申请退宿并查看办理结果。"
+  },
+  {
+    "feature": "payment",
+    "group": "缴费管理",
+    "color": 7,
+    "label": "查看账单",
+    "id": "timer-timer-playback-settings-duration",
+    "action": "action-1",
+    "url": "/workspace/student/payment/action-1",
+    "description": "查看住宿费、水电费和账单余额。"
+  },
+  {
+    "feature": "payment",
+    "group": "缴费管理",
+    "color": 7,
+    "label": "在线缴费",
+    "id": "animation-animation-callbacks-oncomplete",
+    "action": "action-2",
+    "url": "/workspace/student/payment/action-2",
+    "description": "选择未缴清账单进行测试支付，不产生真实扣款。"
+  },
+  {
+    "feature": "payment",
+    "group": "缴费管理",
+    "color": 7,
+    "label": "缴费记录",
+    "id": "timeline-add-timers",
+    "action": "action-3",
+    "url": "/workspace/student/payment/action-3",
+    "description": "查询已经入账的缴费记录。"
+  },
+  {
+    "feature": "repair",
+    "group": "报修服务",
+    "color": 8,
+    "label": "提交报修",
+    "id": "animation-animation-methods-refresh",
+    "action": "action-1",
+    "url": "/workspace/student/repair/action-1",
+    "description": "选择当前住宿房间，填写故障情况与联系方式。"
+  },
+  {
+    "feature": "repair",
+    "group": "报修服务",
+    "color": 8,
+    "label": "查看进度",
+    "id": "timeline-timeline-methods-seek",
+    "action": "action-2",
+    "url": "/workspace/student/repair/action-2",
+    "description": "查询报修审核、派工和维修处理进度。"
+  },
+  {
+    "feature": "repair",
+    "group": "报修服务",
+    "color": 8,
+    "label": "服务评价",
+    "id": "utilities-stagger-stagger-parameters-stagger-grid",
+    "action": "action-3",
+    "url": "/workspace/student/repair/action-3",
+    "description": "对已完成的报修服务评价，每次处理可评价一次。"
+  },
+  {
+    "feature": "announcements",
+    "group": "公告查看",
+    "color": 11,
+    "label": "公寓通知",
+    "id": "text-splittext",
+    "action": "action-1",
+    "url": "/workspace/student/announcements/action-1",
+    "description": "查看与本人住宿楼栋相关的公寓公告。"
+  },
+  {
+    "feature": "announcements",
+    "group": "公告查看",
+    "color": 11,
+    "label": "缴费提醒",
+    "id": "timer-timer-callbacks-oncomplete",
+    "action": "action-2",
+    "url": "/workspace/student/announcements/action-2",
+    "description": "查看缴费事项与催缴通知。"
+  },
+  {
+    "feature": "notifications",
+    "group": "个人消息",
+    "color": 12,
+    "label": "消息通知",
+    "id": "timeline-call-functions",
+    "action": "action-1",
+    "url": "/workspace/student/notifications/action-1",
+    "description": "查看业务消息并标记已读。"
+  }
+]

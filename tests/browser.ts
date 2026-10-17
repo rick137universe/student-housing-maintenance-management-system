@@ -5,10 +5,13 @@ import {roleFeatures} from '../src/data/role-features';
 import type {RoleId} from '../src/types/auth';
 import {verifyLoginTemplate} from './login-template';
 import {verifyHomeTemplate} from './home-template';
+import {verifyStudentTemplate} from './student-template';
+import {studentDocsRegression} from './student-browser';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
  await verifyHomeTemplate();
+ await verifyStudentTemplate();
  const browser=await chromium.launch({channel:'msedge',headless:true});
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
@@ -59,22 +62,27 @@ export async function browserRegression(origin:string,password:string){
     await page.setViewportSize({width:1440,height:1000});
    }
    await loginForm.getByLabel(/账号/).fill(username);await loginForm.getByLabel(/密码/).fill(password);await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
-   await page.waitForURL('**/workspace/**');await page.getByRole('button',{name:'刷新',exact:true}).waitFor();
+   await page.waitForURL('**/workspace/**');const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):page;await workspace.getByRole('button',{name:'刷新',exact:true}).waitFor();
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
-    await page.getByRole('button',{name:'刷新',exact:true}).waitFor();
-    await page.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});
-    assert.equal(await page.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0,`${role}/${feature.id}/${action.id}`);visited++;
+    await workspace.getByRole('button',{name:'刷新',exact:true}).waitFor();
+    await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});
+    assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0,`${role}/${feature.id}/${action.id}`);visited++;
    }
-   const first=roleFeatures[role][0];await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await page.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});await page.getByRole('button',{name:'刷新',exact:true}).waitFor();
+   const first=roleFeatures[role][0];await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});await workspace.getByRole('button',{name:'刷新',exact:true}).waitFor();
    for(const [size,width,height] of [['desktop',1440,1000],['mobile',390,844]] as const){
     await page.setViewportSize({width,height});
-    for(const theme of ['浅色','深色']){await page.getByRole('button',{name:theme,exact:true}).click();await page.screenshot({path:`docs/qa/backend/${role}-${size}-${theme}.png`,fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${role} ${size} overflow`);}
+    if(role==='student'){
+     const nativePage=page.frameLocator('[data-dorma-student-frame]');
+     await expect(nativePage.locator('#docs-info')).toHaveCSS('opacity','1');
+     await expect(nativePage.locator('#toggle-search')).toBeEnabled();
+    }
+    for(const theme of role==='student'?['母版']:['浅色','深色']){if(role!=='student')await workspace.getByRole('button',{name:theme,exact:true}).click();await page.screenshot({path:`docs/qa/backend/${role}-${size}-${theme}.png`,fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${role} ${size} overflow`);}
    }
    if(role==='student'){
-    await page.goto(`${origin}/workspace/student/personal/action-2`);await page.getByRole('button',{name:'修改资料',exact:true}).click();await page.getByRole('dialog').getByLabel('姓名',{exact:true}).fill('林晓屿');await page.getByRole('dialog').getByRole('button',{name:'确认提交',exact:true}).click();await page.getByText('操作已保存。',{exact:true}).waitFor();
-    await page.reload();await page.getByRole('button',{name:'修改资料',exact:true}).waitFor();assert.equal(await page.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0);
+    await page.goto(`${origin}/workspace/student/personal/action-2`);await workspace.getByRole('button',{name:'修改资料',exact:true}).click();await workspace.getByLabel('姓名',{exact:true}).fill('林晓屿');await workspace.getByRole('button',{name:'确认提交',exact:true}).click();await workspace.getByText('操作已保存。',{exact:true}).waitFor();
+    await page.reload();await workspace.getByRole('button',{name:'修改资料',exact:true}).waitFor();assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0);
    }
    const me=await (await page.request.get(origin+'/api/v1/auth/me')).json();
    await page.goto(origin);await page.mouse.move(0,500);
@@ -110,6 +118,7 @@ export async function browserRegression(origin:string,password:string){
    await page.reload();await expect(account.locator('[data-dorma-account-name]')).toHaveText('未登录');
    await context.close();
   }
+  await studentDocsRegression(browser,origin,password);
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}

@@ -12,6 +12,7 @@ import { featureFor, roleFeatures } from '@/data/role-features';
 import { demoAccounts, type RoleId } from '@/data/accounts';
 import s from './WorkspacePage.module.css';
 import { ThemeSelect } from '@/components/theme/ThemeProvider';
+import { StudentDocsPage } from './StudentDocsPage';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -54,6 +55,8 @@ export function WorkspacePage() {
     <span>{demoAccounts.find(item => item.role === account.role)?.roleName}只能进入自己的工作台。</span>
     <Link href="/">返回首页</Link>
   </main>;
+
+  if (role === 'student') return <StudentDocsPage account={account} featureId={feature.id} actionId={action?.id ?? 'action-1'} />;
 
   return <div className={s.page}>
     <header className={s.topbar}>

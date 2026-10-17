@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
     "public/assets/login/assets/js/learn.js",
     "public/assets/login/assets/js/chunks/**",
     "public/assets/home/assets/js/home.js",
+    "public/assets/student/assets/js/docs.js",
+    "public/assets/student/assets/js/chunks/**",
     "public/assets/home/assets/js/chunks/**",
     "public/assets/home/assets/draco/**",
     "public/assets/draco/**",
