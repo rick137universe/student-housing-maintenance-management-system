@@ -38,6 +38,12 @@ window.addEventListener('load', () => {
   announce();
 });
 document.addEventListener('click', event => {
+  const group = event.target.closest('#docs-sidebar .docs-group-link');
+  if (group && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && event.button === 0) {
+    event.preventDefault(); event.stopImmediatePropagation();
+    group.parentElement.querySelector(':scope > ul > li > a.docs-link')?.click();
+    return;
+  }
   if (event.target.closest('#site-menu a[data-id="docs"]')) {
     event.preventDefault(); event.stopImmediatePropagation();
     parent.postMessage({ type: 'dorma-student-workspace' }, location.origin);

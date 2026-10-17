@@ -32,7 +32,7 @@ const entries = [
   {
     "feature": "accommodation",
     "group": "住宿业务",
-    "color": 2,
+    "color": 1,
     "label": "入住申请",
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
@@ -42,7 +42,7 @@ const entries = [
   {
     "feature": "accommodation",
     "group": "住宿业务",
-    "color": 2,
+    "color": 1,
     "label": "调宿申请",
     "id": "timeline-add-animations",
     "action": "action-2",
@@ -52,7 +52,7 @@ const entries = [
   {
     "feature": "accommodation",
     "group": "住宿业务",
-    "color": 2,
+    "color": 1,
     "label": "退宿申请",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
@@ -62,7 +62,7 @@ const entries = [
   {
     "feature": "payment",
     "group": "缴费管理",
-    "color": 7,
+    "color": 2,
     "label": "查看账单",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
@@ -72,7 +72,7 @@ const entries = [
   {
     "feature": "payment",
     "group": "缴费管理",
-    "color": 7,
+    "color": 2,
     "label": "在线缴费",
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
@@ -82,7 +82,7 @@ const entries = [
   {
     "feature": "payment",
     "group": "缴费管理",
-    "color": 7,
+    "color": 2,
     "label": "缴费记录",
     "id": "timeline-add-timers",
     "action": "action-3",
@@ -92,7 +92,7 @@ const entries = [
   {
     "feature": "repair",
     "group": "报修服务",
-    "color": 8,
+    "color": 3,
     "label": "提交报修",
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
@@ -102,7 +102,7 @@ const entries = [
   {
     "feature": "repair",
     "group": "报修服务",
-    "color": 8,
+    "color": 3,
     "label": "查看进度",
     "id": "timeline-timeline-methods-seek",
     "action": "action-2",
@@ -112,7 +112,7 @@ const entries = [
   {
     "feature": "repair",
     "group": "报修服务",
-    "color": 8,
+    "color": 3,
     "label": "服务评价",
     "id": "utilities-stagger-stagger-parameters-stagger-grid",
     "action": "action-3",
@@ -122,7 +122,7 @@ const entries = [
   {
     "feature": "announcements",
     "group": "公告查看",
-    "color": 11,
+    "color": 4,
     "label": "公寓通知",
     "id": "text-splittext",
     "action": "action-1",
@@ -132,7 +132,7 @@ const entries = [
   {
     "feature": "announcements",
     "group": "公告查看",
-    "color": 11,
+    "color": 4,
     "label": "缴费提醒",
     "id": "timer-timer-callbacks-oncomplete",
     "action": "action-2",
@@ -142,7 +142,7 @@ const entries = [
   {
     "feature": "notifications",
     "group": "个人消息",
-    "color": 12,
+    "color": 5,
     "label": "消息通知",
     "id": "timeline-call-functions",
     "action": "action-1",

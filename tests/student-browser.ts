@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import type { Browser, BrowserContext } from '@playwright/test';
 import { expect } from '@playwright/test';
 import entries from '../src/data/student-docs.json';
+import {studentThemeRegression} from './student-themes';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -29,6 +30,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     }
     async function submit() { await frame.getByRole('button', { name: '确认提交', exact: true }).click(); await frame.getByText('操作已保存。', { exact: true }).waitFor(); }
     await go('personal', 1);
+    await studentThemeRegression(page);
     await expect(frame.locator('#toggle-search')).toBeEnabled();
     // Exercise the actual native menu and demo switching, not just direct URLs.
     for (const entry of entries) {

@@ -14,6 +14,12 @@ export async function verifyStudentTemplate() {
   }
   assert.deepEqual(entries.map(e=>`${e.feature}/${e.action}`),roleFeatures.student.flatMap(f=>f.actions.map(a=>`${f.id}/${a.id}`)));
   const html=await readFile('public/assets/student/index.html','utf8');
+  const sidebar=html.match(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/)?.[0];assert(sidebar);
+  const links=[...sidebar.matchAll(/<a class="docs-link"[^>]*data-id="([^"]+)"/g)].map(match=>match[1]);
+  assert.equal(links.length,entries.length,'每个功能应有独立侧栏链接');
+  assert.equal(new Set(links).size,links.length,'功能标识不能与模块标题重复');
+  const children=[...sidebar.matchAll(/<li class="([^"]*docs-action[^"]*)"/g)];assert.equal(children.length,entries.length);
+  for(const child of children)assert.match(child[1].split(/\s+/)[2],/^color-/, '搜索依赖子功能的第三个class读取主题');
   for(const id of ['site-header','docs-sidebar','docs-demos','docs-info','toggle-search','docs-search-input'])assert(html.includes(`id="${id}"`),`缺少母版区域 ${id}`);
   const demos=await readFile('public/assets/student/assets/html/student-demos.html','utf8');
   for(const entry of entries){assert(demos.includes(`data-id="${entry.id}"`),`缺少预览 ${entry.label}`);const page=await readFile(`public/assets/student/pages/${entry.feature}-${entry.action}.html`,'utf8');assert(page.includes(entry.description));}
