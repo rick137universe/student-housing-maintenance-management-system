@@ -24,28 +24,27 @@ function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 
 export function StudentFinancePage({actionId}:{actionId:string}){
   const router=useRouter(),params=useSearchParams();
   const entry=studentPages.find(entry=>entry.feature==='payment'&&entry.action===actionId)!;
-  const record=params.get('record'),search=(params.get('q')??'').slice(0,100);
+  const record=params.get('record');
   const requestedPage=Number(params.get('page')??1);
   const page=Number.isSafeInteger(requestedPage)&&requestedPage>0&&requestedPage<=100000?requestedPage:1;
   const query=new URLSearchParams();
-  if(search)query.set('q',search);
   if(page>1)query.set('page',String(page));
   const listUrl=entry.url+(query.size?'?'+query:'');
   const navigate=useCallback((url:string)=>{router.push(url,{scroll:false});},[router]);
-  return <FinanceContent key={[actionId,record,page,search].join(':')} entry={entry} record={record} search={search} page={page} listUrl={listUrl} navigate={navigate}/>;
+  return <FinanceContent key={[actionId,record,page].join(':')} entry={entry} record={record} page={page} listUrl={listUrl} navigate={navigate}/>;
 }
 
-function FinanceContent({entry,record,search,page,listUrl,navigate}:{entry:Entry;record:string|null;search:string;page:number;listUrl:string;navigate:(url:string)=>void}){
+function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record:string|null;page:number;listUrl:string;navigate:(url:string)=>void}){
   const root=useRef<HTMLDivElement>(null);
   const payments=entry.action==='action-3',resource=payments?'payments':'bills';
   const [rows,setRows]=useState<Row[]>([]),[detail,setDetail]=useState<Row|null>(null),[total,setTotal]=useState(0);
-  const [loading,setLoading]=useState(true),[error,setError]=useState(''),[draft,setDraft]=useState(search),[paying,setPaying]=useState(false);
+  const [loading,setLoading]=useState(true),[error,setError]=useState(''),[paying,setPaying]=useState(false);
   const detailTitle=payments?'缴费记录详情':'账单详情';
   const load=useCallback(async(signal?:AbortSignal)=>{
     setLoading(true);setError('');
     try{
       if(record!==null&&(!/^[1-9]\d{0,18}$/.test(record)||(record.length===19&&record>'9223372036854775807')))throw new Error('记录不存在或不可访问。');
-      const query=new URLSearchParams({q:search,page:String(page),limit:'20'});
+      const query=new URLSearchParams({page:String(page),limit:'20'});
       if(entry.action==='action-2')query.set('unpaid','true');
       const result=await api<Row|Row[]>(record!==null?`${resource}/${record}`:`${resource}?${query}`,{signal});
       if(signal?.aborted)return;
@@ -53,12 +52,12 @@ function FinanceContent({entry,record,search,page,listUrl,navigate}:{entry:Entry
       else setDetail(result.data);
     }catch(reason){if(!signal?.aborted){setDetail(null);setRows([]);setError(reason instanceof Error?reason.message:'读取失败，请重试。');}}
     finally{if(!signal?.aborted)setLoading(false);}
-  },[entry.action,page,record,resource,search]);
+  },[entry.action,page,record,resource]);
   useEffect(()=>{const controller=new AbortController();void load(controller.signal);return()=>controller.abort();},[load]);
 
   // Keep the copied Docs shell, preview and typography; only replace this page's heading and parent link.
   useLayoutEffect(()=>{
-    if(record===null)return;
+    if(record===null){root.current?.closest('.docs-info')?.scrollIntoView({block:'start'});return;}
     const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!;
     const business=root.current!.closest('[data-dorma-business]')!,content=info.querySelector('.docs-info-content.formatted-text')!;
     content.append(business);
@@ -73,17 +72,27 @@ function FinanceContent({entry,record,search,page,listUrl,navigate}:{entry:Entry
       event.preventDefault();event.stopPropagation();navigate(listUrl);
     };
     const stay=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();};
+    const previousLink=info.querySelector<HTMLAnchorElement>('.prev-link a')!,backLink=previousLink.cloneNode(true) as HTMLAnchorElement;
+    backLink.href=listUrl;backLink.title=entry.label;backLink.dataset.id=entry.id;backLink.dataset.color=String(entry.color);backLink.className='text-ui color-orange';
+    for(const node of [...backLink.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();
+    backLink.append(entry.label);previousLink.replaceWith(backLink);
+    const nextItem=info.querySelector('.next-link')!,nextHeading=info.querySelector('.prev-next-heading')!.children[1];
+    const emptyItem=doc.createElement('li'),emptyHeading=nextHeading.cloneNode(false) as HTMLElement;
+    emptyItem.setAttribute('aria-hidden','true');emptyHeading.setAttribute('aria-hidden','true');
+    nextItem.replaceWith(emptyItem);nextHeading.replaceWith(emptyHeading);backLink.addEventListener('click',returnToList);
     breadcrumb.addEventListener('click',returnToList);title.addEventListener('click',stay);
     info.scrollIntoView({block:'start'});
     return()=>{
       breadcrumb.removeEventListener('click',returnToList);title.removeEventListener('click',stay);
+      backLink.removeEventListener('click',returnToList);
       if(info.isConnected){
+        backLink.replaceWith(previousLink);emptyItem.replaceWith(nextItem);emptyHeading.replaceWith(nextHeading);
         content.after(business);
         title.textContent=previous.title;title.href=previous.href;title.title=previous.tooltip;description.textContent=previous.description;
         breadcrumb.textContent=previous.breadcrumb;breadcrumb.href=previous.parent;breadcrumb.title=previous.parentTitle;doc.title=previous.documentTitle;
       }
     };
-  },[record,detailTitle,payments,entry.label,listUrl,navigate]);
+  },[record,detailTitle,payments,entry.label,entry.id,entry.color,listUrl,navigate]);
 
   function link(url:string,event:MouseEvent<HTMLAnchorElement>){
     event.stopPropagation();
@@ -91,10 +100,9 @@ function FinanceContent({entry,record,search,page,listUrl,navigate}:{entry:Entry
     event.preventDefault();navigate(url);
   }
   function navigation(label:ReactNode,url:string,key:string){return <li key={key}><a className="text-ui color-orange" data-color="2" href={url} target="_top" onClick={event=>link(url,event)}>{label}<Arrow/></a></li>;}
-  function pageUrl(next:number,q=search){const query=new URLSearchParams();if(q)query.set('q',q);if(next>1)query.set('page',String(next));return entry.url+(query.size?'?'+query:'');}
+  function pageUrl(next:number){return entry.url+(next>1?'?page='+next:'');}
 
   return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-finance>
-    {record===null&&<form onSubmit={event=>{event.preventDefault();navigate(pageUrl(1,draft.trim()));}}><label>搜索记录<input className="ui-input" value={draft} onChange={event=>setDraft(event.target.value)} placeholder="输入关键词"/></label><span className="ui-controls"><button disabled={loading}>搜索</button></span></form>}
     {error&&<p role="alert">{error}</p>}
     {loading?<p role="status">正在读取…</p>:record===null?<>
       <ul className="links-list links-list-boxed" data-dorma-finance-list>{rows.map(row=>{
