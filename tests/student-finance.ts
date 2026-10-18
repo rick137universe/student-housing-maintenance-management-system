@@ -9,7 +9,20 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   async function get(resource:string){const response=await page.request.get(origin+'/api/v1/'+resource);assert.equal(response.status(),200);return (await response.json()).data;}
   const bill=(await get('bills'))[0],id=String(bill.bill_id);
   const code=(label:string)=>values.getByRole('heading',{name:label,exact:true}).locator('+ pre > code');
+  const reads={bills:0,unpaid:0,payments:0,detail:0};
+  const track=(request:import('@playwright/test').Request)=>{
+    const url=new URL(request.url());
+    if(request.method()!=='GET')return;
+    if(url.pathname==='/api/v1/bills')reads[url.searchParams.get('unpaid')==='true'?'unpaid':'bills']++;
+    if(url.pathname==='/api/v1/payments')reads.payments++;
+    if(url.pathname==='/api/v1/bills/'+id)reads.detail++;
+  };
+  const slowLists=async(route:import('@playwright/test').Route)=>{await new Promise(resolve=>setTimeout(resolve,500));await route.continue();};
+  page.on('request',track);await page.route(/\/api\/v1\/(bills|payments)\?/,slowLists);
   await page.goto(base+'action-1');
+  await expect(frame.locator('[data-dorma-finance]')).toBeAttached();
+  await expect(frame.locator('[data-dorma-finance]').getByText('正在读取…',{exact:true})).toHaveCount(0);
+  await expect(frame.locator('[data-dorma-finance]').getByText('暂无记录。',{exact:true})).toHaveCount(0);
   await expect(list.locator('a')).toHaveText([`${bill.billing_period} · 12.00 · 未缴`]);
   await expectTop();
   await expect(list.locator('a')).toHaveCSS('text-decoration-line','none');
@@ -21,6 +34,8 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText('查看账单');
   await expectTop();
   await expect(code('账期')).toHaveText(bill.billing_period);await expect(code('住宿费')).toHaveText('10.00');await expect(code('水电费')).toHaveText('2.00');
+  assert.deepEqual(reads,{bills:1,unpaid:1,payments:1,detail:0},'预读应合并重复请求，并使用已取得的账单完整资料打开详情');
+  page.off('request',track);await page.unroute(/\/api\/v1\/(bills|payments)\?/,slowLists);
   await expect(values.locator('pre > button.copy-button')).toHaveCount(13);
   await expect(frame.locator('#docs-info .prev-link a')).toHaveText('查看账单');
   await expect(frame.locator('#docs-info .next-link')).toHaveCount(0);
@@ -74,5 +89,5 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   for(const record of [foreignBillId,'999999999999999999','9999999999999999999','invalid']){
     await page.goto(base+'action-1?record='+record);await expect(frame.locator('[data-dorma-finance]').getByRole('alert')).toContainText('不存在或不可访问');await expect(values).toHaveCount(0);
   }
-  console.log('学生缴费页面回归通过：无记录搜索、三类详情仅保留返回列表的上一个、刷新/前进后退、代码框复制、失败/取消/分批缴清、跨账号拒绝及手机布局。');
+  console.log('学生缴费页面回归通过：延迟请求无读取提示、预读去重及详情无额外请求、无记录搜索、详情返回与顶部定位、失败/取消/分批缴清、跨账号拒绝及手机布局。');
 }

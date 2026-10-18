@@ -5,6 +5,7 @@ import {useRouter,useSearchParams} from 'next/navigation';
 import {api} from '@/utils/auth-session';
 import {studentPages} from '@/data/student-pages';
 import {valueLabels} from '@/data/workspace-actions';
+import {financeListPath,type StudentFinanceData} from '@/utils/student-finance-data';
 
 type Row=Record<string,unknown>;
 type Entry=typeof studentPages[number];
@@ -21,7 +22,7 @@ function display(key:string,value:unknown){
 }
 function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><g fill="none" fillRule="evenodd"><polygon fill="currentColor" fillRule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/></g></svg>;}
 
-export function StudentFinancePage({actionId}:{actionId:string}){
+export function StudentFinancePage({actionId,data}:{actionId:string;data:StudentFinanceData}){
   const router=useRouter(),params=useSearchParams();
   const entry=studentPages.find(entry=>entry.feature==='payment'&&entry.action===actionId)!;
   const record=params.get('record');
@@ -31,29 +32,35 @@ export function StudentFinancePage({actionId}:{actionId:string}){
   if(page>1)query.set('page',String(page));
   const listUrl=entry.url+(query.size?'?'+query:'');
   const navigate=useCallback((url:string)=>{router.push(url,{scroll:false});},[router]);
-  return <FinanceContent key={[actionId,record,page].join(':')} entry={entry} record={record} page={page} listUrl={listUrl} navigate={navigate}/>;
+  return <FinanceContent key={[actionId,record,page].join(':')} data={data} entry={entry} record={record} page={page} listUrl={listUrl} navigate={navigate}/>;
 }
 
-function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record:string|null;page:number;listUrl:string;navigate:(url:string)=>void}){
+function FinanceContent({data,entry,record,page,listUrl,navigate}:{data:StudentFinanceData;entry:Entry;record:string|null;page:number;listUrl:string;navigate:(url:string)=>void}){
   const root=useRef<HTMLDivElement>(null);
+  const router=useRouter(),request=useRef({version:0});
   const payments=entry.action==='action-3',resource=payments?'payments':'bills';
-  const [rows,setRows]=useState<Row[]>([]),[detail,setDetail]=useState<Row|null>(null),[total,setTotal]=useState(0);
+  const path=record!==null?`${resource}/${record}`:financeListPath(entry.action,page);
+  const [result,setResult]=useState(()=>data.peek(path));
+  const rows=Array.isArray(result?.data)?result.data:[],detail=result&&!Array.isArray(result.data)?result.data:null,total=result?.meta?.total??rows.length;
   const [loading,setLoading]=useState(true),[error,setError]=useState(''),[paying,setPaying]=useState(false);
   const detailTitle=payments?'缴费记录详情':'账单详情';
-  const load=useCallback(async(signal?:AbortSignal)=>{
+  const load=useCallback(async(force=false)=>{
+    const state=request.current,current=++state.version;
     setLoading(true);setError('');
     try{
       if(record!==null&&(!/^[1-9]\d{0,18}$/.test(record)||(record.length===19&&record>'9223372036854775807')))throw new Error('记录不存在或不可访问。');
-      const query=new URLSearchParams({page:String(page),limit:'20'});
-      if(entry.action==='action-2')query.set('unpaid','true');
-      const result=await api<Row|Row[]>(record!==null?`${resource}/${record}`:`${resource}?${query}`,{signal});
-      if(signal?.aborted)return;
-      if(Array.isArray(result.data)){setRows(result.data);setTotal(result.meta?.total??result.data.length);}
-      else setDetail(result.data);
-    }catch(reason){if(!signal?.aborted){setDetail(null);setRows([]);setError(reason instanceof Error?reason.message:'读取失败，请重试。');}}
-    finally{if(!signal?.aborted)setLoading(false);}
-  },[entry.action,page,record,resource]);
-  useEffect(()=>{const controller=new AbortController();void load(controller.signal);return()=>controller.abort();},[load]);
+      const result=await data.load(path,force);
+      if(current===state.version)setResult(result);
+    }catch(reason){if(current===state.version){setResult(undefined);setError(reason instanceof Error?reason.message:'读取失败，请重试。');}}
+    finally{if(current===state.version)setLoading(false);}
+  },[data,path,record]);
+  useEffect(()=>{
+    const state=request.current;
+    void load();
+    const refresh=()=>{if(root.current?.ownerDocument.visibilityState==='visible')void load();};
+    window.addEventListener('focus',refresh);
+    return()=>{state.version++;window.removeEventListener('focus',refresh);};
+  },[load]);
 
   // Keep the copied Docs shell, preview and typography; only replace this page's heading and parent link.
   useLayoutEffect(()=>{
@@ -103,12 +110,12 @@ function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record
     if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
     event.preventDefault();navigate(url);
   }
-  function navigation(label:ReactNode,url:string,key:string){return <li key={key}><a className="text-ui color-orange" data-color="2" href={url} target="_top" onClick={event=>link(url,event)}>{label}<Arrow/></a></li>;}
+  function navigation(label:ReactNode,url:string,key:string){return <li key={key}><a className="text-ui color-orange" data-color="2" href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{label}<Arrow/></a></li>;}
   function pageUrl(next:number){return entry.url+(next>1?'?page='+next:'');}
 
-  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-finance>
+  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-finance aria-busy={loading}>
     {error&&<p role="alert">{error}</p>}
-    {loading?<p role="status">正在读取…</p>:record===null?<>
+    {result&&(record===null?<>
       <ul className="links-list links-list-boxed" data-dorma-finance-list>{rows.map(row=>{
         const id=String(row[payments?'payment_id':'bill_id']);
         const summary=payments?`${display('amount',row.amount)} · ${display('paid_at',row.paid_at)}`:`${display('billing_period',row.billing_period)} · ${display('total_amount',row.total_amount)} · ${display('bill_status',row.bill_status)}`;
@@ -118,8 +125,8 @@ function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record
       {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(pageUrl(page-1))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(pageUrl(page+1))}>下一页</button></div></>}
     </>:detail&&<>
       <div data-dorma-finance-values>{(payments?paymentFields:billFields).map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(key,detail[key])}</code></pre></Fragment>)}</div>
-      {entry.action==='action-2'&&detail.bill_status!=='paid'&&(paying?<PaymentForm bill={detail} onCancel={()=>setPaying(false)} onSaved={async()=>{setPaying(false);await load();}}/>:<div className="ui-controls"><button onClick={()=>setPaying(true)}>测试支付</button></div>)}
-    </>}
+      {entry.action==='action-2'&&detail.bill_status!=='paid'&&(paying?<PaymentForm bill={detail} onCancel={()=>setPaying(false)} onSaved={async()=>{data.invalidate();await Promise.all([load(true),data.prefetchLists()]);setPaying(false);}}/>:<div className="ui-controls"><button onClick={()=>setPaying(true)}>测试支付</button></div>)}
+    </>)}
   </div>;
 }
 
