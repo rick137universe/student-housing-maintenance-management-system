@@ -1,5 +1,5 @@
 'use client';
-import { createContext,useContext,useCallback,useEffect,useRef,useState,type FormEvent } from 'react';
+import { Fragment,createContext,useContext,useCallback,useEffect,useRef,useState,type FormEvent } from 'react';
 import { api,saveAuthSession } from '@/utils/auth-session';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { workspaceSpec,columnLabels,valueLabels } from '@/data/workspace-actions';
@@ -130,7 +130,7 @@ export function LiveWorkspace({account,featureId,actionId}:{account:Account;feat
   {error&&<p className={l.error} role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {spec.mode==='import'&&<div className={l.toolbar}><button onClick={()=>void download(`export/${resource}/template`)}>下载导入模板</button><label>选择CSV文件<input type="file" accept=".csv,text/csv" disabled={pending} onChange={event=>{const file=event.target.files?.[0];if(file)void upload(file);event.target.value='';}}/></label></div>}
   {spec.mode==='export'&&<button className={l.button} onClick={()=>void download(resource==='statistics'?'statistics/export':`export/${resource}`)}>导出真实数据 CSV</button>}
-  {spec.mode==='profile'&&docs&&<DataTable rows={['username','student_number','full_name','gender','college','grade','phone','email'].map(key=>({title:columnLabels[key]??key,content:text(object[key])})).concat(Array.isArray(object.occupancies)?object.occupancies.map(row=>({title:'住宿记录',content:String((row as Row).bed_id)+' · '+((row as Row).check_out_date?'已退宿':'当前入住')})):[])} keys={['title','content']}/>}
+  {spec.mode==='profile'&&docs&&<div data-dorma-profile>{['username','student_number','full_name','gender','college','grade','phone','email'].map(key=>({title:columnLabels[key]??key,content:text(object[key])})).concat(Array.isArray(object.occupancies)?object.occupancies.map(row=>({title:'住宿记录',content:String((row as Row).bed_id)+' · '+((row as Row).check_out_date?'已退宿':'当前入住')})):[]).map((item,index)=><Fragment key={index}><h3>{item.title}</h3><pre><code className="hljs language-plaintext">{item.content}</code></pre></Fragment>)}</div>}
   {spec.mode==='profile'&&!docs&&<dl className={s.profile}>{['username','student_number','full_name','gender','college','grade','phone','email'].map(key=><div key={key}><dt>{columnLabels[key]??key}</dt><dd>{text(object[key])}</dd></div>)}{Array.isArray(object.occupancies)&&<div><dt>住宿记录</dt><dd>{(object.occupancies as Row[]).map(row=><p key={val(row,'occupancy_id')}>{val(row,'bed_id')} · {row.check_out_date?'已退宿':'当前入住'}</p>)}</dd></div>}</dl>}
   {spec.mode==='profile-edit'&&<button className={l.button} onClick={()=>setEditor({title:'修改个人资料',path:'profile',method:'PATCH',fields:[field('fullName','姓名'),field('phone','联系电话','tel',false),field('email','邮箱','email',false)],initial:{fullName:object.full_name,phone:object.phone,email:object.email}})}>修改资料</button>}
   {spec.mode==='password'&&<button className={l.button} onClick={()=>setEditor({title:'修改密码',path:'profile/password',fields:[field('currentPassword','当前密码','password'),field('newPassword','新密码（至少8字符）','password')]})}>修改登录密码</button>}

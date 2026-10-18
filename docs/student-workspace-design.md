@@ -18,7 +18,7 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 
 | 学生功能 | 母版预览 | 右侧采用的原有元素 |
 | --- | --- | --- |
-| 查看个人信息 | CSS 属性展示 | Docs 标题、正文、参数表格，用真实账号资料和住宿记录替换内容 |
+| 查看个人信息 | CSS 属性展示 | Installation 的 `h3` 标题和 `pre > code` 代码框，逐项展示真实账号资料及住宿记录，并复用母版复制按钮 |
 | 修改个人信息 | Animatable setters 的指针跟随示例 | 参数表格、`ui-input` 和 `ui-controls`，填入姓名、电话和邮箱 |
 | 修改登录密码 | HTML attributes 的输入控件示例 | 相同参数表格和输入控件，密码字段使用密码输入类型 |
 | 入住、调宿、退宿 | CSS transforms、timeline add animations、reversed | 原有数据表、表格中的表单控件及操作按钮，连接申请和审核结果 |
@@ -27,6 +27,8 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 | 公寓通知、缴费提醒、个人消息 | splitText、timer onComplete、timeline call functions | 表格、详情正文和已读操作 |
 
 动画用于解释页面对应的操作，真实业务数据由右侧接口查询结果提供。选中的预览函数、样式与元素来自母版 `documentation-demos.html`，只筛选所需条目、替换标题和可见提示。完整原始示例文件也保留在副本中，以便核对来源。具体映射见 `src/data/student-docs.json`。
+
+查看个人信息使用母版 Installation 的 ES Modules / CommonJS 区域结构：每项资料的 `h3` 后紧邻 `pre > code.hljs`，不添加字号、内边距和间距覆盖。资料为纯文本，不做语法着色；空值仍显示“—”。数据加载后由文档适配脚本复用原始 `CopyButton` 组件，复制当前字段内容。其余页面的表格和表单不受影响。
 
 ## 业务与路由
 

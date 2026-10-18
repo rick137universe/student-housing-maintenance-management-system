@@ -1,4 +1,5 @@
 import entries from './student-entries.js';
+import { c as CopyButton } from './chunks/chunk-WQVFBASJ.js';
 const requested = new URLSearchParams(location.search).get('entry');
 const initial = entries.find(entry => entry.id === requested) ?? entries[0];
 const active = document.querySelector(`#docs-sidebar li > a[data-id="${initial.id}"]`);
@@ -75,6 +76,21 @@ const announce = () => {
   if (entries.some(entry => entry.id === id)) parent.postMessage({ type: 'dorma-student-page', id }, location.origin);
 };
 new MutationObserver(announce).observe(document.querySelector('#docs-info'), { childList: true });
+// Business data arrives after the native Docs highlighter has initialized.
+// Reuse its unchanged copy widget when profile code blocks appear or update.
+const profileCopies = new WeakMap();
+new MutationObserver(() => {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre')) {
+    const value = pre.querySelector('code').textContent;
+    if (profileCopies.get(pre)?.data === value) continue;
+    pre.querySelector('.copy-button')?.remove();
+    const copy = new CopyButton(value);
+    copy.$el.type = 'button';
+    copy.$el.title = '复制' + pre.previousElementSibling.textContent;
+    pre.append(copy.$el);
+    profileCopies.set(pre, copy);
+  }
+}).observe(document.querySelector('#docs-info'), { childList: true, subtree: true, characterData: true });
 window.addEventListener('load', () => {
   // The copied core initializes this widget before the document load event.
   document.querySelector('#docs-versions')?.remove();
