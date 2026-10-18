@@ -6,6 +6,7 @@ import {studentThemeRegression} from './student-themes';
 import {studentNavigationRegression} from './student-navigation';
 import {studentProfileRegression} from './student-profile';
 import {studentProfileEditorRegression} from './student-profile-editor';
+import {studentPasswordEditorRegression} from './student-password-editor';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -78,6 +79,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     const transfer = (await student.call('changes?type=transfer'))[0]; await manager.call(`changes/${transfer.change_id}/review`, { decision: 'approve' });
     await go('accommodation', 3); await frame.getByRole('button', { name: '提交退宿申请', exact: true }).click(); await submit();
     const checkout = (await student.call('changes?type=checkout'))[0]; await manager.call(`changes/${checkout.change_id}/review`, { decision: 'approve' });
+    await go('personal',3);await studentPasswordEditorRegression(page,password);
     await go('notifications', 1); await frame.getByRole('button', { name: '标为已读', exact: true }).first().click(); await frame.getByText('操作已保存。', { exact: true }).waitFor();
     await page.setViewportSize({ width: 390, height: 844 }); await frame.locator('#toggle-sidebar').click();
     await expect(frame.locator('#docs-sidebar')).toHaveClass(/is-active/);

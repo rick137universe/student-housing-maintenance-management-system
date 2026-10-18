@@ -13,7 +13,7 @@ info.querySelector('h1 a').href = initial.url;
 info.querySelector('h1 a').title = initial.label;
 info.querySelector('h1').dataset.color = initial.color;
 info.querySelector('[data-dorma-description]').textContent = initial.description;
-if (initial.feature === 'personal' && initial.action === 'action-2') {
+if (initial.feature === 'personal' && ['action-2', 'action-3'].includes(initial.action)) {
   info.querySelector('.docs-info-content').after(info.querySelector('[data-dorma-business]'));
 }
 const breadcrumb = info.querySelector('.docs-breadcrumb');

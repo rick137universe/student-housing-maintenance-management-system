@@ -1,4 +1,24 @@
 /* Keep the template hover color; action buttons show a line only while pressed. */
-[data-dorma-profile-editor] .code-preview-button:not(:disabled):active {
+[data-dorma-profile-editor] .code-preview-button:not(:disabled):active,
+[data-dorma-password-editor] .code-preview-button:not(:disabled):active {
   border-bottom-color: var(--hex-current-1);
+}
+
+/* Let the masked input occupy the template code line without browser chrome. */
+[data-dorma-password-editor] input[type="password"] {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 1lh;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
 }
