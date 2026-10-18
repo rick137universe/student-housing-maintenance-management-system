@@ -1,0 +1,4 @@
+/* Keep the template hover color; action buttons show a line only while pressed. */
+[data-dorma-profile-editor] .code-preview-button:not(:disabled):active {
+  border-bottom-color: var(--hex-current-1);
+}

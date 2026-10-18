@@ -63,7 +63,7 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
           <header>
             <div className="code-preview-title"><h2 id={'profile-title-'+field.key} className="text-ui">{field.label}</h2></div>
             <nav aria-label={field.label+'编辑操作'}>
-              <button type="button" className={'code-preview-button text-ui'+(editing?' is-active':'')} disabled={!editing||pending||loading} onClick={event=>{event.stopPropagation();void confirm(field.key);}}>确认</button>
+              <button type="button" className="code-preview-button text-ui" disabled={!editing||pending||loading} onClick={event=>{event.stopPropagation();void confirm(field.key);}}>确认</button>
               <button type="button" className="code-preview-button text-ui" disabled={!editing||pending||loading} onClick={event=>{event.stopPropagation();cancel();}}>取消</button>
               <button type="button" className="ui-input code-edit-button text-ui" title={'编辑'+field.label} aria-pressed={editing} disabled={pending||loading||Boolean(active)} onClick={event=>{event.stopPropagation();edit(field.key,field.column);}}>
                 <svg className="icon" width="24" height="24" viewBox="0 0 24 24"><g fill="none" strokeWidth="1.75"><polygon stroke="currentColor" points="13.5 8.5 7.5 14.5 7.5 17.5 10.5 17.5 16.5 11.5"/><path stroke="currentColor" d="M18.0857864,7.08578644 L17.9142136,6.91421356 C17.133165,6.13316498 15.866835,6.13316498 15.0857864,6.91421356 L13.5,8.5 L13.5,8.5 L16.5,11.5 L18.0857864,9.91421356 C18.866835,9.13316498 18.866835,7.86683502 18.0857864,7.08578644 Z"/></g></svg>
