@@ -13,6 +13,9 @@ info.querySelector('h1 a').href = initial.url;
 info.querySelector('h1 a').title = initial.label;
 info.querySelector('h1').dataset.color = initial.color;
 info.querySelector('[data-dorma-description]').textContent = initial.description;
+if (initial.feature === 'personal' && initial.action === 'action-2') {
+  info.querySelector('.docs-info-content').after(info.querySelector('[data-dorma-business]'));
+}
 const breadcrumb = info.querySelector('.docs-breadcrumb');
 if (initial.action === 'overview') breadcrumb.remove();
 else {
@@ -80,13 +83,13 @@ new MutationObserver(announce).observe(document.querySelector('#docs-info'), { c
 // Reuse its unchanged copy widget when profile code blocks appear or update.
 const profileCopies = new WeakMap();
 new MutationObserver(() => {
-  for (const pre of document.querySelectorAll('[data-dorma-profile] pre')) {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre')) {
     const value = pre.querySelector('code').textContent;
     if (profileCopies.get(pre)?.data === value) continue;
     pre.querySelector('.copy-button')?.remove();
     const copy = new CopyButton(value);
     copy.$el.type = 'button';
-    copy.$el.title = '复制' + pre.previousElementSibling.textContent;
+    copy.$el.title = '复制' + (pre.closest('[data-profile-field]')?.querySelector('h2').textContent ?? pre.previousElementSibling.textContent);
     pre.append(copy.$el);
     profileCopies.set(pre, copy);
   }
@@ -123,6 +126,7 @@ button.addEventListener('click', async () => {
   } finally { pending = false;button.disabled = false; }
 });
 window.addEventListener('focus', syncAccount);
+document.addEventListener('dorma-profile-saved', syncAccount);
 void syncAccount();
 const form = document.querySelector('#site-footer form');
 form.addEventListener('submit', event => { event.preventDefault(); event.stopImmediatePropagation(); const input=form.querySelector('input[type=email]');input.setCustomValidity('请使用工作台内的个人消息。');input.reportValidity(); }, true);

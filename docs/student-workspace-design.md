@@ -19,7 +19,7 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 | 学生功能 | 母版预览 | 右侧采用的原有元素 |
 | --- | --- | --- |
 | 查看个人信息 | CSS 属性展示 | Installation 的 `h3` 标题和 `pre > code` 代码框，逐项展示真实账号资料及住宿记录，并复用母版复制按钮 |
-| 修改个人信息 | Animatable setters 的指针跟随示例 | 参数表格、`ui-input` 和 `ui-controls`，填入姓名、电话和邮箱 |
+| 修改个人信息 | Animatable setters 的指针跟随示例 | Using with vanilla JS 的 `code-preview`：姓名、联系电话和邮箱分别使用带标题、确认／取消及铅笔按钮的代码块 |
 | 修改登录密码 | HTML attributes 的输入控件示例 | 相同参数表格和输入控件，密码字段使用密码输入类型 |
 | 入住、调宿、退宿 | CSS transforms、timeline add animations、reversed | 原有数据表、表格中的表单控件及操作按钮，连接申请和审核结果 |
 | 账单、在线缴费、缴费记录 | timer duration、onComplete、timeline add timers | 原有参数表格和输入控件，展示账期、余额和测试支付结果 |
@@ -29,6 +29,8 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 动画用于解释页面对应的操作，真实业务数据由右侧接口查询结果提供。选中的预览函数、样式与元素来自母版 `documentation-demos.html`，只筛选所需条目、替换标题和可见提示。完整原始示例文件也保留在副本中，以便核对来源。具体映射见 `src/data/student-docs.json`。
 
 查看个人信息使用母版 Installation 的 ES Modules / CommonJS 区域结构：每项资料的 `h3` 后紧邻 `pre > code.hljs`，不添加字号、内边距和间距覆盖。资料为纯文本，不做语法着色；空值仍显示“—”。数据加载后由文档适配脚本复用原始 `CopyButton` 组件，复制当前字段内容。其余页面的表格和表单不受影响。
+
+修改个人信息的代码块直接沿用母版 `documentation--getting-started--using-with-vanilla-js-1558d897/index.html` 的标题栏、标签按钮、铅笔 SVG 和代码区域结构。标签文本替换为“确认／取消”，铅笔进入当前字段的纯文本编辑；确认真实调用资料接口，取消或 Escape 恢复已保存值，Enter 确认。一次只编辑一项，保存时保留其他已保存字段；保存失败保留草稿并显示错误。空电话和邮箱保存为 null，姓名不可为空。编辑在当前页面完成，阻止母版原有 CodePen 跳转；姓名保存后同步顶部账户名称。不新增字体、尺寸或间距样式。
 
 ## 业务与路由
 

@@ -84,8 +84,8 @@ export async function browserRegression(origin:string,password:string){
     for(const theme of role==='student'?['母版']:['浅色','深色']){if(role!=='student')await workspace.getByRole('button',{name:theme,exact:true}).click();await page.screenshot({path:`docs/qa/backend/${role}-${size}-${theme}.png`,fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${role} ${size} overflow`);}
    }
    if(role==='student'){
-    await page.goto(`${origin}/workspace/student/personal/action-2`);await workspace.getByRole('button',{name:'修改资料',exact:true}).click();await workspace.getByLabel('姓名',{exact:true}).fill('林晓屿');await workspace.getByRole('button',{name:'确认提交',exact:true}).click();await workspace.getByText('操作已保存。',{exact:true}).waitFor();
-    await page.reload();await workspace.getByRole('button',{name:'修改资料',exact:true}).waitFor();assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0);
+    await page.goto(`${origin}/workspace/student/personal/action-2`);const nameEditor=workspace.locator('[data-profile-field="fullName"]');await nameEditor.getByRole('button',{name:'编辑姓名',exact:true}).click();await nameEditor.getByRole('textbox',{name:'姓名',exact:true}).fill('林晓屿');await nameEditor.getByRole('button',{name:'确认',exact:true}).click();await workspace.getByText('操作已保存。',{exact:true}).waitFor();
+    await page.reload();await expect(nameEditor.locator('code')).toHaveText('林晓屿');assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0);
    }
    const me=await (await page.request.get(origin+'/api/v1/auth/me')).json();
    await page.goto(origin);await page.mouse.move(0,500);
