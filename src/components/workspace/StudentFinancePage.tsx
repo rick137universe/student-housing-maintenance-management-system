@@ -57,7 +57,7 @@ function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record
 
   // Keep the copied Docs shell, preview and typography; only replace this page's heading and parent link.
   useLayoutEffect(()=>{
-    if(record===null){root.current?.closest('.docs-info')?.scrollIntoView({block:'start'});return;}
+    if(record===null)return;
     const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!;
     const business=root.current!.closest('[data-dorma-business]')!,content=info.querySelector('.docs-info-content.formatted-text')!;
     content.append(business);
@@ -81,7 +81,6 @@ function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record
     emptyItem.setAttribute('aria-hidden','true');emptyHeading.setAttribute('aria-hidden','true');
     nextItem.replaceWith(emptyItem);nextHeading.replaceWith(emptyHeading);backLink.addEventListener('click',returnToList);
     breadcrumb.addEventListener('click',returnToList);title.addEventListener('click',stay);
-    info.scrollIntoView({block:'start'});
     return()=>{
       breadcrumb.removeEventListener('click',returnToList);title.removeEventListener('click',stay);
       backLink.removeEventListener('click',returnToList);
@@ -93,6 +92,11 @@ function FinanceContent({entry,record,page,listUrl,navigate}:{entry:Entry;record
       }
     };
   },[record,detailTitle,payments,entry.label,entry.id,entry.color,listUrl,navigate]);
+
+  useLayoutEffect(()=>{
+    // The Docs content starts below its header. Aligning that element scrolls past the page's own top spacing.
+    root.current?.ownerDocument.scrollingElement?.scrollTo({top:0,behavior:'instant'});
+  },[]);
 
   function link(url:string,event:MouseEvent<HTMLAnchorElement>){
     event.stopPropagation();
