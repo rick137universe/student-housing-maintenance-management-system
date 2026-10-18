@@ -15,7 +15,7 @@ export async function studentProfileEditorRegression(page:Page){
   try{
     await name.getByRole('button',{name:'编辑姓名',exact:true}).click();
     const input=name.getByRole('textbox',{name:'姓名',exact:true});
-    await expect(input).toBeFocused();await input.fill('尚未确认的姓名');
+    await expect(input).toBeFocused();await expect(input).toHaveCSS('outline-style','none');await input.fill('尚未确认的姓名');
     await expect(phone.getByRole('button',{name:'编辑联系电话',exact:true})).toBeDisabled();
     await name.getByRole('button',{name:'取消',exact:true}).click();
     await expect(name.locator('code')).toHaveText(before.full_name);
@@ -23,7 +23,8 @@ export async function studentProfileEditorRegression(page:Page){
     await name.getByRole('button',{name:'编辑姓名',exact:true}).click();await input.fill('');
     await name.getByRole('button',{name:'确认',exact:true}).click();await expect(editor.getByRole('alert')).toHaveText('姓名不能为空。');
     await input.fill('代码块回归学生');await name.getByRole('button',{name:'确认',exact:true}).click();
-    await expect(editor.getByRole('status')).toHaveText('操作已保存。');
+    await expect(name.getByRole('textbox')).toHaveCount(0);
+    await expect(editor.getByRole('status')).toHaveCount(0);
     await expect(frame.locator('[data-dorma-account-name]')).toHaveText('代码块回归学生');
     let saved=(await (await page.request.get(new URL('/api/v1/profile',page.url()).href)).json()).data;
     assert.equal(saved.full_name,'代码块回归学生');assert.equal(saved.phone,before.phone);assert.equal(saved.email,before.email);

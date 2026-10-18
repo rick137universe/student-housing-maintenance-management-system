@@ -14,7 +14,6 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
   const [active,setActive]=useState<FieldKey|null>(null);
   const [pending,setPending]=useState(false);
   const [error,setError]=useState('');
-  const [message,setMessage]=useState('');
   const draft=useRef('');
   const saving=useRef(false);
   const root=useRef<HTMLDivElement>(null);
@@ -39,18 +38,18 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
   function edit(key:FieldKey,column:string){
     if(saving.current||loading||active)return;
     draft.current=String(profile[column]??'');
-    setError('');setMessage('');setActive(key);
+    setError('');setActive(key);
   }
-  function cancel(){if(saving.current)return;setActive(null);setError('');setMessage('');}
+  function cancel(){if(saving.current)return;setActive(null);setError('');}
   async function confirm(key:FieldKey){
     if(active!==key||saving.current||loading)return;
     const value=draft.current.replace(/[\r\n]+/g,' ').trim();
     if(key==='fullName'&&!value){setError('姓名不能为空。');return;}
-    saving.current=true;setPending(true);setError('');setMessage('');
+    saving.current=true;setPending(true);setError('');
     try{
       await api('profile',{method:'PATCH',body:JSON.stringify({fullName:String(profile.full_name??''),phone:profile.phone??null,email:profile.email??null,[key]:value||null})});
       await onSaved();
-      setActive(null);setMessage('操作已保存。');
+      setActive(null);
       root.current?.ownerDocument.dispatchEvent(new Event('dorma-profile-saved'));
     }catch(reason){setError(reason instanceof Error?reason.message:'保存失败，请重试。');}
     finally{saving.current=false;setPending(false);}
@@ -74,6 +73,7 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
           <div className="code-editor"><pre className="is-active" data-language="profile"><code
             ref={node=>{codes.current[field.key]=node;}}
             className="hljs language-plaintext"
+            style={{outline:'none'}}
             contentEditable={editing&&!pending&&!loading?'plaintext-only':false}
             suppressContentEditableWarning
             role={editing?'textbox':undefined}
@@ -92,6 +92,5 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
         </div>
       </section>;
     })}
-    {message&&<p role="status">{message}</p>}
   </div>;
 }
