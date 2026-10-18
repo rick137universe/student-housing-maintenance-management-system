@@ -7,6 +7,7 @@ import {studentNavigationRegression} from './student-navigation';
 import {studentProfileRegression} from './student-profile';
 import {studentProfileEditorRegression} from './student-profile-editor';
 import {studentPasswordEditorRegression} from './student-password-editor';
+import {studentFinanceRegression} from './student-finance';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -72,9 +73,8 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await go('repair', 2); await frame.getByRole('button', { name: '查看进度', exact: true }).click(); await expect(frame.getByRole('heading', { name: '报修处理进度' })).toBeVisible(); await frame.getByRole('button', { name: '关闭进度' }).click();
     await go('repair', 3); await frame.getByRole('button', { name: '评价', exact: true }).click(); await frame.getByLabel('服务评分', { exact: true }).selectOption('5'); await frame.getByLabel('评价内容', { exact: true }).fill('已修好'); await submit();
     await admin.call('bills', { studentNumber, period: '2026-10', accommodationFee: '10.00', utilityFee: '2.00', dueDate: '2026-12-31' });
-    await go('payment', 2); await frame.getByRole('button', { name: '测试支付', exact: true }).click(); await frame.getByLabel('支付金额', { exact: true }).fill('5.00'); await submit();
-    assert.equal((await student.call('bills'))[0].outstanding_amount, '7.00');
-    await go('payment', 3); await expect(frame.locator('tbody')).toContainText('5.00');
+    const foreignBill=(await admin.call('bills?limit=100')).find((bill:{student_number:string})=>bill.student_number!==studentNumber);
+    await studentFinanceRegression(page,foreignBill.bill_id);
     await go('accommodation', 2); await frame.getByRole('button', { name: '提交调宿申请', exact: true }).click(); await frame.getByLabel('意向楼栋', { exact: true }).selectOption('NY3'); await submit();
     const transfer = (await student.call('changes?type=transfer'))[0]; await manager.call(`changes/${transfer.change_id}/review`, { decision: 'approve' });
     await go('accommodation', 3); await frame.getByRole('button', { name: '提交退宿申请', exact: true }).click(); await submit();

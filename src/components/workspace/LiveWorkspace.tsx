@@ -8,6 +8,7 @@ import baseStyles from './BusinessPanel.module.css';
 import liveStyles from './LiveWorkspace.module.css';
 import {StudentProfileEditor} from './StudentProfileEditor';
 import {StudentPasswordEditor} from './StudentPasswordEditor';
+import {StudentFinancePage} from './StudentFinancePage';
 
 const DocsAppearance=createContext(false);
 function useStyles(){
@@ -16,7 +17,7 @@ function useStyles(){
  const map=(original:Record<string,string>)=>Object.fromEntries(Object.keys(original).map(key=>[key,native[key]??'']));
  return {docs,s:docs?map(baseStyles):baseStyles,l:docs?map(liveStyles):liveStyles};
 }
-export function DocsWorkspace(props:Parameters<typeof LiveWorkspace>[0]){return <DocsAppearance.Provider value={true}><LiveWorkspace {...props}/></DocsAppearance.Provider>;}
+export function DocsWorkspace(props:Parameters<typeof LiveWorkspace>[0]){return props.account.role==='student'&&props.featureId==='payment'?<StudentFinancePage actionId={props.actionId}/>:<DocsAppearance.Provider value={true}><LiveWorkspace {...props}/></DocsAppearance.Provider>;}
 
 type Row=Record<string,unknown>;
 type Field={key:string;label:string;type?:string;required?:boolean;options?:[string,string][];number?:boolean};

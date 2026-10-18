@@ -13,7 +13,7 @@ info.querySelector('h1 a').href = initial.url;
 info.querySelector('h1 a').title = initial.label;
 info.querySelector('h1').dataset.color = initial.color;
 info.querySelector('[data-dorma-description]').textContent = initial.description;
-if (initial.feature === 'personal' && ['action-2', 'action-3'].includes(initial.action)) {
+if ((initial.feature === 'personal' && ['action-2', 'action-3'].includes(initial.action)) || (initial.feature === 'payment' && initial.action !== 'overview')) {
   info.querySelector('.docs-info-content').after(info.querySelector('[data-dorma-business]'));
 }
 const breadcrumb = info.querySelector('.docs-breadcrumb');
@@ -83,7 +83,7 @@ new MutationObserver(announce).observe(document.querySelector('#docs-info'), { c
 // Reuse its unchanged copy widget when profile code blocks appear or update.
 const profileCopies = new WeakMap();
 new MutationObserver(() => {
-  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre')) {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-finance-values] pre')) {
     const value = pre.querySelector('code').textContent;
     if (profileCopies.get(pre)?.data === value) continue;
     pre.querySelector('.copy-button')?.remove();
