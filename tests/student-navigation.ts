@@ -33,6 +33,11 @@ export async function studentNavigationRegression(page:Page){
     await expect(page).toHaveURL(origin+children[0].url);
     await expect(frame.locator('[data-student-module-links]')).toHaveCount(0);
     await expect(frame.locator('[data-dorma-live-workspace]')).toBeVisible();
+    await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(group.label);
+    await frame.locator('#docs-info .docs-breadcrumb a').click();
+    await expect(page).toHaveURL(origin+group.url);
+    await expect(frame.locator('#docs-info .docs-breadcrumb')).toHaveCount(0);
+    await frame.locator('[data-student-module-links] a').first().click();
     const previous=frame.locator('#docs-info .prev-link a');
     await expect(previous).toHaveAttribute('href',group.url);
     await previous.click();
@@ -44,6 +49,9 @@ export async function studentNavigationRegression(page:Page){
     await frame.locator('#docs-info .next-link a').click();
     await expect(page).toHaveURL(origin+children[0].url);
     await expect(frame.locator('[data-dorma-live-workspace]')).toBeVisible();
+    await page.reload();
+    await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(group.label);
+    await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveAttribute('href',group.url);
   }
   // Native previous/next follows the same group/action order across group boundaries.
   const last=actions.at(-1)!;

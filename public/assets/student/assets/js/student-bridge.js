@@ -12,6 +12,14 @@ info.querySelector('h1 a').href = initial.url;
 info.querySelector('h1 a').title = initial.label;
 info.querySelector('h1').dataset.color = initial.color;
 info.querySelector('[data-dorma-description]').textContent = initial.description;
+const breadcrumb = info.querySelector('.docs-breadcrumb');
+if (initial.action === 'overview') breadcrumb.remove();
+else {
+  const group = entries.find(entry => entry.feature === initial.feature && entry.action === 'overview');
+  breadcrumb.dataset.color = group.color;
+  const link = breadcrumb.querySelector('a');
+  link.textContent = group.label; link.title = group.label; link.href = group.url;
+}
 const palette = ['red', 'corail', 'orange', 'yellow', 'citrus', 'lime'];
 const moduleLinks = info.querySelector('[data-student-module-links]');
 if (initial.action === 'overview') {

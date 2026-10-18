@@ -33,7 +33,15 @@ export async function verifyStudentTemplate() {
       assert(list);assert(!page.includes('data-dorma-business'));
       const targets=[...list.matchAll(/data-id="([^"]+)"/g)].map(match=>match[1]);
       assert.deepEqual(targets,entry.id===studentOverview.id ? modules.map(group=>group.id) : entries.filter(action=>action.feature===entry.feature).map(action=>action.id));
-    }else{assert.equal(list,undefined);assert(page.includes('data-dorma-business'));}
+      assert(!page.includes('class="docs-breadcrumb'));
+    }else{
+      assert.equal(list,undefined);assert(page.includes('data-dorma-business'));
+      const group=modules.find(group=>group.feature===entry.feature)!;
+      const breadcrumb=page.match(/<div class="docs-breadcrumb text-ui"[\s\S]*?<\/div>/)?.[0];assert(breadcrumb);
+      assert(breadcrumb.includes(`data-color="${group.color}"`));
+      assert(breadcrumb.includes(`title="${group.label}" href="${group.url}">${group.label}</a>`));
+      assert(!breadcrumb.includes('docs-breadcrumb-version'));
+    }
     for(const [direction,neighbor] of [['prev',studentPages[index-1]],['next',studentPages[index+1]]] as const){
       const link=page.match(new RegExp(`<li class="${direction}-link">([\\s\\S]*?)<\\/li>`))?.[1];assert(link!==undefined);
       if(neighbor)assert(link.includes(`data-id="${neighbor.id}"`));else assert(!link.includes('<a'));

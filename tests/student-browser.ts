@@ -42,6 +42,12 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
       await expect(frame.locator('#docs-info h1')).toHaveText(entry.label);
       await expect(frame.locator('.docs-demo.is-active')).toHaveAttribute('data-id', entry.id);
       await expect(frame.locator('[data-dorma-business]')).not.toBeEmpty();
+      const breadcrumb=frame.locator('#docs-info .docs-breadcrumb a');
+      await expect(breadcrumb).toHaveText(entry.group);
+      await expect(frame.locator('#docs-info .docs-breadcrumb')).toHaveAttribute('data-color',String(entry.color));
+      await breadcrumb.click();
+      await expect(frame.locator('#docs-info h1')).toHaveText(entry.group);
+      await expect(frame.locator('[data-student-module-links] a')).toHaveCount(entries.filter(action=>action.feature===entry.feature).length);
     }
     await frame.locator('#toggle-search').click(); await frame.locator('#docs-search-input').fill('入住申请'); await frame.locator('#docs-search-results a').first().click();
     await expect(frame.locator('#docs-info h1')).toHaveText('入住申请');
