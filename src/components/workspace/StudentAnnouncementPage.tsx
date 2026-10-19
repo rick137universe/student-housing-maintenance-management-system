@@ -61,7 +61,7 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   const saved={text:heading.textContent,href:heading.getAttribute('href')!,tooltip:heading.title,hidden:description.hidden,documentTitle:doc.title};
   heading.textContent=title;heading.href=detailUrl;heading.title=title;description.hidden=true;doc.querySelector('title')!.textContent=title+' · 学生工作台';
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),back=doc.createElement('a');
-  arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.href=listUrl;back.title=entry.label;back.textContent=entry.label;back.target='_top';crumbs.querySelector('p')!.append(arrow,back);breadcrumb.replaceWith(crumbs);
+  arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.href=listUrl;back.title=entry.label;back.textContent=entry.label;back.target='_top';crumbs.querySelector('p')!.append(' ',arrow,' ',back);breadcrumb.replaceWith(crumbs);
   const previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,replacement=previous.cloneNode(true) as HTMLAnchorElement;
   replacement.href=listUrl;replacement.title=entry.label;replacement.removeAttribute('data-id');replacement.dataset.color=String(entry.color);replacement.className='text-ui color-'+theme;
   for(const node of [...replacement.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();replacement.append(entry.label);previous.replaceWith(replacement);

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {expect,type Page} from '@playwright/test';
 import {expectStudentReveal} from './student-transitions';
+import {expectStudentBreadcrumbSpacing} from './student-breadcrumbs';
 
 type Row=Record<string,unknown>;
 type Client={call:(path:string,body?:object)=>Promise<unknown>};
@@ -21,6 +22,7 @@ export async function studentNotificationRegression(page:Page,admin:Client,peer:
  const target=list.locator(`a[href$="record=${id}"]`);await target.hover();await expect(target).toHaveCSS('color',color);
  await expectStudentReveal(page,()=>target.click(),String(first.title));await expect(page).toHaveURL(origin+base+'?record='+id);
  await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(['个人消息','消息通知']);
+ await expectStudentBreadcrumbSpacing(page);
  await expect(body).toContainText(String(first.content));await expect(body.locator('p').first()).toContainText('接收时间：');await expect(body).toContainText('未读');
  await expect(body.locator('pre,table')).toHaveCount(0);await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base);await expect(frame.locator('#docs-info .prev-link a')).toHaveClass(/color-lime/);
  const read=frame.locator('#docs-info .next-link').getByRole('button',{name:'标为已读',exact:true});await expect(read).toHaveClass(/color-lime/);await expect(read.locator('svg.icon')).toHaveCount(1);await expect(body.getByRole('button')).toHaveCount(0);

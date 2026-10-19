@@ -14,6 +14,7 @@ import {submitStudentAccommodation} from './student-accommodation-submit';
 import {studentRepairWorkflowRegression} from './student-repair';
 import {studentAnnouncementRegression} from './student-announcements';
 import {studentNotificationRegression} from './student-notifications';
+import {studentBreadcrumbRegression} from './student-breadcrumbs';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -32,7 +33,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     const studentNumber = 'UI' + Date.now().toString().slice(-9);
     await admin.call('students', { student_number: studentNumber, full_name: '浏览器回归学生', gender: 'male', college: '计算机学院', grade: '2026', password });
     const student = await session('stu' + studentNumber), page = await student.context.newPage();
-    const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+    const errors: string[] = []; page.on('pageerror', error => errors.push(page.url()+': '+(error.stack??error.message)));
     const frame = page.frameLocator('[data-dorma-student-frame]');
     async function go(feature: string, action: number) {
       await page.goto(`${origin}/workspace/student/${feature}/action-${action}`);
@@ -47,6 +48,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await studentThemeRegression(page);
     await studentNestedThemeRegression(page);
     await studentNavigationRegression(page);
+    await studentBreadcrumbRegression(page);
     await studentTransitionRegression(page);
     await studentAccommodationNavigationRegression(page);
     await expect(frame.locator('#toggle-search')).toBeEnabled();

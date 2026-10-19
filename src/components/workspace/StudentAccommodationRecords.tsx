@@ -71,7 +71,7 @@ function RecordsContent({entry,data,record,page,listUrl,navigate}:{entry:Student
     heading.textContent=title;heading.href=detailUrl;heading.title=title;description.textContent='查看本次申请的床位安排、审核状态及办理信息。';doc.title=title+' · 学生工作台';
     const replacementBreadcrumb=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),back=doc.createElement('a');
     arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.textContent=entry.label;back.href=listUrl;back.title=entry.label;back.target='_top';
-    replacementBreadcrumb.querySelector('p')!.append(arrow,back);breadcrumb.replaceWith(replacementBreadcrumb);
+    replacementBreadcrumb.querySelector('p')!.append(' ',arrow,' ',back);breadcrumb.replaceWith(replacementBreadcrumb);
     const previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,replacement=previous.cloneNode(true) as HTMLAnchorElement;
     replacement.href=listUrl;replacement.title=entry.label;replacement.dataset.id=entry.id;replacement.dataset.color=String(entry.color);replacement.className='text-ui color-corail';
     for(const node of [...replacement.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();

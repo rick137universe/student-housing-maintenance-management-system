@@ -28,7 +28,7 @@ else {
     const parent = entries.find(entry => entry.id === initial.parent);
     const arrow = document.createElement('span'); arrow.className = 'docs-breadcrumb-arrow'; arrow.textContent = '\uE0B1';
     const parentLink = link.cloneNode();parentLink.textContent = parent.label;parentLink.title = parent.label;parentLink.href = parent.url;
-    link.after(arrow, parentLink);
+    link.after(' ', arrow, ' ', parentLink);
   }
 }
 const palette = ['red', 'corail', 'orange', 'yellow', 'citrus', 'lime'];

@@ -32,7 +32,7 @@ export function useRepairDocument(root:RefObject<HTMLDivElement|null>,entry:Stud
    heading.textContent=title;heading.title=title;heading.href=url!;description.textContent=editor?'填写并确认评分和评价内容，完成后提交服务评价。':'查看本次报修的详细信息及处理结果。';doc.querySelector('title')!.textContent=title+' · 学生工作台';heading.addEventListener('click',stay);
    clonedBreadcrumb=breadcrumb.cloneNode(true) as HTMLElement;
    const arrow=doc.createElement('span'),link=doc.createElement('a');arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';link.textContent=entry.label;link.href=listUrl;link.title=entry.label;
-   link.addEventListener('click',returnToList);clonedBreadcrumb.querySelector('p')!.append(arrow,link);breadcrumb.replaceWith(clonedBreadcrumb);
+   link.addEventListener('click',returnToList);clonedBreadcrumb.querySelector('p')!.append(' ',arrow,' ',link);breadcrumb.replaceWith(clonedBreadcrumb);
    previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!;back=previous.cloneNode(true) as HTMLAnchorElement;back.href=listUrl;back.title=entry.label;back.removeAttribute('data-id');back.className='text-ui color-'+palette[entry.color];back.dataset.color=String(entry.color);
    for(const node of [...back.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();back.append(entry.label);back.addEventListener('click',returnToList);previous.replaceWith(back);
    if(!editor){

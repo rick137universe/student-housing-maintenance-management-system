@@ -3,6 +3,7 @@ import {expect,type Page} from '@playwright/test';
 import entries from '../src/data/student-repair-pages.json';
 import {studentPages} from '../src/data/student-pages';
 import {expectStudentReveal} from './student-transitions';
+import {expectStudentBreadcrumbSpacing} from './student-breadcrumbs';
 
 type Client={call:(path:string,body?:object)=>Promise<unknown>};
 type Row=Record<string,unknown>;
@@ -63,6 +64,7 @@ export async function submitStudentRepair(page:Page,description='三栏页面水
   assert.equal(requests.length,1);assert.deepEqual(requests[0].postDataJSON(),{roomId:stay.room_id,faultType:'水电设施',description,phone:'13800138000'});
   const report=(await get(page,'repairs'))[0];assert.equal(report.fault_description,description);
   await expectStudentReveal(page,()=>rowLink(page,report.repair_id).click(),'报修申请详情');
+  await expectStudentBreadcrumbSpacing(page);
   await expect(frame.locator('[data-dorma-repair-values]').getByRole('heading',{name:'故障描述',exact:true}).locator('+ pre > code')).toHaveText(description);
   await expect(frame.locator('#docs-info .next-link')).toHaveCount(0);await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(origin+base+'action-1/records');
   return String(report.repair_id);

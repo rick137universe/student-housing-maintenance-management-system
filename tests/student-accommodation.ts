@@ -3,6 +3,7 @@ import {expect,type Page} from '@playwright/test';
 import records from '../src/data/student-records.json';
 import {studentPages} from '../src/data/student-pages';
 import {expectStudentReveal} from './student-transitions';
+import {expectStudentBreadcrumbSpacing} from './student-breadcrumbs';
 
 export async function studentAccommodationNavigationRegression(page:Page){
  const origin=new URL(page.url()).origin,frame=page.frameLocator('[data-dorma-student-frame]');
@@ -80,6 +81,7 @@ export async function expectAccommodationRecord(page:Page,action:number,id:strin
  await expect(frame.locator('#docs-info .prev-link a')).toHaveText(records[action-1].label);
  await expect(frame.locator('#docs-info .next-link')).toHaveCount(0);
  await expect(frame.locator('#docs-info .docs-breadcrumb a').last()).toHaveText(records[action-1].label);
+ await expectStudentBreadcrumbSpacing(page);
  await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);
  await page.reload();await expect(code('申请编号')).toHaveText(id);
  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(url);await expect(row).toHaveText(summary);

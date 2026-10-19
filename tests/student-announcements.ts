@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {expect,type Page} from '@playwright/test';
 import {expectStudentReveal} from './student-transitions';
+import {expectStudentBreadcrumbSpacing} from './student-breadcrumbs';
 
 type Row=Record<string,unknown>;
 type Client={call:(path:string,body?:object)=>Promise<unknown>};
@@ -27,6 +28,7 @@ export async function studentAnnouncementRegression(page:Page,admin:Client){
  await expect(body.locator('br')).toHaveCount(1);await expect(body.locator('img,script,pre,table')).toHaveCount(0);
  await expect(frame.locator('[data-dorma-description]')).toBeHidden();
  await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(['公告查看','公寓通知']);
+ await expectStudentBreadcrumbSpacing(page);
  await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-1');await expect(frame.locator('#docs-info .next-link')).toHaveCount(0);
  await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);
  const styles=await body.locator('p').evaluateAll(elements=>elements.map(el=>{const style=getComputedStyle(el);return {font:style.fontFamily,size:style.fontSize,line:style.lineHeight,margin:style.marginBottom};}));
