@@ -51,7 +51,10 @@ export async function studentAnnouncementRegression(page:Page,admin:Client){
  await page.goto(origin+base+'action-2');await expect(list.locator('a')).toHaveText(reminders.map(row=>`${row.title} · ${row.read_at?'已读':'未读'}`));
  const target=list.locator(`a[href$="record=${reminder.notification_id}"]`);await expect(target).toHaveText('缴费提醒 · 未读');
  await expectStudentReveal(page,()=>target.click(),'缴费提醒');await expect(body).toContainText(String(reminder.content));
- await expect(body).toContainText('未读');await body.getByRole('button',{name:'标为已读',exact:true}).click();await expect(body).toContainText('已读');await expect(body.getByRole('button')).toHaveCount(0);
+ const read=frame.locator('#docs-info .next-link').getByRole('button',{name:'标为已读',exact:true});await expect(read).toHaveClass(/color-citrus/);await expect(read.locator('svg.icon')).toHaveCount(1);await expect(body.getByRole('button')).toHaveCount(0);
+ const previousBounds=await frame.locator('#docs-info .prev-link a').boundingBox(),readBounds=await read.boundingBox();assert(previousBounds&&readBounds&&Math.abs(previousBounds.y-readBounds.y)<1&&readBounds.x>previousBounds.x,'缴费提醒的已读操作应位于下一页位置');await read.hover();await expect(read).toHaveCSS('color','rgb(249, 246, 64)');
+ await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/student-reminder-read-navigation.png'});
+ await expect(body).toContainText('未读');await read.click();await expect(body).toContainText('已读');await expect(read).toHaveCount(0);
  assert((await get('notifications/'+reminder.notification_id)).read_at);await expect(frame.getByText('操作已保存。',{exact:true})).toHaveCount(0);
  await frame.locator('#docs-info .prev-link a').click();await expect(target).toHaveText('缴费提醒 · 已读');await page.reload();await expect(target).toHaveText('缴费提醒 · 已读');
  await target.click();await expect(page).toHaveURL(origin+base+'action-2?record='+reminder.notification_id);await expect(body).toContainText('已读');await page.reload();await expect(body).toContainText('已读');await expect(frame.locator('#docs-info .next-link')).toHaveCount(0);

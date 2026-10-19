@@ -22,11 +22,13 @@ export async function studentNotificationRegression(page:Page,admin:Client,peer:
  await expectStudentReveal(page,()=>target.click(),String(first.title));await expect(page).toHaveURL(origin+base+'?record='+id);
  await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(['个人消息','消息通知']);
  await expect(body).toContainText(String(first.content));await expect(body.locator('p').first()).toContainText('接收时间：');await expect(body).toContainText('未读');
- await expect(body.locator('pre,table')).toHaveCount(0);await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base);await expect(frame.locator('#docs-info .prev-link a')).toHaveClass(/color-lime/);await expect(frame.locator('#docs-info .next-link')).toHaveCount(0);
+ await expect(body.locator('pre,table')).toHaveCount(0);await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base);await expect(frame.locator('#docs-info .prev-link a')).toHaveClass(/color-lime/);
+ const read=frame.locator('#docs-info .next-link').getByRole('button',{name:'标为已读',exact:true});await expect(read).toHaveClass(/color-lime/);await expect(read.locator('svg.icon')).toHaveCount(1);await expect(body.getByRole('button')).toHaveCount(0);
+ const previousBounds=await frame.locator('#docs-info .prev-link a').boundingBox(),readBounds=await read.boundingBox();assert(previousBounds&&readBounds&&Math.abs(previousBounds.y-readBounds.y)<1&&readBounds.x>previousBounds.x,'已读操作应与上一页在同一行右侧');await read.hover();await expect(read).toHaveCSS('color',color);
  await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');
  await page.screenshot({path:'docs/qa/backend/student-notification-detail-desktop.png'});
  await page.setViewportSize({width:390,height:844});assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);await page.screenshot({path:'docs/qa/backend/student-notification-detail-mobile.png'});await page.setViewportSize({width:1440,height:1000});
- await body.getByRole('button',{name:'标为已读',exact:true}).click();await expect(body.getByRole('button')).toHaveCount(0);assert((await get('notifications/'+id)).read_at);
+ await read.focus();await page.keyboard.press('Space');await expect(read).toHaveCount(0);assert((await get('notifications/'+id)).read_at);
  await expect(frame.getByText('操作已保存。',{exact:true})).toHaveCount(0);
  await frame.locator('#docs-info .prev-link a').click();await expect(target).toHaveText(String(first.title)+' · 已读');
  await page.goBack();await expect(body).toContainText('已读');await page.reload();await expect(body).toContainText('已读');await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);

@@ -10,7 +10,8 @@ import {api} from '@/utils/auth-session';
 const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
 function isReminder(row:StudentRow){return row.title==='缴费提醒'&&row.bill_id!==null&&row.bill_id!==undefined;}
-function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><g fill="none" fillRule="evenodd"><polygon fill="currentColor" fillRule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/></g></svg>;}
+const arrowPoints='17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75';
+function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><g fill="none" fillRule="evenodd"><polygon fill="currentColor" fillRule="nonzero" points={arrowPoints}/></g></svg>;}
 
 export function StudentAnnouncementPage({entry,data}:{entry:StudentPage;data:StudentAnnouncementData}){
  const params=useSearchParams(),router=useRouter(),record=params.get('record'),requestedPage=Number(params.get('page')??1);
@@ -20,6 +21,7 @@ export function StudentAnnouncementPage({entry,data}:{entry:StudentPage;data:Stu
 }
 function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data:StudentAnnouncementData;record:string|null;page:number;navigate:(url:string)=>void}){
  const root=useRef<HTMLDivElement>(null),request=useRef({version:0}),saving=useRef(false),router=useRouter();
+ const readAction=useRef<()=>Promise<void>>(async()=>{}),readLink=useRef<HTMLAnchorElement|null>(null);
  const reminder=entry.feature==='announcements'&&entry.action==='action-2',notification=entry.feature==='notifications'||reminder,theme=entry.feature==='notifications'?'lime':'citrus';
  const resource=notification?'notifications':'announcements',identifier=notification?'notification_id':'announcement_id';
  const path=record===null?announcementListPath(entry,page):resource+'/'+record+(reminder?'?type=payment-reminder':'');
@@ -28,6 +30,7 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   return cached&&!Array.isArray(cached.data)&&reminder&&!isReminder(cached.data)?undefined:cached;
  }),[loading,setLoading]=useState(true),[pending,setPending]=useState(false),[error,setError]=useState('');
  const rows=Array.isArray(result?.data)?result.data:[],detail=result&&!Array.isArray(result.data)?result.data:null,total=result?.meta?.total??rows.length;
+ const unread=record!==null&&notification&&Boolean(detail&&!detail.read_at);
  const listUrl=entry.url+(page>1?'?page='+page:''),detailUrl=listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(record??'');
  const title=detail?String(detail.title):entry.label+'详情';
  const load=useCallback(async(force=false)=>{
@@ -63,15 +66,25 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   replacement.href=listUrl;replacement.title=entry.label;replacement.removeAttribute('data-id');replacement.dataset.color=String(entry.color);replacement.className='text-ui color-'+theme;
   for(const node of [...replacement.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();replacement.append(entry.label);previous.replaceWith(replacement);
   const next=info.querySelector('.next-link')!,nextHeading=info.querySelector('.prev-next-heading')!.children[1],empty=doc.createElement('li'),emptyHeading=nextHeading.cloneNode(false) as HTMLElement;
+  let action:HTMLAnchorElement|undefined;
+  const mark=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();if(action?.getAttribute('aria-disabled')!=='true')void readAction.current();};
+  const keyboard=(event:KeyboardEvent)=>{if(event.key===' '){event.preventDefault();event.stopPropagation();if(action?.getAttribute('aria-disabled')!=='true')void readAction.current();}};
+  if(unread){
+   empty.className='next-link';emptyHeading.textContent='下一个';action=doc.createElement('a');action.className='text-ui color-'+theme;action.dataset.color=String(entry.color);action.href=detailUrl;action.title='标为已读';action.textContent='标为已读';action.setAttribute('role','button');
+   const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg'),polygon=doc.createElementNS('http://www.w3.org/2000/svg','polygon');
+   svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('class','icon');polygon.setAttribute('fill','currentColor');polygon.setAttribute('points',arrowPoints);svg.append(polygon);action.append(svg);empty.append(action);
+   action.addEventListener('click',mark);action.addEventListener('keydown',keyboard);readLink.current=action;
+  }
   next.replaceWith(empty);nextHeading.replaceWith(emptyHeading);
   const returnToList=(event:globalThis.MouseEvent)=>{event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(listUrl);};
   const stay=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();};
   back.addEventListener('click',returnToList);replacement.addEventListener('click',returnToList);heading.addEventListener('click',stay);
   return()=>{
    back.removeEventListener('click',returnToList);replacement.removeEventListener('click',returnToList);heading.removeEventListener('click',stay);
+   action?.removeEventListener('click',mark);action?.removeEventListener('keydown',keyboard);if(readLink.current===action)readLink.current=null;
    if(info.isConnected){crumbs.replaceWith(breadcrumb);replacement.replaceWith(previous);empty.replaceWith(next);emptyHeading.replaceWith(nextHeading);heading.textContent=saved.text;heading.href=saved.href;heading.title=saved.tooltip;description.hidden=saved.hidden;doc.querySelector('title')!.textContent=saved.documentTitle;}
   };
- },[record,title,detailUrl,entry.color,entry.label,listUrl,navigate,theme]);
+ },[record,title,detailUrl,entry.color,entry.label,listUrl,navigate,theme,unread]);
  function link(url:string,event:MouseEvent<HTMLAnchorElement>){event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(url);}
  async function markRead(){
   if(saving.current||!detail||detail.read_at||!notification)return;
@@ -80,6 +93,8 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   catch(reason){setError(reason instanceof Error?reason.message:'操作失败，请重试。');}
   finally{saving.current=false;setPending(false);}
  }
+ useLayoutEffect(()=>{readAction.current=markRead;});
+ useLayoutEffect(()=>{readLink.current?.setAttribute('aria-disabled',String(pending));readLink.current?.setAttribute('aria-busy',String(pending));},[pending,unread,title]);
  const paragraphs=detail?String(detail.content??'').replace(/\r\n?/g,'\n').split(/\n\s*\n/).filter(paragraph=>paragraph.trim()):[];
  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-announcements aria-busy={loading}>
   {error&&<p role="alert">{error}</p>}
@@ -93,7 +108,6 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   </>:detail&&<div data-dorma-announcement-body>
    <p>{notification?(reminder?'提醒时间：':'接收时间：'):'发布时间：'}{date(detail[notification?'created_at':'published_at'])}{notification?' · '+(detail.read_at?'已读':'未读'):''}</p>
    {paragraphs.map((paragraph,index)=><p key={index}>{paragraph.split('\n').map((line,lineIndex)=><Fragment key={lineIndex}>{lineIndex>0&&<br/>}{line}</Fragment>)}</p>)}
-   {notification&&!detail.read_at&&<div className="ui-controls"><button className="ui-input" type="button" disabled={pending} onClick={event=>{event.stopPropagation();void markRead();}}>标为已读</button></div>}
   </div>)}
  </div>;
 }
