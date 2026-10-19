@@ -8,6 +8,7 @@ import {studentProfileRegression} from './student-profile';
 import {studentProfileEditorRegression} from './student-profile-editor';
 import {studentPasswordEditorRegression} from './student-password-editor';
 import {studentFinanceRegression} from './student-finance';
+import {studentTransitionRegression} from './student-transitions';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -41,6 +42,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await go('personal',1);
     await studentThemeRegression(page);
     await studentNavigationRegression(page);
+    await studentTransitionRegression(page);
     await expect(frame.locator('#toggle-search')).toBeEnabled();
     // Exercise the actual native menu and demo switching, not just direct URLs.
     for (const entry of entries) {

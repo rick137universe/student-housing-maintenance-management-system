@@ -1,5 +1,6 @@
 import entries from './student-entries.js';
 import { c as CopyButton } from './chunks/chunk-WQVFBASJ.js';
+import { m as waapi, o as utils } from './chunks/chunk-WXAKRBIO.js';
 const requested = new URLSearchParams(location.search).get('entry');
 const initial = entries.find(entry => entry.id === requested) ?? entries[0];
 const active = document.querySelector(`#docs-sidebar li > a[data-id="${initial.id}"]`);
@@ -74,9 +75,25 @@ const translatePreviews = () => {
   }
 };
 new MutationObserver(translatePreviews).observe(document.querySelector('#docs-demos'), { childList: true, subtree: true });
+let revealedPage = null;
+let revealedKey = null;
+const revealContent = (key = 'page') => {
+  const container = document.querySelector('#docs-info');
+  const page = container.querySelector('.docs-info');
+  if (!page || (page === revealedPage && key === revealedKey)) return;
+  revealedPage = page; revealedKey = key;
+  // Local snippets can arrive before the original 75ms fade-out completes.
+  // Replay the template's 150ms reveal from zero, using its unchanged WAAPI engine.
+  utils.remove(container);
+  waapi.animate(container, { opacity: [0, 1], duration: 150, ease: 'out' });
+};
+document.addEventListener('dorma-student-content-change', event => revealContent(event.detail.key));
 const announce = () => {
   const id = document.querySelector('#docs-info .docs-info')?.dataset.id;
-  if (entries.some(entry => entry.id === id)) parent.postMessage({ type: 'dorma-student-page', id }, location.origin);
+  if (entries.some(entry => entry.id === id)) {
+    revealContent();
+    parent.postMessage({ type: 'dorma-student-page', id }, location.origin);
+  }
 };
 new MutationObserver(announce).observe(document.querySelector('#docs-info'), { childList: true });
 // Business data arrives after the native Docs highlighter has initialized.

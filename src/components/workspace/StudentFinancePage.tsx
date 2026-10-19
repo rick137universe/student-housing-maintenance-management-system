@@ -123,8 +123,11 @@ function FinanceContent({data,entry,record,page,listUrl,paymentStep,navigate}:{d
 
   useLayoutEffect(()=>{
     // The Docs content starts below its header. Aligning that element scrolls past the page's own top spacing.
-    root.current?.ownerDocument.scrollingElement?.scrollTo({top:0,behavior:'instant'});
-  },[]);
+    const doc=root.current!.ownerDocument;
+    doc.scrollingElement?.scrollTo({top:0,behavior:'instant'});
+    // Query-based detail/payment routes reuse the native page rather than fetching a Docs snippet.
+    doc.dispatchEvent(new CustomEvent('dorma-student-content-change',{detail:{key:record===null&&page===1?'page':JSON.stringify([record,page,paymentStep])}}));
+  },[record,page,paymentStep]);
 
   function link(url:string,event:MouseEvent<HTMLAnchorElement>){
     event.stopPropagation();
