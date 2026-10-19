@@ -8,6 +8,7 @@ import {verifyHomeTemplate} from './home-template';
 import {verifyStudentTemplate} from './student-template';
 import {studentDocsRegression} from './student-browser';
 import {workspacePath} from '../src/utils/workspace-route';
+import {delayedWorkspaceHydration} from './workspace-entry';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
@@ -66,6 +67,13 @@ export async function browserRegression(origin:string,password:string){
    await page.waitForURL(origin+workspacePath(role));const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):page;
    if(role==='student')await expect(workspace.locator('[data-student-module-links] a')).toHaveCount(6);
    else await workspace.locator('[data-dorma-live-workspace]').waitFor();
+   const initialResponse=await page.request.get(origin+workspacePath(role)),initialHtml=await initialResponse.text();
+   assert.equal(initialResponse.status(),200);
+   assert(!initialHtml.includes('正在确认身份'),'首屏不应包含客户端身份加载提示');
+   assert.match(initialResponse.headers()['cache-control'],/no-store|no-cache/,'身份首屏必须禁止缓存复用或强制重新校验（开发服务使用no-cache）');
+   assert(!/public|s-maxage/.test(initialResponse.headers()['cache-control']),'身份首屏不能使用公共缓存');
+   assert(initialHtml.includes(role==='student'?'data-dorma-student-frame':'data-dorma-live-workspace'),'服务端应直接输出对应身份的工作台首屏');
+   if(role==='student')await delayedWorkspaceHydration(page,origin);
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
@@ -100,6 +108,10 @@ export async function browserRegression(origin:string,password:string){
    let releaseEntry!:()=>void;
    const entryGate=new Promise<void>(resolve=>{releaseEntry=resolve;});
    await page.route('**/api/v1/auth/me',async route=>{await entryGate;await route.continue();});
+   let releaseWorkspace!:()=>void;
+   const workspaceGate=new Promise<void>(resolve=>{releaseWorkspace=resolve;});
+   const workspaceDocument='**/assets/student/index.html?entry=docs';
+   if(role==='student')await page.route(workspaceDocument,async route=>{await workspaceGate;await route.continue();});
    const documents:string[]=[];
    const trackDocument=(request:import('@playwright/test').Request)=>{if(request.isNavigationRequest()&&request.frame()===page.mainFrame())documents.push(request.url());};
    page.on('request',trackDocument);
@@ -107,8 +119,17 @@ export async function browserRegression(origin:string,password:string){
    await page.waitForTimeout(300);
    await expect(page.locator('[data-dorma-home-frame]')).toBeVisible();
    await expect(page.getByText('正在进入工作台…',{exact:true})).toHaveCount(0);
+   await expect(page.getByText('正在确认身份…',{exact:true})).toHaveCount(0);
    releaseEntry();
    await page.waitForURL(origin+workspacePath(role));
+   if(role==='student'){
+    await expect(page.locator('[data-dorma-entry-cover] [data-dorma-home-frame]')).toBeVisible();
+    await expect(page.getByText('正在确认身份…',{exact:true})).toHaveCount(0);
+    releaseWorkspace();
+    await expect(page.frameLocator('[data-dorma-student-frame]').locator('[data-student-module-links] a')).toHaveCount(6);
+    await expect(page.locator('[data-dorma-entry-cover]')).toHaveCount(0);
+    await page.unroute(workspaceDocument);
+   }
    await page.unroute('**/api/v1/auth/me');page.off('request',trackDocument);
    assert.deepEqual(documents,[],`${role} Docs should use client navigation`);
    await page.goto(origin);

@@ -16,7 +16,7 @@ import { StudentDocsPage } from './StudentDocsPage';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
-export function WorkspacePage() {
+export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   const params = useParams<{ role: string; feature?: string; action?: string[] }>();
   const pathname = usePathname();
   const router = useRouter();
@@ -32,16 +32,19 @@ export function WorkspacePage() {
     document.documentElement.setAttribute('data-dorma-workspace-active', '');
     return () => document.documentElement.removeAttribute('data-dorma-workspace-active');
   }, []);
+  useLayoutEffect(()=>{
+    if(account!==undefined&&!(account?.role==='student'&&role==='student'&&(!params.feature||feature)))onReady?.();
+  },[account,role,params.feature,feature,onReady]);
 
   async function logout() {
     try { await api('auth/logout', {method:'POST',body:'{}'}); saveAuthSession(null); router.push('/'); }
     catch(error) { setError(error instanceof Error ? error.message : '退出失败'); }
   }
 
-  if (account === undefined) return <main className={s.loading}>正在确认身份…</main>;
+  if (account === undefined) return null;
 
   if (account?.role === 'student' && role === 'student' && !params.feature) {
-    return <StudentDocsPage account={account} featureId="overview" actionId="overview" />;
+    return <StudentDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
   }
 
   if (!account || !role || !feature) return <main className={s.denied}>
@@ -60,7 +63,7 @@ export function WorkspacePage() {
     <Link href="/">返回首页</Link>
   </main>;
 
-  if (role === 'student') return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? action?.id ?? 'action-1' : 'overview'} />;
+  if (role === 'student') return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? action?.id ?? 'action-1' : 'overview'} onReady={onReady}/>;
 
   return <div className={s.page}>
     <header className={s.topbar}>

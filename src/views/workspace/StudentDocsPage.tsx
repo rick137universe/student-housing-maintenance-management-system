@@ -11,7 +11,7 @@ import { studentPages as entries } from '@/data/student-pages';
 import type { Account } from '@/types/auth';
 import s from './StudentDocsPage.module.css';
 
-export function StudentDocsPage({ account, featureId, actionId }: { account: Account; featureId: string; actionId: string }) {
+export function StudentDocsPage({ account, featureId, actionId,onReady }: { account: Account; featureId: string; actionId: string;onReady?:()=>void }) {
   const router = useRouter();
   const params = useSearchParams();
   const queryRef = useRef(params.toString());
@@ -52,6 +52,7 @@ export function StudentDocsPage({ account, featureId, actionId }: { account: Acc
       const entry = entries.find(e => e.id === event.data.id);
       const target = frame.current?.contentDocument?.querySelector('[data-dorma-business]');
       if (!entry) return;
+      onReady?.();
       if (entry.action === 'overview') setView(null);
       else if (target) setView(current => current?.target === target && current.entry.id === entry.id ? current : { target, entry });
       else return;
@@ -61,8 +62,9 @@ export function StudentDocsPage({ account, featureId, actionId }: { account: Acc
       if (location.pathname !== entry.url || queryRef.current !== query) router.replace(entry.url + (query ? '?' + query : ''), { scroll: false });
     };
     window.addEventListener('message', receive);
+    frame.current?.contentWindow?.postMessage({type:'dorma-student-connect'},location.origin);
     return () => window.removeEventListener('message', receive);
-  }, [router, account.role]);
+  }, [router, account.role,onReady]);
   return <main className={s.page}>
     <iframe ref={frame} className={s.frame} data-dorma-student-frame src={src} title="学生工作台" />
     {view && createPortal(view.entry.feature==='payment'

@@ -96,6 +96,11 @@ const announce = () => {
   }
 };
 new MutationObserver(announce).observe(document.querySelector('#docs-info'), { childList: true });
+// With a server-rendered iframe, its first load can finish before React hydrates.
+// Reply to the parent's handshake as well as announcing the document load.
+window.addEventListener('message', event => {
+  if (event.origin === location.origin && event.source === parent && event.data?.type === 'dorma-student-connect') announce();
+});
 // Business data arrives after the native Docs highlighter has initialized.
 // Reuse its unchanged copy widget when profile code blocks appear or update.
 const profileCopies = new WeakMap();
