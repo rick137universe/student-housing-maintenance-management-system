@@ -30,18 +30,18 @@ for(const parentId of new Set(studentChildren.map(entry=>entry.parent!))){
  const anchor=index.indexOf(`data-id="${entry.parent}"`,index.indexOf('<aside id="docs-sidebar"'));
  const start=index.lastIndexOf('<li',anchor),end=elementEnd(index,start,'li');
  const parent=index.slice(start,index.indexOf('</a>',anchor)+4);
- const child=children.map(entry=>`<li class="docs-nav-item ${entry.kind==='submit'?'docs-submit':'docs-records'} color-corail" data-color="1">${link(entry,'next',true)}</li>`).join('');
+ const child=children.map(entry=>`<li class="docs-nav-item ${!entry.kind||entry.kind.endsWith('records')?'docs-records':'docs-submit'} color-${palette[entry.color]}" data-color="${entry.color}">${link(entry,'next',true)}</li>`).join('');
  index=index.slice(0,start)+parent+nestedOpening+child+'</ul></li>'+index.slice(end);
 }
 await writeFile(root+'index.html',index);
-const originalBreadcrumb=(await readFile(mother+'documentation--animation--animatable-properties--css-properties-d413c831/index.html','utf8')).match(/<div class="docs-breadcrumb text-ui"[\s\S]*?<\/div>/)![0].replace(/<a class="docs-breadcrumb-version"[\s\S]*?<\/a>/,'');
+const originalBreadcrumb=(await readFile(mother+'documentation--animation--animatable-properties--css-properties-d413c831/index.html','utf8')).match(/<div class="docs-breadcrumb text-ui"[\s\S]*?<\/div>/)![0].replace(/<a class="docs-breadcrumb-version"[\s\S]*?<\/a>/,'').replace(/[\t ]+$/gm,'');
 for(const [position,entry] of studentPages.entries()){
  let page=pages.get(entry.id)??pages.get(entry.parent!)!;
  page=page.replace(/<title>[\s\S]*?<\/title>/,`<title>${html(entry.label)} · 学生工作台</title>`)
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`)
   .replace(/<h1[^>]*>[\s\S]*?<\/h1>/,`<h1 data-color="${entry.color}"><a title="${html(entry.label)}" href="${entry.url}">${html(entry.label)}</a></h1>`)
   .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`)
-  .replace(/<h6 class="links-list-heading">(?:申请记录|本页功能)<\/h6>\s*<ul[^>]*data-student-record-links[^>]*>[\s\S]*?<\/ul>/,'');
+  .replace(/<h6 class="links-list-heading">(?:申请记录|本页功能)<\/h6>\s*<ul[^>]*data-student-record-links[^>]*>[\s\S]*?<\/ul>\r?\n?/,'');
  if(entry.parent){
   const parent=studentPages.find(candidate=>candidate.id===entry.parent)!,group=studentPages.find(candidate=>candidate.feature===entry.feature&&candidate.action==='overview')!;
   let linkIndex=0;
@@ -67,7 +67,7 @@ let demos=await readFile(root+'assets/html/student-demos.html','utf8');
 const originals=await readFile(root+'assets/html/documentation-demos.html','utf8');
 for(const entry of [...studentChildren].reverse()){
  const expression=new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`);
- demos=demos.replace(expression,'');
+ demos=demos.replace(new RegExp('\\r?\\n?'+expression.source),'');
  const preview=originals.match(expression)![0].replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
  const parent=new RegExp(`(<article[^>]*data-id="${entry.parent}"[\\s\\S]*?</article>)`);
  demos=demos.replace(parent,match=>match+'\n'+preview);
@@ -76,4 +76,4 @@ await writeFile(root+'assets/html/student-demos.html',demos);
 await writeFile(root+'assets/js/student-entries.js','const entries = '+JSON.stringify(studentPages,null,2)+';\nexport default entries;\n');
 const routes=Object.fromEntries(studentPages.map(entry=>[entry.url,`/assets/student/pages/${entry.feature}-${entry.action}.html`]));
 await writeFile(root+'assets/js/documentation-archive-map.js','// Application routes supplied to the unchanged Docs runtime.\nconst routes = '+JSON.stringify(routes,null,2)+';\nexport const documentationArchivePath = url => routes[new URL(url, location.href).pathname] ?? url;\n');
-console.log('已同步三级住宿目录、申请记录页面、页内入口与相邻导航。');
+console.log('已同步住宿与报修三级目录、操作及记录页面、页内入口与相邻导航。');

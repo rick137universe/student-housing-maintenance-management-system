@@ -80,6 +80,9 @@ try{
  await technician.request(`repairs/${repair.repair_id}/progress`,'POST',{status:'waiting_parts',note:'等待零件'});await technician.request(`repairs/${repair.repair_id}/progress`,'POST',{status:'in_progress',note:'零件到达'});
  await technician.request(`repairs/${repair.repair_id}/complete`,'POST',{note:'更换完成且测试通过',hours:1.5,materials:'密封圈1个'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5,note:'测试评价'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5},409);
  assert((await student.request(`repairs/${repair.repair_id}/history`)).data.length>=8);checks++;
+ const repairDetail=(await student.request('repairs/'+repair.repair_id)).data;
+ assert.equal(repairDetail.repair_status,'evaluated');assert.equal(Number(repairDetail.service_rating),5);assert.equal(repairDetail.evaluation_content,'测试评价');assert.equal(repairDetail.processing_description,'更换完成且测试通过');assert.equal(repairDetail.materials,'密封圈1个');assert(repairDetail.technician_name&&repairDetail.completed_at&&repairDetail.evaluated_at);
+ await second.request('repairs/'+repair.repair_id,'GET',undefined,404);await second.request(`repairs/${repair.repair_id}/history`,'GET',undefined,403);checks++;
  const rejected=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'其他',description:'重复报修验证',phone:'13800000001'})).data;await manager.request(`repairs/${rejected.repair_id}/review`,'POST',{decision:'reject',note:'重复提交'});assert.equal((await student.request('repairs/'+rejected.repair_id)).data.repair_status,'rejected');checks++;
  const notification=(await student.request('notifications?unread=true')).data[0];await student.request(`notifications/${notification.notification_id}/read`,'POST',{});assert((await student.request('notifications/'+notification.notification_id)).data.read_at);checks++;
  await administrator.request('accounts/'+(await administrator.request('auth/me')).data.id,'PATCH',{accountStatus:'disabled'},409);checks++;

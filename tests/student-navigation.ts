@@ -32,7 +32,7 @@ export async function studentNavigationRegression(page:Page){
     await list.locator('a').first().click();
     await expect(page).toHaveURL(origin+children[0].url);
     await expect(frame.locator('[data-student-module-links]')).toHaveCount(0);
-    await expect(frame.locator(group.feature==='accommodation'?'[data-student-record-links]':'[data-dorma-live-workspace]')).toBeVisible();
+    await expect(frame.locator(['accommodation','repair'].includes(group.feature)?'[data-student-record-links]':'[data-dorma-live-workspace]')).toBeVisible();
     await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(group.label);
     await frame.locator('#docs-info .docs-breadcrumb a').click();
     await expect(page).toHaveURL(origin+group.url);
@@ -48,7 +48,7 @@ export async function studentNavigationRegression(page:Page){
     await expect(frame.locator('[data-dorma-business]')).toHaveCount(0);
     await frame.locator('#docs-info .next-link a').click();
     await expect(page).toHaveURL(origin+children[0].url);
-    await expect(frame.locator(group.feature==='accommodation'?'[data-student-record-links]':'[data-dorma-live-workspace]')).toBeVisible();
+    await expect(frame.locator(['accommodation','repair'].includes(group.feature)?'[data-student-record-links]':'[data-dorma-live-workspace]')).toBeVisible();
     await page.reload();
     await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(group.label);
     await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveAttribute('href',group.url);

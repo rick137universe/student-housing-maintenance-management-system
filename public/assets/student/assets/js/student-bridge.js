@@ -124,7 +124,7 @@ window.addEventListener('message', event => {
 // Reuse its unchanged copy widget when profile code blocks appear or update.
 const profileCopies = new WeakMap();
 new MutationObserver(() => {
-  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-finance-values] pre, [data-dorma-accommodation-values] pre, [data-dorma-application-editor] .code-editor pre')) {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-finance-values] pre, [data-dorma-accommodation-values] pre, [data-dorma-repair-values] pre, [data-dorma-application-editor] .code-editor pre')) {
     if (pre.closest('[data-dorma-application-editor]') && pre.querySelector('input,select,textarea')) {
       pre.querySelector('.copy-button')?.remove();profileCopies.delete(pre);continue;
     }

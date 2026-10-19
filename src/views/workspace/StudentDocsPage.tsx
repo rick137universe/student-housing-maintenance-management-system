@@ -10,6 +10,8 @@ import { StudentFinanceData,financeListPath } from '@/utils/student-finance-data
 import {StudentAccommodationRecords} from '@/components/workspace/StudentAccommodationRecords';
 import {StudentAccommodationSubmit} from '@/components/workspace/StudentAccommodationSubmit';
 import {StudentAccommodationData,accommodationListPath} from '@/utils/student-accommodation-data';
+import {StudentRepairPage} from '@/components/workspace/StudentRepairPage';
+import {StudentRepairData,repairListPath} from '@/utils/student-repair-data';
 import { studentPages as entries } from '@/data/student-pages';
 import type { Account } from '@/types/auth';
 import s from './StudentDocsPage.module.css';
@@ -23,6 +25,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
   const frame = useRef<HTMLIFrameElement>(null);
   const finance = useMemo(() => new StudentFinanceData(account.id,account.csrfToken), [account.id, account.csrfToken]);
   const accommodation = useMemo(() => new StudentAccommodationData(account.id,account.csrfToken), [account.id, account.csrfToken]);
+  const repairs = useMemo(() => new StudentRepairData(account.id,account.csrfToken), [account.id, account.csrfToken]);
   useEffect(() => {
     void finance.prefetchLists();
     const iframe=frame.current!;
@@ -37,13 +40,14 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
         const entry=entries.find(entry=>entry.url===url.pathname);
         if(entry?.feature==='payment'&&entry.action!=='overview')void finance.load(financeListPath(entry.action)).catch(()=>{});
         if(entry?.feature==='accommodation'&&entry.parent&&entry.kind!=='submit')void accommodation.load(accommodationListPath(entry.action.split('/')[0])).catch(()=>{});
+        if(entry?.feature==='repair'&&entry.parent&&entry.kind!=='repair-submit')void repairs.load(repairListPath(entry)).catch(()=>{});
       };
       doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
       detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
     };
     iframe.addEventListener('load',bind);bind();
     return()=>{iframe.removeEventListener('load',bind);detach();};
-  }, [finance,accommodation]);
+  }, [finance,accommodation,repairs]);
   const refreshRef = useRef(refresh);
   useEffect(() => { refreshRef.current = refresh; }, [refresh]);
   const [src] = useState(() => '/assets/student/index.html?entry=' + encodeURIComponent((entries.find(e => e.feature === featureId && e.action === actionId) ?? entries[0]).id));
@@ -58,7 +62,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
       const target = frame.current?.contentDocument?.querySelector('[data-dorma-business]');
       if (!entry) return;
       onReady?.();
-      if (entry.action === 'overview'||(entry.feature==='accommodation'&&!entry.parent)) setView(null);
+      if (entry.action === 'overview'||entries.some(child=>child.parent===entry.id)) setView(null);
       else if (target) setView(current => current?.target === target && current.entry.id === entry.id ? current : { target, entry });
       else return;
       // The copied runtime writes history itself, carrying Next's internal state.
@@ -74,6 +78,8 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
     <iframe ref={frame} className={s.frame} data-dorma-student-frame src={src} title="学生工作台" />
     {view && createPortal(view.entry.feature==='payment'
       ? <StudentFinancePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={finance} actionId={view.entry.action}/>
+      : view.entry.feature==='repair'
+      ? <StudentRepairPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={repairs} entry={view.entry}/>
       : view.entry.kind==='submit'
       ? <StudentAccommodationSubmit key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={accommodation} entry={view.entry}/>
       : view.entry.feature==='accommodation'&&view.entry.parent

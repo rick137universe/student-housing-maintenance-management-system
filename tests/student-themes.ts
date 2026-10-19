@@ -47,17 +47,17 @@ export async function studentThemeRegression(page:Page){
 
 export async function studentNestedThemeRegression(page:Page){
  const origin=new URL(page.url()).origin,frame=page.frameLocator('[data-dorma-student-frame]');
- for(const parent of entries.filter(entry=>entry.feature==='accommodation')){
+ for(const parent of entries.filter(entry=>['accommodation','repair'].includes(entry.feature))){
   const children=studentChildren.filter(entry=>entry.parent===parent.id);
   await page.goto(origin+parent.url);
   await expect(frame.locator('[data-student-record-links] a')).toHaveCount(2);
-  const colors=await frame.locator('body').evaluate(body=>{
-   const sample=body.ownerDocument.createElement('span');sample.className='color-corail';body.append(sample);
+  const colors=await frame.locator('body').evaluate((body,theme)=>{
+   const sample=body.ownerDocument.createElement('span');sample.className='color-'+theme;body.append(sample);
    sample.style.color='var(--hex-current-1)';const active=getComputedStyle(sample).color;
    sample.style.color='var(--hex-fg-2)';const neutral=getComputedStyle(sample).color;
    sample.style.color='var(--hex-fg-1)';const hover=getComputedStyle(sample).color;
    sample.remove();return {active,neutral,hover};
-  });
+  },parent.feature==='repair'?'yellow':'corail');
   const links=children.map(child=>frame.locator(`#docs-sidebar a[data-id="${child.id}"]`));
   await frame.locator('#docs-info h1').hover();
   for(const link of links){await expect(link.locator('..')).not.toHaveClass(/is-active/);await expect(link).toHaveCSS('color',colors.neutral);}
@@ -73,15 +73,15 @@ export async function studentNestedThemeRegression(page:Page){
   await page.goBack();await expect(links[0]).toHaveCSS('color',colors.active);await expect(links[1]).toHaveCSS('color',colors.neutral);
   await frame.locator('#toggle-search').click();await frame.locator('#docs-search-input').fill(children[0].label);
   const result=frame.locator('#docs-search-results a').filter({hasText:children[0].label}).first();
-  await expect(result).toHaveClass(/color-corail/);await result.click();await expect(links[0]).toHaveCSS('color',colors.active);await expect(links[1]).toHaveCSS('color',colors.neutral);
+  await expect(result).toHaveClass(new RegExp('color-'+(parent.feature==='repair'?'yellow':'corail')));await result.click();await expect(links[0]).toHaveCSS('color',colors.active);await expect(links[1]).toHaveCSS('color',colors.neutral);
  }
  await page.setViewportSize({width:390,height:844});await page.reload();
  await frame.locator('#toggle-sidebar').click();
- const current=studentChildren.find(entry=>entry.action==='action-3/submit')!,other=studentChildren.find(entry=>entry.action==='action-3/records')!;
- await expect(frame.locator(`#docs-sidebar a[data-id="${current.id}"]`)).toHaveCSS('color','rgb(255, 125, 54)');
- await expect(frame.locator(`#docs-sidebar a[data-id="${other.id}"]`)).not.toHaveCSS('color','rgb(255, 125, 54)');
+ const current=studentChildren.find(entry=>entry.feature==='repair'&&entry.action==='action-3/submit')!,other=studentChildren.find(entry=>entry.feature==='repair'&&entry.action==='action-3/records')!;
+ await expect(frame.locator(`#docs-sidebar a[data-id="${current.id}"]`)).toHaveCSS('color','rgb(255, 204, 42)');
+ await expect(frame.locator(`#docs-sidebar a[data-id="${other.id}"]`)).not.toHaveCSS('color','rgb(255, 204, 42)');
  await page.screenshot({path:'docs/qa/backend/student-sidebar-leaf-colors-mobile.png'});
  await page.setViewportSize({width:1440,height:1000});await page.reload();
  await page.screenshot({path:'docs/qa/backend/student-sidebar-leaf-colors-desktop.png'});
- console.log('三级导航颜色回归通过：三组未选中默认色、选中主题色、母版悬停色、切换与返回、刷新、搜索和手机目录。');
+ console.log('三级导航颜色回归通过：住宿与报修六组未选中默认色、选中主题色、母版悬停色、切换与返回、刷新、搜索和手机目录。');
 }

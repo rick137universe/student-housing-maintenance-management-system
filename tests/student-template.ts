@@ -25,9 +25,10 @@ export async function verifyStudentTemplate() {
   const children=[...sidebar.matchAll(/<li class="([^"]*docs-action[^"]*)"/g)];assert.equal(children.length,entries.length);
   for(const child of children)assert.match(child[1].split(/\s+/)[2],/^color-/, '搜索依赖子功能的第三个class读取主题');
   for(const child of studentChildren){
-    assert(sidebar.includes(`class="docs-nav-item ${child.kind==='submit'?'docs-submit':'docs-records'} color-corail"`));
+    const theme=['red','corail','orange','yellow','citrus','lime'][child.color];
+    assert(sidebar.includes(`class="docs-nav-item ${!child.kind||child.kind.endsWith('records')?'docs-records':'docs-submit'} color-${theme}"`));
     assert.match(sidebar,new RegExp(`data-id="${child.parent}">[^<]+</a><ul class="docs-nav-item">[\\s\\S]*?data-id="${child.id}"`),'提交和记录必须位于对应申请的第三级目录');
-    const parent=await readFile(`public/assets/student/pages/accommodation-${child.action.split('/')[0]}.html`,'utf8');
+    const parent=await readFile(`public/assets/student/pages/${child.feature}-${child.action.split('/')[0]}.html`,'utf8');
     assert(parent.includes('data-student-record-links'));assert(parent.includes(`href="${child.url}"`));
   }
   for(const id of ['site-header','docs-sidebar','docs-demos','docs-info','toggle-search','docs-search-input'])assert(html.includes(`id="${id}"`),`缺少母版区域 ${id}`);
@@ -42,7 +43,7 @@ export async function verifyStudentTemplate() {
       assert.deepEqual(targets,entry.id===studentOverview.id ? modules.map(group=>group.id) : entries.filter(action=>action.feature===entry.feature).map(action=>action.id));
       assert(!page.includes('class="docs-breadcrumb'));
     }else{
-      assert.equal(list,undefined);assert.equal(page.includes('data-dorma-business'),!(entry.feature==='accommodation'&&!entry.parent));
+      assert.equal(list,undefined);assert.equal(page.includes('data-dorma-business'),!studentChildren.some(child=>child.parent===entry.id));
       const group=modules.find(group=>group.feature===entry.feature)!;
       const breadcrumb=page.match(/<div class="docs-breadcrumb text-ui"[\s\S]*?<\/div>/)?.[0];assert(breadcrumb);
       assert(breadcrumb.includes(`data-color="${group.color}"`));

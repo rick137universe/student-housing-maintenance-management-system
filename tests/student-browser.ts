@@ -11,6 +11,7 @@ import {studentFinanceRegression} from './student-finance';
 import {studentTransitionRegression} from './student-transitions';
 import {studentAccommodationNavigationRegression,expectAccommodationRecord} from './student-accommodation';
 import {submitStudentAccommodation} from './student-accommodation-submit';
+import {studentRepairWorkflowRegression} from './student-repair';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -36,7 +37,6 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
       await frame.locator('[data-dorma-live-workspace]').waitFor();
       await frame.getByText('正在读取…', { exact: true }).waitFor({ state: 'hidden' });
     }
-    async function submit() { await frame.getByRole('button', { name: '确认提交', exact: true }).click(); await frame.getByText('操作已保存。', { exact: true }).waitFor(); }
     await go('personal', 1);
     await studentProfileRegression(page);
     await go('personal',2);
@@ -55,7 +55,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
       await frame.locator(`#docs-sidebar ul ul a[data-id="${entry.id}"]`).click();
       await expect(frame.locator('#docs-info h1')).toHaveText(entry.label);
       await expect(frame.locator('.docs-demo.is-active')).toHaveAttribute('data-id', entry.id);
-      if(entry.feature==='accommodation')await expect(frame.locator('[data-student-record-links] a')).toHaveCount(2);
+      if(['accommodation','repair'].includes(entry.feature))await expect(frame.locator('[data-student-record-links] a')).toHaveCount(2);
       else await expect(frame.locator('[data-dorma-business]')).not.toBeEmpty();
       const breadcrumb=frame.locator('#docs-info .docs-breadcrumb a');
       await expect(breadcrumb).toHaveText(entry.group);
@@ -70,15 +70,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     const application = (await student.call('applications'))[0]; assert.equal(application.application_note, '三栏页面入住回归');
     await manager.call(`applications/${application.application_id}/review`, { decision: 'approve' });
     await expectAccommodationRecord(page,1,application.application_id,'已完成');
-    await go('repair', 1); await frame.getByRole('button', { name: '提交报修', exact: true }).click();
-    await frame.getByLabel('故障描述', { exact: true }).fill('三栏页面水龙头报修'); await frame.getByLabel('联系电话', { exact: true }).fill('13800138000'); await submit();
-    const repair = (await student.call('repairs'))[0]; assert.equal(repair.fault_description, '三栏页面水龙头报修');
-    await manager.call(`repairs/${repair.repair_id}/review`, { decision: 'approve' });
-    const tech = (await admin.call('accounts?limit=100')).find((row: { username: string }) => row.username === 'mt008');
-    await admin.call(`repairs/${repair.repair_id}/dispatch`, { technicianId: tech.account_id });
-    await technician.call(`repairs/${repair.repair_id}/accept`, {}); await technician.call(`repairs/${repair.repair_id}/start`, {}); await technician.call(`repairs/${repair.repair_id}/complete`, { note: '浏览器回归完工', hours: 1, materials: '密封圈' });
-    await go('repair', 2); await frame.getByRole('button', { name: '查看进度', exact: true }).click(); await expect(frame.getByRole('heading', { name: '报修处理进度' })).toBeVisible(); await frame.getByRole('button', { name: '关闭进度' }).click();
-    await go('repair', 3); await frame.getByRole('button', { name: '评价', exact: true }).click(); await frame.getByLabel('服务评分', { exact: true }).selectOption('5'); await frame.getByLabel('评价内容', { exact: true }).fill('已修好'); await submit();
+    await studentRepairWorkflowRegression(page,admin,manager,technician);
     await admin.call('bills', { studentNumber, period: '2026-10', accommodationFee: '10.00', utilityFee: '2.00', dueDate: '2026-12-31' });
     const foreignBill=(await admin.call('bills?limit=100')).find((bill:{student_number:string})=>bill.student_number!==studentNumber);
     await studentFinanceRegression(page,foreignBill.bill_id);
