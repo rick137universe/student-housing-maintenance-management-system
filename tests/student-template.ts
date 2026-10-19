@@ -17,6 +17,7 @@ export async function verifyStudentTemplate() {
   assert.deepEqual(entries.map(e=>`${e.feature}/${e.action}`),roleFeatures.student.flatMap(f=>f.actions.map(a=>`${f.id}/${a.id}`)));
   const html=await readFile('public/assets/student/index.html','utf8');
   const sidebar=html.match(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/)?.[0];assert(sidebar);
+  assert(!/<a\b[^>]*\bdata-color=/.test(sidebar),'侧栏链接必须继承父级选中状态颜色，不能使用强制着色的 data-color');
   const links=[...sidebar.matchAll(/<a class="docs-link[^"]*"[^>]*data-id="([^"]+)"/g)].map(match=>match[1]);
   assert.equal(links.length,studentPages.length-1,'每个模块及功能应有独立侧栏链接');
   assert(html.includes(`href="${studentOverview.url}"`) && html.includes('data-id="docs"'),'总导航使用母版顶部 Docs 入口');

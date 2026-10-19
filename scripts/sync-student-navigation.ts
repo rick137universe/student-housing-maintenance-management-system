@@ -18,7 +18,7 @@ const overview=pages.get('timer')!;
 const arrows=Object.fromEntries(['prev','next'].map(direction=>[direction,overview.match(new RegExp(`<li class="${direction}-link">[\\s\\S]*?(<svg[\\s\\S]*?</svg>)`))![1]]));
 function link(entry:StudentPage,direction='next',sidebar=false){
  const text=html(entry.label),arrow=sidebar?'':arrows[direction];
- return `<a class="${sidebar?'docs-link':'text-ui color-'+palette[entry.color]}" data-color="${entry.color}" data-id="${entry.id}" title="${text}" href="${entry.url}">${direction==='prev'?arrow+text:text+arrow}</a>`;
+ return `<a class="${sidebar?'docs-link':'text-ui color-'+palette[entry.color]}"${sidebar?'':` data-color="${entry.color}"`} data-id="${entry.id}" title="${text}" href="${entry.url}">${direction==='prev'?arrow+text:text+arrow}</a>`;
 }
 const nativeSidebar=await readFile(mother+'documentation-ec29569f/index.html','utf8');
 const nestedStart=nativeSidebar.indexOf('<ul',nativeSidebar.indexOf('data-id="animation-animatable-properties"'));

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import type { Browser, BrowserContext } from '@playwright/test';
 import { expect } from '@playwright/test';
 import entries from '../src/data/student-docs.json';
-import {studentThemeRegression} from './student-themes';
+import {studentThemeRegression,studentNestedThemeRegression} from './student-themes';
 import {studentNavigationRegression} from './student-navigation';
 import {studentProfileRegression} from './student-profile';
 import {studentProfileEditorRegression} from './student-profile-editor';
@@ -43,6 +43,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await studentProfileEditorRegression(page);
     await go('personal',1);
     await studentThemeRegression(page);
+    await studentNestedThemeRegression(page);
     await studentNavigationRegression(page);
     await studentTransitionRegression(page);
     await studentAccommodationNavigationRegression(page);
