@@ -12,6 +12,8 @@ import {StudentAccommodationSubmit} from '@/components/workspace/StudentAccommod
 import {StudentAccommodationData,accommodationListPath} from '@/utils/student-accommodation-data';
 import {StudentRepairPage} from '@/components/workspace/StudentRepairPage';
 import {StudentRepairData,repairListPath} from '@/utils/student-repair-data';
+import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
+import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
 import { studentPages as entries } from '@/data/student-pages';
 import type { Account } from '@/types/auth';
 import s from './StudentDocsPage.module.css';
@@ -26,6 +28,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
   const finance = useMemo(() => new StudentFinanceData(account.id,account.csrfToken), [account.id, account.csrfToken]);
   const accommodation = useMemo(() => new StudentAccommodationData(account.id,account.csrfToken), [account.id, account.csrfToken]);
   const repairs = useMemo(() => new StudentRepairData(account.id,account.csrfToken), [account.id, account.csrfToken]);
+  const announcements = useMemo(() => new StudentAnnouncementData(account.id,account.csrfToken), [account.id, account.csrfToken]);
   useEffect(() => {
     void finance.prefetchLists();
     const iframe=frame.current!;
@@ -41,13 +44,14 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
         if(entry?.feature==='payment'&&entry.action!=='overview')void finance.load(financeListPath(entry.action)).catch(()=>{});
         if(entry?.feature==='accommodation'&&entry.parent&&entry.kind!=='submit')void accommodation.load(accommodationListPath(entry.action.split('/')[0])).catch(()=>{});
         if(entry?.feature==='repair'&&entry.parent&&entry.kind!=='repair-submit')void repairs.load(repairListPath(entry)).catch(()=>{});
+        if(entry?.feature==='announcements'&&entry.action!=='overview')void announcements.load(announcementListPath(entry.action)).catch(()=>{});
       };
       doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
       detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
     };
     iframe.addEventListener('load',bind);bind();
     return()=>{iframe.removeEventListener('load',bind);detach();};
-  }, [finance,accommodation,repairs]);
+  }, [finance,accommodation,repairs,announcements]);
   const refreshRef = useRef(refresh);
   useEffect(() => { refreshRef.current = refresh; }, [refresh]);
   const [src] = useState(() => '/assets/student/index.html?entry=' + encodeURIComponent((entries.find(e => e.feature === featureId && e.action === actionId) ?? entries[0]).id));
@@ -80,6 +84,8 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
       ? <StudentFinancePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={finance} actionId={view.entry.action}/>
       : view.entry.feature==='repair'
       ? <StudentRepairPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={repairs} entry={view.entry}/>
+      : view.entry.feature==='announcements'
+      ? <StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={announcements} entry={view.entry}/>
       : view.entry.kind==='submit'
       ? <StudentAccommodationSubmit key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={accommodation} entry={view.entry}/>
       : view.entry.feature==='accommodation'&&view.entry.parent

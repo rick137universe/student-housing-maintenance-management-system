@@ -112,6 +112,7 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  const period=params.get('period');if(period&&kind==='bills')condition+=` AND x.billing_period=${add(period)}`;
  if(params.get('unpaid')==='true'&&kind==='bills')condition+=' AND balance.outstanding_amount>0';
  if(params.get('unread')==='true'&&kind==='notifications')condition+=' AND x.read_at IS NULL';
+ if(params.get('type')==='payment-reminder'&&kind==='notifications')condition+=" AND x.title='缴费提醒' AND x.bill_id IS NOT NULL";
  const building=params.get('buildingId');if(building&&['rooms','beds','repairs','occupancies','buildings'].includes(kind))condition+=` AND a.building_id=${add(building)}`;
  const dateColumn:Record<string,string>={audit:'x.occurred_at',repairs:'x.submitted_at',maintenance:'x.dispatched_at',payments:'x.paid_at',bills:'x.generated_at'};
  for(const [filter,op] of [['from','>='],['to','<']] as const){const value=params.get(filter);if(value&&dateColumn[kind]){z.iso.date().parse(value);condition+=` AND ${dateColumn[kind]} ${op} ${add(value)}::date${filter==='to'?"+interval '1 day'":''}`;}}

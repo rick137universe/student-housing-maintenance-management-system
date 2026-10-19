@@ -12,6 +12,7 @@ import {studentTransitionRegression} from './student-transitions';
 import {studentAccommodationNavigationRegression,expectAccommodationRecord} from './student-accommodation';
 import {submitStudentAccommodation} from './student-accommodation-submit';
 import {studentRepairWorkflowRegression} from './student-repair';
+import {studentAnnouncementRegression} from './student-announcements';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -74,6 +75,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await admin.call('bills', { studentNumber, period: '2026-10', accommodationFee: '10.00', utilityFee: '2.00', dueDate: '2026-12-31' });
     const foreignBill=(await admin.call('bills?limit=100')).find((bill:{student_number:string})=>bill.student_number!==studentNumber);
     await studentFinanceRegression(page,foreignBill.bill_id);
+    await studentAnnouncementRegression(page,admin);
     await submitStudentAccommodation(page,2,'三栏页面调宿回归');
     const transfer = (await student.call('changes?type=transfer'))[0]; await manager.call(`changes/${transfer.change_id}/review`, { decision: 'approve' });
     await expectAccommodationRecord(page,2,transfer.change_id,'已完成');
