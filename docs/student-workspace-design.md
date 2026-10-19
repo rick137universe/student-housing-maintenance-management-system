@@ -33,6 +33,8 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 
 动画用于解释页面对应的操作，真实业务数据由右侧接口查询结果提供。选中的预览函数、样式与元素来自母版 `documentation-demos.html`，只筛选所需条目、替换标题和可见提示。完整原始示例文件也保留在副本中，以便核对来源。具体映射见 `src/data/student-docs.json`。
 
+学生各列表的“暂无记录。”统一使用 `StudentEmptyState`，复用母版 Getting started 的 `<div class="notice info"><p>…</p></div>`。外层保留 `.formatted-text`，直接继承母版 INFO 标签、蓝色背景、正文颜色、字号、圆角和内边距，不新增样式覆盖。覆盖住宿申请记录、缴费列表、报修记录与评价候选、公告和个人消息，以及 Docs 通用表格的空状态；仍只在数据确认返回空列表后显示，不在加载或读取失败时提前显示空记录提示。
+
 住宿申请主页仅提供“提交申请／申请记录”两个母版导航入口，不挂载表单或查询记录。提交页位于 `/workspace/student/accommodation/action-N/submit`，记录页位于 `/workspace/student/accommodation/action-N/records`，两者都属于对应申请的左侧第三级目录。申请主页的“下一个”进入提交子页，两个子页的“上一个”都返回对应申请主页；提交页右侧导航位置改为“提交申请”，记录页继续沿用原顺序的下一页。记录列表不提供搜索，保留分页和独立详情。入住记录查询 `applications`，调宿和退宿分别查询 `changes?type=transfer`、`changes?type=checkout`，仍由后端限制本人范围。
 
 三级目录直接采用母版 Animation / Animatable properties 的嵌套 `ul.docs-nav-item` 结构；提交及记录页标题上方的两级链接复制自 CSS Properties 页的 `docs-breadcrumb`。只替换文字、地址和主题编号，不新增字号或布局覆盖。`src/data/student-records.json`、`src/data/student-submissions.json` 与 `src/data/student-repair-pages.json` 定义十二个三级子页，`scripts/sync-student-navigation.ts` 离线同步项目副本中的目录、片段、预览及前后链接，母版目录只读。

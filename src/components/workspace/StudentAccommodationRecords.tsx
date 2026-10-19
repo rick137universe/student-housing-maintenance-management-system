@@ -6,6 +6,7 @@ import type {StudentPage} from '@/data/student-pages';
 import {valueLabels} from '@/data/workspace-actions';
 import {accommodationListPath,type StudentAccommodationData} from '@/utils/student-accommodation-data';
 import type {StudentRow} from '@/utils/student-record-data';
+import {StudentEmptyState} from './StudentEmptyState';
 
 const fields=[['business_type','业务类型'],['student_number','学号'],['full_name','姓名'],['original_bed_id','原床位'],['new_bed_id','新床位'],['preferred_building_id','意向楼栋'],['application_note','申请说明'],['review_status','审核状态'],['applied_at','申请时间'],['processing_due_at','办理期限'],['reviewer_account_id','审核人员编号'],['reviewed_at','审核时间'],['review_note','审核意见']] as const;
 const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
@@ -106,7 +107,7 @@ function RecordsContent({entry,data,record,page,listUrl,navigate}:{entry:Student
         const summary=['business_type','original_bed_id','new_bed_id','review_status'].map(key=>display(key,row[key])).join(' · ');
         return <li key={id}><a className="text-ui color-corail" data-color="1" href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{summary}<Arrow/></a></li>;
       })}</ul>
-      {!rows.length&&<p>暂无记录。</p>}
+      {!rows.length&&<StudentEmptyState/>}
       {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
     </>:detail&&<RecordValues row={detail} fields={detailFields}/>)}
   </div>;

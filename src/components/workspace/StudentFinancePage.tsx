@@ -6,6 +6,7 @@ import {api} from '@/utils/auth-session';
 import {studentPages} from '@/data/student-pages';
 import {valueLabels} from '@/data/workspace-actions';
 import {financeListPath,type StudentFinanceData} from '@/utils/student-finance-data';
+import {StudentEmptyState} from './StudentEmptyState';
 
 type Row=Record<string,unknown>;
 type Entry=typeof studentPages[number];
@@ -145,7 +146,7 @@ function FinanceContent({data,entry,record,page,listUrl,paymentStep,navigate}:{d
         const summary=payments?`${display('amount',row.amount)} · ${display('paid_at',row.paid_at)}`:`${display('billing_period',row.billing_period)} · ${display('total_amount',row.total_amount)} · ${display('bill_status',row.bill_status)}`;
         return navigation(summary,listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(id),id);
       })}</ul>
-      {!rows.length&&<p>暂无记录。</p>}
+      {!rows.length&&<StudentEmptyState/>}
       {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(pageUrl(page-1))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(pageUrl(page+1))}>下一页</button></div></>}
     </>:detail&&<>
       {paymentStep&&canPay?<PaymentForm bill={detail} onCancel={()=>navigate(detailUrl)} onSaved={async()=>{

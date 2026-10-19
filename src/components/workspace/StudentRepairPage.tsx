@@ -6,6 +6,7 @@ import {api} from '@/utils/auth-session';
 import {studentPages,type StudentPage} from '@/data/student-pages';
 import {repairListPath,type StudentRepairData} from '@/utils/student-repair-data';
 import type {StudentRow} from '@/utils/student-record-data';
+import {StudentEmptyState} from './StudentEmptyState';
 import {RepairArrow,RepairEditorFields,RepairValues,repairValue,useRepairDocument,useRepairSubmitFooter,type RepairField} from './StudentRepairElements';
 
 const requestFields=[['repair_id','报修编号'],['room_id','报修房间'],['fault_type','故障类型'],['fault_description','故障描述'],['contact_phone','联系电话'],['repair_status','工单状态'],['submitted_at','提交时间'],['reviewed_at','审核时间'],['review_note','审核意见']] as const;
@@ -62,7 +63,7 @@ function RepairRecordsContent({entry,data,record,page,navigate}:{entry:StudentPa
     const summary=keys.map(key=>repairValue(key,row[key])+(key==='service_rating'?' 分':'')).join(' · ');
     return <li key={String(row.repair_id)}><a className="text-ui color-yellow" data-color="3" href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{summary}<RepairArrow/></a></li>;
    })}</ul>
-   {!rows.length&&<p>暂无记录。</p>}
+   {!rows.length&&<StudentEmptyState/>}
    {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
   </>:detail&&(!allowed?<p role="alert">{evaluate?'此工单尚未完工或已经评价，不能重复提交。':'记录不存在或不可访问。'}</p>:evaluate?<RepairForm entry={entry} data={data} repair={detail} locked={loading}/>:<>
    <RepairValues row={detail} fields={[...requestFields,...(detail.maintenance_id?maintenanceFields:[]),...(evaluations||detail.repair_status==='evaluated'?evaluationFields:[])]}/>

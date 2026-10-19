@@ -8,6 +8,7 @@ import baseStyles from './BusinessPanel.module.css';
 import liveStyles from './LiveWorkspace.module.css';
 import {StudentProfileEditor} from './StudentProfileEditor';
 import {StudentPasswordEditor} from './StudentPasswordEditor';
+import {StudentEmptyState} from './StudentEmptyState';
 
 const DocsAppearance=createContext(false);
 function useStyles(){
@@ -44,7 +45,7 @@ const columns:Record<string,string[]>={
 };
 function DataTable({rows,keys,actions}:{rows:Row[];keys:string[];actions?:(row:Row)=>React.ReactNode}){
  const {s,l,docs}=useStyles();
- return <div className={s.tableScroll}><table className={s.businessTable}><thead><tr>{keys.map(k=><th key={k}>{columnLabels[k]??k}</th>)}{actions&&<th>操作</th>}</tr></thead><tbody>{rows.map((row,index)=><tr key={String(row[resourceId[keys[0]]??keys[0]]??index)}>{keys.map(k=><td key={k} data-label={docs?(columnLabels[k]??k):undefined}>{text(row[k])}</td>)}{actions&&<td data-label={docs?'操作':undefined}><div className={l.actions}>{actions(row)}</div></td>}</tr>)}</tbody></table>{!rows.length&&<p>暂无记录。</p>}</div>;
+ return <div className={s.tableScroll}><table className={s.businessTable}><thead><tr>{keys.map(k=><th key={k}>{columnLabels[k]??k}</th>)}{actions&&<th>操作</th>}</tr></thead><tbody>{rows.map((row,index)=><tr key={String(row[resourceId[keys[0]]??keys[0]]??index)}>{keys.map(k=><td key={k} data-label={docs?(columnLabels[k]??k):undefined}>{text(row[k])}</td>)}{actions&&<td data-label={docs?'操作':undefined}><div className={l.actions}>{actions(row)}</div></td>}</tr>)}</tbody></table>{!rows.length&&(docs?<StudentEmptyState/>:<p>暂无记录。</p>)}</div>;
 }
 function EditDialog({editor,pending,error,onClose,onSubmit}:{editor:Editor;pending:boolean;error:string;onClose:()=>void;onSubmit:(values:Row)=>void}){
  const {s,l,docs}=useStyles();

@@ -6,6 +6,7 @@ import type {StudentPage} from '@/data/student-pages';
 import type {StudentRow} from '@/utils/student-record-data';
 import {announcementListPath,type StudentAnnouncementData} from '@/utils/student-announcement-data';
 import {api} from '@/utils/auth-session';
+import {StudentEmptyState} from './StudentEmptyState';
 
 const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
@@ -103,7 +104,7 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
     const id=String(row[identifier]),url=listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(id);
     return <li key={id}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{String(row.title)}{notification?' · '+(row.read_at?'已读':'未读'):''}<Arrow/></a></li>;
    })}</ul>
-   {!rows.length&&<p>暂无记录。</p>}
+   {!rows.length&&<StudentEmptyState/>}
    {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
   </>:detail&&<div data-dorma-announcement-body>
    <p>{notification?(reminder?'提醒时间：':'接收时间：'):'发布时间：'}{date(detail[notification?'created_at':'published_at'])}{notification?' · '+(detail.read_at?'已读':'未读'):''}</p>
