@@ -44,7 +44,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
         if(entry?.feature==='payment'&&entry.action!=='overview')void finance.load(financeListPath(entry.action)).catch(()=>{});
         if(entry?.feature==='accommodation'&&entry.parent&&entry.kind!=='submit')void accommodation.load(accommodationListPath(entry.action.split('/')[0])).catch(()=>{});
         if(entry?.feature==='repair'&&entry.parent&&entry.kind!=='repair-submit')void repairs.load(repairListPath(entry)).catch(()=>{});
-        if(entry?.feature==='announcements'&&entry.action!=='overview')void announcements.load(announcementListPath(entry.action)).catch(()=>{});
+        if(entry&&['announcements','notifications'].includes(entry.feature)&&entry.action!=='overview')void announcements.load(announcementListPath(entry)).catch(()=>{});
       };
       doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
       detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
@@ -84,7 +84,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
       ? <StudentFinancePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={finance} actionId={view.entry.action}/>
       : view.entry.feature==='repair'
       ? <StudentRepairPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={repairs} entry={view.entry}/>
-      : view.entry.feature==='announcements'
+      : ['announcements','notifications'].includes(view.entry.feature)
       ? <StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={announcements} entry={view.entry}/>
       : view.entry.kind==='submit'
       ? <StudentAccommodationSubmit key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={accommodation} entry={view.entry}/>

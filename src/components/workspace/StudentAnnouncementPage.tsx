@@ -20,8 +20,9 @@ export function StudentAnnouncementPage({entry,data}:{entry:StudentPage;data:Stu
 }
 function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data:StudentAnnouncementData;record:string|null;page:number;navigate:(url:string)=>void}){
  const root=useRef<HTMLDivElement>(null),request=useRef({version:0}),saving=useRef(false),router=useRouter();
- const reminder=entry.action==='action-2',resource=reminder?'notifications':'announcements',identifier=reminder?'notification_id':'announcement_id';
- const path=record===null?announcementListPath(entry.action,page):resource+'/'+record+(reminder?'?type=payment-reminder':'');
+ const reminder=entry.feature==='announcements'&&entry.action==='action-2',notification=entry.feature==='notifications'||reminder,theme=entry.feature==='notifications'?'lime':'citrus';
+ const resource=notification?'notifications':'announcements',identifier=notification?'notification_id':'announcement_id';
+ const path=record===null?announcementListPath(entry,page):resource+'/'+record+(reminder?'?type=payment-reminder':'');
  const [result,setResult]=useState(()=>{
   const cached=data.peek(path)??(record!==null?data.peek(resource+'/'+record):undefined);
   return cached&&!Array.isArray(cached.data)&&reminder&&!isReminder(cached.data)?undefined:cached;
@@ -59,7 +60,7 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),back=doc.createElement('a');
   arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.href=listUrl;back.title=entry.label;back.textContent=entry.label;back.target='_top';crumbs.querySelector('p')!.append(arrow,back);breadcrumb.replaceWith(crumbs);
   const previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,replacement=previous.cloneNode(true) as HTMLAnchorElement;
-  replacement.href=listUrl;replacement.title=entry.label;replacement.removeAttribute('data-id');replacement.dataset.color=String(entry.color);replacement.className='text-ui color-citrus';
+  replacement.href=listUrl;replacement.title=entry.label;replacement.removeAttribute('data-id');replacement.dataset.color=String(entry.color);replacement.className='text-ui color-'+theme;
   for(const node of [...replacement.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();replacement.append(entry.label);previous.replaceWith(replacement);
   const next=info.querySelector('.next-link')!,nextHeading=info.querySelector('.prev-next-heading')!.children[1],empty=doc.createElement('li'),emptyHeading=nextHeading.cloneNode(false) as HTMLElement;
   next.replaceWith(empty);nextHeading.replaceWith(emptyHeading);
@@ -70,10 +71,10 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
    back.removeEventListener('click',returnToList);replacement.removeEventListener('click',returnToList);heading.removeEventListener('click',stay);
    if(info.isConnected){crumbs.replaceWith(breadcrumb);replacement.replaceWith(previous);empty.replaceWith(next);emptyHeading.replaceWith(nextHeading);heading.textContent=saved.text;heading.href=saved.href;heading.title=saved.tooltip;description.hidden=saved.hidden;doc.querySelector('title')!.textContent=saved.documentTitle;}
   };
- },[record,title,detailUrl,entry.color,entry.label,listUrl,navigate]);
+ },[record,title,detailUrl,entry.color,entry.label,listUrl,navigate,theme]);
  function link(url:string,event:MouseEvent<HTMLAnchorElement>){event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(url);}
  async function markRead(){
-  if(saving.current||!detail||detail.read_at||!reminder)return;
+  if(saving.current||!detail||detail.read_at||!notification)return;
   saving.current=true;setPending(true);setError('');
   try{await api(`notifications/${detail.notification_id}/read`,{method:'POST',body:'{}'});data.invalidate();await load(true);}
   catch(reason){setError(reason instanceof Error?reason.message:'操作失败，请重试。');}
@@ -85,14 +86,14 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-announcement-list>{rows.map(row=>{
     const id=String(row[identifier]),url=listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(id);
-    return <li key={id}><a className="text-ui color-citrus" data-color="4" href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{String(row.title)}{reminder?' · '+(row.read_at?'已读':'未读'):''}<Arrow/></a></li>;
+    return <li key={id}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{String(row.title)}{notification?' · '+(row.read_at?'已读':'未读'):''}<Arrow/></a></li>;
    })}</ul>
    {!rows.length&&<p>暂无记录。</p>}
    {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
   </>:detail&&<div data-dorma-announcement-body>
-   <p>{reminder?'提醒时间：':'发布时间：'}{date(detail[reminder?'created_at':'published_at'])}{reminder?' · '+(detail.read_at?'已读':'未读'):''}</p>
+   <p>{notification?(reminder?'提醒时间：':'接收时间：'):'发布时间：'}{date(detail[notification?'created_at':'published_at'])}{notification?' · '+(detail.read_at?'已读':'未读'):''}</p>
    {paragraphs.map((paragraph,index)=><p key={index}>{paragraph.split('\n').map((line,lineIndex)=><Fragment key={lineIndex}>{lineIndex>0&&<br/>}{line}</Fragment>)}</p>)}
-   {reminder&&!detail.read_at&&<div className="ui-controls"><button className="ui-input" type="button" disabled={pending} onClick={event=>{event.stopPropagation();void markRead();}}>标为已读</button></div>}
+   {notification&&!detail.read_at&&<div className="ui-controls"><button className="ui-input" type="button" disabled={pending} onClick={event=>{event.stopPropagation();void markRead();}}>标为已读</button></div>}
   </div>)}
  </div>;
 }

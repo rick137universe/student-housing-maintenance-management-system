@@ -13,6 +13,7 @@ import {studentAccommodationNavigationRegression,expectAccommodationRecord} from
 import {submitStudentAccommodation} from './student-accommodation-submit';
 import {studentRepairWorkflowRegression} from './student-repair';
 import {studentAnnouncementRegression} from './student-announcements';
+import {studentNotificationRegression} from './student-notifications';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -83,7 +84,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     const checkout = (await student.call('changes?type=checkout'))[0]; await manager.call(`changes/${checkout.change_id}/review`, { decision: 'approve' });
     await expectAccommodationRecord(page,3,checkout.change_id,'已完成');
     await go('personal',3);await studentPasswordEditorRegression(page,password);
-    await go('notifications', 1); await frame.getByRole('button', { name: '标为已读', exact: true }).first().click(); await frame.getByText('操作已保存。', { exact: true }).waitFor();
+    await go('notifications',1);await studentNotificationRegression(page,admin,await session('stu202602114'));
     await page.setViewportSize({ width: 390, height: 844 }); await frame.locator('#toggle-sidebar').click();
     await expect(frame.locator('#docs-sidebar')).toHaveClass(/is-active/);
     assert.equal(await frame.locator('html').evaluate(el => el.scrollWidth > innerWidth), false);
