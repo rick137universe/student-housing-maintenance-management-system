@@ -24,6 +24,12 @@ else {
   breadcrumb.dataset.color = group.color;
   const link = breadcrumb.querySelector('a');
   link.textContent = group.label; link.title = group.label; link.href = group.url;
+  if (initial.parent) {
+    const parent = entries.find(entry => entry.id === initial.parent);
+    const arrow = document.createElement('span'); arrow.className = 'docs-breadcrumb-arrow'; arrow.textContent = '\uE0B1';
+    const parentLink = link.cloneNode();parentLink.textContent = parent.label;parentLink.title = parent.label;parentLink.href = parent.url;
+    link.after(arrow, parentLink);
+  }
 }
 const palette = ['red', 'corail', 'orange', 'yellow', 'citrus', 'lime'];
 const moduleLinks = info.querySelector('[data-student-module-links]');
@@ -32,7 +38,7 @@ if (initial.action === 'overview') {
   const template = moduleLinks.firstElementChild;
   const targets = initial.id === 'docs'
     ? entries.filter(entry => entry.id !== 'docs' && entry.action === 'overview')
-    : entries.filter(entry => entry.feature === initial.feature && entry.action !== 'overview');
+    : entries.filter(entry => entry.feature === initial.feature && entry.action !== 'overview' && !entry.parent);
   info.querySelector('h6.links-list-heading').textContent = initial.id === 'docs' ? '功能模块' : '本模块功能';
   moduleLinks.replaceChildren(...targets.map(entry => {
     const item = template.cloneNode(true), link = item.querySelector('a');
@@ -45,6 +51,18 @@ if (initial.action === 'overview') {
 } else {
   info.querySelector('h6.links-list-heading')?.remove();
   moduleLinks.remove();
+}
+const children = entries.filter(entry => entry.parent === initial.id);
+if (children.length) {
+  const heading = document.createElement('h6');heading.className = 'links-list-heading';heading.textContent = '申请记录';
+  const list = moduleLinks.cloneNode(false);list.removeAttribute('data-student-module-links');list.dataset.studentRecordLinks = '';
+  for (const entry of children) {
+    const item = moduleLinks.firstElementChild.cloneNode(true), link = item.querySelector('a');
+    link.href = entry.url;link.title = entry.label;link.dataset.id = entry.id;link.dataset.color = entry.color;link.className = 'text-ui color-' + palette[entry.color];
+    for (const node of [...link.childNodes]) if (node.nodeType === Node.TEXT_NODE) node.remove();
+    link.prepend(entry.label);list.append(item);
+  }
+  info.querySelector('.docs-info-content').after(heading, list);
 }
 const position = entries.indexOf(initial);
 for (const [direction, neighbor, heading] of [

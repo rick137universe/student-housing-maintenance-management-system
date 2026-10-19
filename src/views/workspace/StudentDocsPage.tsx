@@ -69,6 +69,6 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
     <iframe ref={frame} className={s.frame} data-dorma-student-frame src={src} title="学生工作台" />
     {view && createPortal(view.entry.feature==='payment'
       ? <StudentFinancePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={finance} actionId={view.entry.action}/>
-      : <DocsWorkspace key={view.entry.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} />, view.target)}
+      : <DocsWorkspace key={view.entry.id} account={account} featureId={view.entry.feature} actionId={view.entry.action.split('/')[0]} accommodationView={view.entry.feature==='accommodation'?(view.entry.parent?'records':'submit'):undefined} />, view.target)}
   </main>;
 }

@@ -37,7 +37,7 @@
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
     "url": "/workspace/student/accommodation/action-1",
-    "description": "提交入住申请，选择意向楼栋并查看审核结果。"
+    "description": "提交入住申请，选择意向楼栋和期望入住日期。"
   },
   {
     "feature": "accommodation",
@@ -57,7 +57,7 @@
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
     "url": "/workspace/student/accommodation/action-3",
-    "description": "申请退宿并查看办理结果。"
+    "description": "提交退宿申请，填写期望办理日期和申请说明。"
   },
   {
     "feature": "payment",

@@ -13,6 +13,7 @@ import { demoAccounts, type RoleId } from '@/data/accounts';
 import s from './WorkspacePage.module.css';
 import { ThemeSelect } from '@/components/theme/ThemeProvider';
 import { StudentDocsPage } from './StudentDocsPage';
+import {studentPages} from '@/data/student-pages';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -63,7 +64,11 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     <Link href="/">返回首页</Link>
   </main>;
 
-  if (role === 'student') return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? action?.id ?? 'action-1' : 'overview'} onReady={onReady}/>;
+  if (role === 'student') {
+    const nestedAction=pathname.split('/').slice(4).join('/');
+    const studentAction=studentPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
+    return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? studentAction??action?.id??'action-1':'overview'} onReady={onReady}/>;
+  }
 
   return <div className={s.page}>
     <header className={s.topbar}>

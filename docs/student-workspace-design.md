@@ -6,7 +6,7 @@
 
 完整复制 Docs 的 HTML 外壳、顶部搜索、侧栏、预览容器、内容容器、搜索弹层及页脚。`core.css`、`docs.css`、`docs.js`、全部运行依赖及字体保持原始字节；没有新增或覆盖字号、行高、列宽、间距、断点和动画参数。`StudentDocsPage.module.css` 只负责承载整个独立文档，不覆盖文档内的样式。
 
-左栏用原有 `docs-nav-item` 组织六组业务和十五个操作；中栏保留母版 Documentation 总导航点阵、六个模块预览和十五个功能预览，仍由原始运行时负责滚动、激活、播放与折叠；右栏保留 `docs-info-content formatted-text`、标题、说明、模块入口、前后导航及完整页脚。顶部 Logo 换为项目 SVG，账户按钮复用首页和登录页的实现，Docs 返回学生工作台总导航，Learn 保留原站链接。搜索使用母版搜索组件，在学生业务菜单中搜索，支持键盘操作。
+左栏用原有 `docs-nav-item` 组织六组业务、十五个操作及三个住宿申请记录子页；中栏保留母版 Documentation 总导航点阵、六个模块预览、十五个功能预览及三个记录页预览，仍由原始运行时负责滚动、激活、播放与折叠；右栏保留 `docs-info-content formatted-text`、标题、说明、模块入口、前后导航及完整页脚。顶部 Logo 换为项目 SVG，账户按钮复用首页和登录页的实现，Docs 返回学生工作台总导航，Learn 保留原站链接。搜索使用母版搜索组件，在学生业务菜单中搜索，支持键盘操作。
 
 六个模块依次采用母版前六种颜色：个人信息为红色、住宿业务为珊瑚橙、缴费管理为橙色、报修服务为黄色、公告查看为柠黄色、个人消息为青柠色。侧栏、预览及搜索结果使用同一份映射。模块标题进入各自总览，模块与子功能的 `data-id` 各自唯一，避免首个功能的选中状态落在模块标题上。子功能列表的第三个 class 保留母版颜色类，满足原搜索组件的主题读取规则；不修改原始 CSS 和 `docs.js`。
 
@@ -21,12 +21,16 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 | 查看个人信息 | CSS 属性展示 | Installation 的 `h3` 标题和 `pre > code` 代码框，逐项展示真实账号资料及住宿记录，并复用母版复制按钮 |
 | 修改个人信息 | Animatable setters 的指针跟随示例 | Using with vanilla JS 的 `code-preview`：姓名、联系电话和邮箱分别使用带标题、确认／取消及铅笔按钮的代码块 |
 | 修改登录密码 | HTML attributes 的输入控件示例 | 同款 `code-preview`：原密码、新密码、确认新密码三个代码块，使用遮罩密码输入和确认／取消、铅笔按钮 |
-| 入住、调宿、退宿 | CSS transforms、timeline add animations、reversed | 原有数据表、表格中的表单控件及操作按钮，连接申请和审核结果 |
+| 入住、调宿、退宿 | CSS transforms、timeline add animations、reversed；记录页使用 Timer / Timeline / Animation properties 点阵 | 主页保留申请表单及提交操作；三级记录页使用原有记录表格与详情，连接申请和审核结果 |
 | 账单、在线缴费、缴费记录 | timer duration、onComplete、timeline add timers | Getting started 的导航列表展示摘要；Installation 的标题与代码框展示明细，在线缴费详情承接测试支付 |
 | 提交报修、查看进度、服务评价 | refresh、timeline seek、stagger grid | 表格、输入控件、有序列表，连接报修、处理历史和1～5分评价 |
 | 公寓通知、缴费提醒、个人消息 | splitText、timer onComplete、timeline call functions | 表格、详情正文和已读操作 |
 
 动画用于解释页面对应的操作，真实业务数据由右侧接口查询结果提供。选中的预览函数、样式与元素来自母版 `documentation-demos.html`，只筛选所需条目、替换标题和可见提示。完整原始示例文件也保留在副本中，以便核对来源。具体映射见 `src/data/student-docs.json`。
+
+住宿申请主页只保留提交操作，不查询或展示申请记录、记录搜索和分页。三个记录页分别位于 `/workspace/student/accommodation/action-1/records`、`action-2/records`、`action-3/records`，在各申请的左侧第三级目录、页内原版导航列表和“下一个”按钮中提供入口。记录页不提供提交按钮，保留原有搜索、详情及分页；上一页返回对应申请，下一页延续母版页面顺序。入住记录查询 `applications`，调宿和退宿分别查询 `changes?type=transfer`、`changes?type=checkout`，仍由后端限制本人范围。
+
+三级目录直接采用母版 Animation / Animatable properties 的嵌套 `ul.docs-nav-item` 结构；记录页标题上方的两级链接复制自 CSS Properties 页的 `docs-breadcrumb`。记录页点阵预览复制自母版三个 Properties 章节。只替换文字、地址和主题编号，不新增字号或布局覆盖。`src/data/student-records.json` 定义记录子页，`scripts/sync-student-navigation.ts` 离线同步项目副本中的目录、片段、预览及前后链接，母版目录只读。
 
 查看个人信息使用母版 Installation 的 ES Modules / CommonJS 区域结构：每项资料的 `h3` 后紧邻 `pre > code.hljs`，不添加字号、内边距和间距覆盖。资料为纯文本，不做语法着色；空值仍显示“—”。数据加载后由文档适配脚本复用原始 `CopyButton` 组件，复制当前字段内容。其余页面的表格和表单不受影响。
 
@@ -79,5 +83,7 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 `tests/student-finance.ts` 验证三类列表摘要、账单与缴费记录明细、复制控件、移除记录搜索、详情底部返回列表、右侧支付入口的位置及悬停色、支付子页直达和刷新、浏览器前进／后退、母版标题间距、手机布局、超额与失败支付、取消、分批缴清、缴清后的禁付，以及不可访问记录的处理。
 
 `tests/student-transitions.ts` 逐帧检查切换后右侧透明度的中间值与最终值，并验证母版 150 毫秒的动画。覆盖模块入口、侧栏、前后导航、搜索、浏览器返回和手机；缴费回归同时验证账单详情及支付子页的渐显。
+
+`tests/student-accommodation.ts` 覆盖三类申请主页与记录页的职责分离、三级目录选中、页内及下一页入口、搜索主题、直达刷新、前后导航和手机布局；学生业务回归在真实提交及宿管审核后，分别检查对应记录页的审核状态和详情。
 
 母版目录不修改。复制资源保留原始许可与版权信息；网页不改为其他主题配色，以保持母版原有深色外观。

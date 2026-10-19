@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import entries from '../src/data/student-docs.json';
 import {studentPages,studentOverview} from '../src/data/student-pages';
 import modules from '../src/data/student-modules.json';
+import records from '../src/data/student-records.json';
 import { roleFeatures } from '../src/data/role-features';
 
 export async function verifyStudentTemplate() {
@@ -23,6 +24,12 @@ export async function verifyStudentTemplate() {
   assert.equal(new Set(links).size,links.length,'功能标识不能与模块标题重复');
   const children=[...sidebar.matchAll(/<li class="([^"]*docs-action[^"]*)"/g)];assert.equal(children.length,entries.length);
   for(const child of children)assert.match(child[1].split(/\s+/)[2],/^color-/, '搜索依赖子功能的第三个class读取主题');
+  for(const record of records){
+    assert(sidebar.includes(`class="docs-nav-item docs-records color-corail"`));
+    assert.match(sidebar,new RegExp(`data-id="${record.parent}">[^<]+</a><ul class="docs-nav-item"><li[^>]*><a[^>]*data-id="${record.id}"`),'申请记录必须位于对应申请的第三级目录');
+    const parent=await readFile(`public/assets/student/pages/accommodation-${record.action.split('/')[0]}.html`,'utf8');
+    assert(parent.includes('data-student-record-links'));assert(parent.includes(`href="${record.url}"`));
+  }
   for(const id of ['site-header','docs-sidebar','docs-demos','docs-info','toggle-search','docs-search-input'])assert(html.includes(`id="${id}"`),`缺少母版区域 ${id}`);
   const demos=await readFile('public/assets/student/assets/html/student-demos.html','utf8');
   for(const [index,entry] of studentPages.entries()){
@@ -47,5 +54,5 @@ export async function verifyStudentTemplate() {
       if(neighbor)assert(link.includes(`data-id="${neighbor.id}"`));else assert(!link.includes('<a'));
     }
   }
-  console.log(`学生 Docs 校验通过：${count} 个原始资源逐字节一致，总导航、6 个模块总览、15 个业务页及相邻导航完整。`);
+  console.log(`学生 Docs 校验通过：${count} 个原始资源逐字节一致，总导航、6 个模块总览、15 个业务页、3 个三级记录页及相邻导航完整。`);
 }

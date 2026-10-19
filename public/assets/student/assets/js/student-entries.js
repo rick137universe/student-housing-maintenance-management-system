@@ -67,7 +67,18 @@ const entries = [
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
     "url": "/workspace/student/accommodation/action-1",
-    "description": "提交入住申请，选择意向楼栋并查看审核结果。"
+    "description": "提交入住申请，选择意向楼栋和期望入住日期。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
+    "label": "入住申请记录",
+    "id": "timer-timer-properties",
+    "action": "action-1/records",
+    "parent": "animation-animatable-properties-css-transforms",
+    "url": "/workspace/student/accommodation/action-1/records",
+    "description": "查看已提交的入住申请及审核结果。"
   },
   {
     "feature": "accommodation",
@@ -83,11 +94,33 @@ const entries = [
     "feature": "accommodation",
     "group": "住宿业务",
     "color": 1,
+    "label": "调宿申请记录",
+    "id": "timeline-timeline-properties",
+    "action": "action-2/records",
+    "parent": "timeline-add-animations",
+    "url": "/workspace/student/accommodation/action-2/records",
+    "description": "查看调宿申请、审核意见及床位变更结果。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
     "label": "退宿申请",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
     "url": "/workspace/student/accommodation/action-3",
-    "description": "申请退宿并查看办理结果。"
+    "description": "提交退宿申请，填写期望办理日期和申请说明。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
+    "label": "退宿申请记录",
+    "id": "animation-animation-properties",
+    "action": "action-3/records",
+    "parent": "animation-animation-playback-settings-reversed",
+    "url": "/workspace/student/accommodation/action-3/records",
+    "description": "查看退宿申请及办理结果。"
   },
   {
     "feature": "payment",
