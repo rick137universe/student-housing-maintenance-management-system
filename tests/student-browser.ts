@@ -67,7 +67,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await frame.getByLabel('意向楼栋', { exact: true }).selectOption('NY3'); await frame.getByLabel('申请说明', { exact: true }).fill('三栏页面入住回归'); await submit();
     const application = (await student.call('applications'))[0]; assert.equal(application.application_note, '三栏页面入住回归');
     await manager.call(`applications/${application.application_id}/review`, { decision: 'approve' });
-    await expectAccommodationRecord(page,1,application.application_id,'已通过');
+    await expectAccommodationRecord(page,1,application.application_id,'已完成');
     await go('repair', 1); await frame.getByRole('button', { name: '提交报修', exact: true }).click();
     await frame.getByLabel('故障描述', { exact: true }).fill('三栏页面水龙头报修'); await frame.getByLabel('联系电话', { exact: true }).fill('13800138000'); await submit();
     const repair = (await student.call('repairs'))[0]; assert.equal(repair.fault_description, '三栏页面水龙头报修');
@@ -82,10 +82,10 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await studentFinanceRegression(page,foreignBill.bill_id);
     await go('accommodation', 2); await frame.getByRole('button', { name: '提交调宿申请', exact: true }).click(); await frame.getByLabel('意向楼栋', { exact: true }).selectOption('NY3'); await submit();
     const transfer = (await student.call('changes?type=transfer'))[0]; await manager.call(`changes/${transfer.change_id}/review`, { decision: 'approve' });
-    await expectAccommodationRecord(page,2,transfer.change_id,'已通过');
+    await expectAccommodationRecord(page,2,transfer.change_id,'已完成');
     await go('accommodation', 3); await frame.getByRole('button', { name: '提交退宿申请', exact: true }).click(); await submit();
     const checkout = (await student.call('changes?type=checkout'))[0]; await manager.call(`changes/${checkout.change_id}/review`, { decision: 'approve' });
-    await expectAccommodationRecord(page,3,checkout.change_id,'已通过');
+    await expectAccommodationRecord(page,3,checkout.change_id,'已完成');
     await go('personal',3);await studentPasswordEditorRegression(page,password);
     await go('notifications', 1); await frame.getByRole('button', { name: '标为已读', exact: true }).first().click(); await frame.getByText('操作已保存。', { exact: true }).waitFor();
     await page.setViewportSize({ width: 390, height: 844 }); await frame.locator('#toggle-sidebar').click();

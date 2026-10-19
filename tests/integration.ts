@@ -56,9 +56,14 @@ try{
  await new Session().request('bills','GET',undefined,401);await student.request('accounts','GET',undefined,403);await manager.request('rooms/BY4-502','GET',undefined,404);checks+=3;
  const request=(await incoming.request('applications')).data[0];await manager.request(`applications/${request.application_id}/review`,'POST',{decision:'approve'});await manager.request(`applications/${request.application_id}/review`,'POST',{decision:'approve'});
  let stay=(await incoming.request('occupancies')).data.find((x:QueryResultRow)=>x.check_out_date===null);assert(stay);checks++;
+ const allocatedBed=stay.bed_id,applicationDetail=(await incoming.request('applications/'+request.application_id)).data;
+ assert.equal(applicationDetail.business_type,'checkin');assert.equal(applicationDetail.original_bed_id,null);assert.equal(applicationDetail.new_bed_id,allocatedBed);
+ await second.request('applications/'+request.application_id,'GET',undefined,404);checks++;
  const change=(await incoming.request('changes','POST',{type:'transfer',preferredBuildingId:'NY3',note:'集成调宿'})).data;
  await manager.request(`changes/${change.change_id}/review`,'POST',{decision:'approve',bedId:'NY3-102-04'});stay=(await incoming.request('occupancies')).data.find((x:QueryResultRow)=>x.check_out_date===null);assert.equal(stay.bed_id,'NY3-102-04');checks++;
  const checkout=(await incoming.request('changes','POST',{type:'checkout',note:'集成退宿'})).data;await manager.request(`changes/${checkout.change_id}/review`,'POST',{decision:'approve'});assert(!(await incoming.request('occupancies')).data.some((x:QueryResultRow)=>x.check_out_date===null));checks++;
+ assert.equal((await incoming.request('applications/'+request.application_id)).data.new_bed_id,allocatedBed,'入住申请应保留最初分配床位，不随调宿或退宿改变');
+ await second.request('changes/'+change.change_id,'GET',undefined,404);checks++;
  // 性别不匹配时整笔审核回滚。
  const wrong=(await female.request('changes','POST',{type:'transfer',preferredBuildingId:'NY3',note:'性别验证'})).data;await administrator.request(`changes/${wrong.change_id}/review`,'POST',{decision:'approve',bedId:'NY3-102-01'},409);assert.equal((await female.request('changes/'+wrong.change_id)).data.review_status,'pending');checks++;
  const bill=(await student.request('bills')).data[0];await second.request(`bills/${bill.bill_id}`,'GET',undefined,404);

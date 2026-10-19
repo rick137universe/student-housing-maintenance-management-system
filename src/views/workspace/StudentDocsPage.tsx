@@ -7,6 +7,8 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { DocsWorkspace } from '@/components/workspace/LiveWorkspace';
 import { StudentFinancePage } from '@/components/workspace/StudentFinancePage';
 import { StudentFinanceData,financeListPath } from '@/utils/student-finance-data';
+import {StudentAccommodationRecords} from '@/components/workspace/StudentAccommodationRecords';
+import {StudentAccommodationData,accommodationListPath} from '@/utils/student-accommodation-data';
 import { studentPages as entries } from '@/data/student-pages';
 import type { Account } from '@/types/auth';
 import s from './StudentDocsPage.module.css';
@@ -19,6 +21,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
   const { refresh } = useAuth();
   const frame = useRef<HTMLIFrameElement>(null);
   const finance = useMemo(() => new StudentFinanceData(account.id,account.csrfToken), [account.id, account.csrfToken]);
+  const accommodation = useMemo(() => new StudentAccommodationData(account.id,account.csrfToken), [account.id, account.csrfToken]);
   useEffect(() => {
     void finance.prefetchLists();
     const iframe=frame.current!;
@@ -30,15 +33,16 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
         const anchor=(event.target as Element).closest?.('a[href]');if(!anchor)return;
         const url=new URL(anchor.getAttribute('href')!,doc.baseURI);
         if(url.origin!==location.origin)return;
-        const entry=entries.find(entry=>entry.feature==='payment'&&entry.action!=='overview'&&entry.url===url.pathname);
-        if(entry)void finance.load(financeListPath(entry.action)).catch(()=>{});
+        const entry=entries.find(entry=>entry.url===url.pathname);
+        if(entry?.feature==='payment'&&entry.action!=='overview')void finance.load(financeListPath(entry.action)).catch(()=>{});
+        if(entry?.feature==='accommodation'&&entry.parent)void accommodation.load(accommodationListPath(entry.action.split('/')[0])).catch(()=>{});
       };
       doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
       detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
     };
     iframe.addEventListener('load',bind);bind();
     return()=>{iframe.removeEventListener('load',bind);detach();};
-  }, [finance]);
+  }, [finance,accommodation]);
   const refreshRef = useRef(refresh);
   useEffect(() => { refreshRef.current = refresh; }, [refresh]);
   const [src] = useState(() => '/assets/student/index.html?entry=' + encodeURIComponent((entries.find(e => e.feature === featureId && e.action === actionId) ?? entries[0]).id));
@@ -69,6 +73,8 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
     <iframe ref={frame} className={s.frame} data-dorma-student-frame src={src} title="学生工作台" />
     {view && createPortal(view.entry.feature==='payment'
       ? <StudentFinancePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={finance} actionId={view.entry.action}/>
-      : <DocsWorkspace key={view.entry.id} account={account} featureId={view.entry.feature} actionId={view.entry.action.split('/')[0]} accommodationView={view.entry.feature==='accommodation'?(view.entry.parent?'records':'submit'):undefined} />, view.target)}
+      : view.entry.feature==='accommodation'&&view.entry.parent
+      ? <StudentAccommodationRecords key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} data={accommodation} entry={view.entry}/>
+      : <DocsWorkspace key={view.entry.id} account={account} featureId={view.entry.feature} actionId={view.entry.action.split('/')[0]} accommodationView={view.entry.feature==='accommodation'?'submit':undefined} onSaved={view.entry.feature==='accommodation'?()=>accommodation.invalidate():undefined} />, view.target)}
   </main>;
 }

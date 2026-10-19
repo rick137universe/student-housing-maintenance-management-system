@@ -58,10 +58,9 @@ function EditDialog({editor,pending,error,onClose,onSubmit}:{editor:Editor;pendi
  <div className={s.fields}>{editor.fields.map(f=>{let value=editor.initial?.[f.key]??'';if(f.type==='datetime-local'&&value)value=new Date(String(value)).toLocaleString('sv-SE').slice(0,16).replace(' ','T');return <label key={f.key}>{f.label}{f.options?<select name={f.key} required={f.required} defaultValue={String(value)}>{!f.required&&<option value="">自动选择 / 不指定</option>}{f.options.map(([v,label])=><option key={v} value={v}>{label}</option>)}</select>:f.type==='textarea'?<textarea name={f.key} required={f.required} rows={4} defaultValue={String(value)}/>:<input name={f.key} type={f.type??'text'} required={f.required} defaultValue={String(value)} min={f.type==='number'?0.01:undefined} step={f.type==='number'?'any':undefined} minLength={f.type==='password'?8:undefined}/>}</label>;})}</div>
  <footer><button type="button" onClick={onClose} disabled={pending}>取消</button><button disabled={pending}>{pending?'正在提交…':'确认提交'}</button></footer></form></section></dialog>;
 }
-export function LiveWorkspace({account,featureId,actionId,accommodationView}:{account:Account;featureId:string;actionId:string;accommodationView?:'submit'|'records'}){
+export function LiveWorkspace({account,featureId,actionId,accommodationView,onSaved}:{account:Account;featureId:string;actionId:string;accommodationView?:'submit';onSaved?:()=>void}){
  const {s,l,docs}=useStyles();
  const submission=docs&&featureId==='accommodation'&&accommodationView==='submit';
- const records=docs&&featureId==='accommodation'&&accommodationView==='records';
  const DetailsTag=docs?'section':'dialog';
  const spec=workspaceSpec(account.role,featureId,actionId);const [resource,setResource]=useState(spec.resource);
  const [rows,setRows]=useState<Row[]>([]);const [object,setObject]=useState<Row>({});const [total,setTotal]=useState(0);const [page,setPage]=useState(1);const [q,setQ]=useState('');const [search,setSearch]=useState('');const [from,setFrom]=useState('');const [to,setTo]=useState('');const [building,setBuilding]=useState('');
@@ -79,7 +78,7 @@ export function LiveWorkspace({account,featureId,actionId,accommodationView}:{ac
  useEffect(()=>{void load();},[load]);
  useEffect(()=>{if(resource!=='backups')return;const timer=setInterval(()=>void load(),10000);return()=>clearInterval(timer);},[resource,load]);
  async function mutate(path:string,body:Row={},method='POST'){
-  setPending(true);setError('');setMessage('');try{const result=await api<Row>(path,{method,body:JSON.stringify(body)});setEditor(null);setMessage(result.data.result==='cancelled'?'测试支付已取消，没有记账。':result.data.reauthenticate?'密码已修改，请重新登录。':'操作已保存。');if(result.data.reauthenticate)saveAuthSession(null);else{await refresh();await load();}}catch(error){setError(error instanceof Error?error.message:'操作失败');}finally{setPending(false);}
+  setPending(true);setError('');setMessage('');try{const result=await api<Row>(path,{method,body:JSON.stringify(body)});onSaved?.();setEditor(null);setMessage(result.data.result==='cancelled'?'测试支付已取消，没有记账。':result.data.reauthenticate?'密码已修改，请重新登录。':'操作已保存。');if(result.data.reauthenticate)saveAuthSession(null);else{await refresh();await load();}}catch(error){setError(error instanceof Error?error.message:'操作失败');}finally{setPending(false);}
  }
  async function options(path:string,key:string,label:string):Promise<[string,string][]>{const result=await api<Row[]>(path+'?limit=100');return result.data.map(row=>[val(row,key),`${val(row,key)} · ${val(row,label)}`]);}
  async function create(){try{
@@ -130,7 +129,7 @@ export function LiveWorkspace({account,featureId,actionId,accommodationView}:{ac
   {!docs&&<section className={s.overview}><div><span>当前记录</span><strong>{total}</strong></div><div><span>当前身份</span><strong>{account.roleName}</strong></div><div><span>数据状态</span><strong>{loading?'加载中':error?'读取失败':'已更新'}</strong></div></section>}
   <section className={s.panel}>
   {(featureId==='base-data'&&account.role==='admin')&&<label>数据类型<select value={resource} onChange={event=>{setResource(event.target.value);setPage(1);}}>{Object.keys(resourceFields).map(key=><option key={key} value={key}>{{students:'学生',buildings:'公寓楼',rooms:'房间',beds:'床位'}[key]}</option>)}</select></label>}
-  <div className={l.toolbar}>{spec.create&&!records&&<button disabled={pending} onClick={()=>void create()}>{spec.create==='backup'?'创建备份任务':spec.create==='generate-bills'?'生成月账单':spec.create==='repair'?'提交报修':spec.create==='application'?'提交入住申请':spec.create==='transfer'?'提交调宿申请':spec.create==='checkout'?'提交退宿申请':'新增记录'}</button>}{!docs&&<button onClick={()=>void load()} disabled={loading}>刷新</button>}</div>
+  <div className={l.toolbar}>{spec.create&&<button disabled={pending} onClick={()=>void create()}>{spec.create==='backup'?'创建备份任务':spec.create==='generate-bills'?'生成月账单':spec.create==='repair'?'提交报修':spec.create==='application'?'提交入住申请':spec.create==='transfer'?'提交调宿申请':spec.create==='checkout'?'提交退宿申请':'新增记录'}</button>}{!docs&&<button onClick={()=>void load()} disabled={loading}>刷新</button>}</div>
   {resource.startsWith('backup')&&<p role="status">{worker==='running'?'后台任务进程正在运行。':'后台任务进程离线，请运行 npm run jobs；任务会保留在队列。'} 恢复只创建独立副本。</p>}
   {error&&<p className={l.error} role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {spec.mode==='import'&&<div className={l.toolbar}><button onClick={()=>void download(`export/${resource}/template`)}>下载导入模板</button><label>选择CSV文件<input type="file" accept=".csv,text/csv" disabled={pending} onChange={event=>{const file=event.target.files?.[0];if(file)void upload(file);event.target.value='';}}/></label></div>}
