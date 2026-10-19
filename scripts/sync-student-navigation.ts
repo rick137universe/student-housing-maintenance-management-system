@@ -1,7 +1,6 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {dirname} from 'node:path';
-import {studentPages,type StudentPage} from '../src/data/student-pages';
-import records from '../src/data/student-records.json';
+import {studentPages,studentChildren,type StudentPage} from '../src/data/student-pages';
 
 // Synchronize project HTML offline. Mother files are read-only, and its CSS/runtime stay unchanged.
 const root='public/assets/student/';
@@ -25,11 +24,13 @@ const nativeSidebar=await readFile(mother+'documentation-ec29569f/index.html','u
 const nestedStart=nativeSidebar.indexOf('<ul',nativeSidebar.indexOf('data-id="animation-animatable-properties"'));
 const nestedOpening=nativeSidebar.slice(nestedStart,nativeSidebar.indexOf('>',nestedStart)+1);
 let index=await readFile(root+'index.html','utf8');
-for(const entry of records){
+for(const parentId of new Set(studentChildren.map(entry=>entry.parent!))){
+ const children=studentChildren.filter(entry=>entry.parent===parentId);
+ const entry=children[0];
  const anchor=index.indexOf(`data-id="${entry.parent}"`,index.indexOf('<aside id="docs-sidebar"'));
  const start=index.lastIndexOf('<li',anchor),end=elementEnd(index,start,'li');
  const parent=index.slice(start,index.indexOf('</a>',anchor)+4);
- const child=`<li class="docs-nav-item docs-records color-corail" data-color="1">${link(entry,'next',true)}</li>`;
+ const child=children.map(entry=>`<li class="docs-nav-item ${entry.kind==='submit'?'docs-submit':'docs-records'} color-corail" data-color="1">${link(entry,'next',true)}</li>`).join('');
  index=index.slice(0,start)+parent+nestedOpening+child+'</ul></li>'+index.slice(end);
 }
 await writeFile(root+'index.html',index);
@@ -40,7 +41,7 @@ for(const [position,entry] of studentPages.entries()){
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`)
   .replace(/<h1[^>]*>[\s\S]*?<\/h1>/,`<h1 data-color="${entry.color}"><a title="${html(entry.label)}" href="${entry.url}">${html(entry.label)}</a></h1>`)
   .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`)
-  .replace(/<h6 class="links-list-heading">申请记录<\/h6>\s*<ul[^>]*data-student-record-links[^>]*>[\s\S]*?<\/ul>/,'');
+  .replace(/<h6 class="links-list-heading">(?:申请记录|本页功能)<\/h6>\s*<ul[^>]*data-student-record-links[^>]*>[\s\S]*?<\/ul>/,'');
  if(entry.parent){
   const parent=studentPages.find(candidate=>candidate.id===entry.parent)!,group=studentPages.find(candidate=>candidate.feature===entry.feature&&candidate.action==='overview')!;
   let linkIndex=0;
@@ -49,19 +50,22 @@ for(const [position,entry] of studentPages.entries()){
   });
   page=page.replace(/<div class="docs-breadcrumb text-ui"[\s\S]*?<\/div>/,crumbs);
  }
- const children=records.filter(record=>record.parent===entry.id);
+ const children=studentChildren.filter(child=>child.parent===entry.id);
  if(children.length){
-  const related=`<h6 class="links-list-heading">申请记录</h6>\n<ul class="links-list links-list-boxed" data-student-record-links="">${children.map(child=>'<li>'+link(child)+'</li>').join('')}</ul>\n`;
+  page=page.replace(/<div data-dorma-business=""><\/div>/,'');
+  const related=`<h6 class="links-list-heading">本页功能</h6>\n<ul class="links-list links-list-boxed" data-student-record-links="">${children.map(child=>'<li>'+link(child)+'</li>').join('')}</ul>\n`;
   page=page.replace(/(?=\s*<div class="prev-next-heading)/,related);
+ }else if(entry.parent&&!page.includes('data-dorma-business')){
+  page=page.replace(/(<p data-dorma-description="">[\s\S]*?<\/p>)/,'$1<div data-dorma-business=""></div>');
  }
- for(const [direction,neighbor] of [['prev',studentPages[position-1]],['next',studentPages[position+1]]] as const){
+ for(const [direction,neighbor] of [['prev',entry.parent?studentPages.find(page=>page.id===entry.parent):studentPages[position-1]],['next',studentPages[position+1]]] as const){
   page=page.replace(new RegExp(`<li class="${direction}-link">[\\s\\S]*?</li>`),`<li class="${direction}-link">${neighbor?link(neighbor,direction):''}</li>`);
  }
  const file=root+`pages/${entry.feature}-${entry.action}.html`;await mkdir(dirname(file),{recursive:true});await writeFile(file,page);
 }
 let demos=await readFile(root+'assets/html/student-demos.html','utf8');
 const originals=await readFile(root+'assets/html/documentation-demos.html','utf8');
-for(const entry of records){
+for(const entry of [...studentChildren].reverse()){
  const expression=new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`);
  demos=demos.replace(expression,'');
  const preview=originals.match(expression)![0].replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);

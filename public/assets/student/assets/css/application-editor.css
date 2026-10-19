@@ -1,0 +1,25 @@
+/* Keep the native code-preview header, spacing and typography. Only the field controls are new. */
+[data-dorma-application-editor] .code-preview-button:not(:disabled):active {
+  border-bottom-color: var(--hex-current-1);
+}
+[data-dorma-application-editor] :is(input,select,textarea) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
+  color-scheme: dark;
+}
+[data-dorma-application-editor] :is(input,select) { height: 1lh; }
+[data-dorma-application-editor] select { cursor: pointer; }
+[data-dorma-application-editor] option { background: var(--hex-bg-3); color: var(--hex-fg-1); }
+[data-dorma-application-editor] textarea { resize: vertical; white-space: pre-wrap; }
+.next-link a[role="button"][aria-disabled="true"] { opacity: .4; cursor: not-allowed; }

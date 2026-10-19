@@ -77,7 +77,7 @@ export async function browserRegression(origin:string,password:string){
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
-    await workspace.locator('[data-dorma-live-workspace]').waitFor();
+    await workspace.locator(role==='student'&&feature.id==='accommodation'?'[data-student-record-links]':'[data-dorma-live-workspace]').waitFor();
     await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});
     assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0,`${role}/${feature.id}/${action.id}`);visited++;
    }

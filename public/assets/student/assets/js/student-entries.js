@@ -73,6 +73,18 @@ const entries = [
     "feature": "accommodation",
     "group": "住宿业务",
     "color": 1,
+    "label": "提交入住申请",
+    "id": "animation-animatable-properties-css-variables",
+    "action": "action-1/submit",
+    "parent": "animation-animatable-properties-css-transforms",
+    "kind": "submit",
+    "url": "/workspace/student/accommodation/action-1/submit",
+    "description": "填写意向楼栋、期望办理日期及申请说明，确认后提交入住申请。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
     "label": "入住申请记录",
     "id": "timer-timer-properties",
     "action": "action-1/records",
@@ -94,6 +106,18 @@ const entries = [
     "feature": "accommodation",
     "group": "住宿业务",
     "color": 1,
+    "label": "提交调宿申请",
+    "id": "animation-animatable-properties-javascript-object-properties",
+    "action": "action-2/submit",
+    "parent": "timeline-add-animations",
+    "kind": "submit",
+    "url": "/workspace/student/accommodation/action-2/submit",
+    "description": "填写意向楼栋、期望办理日期及申请说明，确认后提交调宿申请。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
     "label": "调宿申请记录",
     "id": "timeline-timeline-properties",
     "action": "action-2/records",
@@ -110,6 +134,18 @@ const entries = [
     "action": "action-3",
     "url": "/workspace/student/accommodation/action-3",
     "description": "提交退宿申请，填写期望办理日期和申请说明。"
+  },
+  {
+    "feature": "accommodation",
+    "group": "住宿业务",
+    "color": 1,
+    "label": "提交退宿申请",
+    "id": "animation-animatable-properties-svg-attributes",
+    "action": "action-3/submit",
+    "parent": "animation-animation-playback-settings-reversed",
+    "kind": "submit",
+    "url": "/workspace/student/accommodation/action-3/submit",
+    "description": "填写期望办理日期及申请说明，确认后提交退宿申请。"
   },
   {
     "feature": "accommodation",

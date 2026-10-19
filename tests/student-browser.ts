@@ -10,6 +10,7 @@ import {studentPasswordEditorRegression} from './student-password-editor';
 import {studentFinanceRegression} from './student-finance';
 import {studentTransitionRegression} from './student-transitions';
 import {studentAccommodationNavigationRegression,expectAccommodationRecord} from './student-accommodation';
+import {submitStudentAccommodation} from './student-accommodation-submit';
 
 // Called only by the integration suite, against its disposable PostgreSQL database.
 export async function studentDocsRegression(browser: Browser, origin: string, password: string) {
@@ -53,7 +54,8 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
       await frame.locator(`#docs-sidebar ul ul a[data-id="${entry.id}"]`).click();
       await expect(frame.locator('#docs-info h1')).toHaveText(entry.label);
       await expect(frame.locator('.docs-demo.is-active')).toHaveAttribute('data-id', entry.id);
-      await expect(frame.locator('[data-dorma-business]')).not.toBeEmpty();
+      if(entry.feature==='accommodation')await expect(frame.locator('[data-student-record-links] a')).toHaveCount(2);
+      else await expect(frame.locator('[data-dorma-business]')).not.toBeEmpty();
       const breadcrumb=frame.locator('#docs-info .docs-breadcrumb a');
       await expect(breadcrumb).toHaveText(entry.group);
       await expect(frame.locator('#docs-info .docs-breadcrumb')).toHaveAttribute('data-color',String(entry.color));
@@ -63,8 +65,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     }
     await frame.locator('#toggle-search').click(); await frame.locator('#docs-search-input').fill('入住申请'); await frame.locator('#docs-search-results a').first().click();
     await expect(frame.locator('#docs-info h1')).toHaveText('入住申请');
-    await frame.getByRole('button', { name: '提交入住申请', exact: true }).click();
-    await frame.getByLabel('意向楼栋', { exact: true }).selectOption('NY3'); await frame.getByLabel('申请说明', { exact: true }).fill('三栏页面入住回归'); await submit();
+    await submitStudentAccommodation(page,1,'三栏页面入住回归');
     const application = (await student.call('applications'))[0]; assert.equal(application.application_note, '三栏页面入住回归');
     await manager.call(`applications/${application.application_id}/review`, { decision: 'approve' });
     await expectAccommodationRecord(page,1,application.application_id,'已完成');
@@ -80,10 +81,10 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     await admin.call('bills', { studentNumber, period: '2026-10', accommodationFee: '10.00', utilityFee: '2.00', dueDate: '2026-12-31' });
     const foreignBill=(await admin.call('bills?limit=100')).find((bill:{student_number:string})=>bill.student_number!==studentNumber);
     await studentFinanceRegression(page,foreignBill.bill_id);
-    await go('accommodation', 2); await frame.getByRole('button', { name: '提交调宿申请', exact: true }).click(); await frame.getByLabel('意向楼栋', { exact: true }).selectOption('NY3'); await submit();
+    await submitStudentAccommodation(page,2,'三栏页面调宿回归');
     const transfer = (await student.call('changes?type=transfer'))[0]; await manager.call(`changes/${transfer.change_id}/review`, { decision: 'approve' });
     await expectAccommodationRecord(page,2,transfer.change_id,'已完成');
-    await go('accommodation', 3); await frame.getByRole('button', { name: '提交退宿申请', exact: true }).click(); await submit();
+    await submitStudentAccommodation(page,3,'三栏页面退宿回归');
     const checkout = (await student.call('changes?type=checkout'))[0]; await manager.call(`changes/${checkout.change_id}/review`, { decision: 'approve' });
     await expectAccommodationRecord(page,3,checkout.change_id,'已完成');
     await go('personal',3);await studentPasswordEditorRegression(page,password);

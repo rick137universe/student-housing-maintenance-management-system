@@ -54,7 +54,8 @@ if (initial.action === 'overview') {
 }
 const children = entries.filter(entry => entry.parent === initial.id);
 if (children.length) {
-  const heading = document.createElement('h6');heading.className = 'links-list-heading';heading.textContent = '申请记录';
+  info.querySelector('[data-dorma-business]')?.remove();
+  const heading = document.createElement('h6');heading.className = 'links-list-heading';heading.textContent = '本页功能';
   const list = moduleLinks.cloneNode(false);list.removeAttribute('data-student-module-links');list.dataset.studentRecordLinks = '';
   for (const entry of children) {
     const item = moduleLinks.firstElementChild.cloneNode(true), link = item.querySelector('a');
@@ -66,7 +67,7 @@ if (children.length) {
 }
 const position = entries.indexOf(initial);
 for (const [direction, neighbor, heading] of [
-  ['prev', entries[position - 1], info.querySelector('.prev-next-heading').children[0]],
+  ['prev', initial.parent?entries.find(entry=>entry.id===initial.parent):entries[position - 1], info.querySelector('.prev-next-heading').children[0]],
   ['next', entries[position + 1], info.querySelector('.prev-next-heading').children[1]],
 ]) {
   heading.textContent = neighbor ? (direction === 'prev' ? '上一个' : '下一个') : '';
@@ -123,7 +124,10 @@ window.addEventListener('message', event => {
 // Reuse its unchanged copy widget when profile code blocks appear or update.
 const profileCopies = new WeakMap();
 new MutationObserver(() => {
-  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-finance-values] pre, [data-dorma-accommodation-values] pre')) {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-finance-values] pre, [data-dorma-accommodation-values] pre, [data-dorma-application-editor] .code-editor pre')) {
+    if (pre.closest('[data-dorma-application-editor]') && pre.querySelector('input,select,textarea')) {
+      pre.querySelector('.copy-button')?.remove();profileCopies.delete(pre);continue;
+    }
     const value = pre.querySelector('code').textContent;
     if (profileCopies.get(pre)?.data === value) continue;
     pre.querySelector('.copy-button')?.remove();

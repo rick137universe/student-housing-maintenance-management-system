@@ -6,7 +6,7 @@
 
 完整复制 Docs 的 HTML 外壳、顶部搜索、侧栏、预览容器、内容容器、搜索弹层及页脚。`core.css`、`docs.css`、`docs.js`、全部运行依赖及字体保持原始字节；没有新增或覆盖字号、行高、列宽、间距、断点和动画参数。`StudentDocsPage.module.css` 只负责承载整个独立文档，不覆盖文档内的样式。
 
-左栏用原有 `docs-nav-item` 组织六组业务、十五个操作及三个住宿申请记录子页；中栏保留母版 Documentation 总导航点阵、六个模块预览、十五个功能预览及三个记录页预览，仍由原始运行时负责滚动、激活、播放与折叠；右栏保留 `docs-info-content formatted-text`、标题、说明、模块入口、前后导航及完整页脚。顶部 Logo 换为项目 SVG，账户按钮复用首页和登录页的实现，Docs 返回学生工作台总导航，Learn 保留原站链接。搜索使用母版搜索组件，在学生业务菜单中搜索，支持键盘操作。
+左栏用原有 `docs-nav-item` 组织六组业务、十五个操作及六个住宿申请子页（提交、记录各三个）；中栏保留母版 Documentation 总导航点阵、六个模块预览、十五个功能预览及六个子页预览，仍由原始运行时负责滚动、激活、播放与折叠；右栏保留 `docs-info-content formatted-text`、标题、说明、模块入口、前后导航及完整页脚。顶部 Logo 换为项目 SVG，账户按钮复用首页和登录页的实现，Docs 返回学生工作台总导航，Learn 保留原站链接。搜索使用母版搜索组件，在学生业务菜单中搜索，支持键盘操作。
 
 六个模块依次采用母版前六种颜色：个人信息为红色、住宿业务为珊瑚橙、缴费管理为橙色、报修服务为黄色、公告查看为柠黄色、个人消息为青柠色。侧栏、预览及搜索结果使用同一份映射。模块标题进入各自总览，模块与子功能的 `data-id` 各自唯一，避免首个功能的选中状态落在模块标题上。子功能列表的第三个 class 保留母版颜色类，满足原搜索组件的主题读取规则；不修改原始 CSS 和 `docs.js`。
 
@@ -21,16 +21,18 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 | 查看个人信息 | CSS 属性展示 | Installation 的 `h3` 标题和 `pre > code` 代码框，逐项展示真实账号资料及住宿记录，并复用母版复制按钮 |
 | 修改个人信息 | Animatable setters 的指针跟随示例 | Using with vanilla JS 的 `code-preview`：姓名、联系电话和邮箱分别使用带标题、确认／取消及铅笔按钮的代码块 |
 | 修改登录密码 | HTML attributes 的输入控件示例 | 同款 `code-preview`：原密码、新密码、确认新密码三个代码块，使用遮罩密码输入和确认／取消、铅笔按钮 |
-| 入住、调宿、退宿 | CSS transforms、timeline add animations、reversed；记录页使用 Timer / Timeline / Animation properties 点阵 | 主页保留申请表单及提交操作；三级记录页使用原有记录表格与详情，连接申请和审核结果 |
+| 入住、调宿、退宿 | CSS transforms、timeline add animations、reversed；提交页使用 CSS variables、JavaScript object properties、SVG attributes；记录页使用 Properties 点阵 | 主页提供提交及记录两个导航入口；提交页使用可编辑代码块；记录列表展示四项摘要，详情使用 Installation 代码框 |
 | 账单、在线缴费、缴费记录 | timer duration、onComplete、timeline add timers | Getting started 的导航列表展示摘要；Installation 的标题与代码框展示明细，在线缴费详情承接测试支付 |
 | 提交报修、查看进度、服务评价 | refresh、timeline seek、stagger grid | 表格、输入控件、有序列表，连接报修、处理历史和1～5分评价 |
 | 公寓通知、缴费提醒、个人消息 | splitText、timer onComplete、timeline call functions | 表格、详情正文和已读操作 |
 
 动画用于解释页面对应的操作，真实业务数据由右侧接口查询结果提供。选中的预览函数、样式与元素来自母版 `documentation-demos.html`，只筛选所需条目、替换标题和可见提示。完整原始示例文件也保留在副本中，以便核对来源。具体映射见 `src/data/student-docs.json`。
 
-住宿申请主页只保留提交操作，不查询或展示申请记录、记录搜索和分页。三个记录页分别位于 `/workspace/student/accommodation/action-1/records`、`action-2/records`、`action-3/records`，在各申请的左侧第三级目录、页内原版导航列表和“下一个”按钮中提供入口。记录页不提供提交按钮，保留原有搜索、详情及分页；上一页返回对应申请，下一页延续母版页面顺序。入住记录查询 `applications`，调宿和退宿分别查询 `changes?type=transfer`、`changes?type=checkout`，仍由后端限制本人范围。
+住宿申请主页仅提供“提交申请／申请记录”两个母版导航入口，不挂载表单或查询记录。提交页位于 `/workspace/student/accommodation/action-N/submit`，记录页位于 `/workspace/student/accommodation/action-N/records`，两者都属于对应申请的左侧第三级目录。申请主页的“下一个”进入提交子页，两个子页的“上一个”都返回对应申请主页；提交页右侧导航位置改为“提交申请”，记录页继续沿用原顺序的下一页。记录列表不提供搜索，保留分页和独立详情。入住记录查询 `applications`，调宿和退宿分别查询 `changes?type=transfer`、`changes?type=checkout`，仍由后端限制本人范围。
 
-三级目录直接采用母版 Animation / Animatable properties 的嵌套 `ul.docs-nav-item` 结构；记录页标题上方的两级链接复制自 CSS Properties 页的 `docs-breadcrumb`。记录页点阵预览复制自母版三个 Properties 章节。只替换文字、地址和主题编号，不新增字号或布局覆盖。`src/data/student-records.json` 定义记录子页，`scripts/sync-student-navigation.ts` 离线同步项目副本中的目录、片段、预览及前后链接，母版目录只读。
+三级目录直接采用母版 Animation / Animatable properties 的嵌套 `ul.docs-nav-item` 结构；提交及记录页标题上方的两级链接复制自 CSS Properties 页的 `docs-breadcrumb`。只替换文字、地址和主题编号，不新增字号或布局覆盖。`src/data/student-records.json` 与 `src/data/student-submissions.json` 定义两类子页，`scripts/sync-student-navigation.ts` 离线同步项目副本中的目录、片段、预览及前后链接，母版目录只读。
+
+提交申请使用与修改个人信息一致的 `code-preview` 标题栏、确认／取消、铅笔和代码区。入住、调宿包含意向楼栋、期望办理日期、申请说明；退宿保留原业务的办理日期及说明。铅笔进入单项编辑，确认只暂存当前草稿，取消恢复本项上次确认值，不提前写入服务端。楼栋使用真实楼栋候选，日期使用暗色原生日期候选，控件继承母版代码字体、背景和颜色，移除浏览器黑框；说明支持多行，长度沿用后端4000字符限制。编辑期间底部提交按钮不可用，未选择楼栋、无效日期和服务端失败会保留内容并显示错误。整份提交只调用一次原 `applications` 或 `changes` 接口，业务类型由当前子页确定；成功清空申请缓存并通过母版导航进入对应记录列表，不显示成功状态文字。草稿只保留在当前页面内存，刷新或离开子页会清空。
 
 查看个人信息使用母版 Installation 的 ES Modules / CommonJS 区域结构：每项资料的 `h3` 后紧邻 `pre > code.hljs`，不添加字号、内边距和间距覆盖。资料为纯文本，不做语法着色；空值仍显示“—”。数据加载后由文档适配脚本复用原始 `CopyButton` 组件，复制当前字段内容。其余页面的表格和表单不受影响。
 
@@ -89,5 +91,7 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 入住申请的业务类型为入住、原床位为空，新床位通过 `occupancy_records.application_id` 关联原始分配床位，后续调宿、退宿不会改写该历史结果；调宿与退宿读取自身原床位和新床位。列表及详情继续调用本人范围的 `applications`、`changes` 接口；无权限、不存在或不属于当前业务类型的记录不显示详情。记录数据缓存与缴费数据共用 `StudentRecordData` 的会话隔离、5秒有效期和并发去重机制，但实例与资源分开。仅在悬停记录页入口时提前读取，提交申请成功即清空申请记录缓存；读取过程不增加提示文字，网络错误仍展示真实错误。
 
 `tests/student-accommodation.ts` 覆盖三类申请主页与记录页的职责分离、三级目录选中、页内及下一页入口、搜索主题、直达刷新、前后导航和手机布局；学生业务回归在真实提交及宿管审核后，分别检查四项摘要、真实分配床位、独立详情、复制控件、返回列表、渐显和无效记录处理。集成测试验证入住历史床位在调宿与退宿后保持不变，跨学生详情访问仍被拒绝。
+
+`tests/student-accommodation-submit.ts` 通过三个真实提交子页验证母版导航与渐显、直达刷新、代码块编辑确认／取消、候选楼栋和日期、缺少必填项及日期校验、编辑期间禁止提交、不提前发送请求、底部统一提交一次、真实请求内容、提交后记录展示和手机布局。
 
 母版目录不修改。复制资源保留原始许可与版权信息；网页不改为其他主题配色，以保持母版原有深色外观。
