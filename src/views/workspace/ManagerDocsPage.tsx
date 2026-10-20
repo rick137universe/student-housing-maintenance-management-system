@@ -10,6 +10,8 @@ import {StudentAnnouncementData,announcementListPath} from '@/utils/student-anno
 import {ManagerAccommodationPage} from '@/components/workspace/ManagerAccommodationPage';
 import {StudentAccommodationData,accommodationListPath} from '@/utils/student-accommodation-data';
 import {ManagerBedsPage} from '@/components/workspace/ManagerBedsPage';
+import {ManagerResourcePage} from '@/components/workspace/ManagerResourcePage';
+import {baseDataListPath} from '@/utils/manager-base-data';
 import {ManagerBedData,bedListPath} from '@/utils/manager-bed-data';
 import {ManagerRepairPage} from '@/components/workspace/ManagerRepairPage';
 import {ManagerRepairData,managerRepairListPath} from '@/utils/manager-repair-data';
@@ -48,7 +50,7 @@ function ManagerBusiness({account,entry,onReady}:{account:Account;entry:ManagerP
  </>,target)}</div>;
 }
 
-export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Account;featureId:string;actionId:string;onReady?:()=>void}){
+export function ManagerDocsPage({account,featureId,actionId,onReady,onLogout}:{account:Account;featureId:string;actionId:string;onReady?:()=>void;onLogout?:()=>void}){
  const router=useRouter(),{refresh}=useAuth();
  const params=useSearchParams(),queryRef=useRef(params.toString());
  useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
@@ -68,6 +70,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
     if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
     if(entry?.feature==='accommodation'&&entry.action!=='overview')void accommodation.load(accommodationListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='repair-review'&&entry.action!=='overview')void repairs.load(managerRepairListPath(entry.action)).catch(()=>{});
+    if(entry?.feature==='base-data'&&entry.action!=='overview')void beds.load(baseDataListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='beds'&&entry.action!=='overview')void beds.load(bedListPath(entry.action)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
@@ -82,7 +85,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
  useEffect(()=>{
   const receive=(event:MessageEvent)=>{
    if(event.origin!==location.origin||event.source!==frame.current?.contentWindow)return;
-   if(event.data?.type==='dorma-manager-logout'){void refreshRef.current().then(()=>router.push('/'));return;}
+   if(event.data?.type==='dorma-manager-logout'){if(onLogout)onLogout();else void refreshRef.current().then(()=>router.push('/'));return;}
    if(event.data?.type==='dorma-manager-login'){router.push('/login');return;}
    if(event.data?.type!=='dorma-manager-page')return;
    const entry=managerPages.find(page=>page.id===event.data.id);if(!entry)return;
@@ -90,17 +93,19 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','accommodation','beds','repair-review'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','accommodation','beds','repair-review','base-data'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
   };
   window.addEventListener('message',receive);frame.current?.contentWindow?.postMessage({type:'dorma-manager-connect'},location.origin);
   return()=>window.removeEventListener('message',receive);
- },[router,onReady]);
+ },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-manager-frame src={src} title="宿管工作台"/>
-  {view&&createPortal(view.entry.feature==='repair-review'
+  {view&&createPortal(view.entry.feature==='base-data'
+   ?<ManagerResourcePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={beds}/>
+   :view.entry.feature==='repair-review'
    ?<ManagerRepairPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={repairs}/>
    :view.entry.feature==='beds'
    ?<ManagerBedsPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={beds}/>

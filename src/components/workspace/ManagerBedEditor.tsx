@@ -5,12 +5,12 @@ import {api} from '@/utils/auth-session';
 import {valueLabels} from '@/data/workspace-actions';
 import type {ManagerPage} from '@/data/manager-pages';
 import type {StudentRow} from '@/utils/student-record-data';
-import type {ManagerBedData} from '@/utils/manager-bed-data';
+import type {ManagerResourceData} from '@/utils/manager-resource-data';
 import {StudentWarning} from './StudentWarning';
 
 type Field='bed_number'|'bed_status';
 const fields=[{key:'bed_number',label:'床位号'},{key:'bed_status',label:'床位状态'}] as const;
-export function ManagerBedEditor({entry,row,data,detailUrl,navigate}:{entry:ManagerPage;row:StudentRow;data:ManagerBedData;detailUrl:string;navigate:(url:string)=>void}){
+export function ManagerBedEditor({entry,row,data,detailUrl,navigate}:{entry:ManagerPage;row:StudentRow;data:ManagerResourceData;detailUrl:string;navigate:(url:string)=>void}){
  const root=useRef<HTMLDivElement>(null),input=useRef<HTMLInputElement|HTMLSelectElement>(null),saving=useRef(false),submitAction=useRef<()=>Promise<void>>(async()=>{}),footer=useRef<HTMLAnchorElement|null>(null);
  const [values,setValues]=useState<Record<Field,string>>(()=>({bed_number:String(row.bed_number),bed_status:String(row.bed_status)})),[active,setActive]=useState<Field|null>(null),[draft,setDraft]=useState('');
  const [error,setError]=useState(''),[pending,setPending]=useState(false);
@@ -33,7 +33,7 @@ export function ManagerBedEditor({entry,row,data,detailUrl,navigate}:{entry:Mana
  useLayoutEffect(()=>{submitAction.current=submit;});
  useEffect(()=>{
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,next=info.querySelector('.next-link')!,heading=info.querySelector('.prev-next-heading')!.children[1],savedHeading=heading.textContent;
-  const button=doc.createElement('a');button.href=detailUrl+'&edit=1';button.title='提交更新';button.textContent='提交更新';button.className='text-ui color-orange';button.dataset.color=String(entry.color);button.setAttribute('role','button');
+  const button=doc.createElement('a');button.href=detailUrl+'&edit=1';button.title='提交更新';button.textContent='提交更新';button.className='text-ui color-'+(entry.color===0?'red':'orange');button.dataset.color=String(entry.color);button.setAttribute('role','button');
   const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg'),polygon=doc.createElementNS('http://www.w3.org/2000/svg','polygon');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('class','icon');polygon.setAttribute('fill','currentColor');polygon.setAttribute('points','17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75');svg.append(polygon);button.append(svg);
   const send=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();if(button.getAttribute('aria-disabled')!=='true')void submitAction.current();};
   const keyboard=(event:KeyboardEvent)=>{if(event.key===' '){event.preventDefault();event.stopPropagation();if(button.getAttribute('aria-disabled')!=='true')void submitAction.current();}};

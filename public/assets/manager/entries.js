@@ -27,7 +27,7 @@ const entries = [
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
     "url": "/workspace/dormManager/base-data/action-1",
-    "description": "学生、房间与床位数据保持在同一坐标系。"
+    "description": "查看授权楼栋内学生的资料，维护姓名及联系方式。"
   },
   {
     "feature": "base-data",
@@ -37,7 +37,7 @@ const entries = [
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
     "url": "/workspace/dormManager/base-data/action-2",
-    "description": "学生、房间与床位数据保持在同一坐标系。"
+    "description": "查看房间资料，维护楼层、房型、容量及状态。"
   },
   {
     "feature": "base-data",
@@ -47,7 +47,7 @@ const entries = [
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-3",
     "url": "/workspace/dormManager/base-data/action-3",
-    "description": "学生、房间与床位数据保持在同一坐标系。"
+    "description": "查看床位资料，维护床位号及状态。"
   },
   {
     "feature": "accommodation",

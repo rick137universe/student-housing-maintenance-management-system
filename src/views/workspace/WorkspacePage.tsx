@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { redirect, useParams, usePathname, useRouter } from 'next/navigation';
 import { ArrowLeft, LogOut, Menu, ShieldAlert, X } from 'lucide-react';
@@ -23,7 +23,9 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { account } = useAuth();
+  const { account, refresh } = useAuth();
+  const leavingRef=useRef(false),[leaving,setLeaving]=useState(false);
+  const docsLogout=useCallback(()=>{leavingRef.current=true;setLeaving(true);void refresh().then(()=>router.push('/'));},[refresh,router]);
   const [error, setError] = useState('');
   const role = validRoles.includes(params.role as RoleId) ? params.role as RoleId : null;
   const feature = role && params.feature ? featureFor(role, params.feature) : undefined;
@@ -39,18 +41,23 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   },[account,role,params.feature,feature,onReady]);
 
   async function logout() {
+    if(leavingRef.current)return;leavingRef.current=true;setLeaving(true);
     try { await api('auth/logout', {method:'POST',body:'{}'}); saveAuthSession(null); router.push('/'); }
-    catch(error) { setError(error instanceof Error ? error.message : '退出失败'); }
+    catch(error) { leavingRef.current=false;setLeaving(false);setError(error instanceof Error ? error.message : '退出失败'); }
   }
 
   if (account === undefined) return null;
-  if (!account) redirect('/login');
+  if (!account) {
+    // Explicit logout already owns its destination; do not race it with an auth redirect.
+    if(leaving)return null;
+    redirect('/login');
+  }
 
   if (account?.role === 'student' && role === 'student' && !params.feature) {
-    return <StudentDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
+    return <StudentDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady} onLogout={docsLogout}/>;
   }
   if(account?.role==='dormManager'&&role==='dormManager'&&!params.feature){
-    return <ManagerDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
+    return <ManagerDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady} onLogout={docsLogout}/>;
   }
 
   if (!role || !feature || account.role !== role || !roleFeatures[account.role].some(item => item.id === feature.id)) return <main className={s.denied}>
@@ -64,9 +71,9 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   if (role === 'student') {
     const nestedAction=pathname.split('/').slice(4).join('/');
     const studentAction=studentPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
-    return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? studentAction??action?.id??'action-1':'overview'} onReady={onReady}/>;
+    return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? studentAction??action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   }
-  if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady}/>;
+  if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 
   return <div className={s.page}>
     <header className={s.topbar}>

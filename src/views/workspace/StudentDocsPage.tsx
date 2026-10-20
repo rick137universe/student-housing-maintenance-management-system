@@ -18,7 +18,7 @@ import { studentPages as entries } from '@/data/student-pages';
 import type { Account } from '@/types/auth';
 import s from './StudentDocsPage.module.css';
 
-export function StudentDocsPage({ account, featureId, actionId,onReady }: { account: Account; featureId: string; actionId: string;onReady?:()=>void }) {
+export function StudentDocsPage({ account, featureId, actionId,onReady,onLogout }: { account: Account; featureId: string; actionId: string;onReady?:()=>void;onLogout?:()=>void }) {
   const router = useRouter();
   const params = useSearchParams();
   const queryRef = useRef(params.toString());
@@ -59,7 +59,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       if (event.origin !== location.origin || event.source !== frame.current?.contentWindow) return;
-      if (event.data?.type === 'dorma-student-logout') { void refreshRef.current().then(() => router.push('/')); return; }
+      if (event.data?.type === 'dorma-student-logout') { if(onLogout)onLogout();else void refreshRef.current().then(() => router.push('/')); return; }
       if (event.data?.type === 'dorma-student-login') { router.push('/login'); return; }
       if (event.data?.type !== 'dorma-student-page') return;
       const entry = entries.find(e => e.id === event.data.id);
@@ -77,7 +77,7 @@ export function StudentDocsPage({ account, featureId, actionId,onReady }: { acco
     window.addEventListener('message', receive);
     frame.current?.contentWindow?.postMessage({type:'dorma-student-connect'},location.origin);
     return () => window.removeEventListener('message', receive);
-  }, [router, account.role,onReady]);
+  }, [router, account.role,onReady,onLogout]);
   return <main className={s.page}>
     <iframe ref={frame} className={s.frame} data-dorma-student-frame src={src} title="学生工作台" />
     {view && createPortal(view.entry.feature==='payment'

@@ -78,7 +78,7 @@ for (const [direction, neighbor, heading] of [
 if(initial.action!=='overview'){
   const content=info.querySelector('.docs-info-content.formatted-text');
   if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));
-  content.hidden=!['personal','notifications','accommodation','beds','repair-review'].includes(initial.feature);
+  content.hidden=!['personal','notifications','accommodation','beds','repair-review','base-data'].includes(initial.feature);
 }
 document.title = initial.label + ' · 宿管工作台';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
@@ -126,7 +126,7 @@ window.addEventListener('message', event => {
 // React inserts business values after the mother highlighter initializes.
 const profileCopies = new WeakMap();
 new MutationObserver(() => {
-  for(const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-accommodation-values] pre, [data-dorma-bed-values] pre, [data-dorma-repair-values] pre, [data-dorma-application-editor] .code-editor pre')){
+  for(const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-accommodation-values] pre, [data-dorma-bed-values] pre, [data-dorma-base-values] pre, [data-dorma-repair-values] pre, [data-dorma-application-editor] .code-editor pre')){
     if(pre.closest('[data-dorma-application-editor]')&&pre.querySelector('input,select,textarea')){pre.querySelector('.copy-button')?.remove();profileCopies.delete(pre);continue;}
     const value=pre.querySelector('code').textContent;
     if(profileCopies.get(pre)?.data===value)continue;
