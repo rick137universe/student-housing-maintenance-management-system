@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {StudentPage} from '@/data/student-pages';
@@ -98,7 +99,7 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
  useLayoutEffect(()=>{readLink.current?.setAttribute('aria-disabled',String(pending));readLink.current?.setAttribute('aria-busy',String(pending));},[pending,unread,title]);
  const paragraphs=detail?String(detail.content??'').replace(/\r\n?/g,'\n').split(/\n\s*\n/).filter(paragraph=>paragraph.trim()):[];
  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-announcements aria-busy={loading}>
-  {error&&<p role="alert">{error}</p>}
+  {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-announcement-list>{rows.map(row=>{
     const id=String(row[identifier]),url=listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(id);

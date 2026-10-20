@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {useLayoutEffect,useRef,useState} from 'react';
 import {api} from '@/utils/auth-session';
 
@@ -88,7 +89,7 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
               if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancel();}
             }}
           >{String(profile[field.column]??'—')}</code></pre></div>
-          {editing&&error&&<p role="alert">{error}</p>}
+          {editing&&error&&<StudentWarning>{error}</StudentWarning>}
         </div>
       </section>;
     })}

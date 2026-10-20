@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {Fragment,useLayoutEffect,useRef,useState,type RefObject} from 'react';
 import type {StudentPage} from '@/data/student-pages';
 import {valueLabels} from '@/data/workspace-actions';
@@ -85,7 +86,7 @@ export function RepairEditorFields({fields,values,onChange,active,onActive,pendi
     <button type="button" className="ui-input code-edit-button text-ui" title={'编辑'+field.label} aria-pressed={editing} disabled={pending||Boolean(active)||(field.type==='select'&&!field.options?.length)} onClick={event=>{event.stopPropagation();setDraft(values[field.key]??'');setError('');onActive(field.key);}}><svg className="icon" width="24" height="24" viewBox="0 0 24 24"><g fill="none" strokeWidth="1.75"><polygon stroke="currentColor" points="13.5 8.5 7.5 14.5 7.5 17.5 10.5 17.5 16.5 11.5"/><path stroke="currentColor" d="M18.0857864,7.08578644 L17.9142136,6.91421356 C17.133165,6.13316498 15.866835,6.13316498 15.0857864,6.91421356 L13.5,8.5 L13.5,8.5 L16.5,11.5 L18.0857864,9.91421356 C18.866835,9.13316498 18.866835,7.86683502 18.0857864,7.08578644 Z"/></g></svg></button>
    </nav></header><div className="code-editor"><pre className="is-active"><code className="hljs language-plaintext" onKeyDown={event=>{if(event.nativeEvent.isComposing)return;if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancel();}if(event.key==='Enter'&&(field.type!=='textarea'||event.ctrlKey||event.metaKey)){event.preventDefault();event.stopPropagation();confirm(field);}}}>
     {editing?(field.type==='select'?<select ref={node=>{input.current=node;}} aria-label={field.label} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}><option value="">请选择{field.label}</option>{field.options!.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>:field.type==='textarea'?<textarea ref={node=>{input.current=node;}} aria-label={field.label} rows={3} maxLength={field.maxLength??4000} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>:<input ref={node=>{input.current=node;}} type="tel" aria-label={field.label} maxLength={field.maxLength??32} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>):value||'—'}
-   </code></pre></div>{editing&&error&&<p role="alert">{error}</p>}</div>
+   </code></pre></div>{editing&&error&&<StudentWarning>{error}</StudentWarning>}</div>
   </section>;
  })}</>;
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {api} from '@/utils/auth-session';
 import {studentPages,type StudentPage} from '@/data/student-pages';
@@ -98,6 +99,6 @@ export function StudentAccommodationSubmit({entry,data}:{entry:StudentPage;data:
         </div>
       </section>;
     })}
-    {error&&<p role="alert">{error}</p>}
+    {error&&<StudentWarning>{error}</StudentWarning>}
   </div>;
 }

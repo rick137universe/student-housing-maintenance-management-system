@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {useLayoutEffect,useRef,useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {api,saveAuthSession} from '@/utils/auth-session';
@@ -81,7 +82,7 @@ export function StudentPasswordEditor(){
               if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancel();}
             }}
           />:entered?'••••••••':'—'}</code></pre></div>
-          {editing&&error&&<p role="alert" id={'password-error-'+field.key}>{error}</p>}
+          {editing&&error&&<StudentWarning id={'password-error-'+field.key}>{error}</StudentWarning>}
         </div>
       </section>;
     })}

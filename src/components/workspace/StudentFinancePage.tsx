@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type FormEvent,type MouseEvent,type ReactNode} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {api} from '@/utils/auth-session';
@@ -139,7 +140,7 @@ function FinanceContent({data,entry,record,page,listUrl,paymentStep,navigate}:{d
   function pageUrl(next:number){return entry.url+(next>1?'?page='+next:'');}
 
   return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-finance aria-busy={loading}>
-    {error&&<p role="alert">{error}</p>}
+    {error&&<StudentWarning>{error}</StudentWarning>}
     {result&&(record===null?<>
       <ul className="links-list links-list-boxed" data-dorma-finance-list>{rows.map(row=>{
         const id=String(row[payments?'payment_id':'bill_id']);
@@ -177,7 +178,7 @@ function PaymentForm({bill,onCancel,onSaved}:{bill:Row;onCancel:()=>void;onSaved
     <pre><code className="hljs language-plaintext"><input id="student-payment-amount" inputMode="decimal" required pattern="[0-9]+(\.[0-9]{1,2})?" value={amount} disabled={pending} onChange={event=>setAmount(event.target.value)} style={{display:'block',width:'100%',font:'inherit',color:'inherit',background:'transparent',border:0,padding:0,outline:'none',borderRadius:0}}/></code></pre>
     <h3><label htmlFor="student-payment-result">测试支付结果</label></h3>
     <select id="student-payment-result" className="ui-input" value={result} disabled={pending} onChange={event=>setResult(event.target.value)}><option value="succeeded">成功并入账</option><option value="failed">失败，不记账</option><option value="cancelled">取消，不记账</option></select>
-    {error&&<p role="alert">{error}</p>}
+    {error&&<StudentWarning>{error}</StudentWarning>}
     <div className="ui-controls"><button type="button" disabled={pending} onClick={onCancel}>取消</button><button disabled={pending}>{pending?'正在提交…':'确认支付'}</button></div>
   </form>;
 }

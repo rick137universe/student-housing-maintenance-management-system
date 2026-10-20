@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {StudentPage} from '@/data/student-pages';
@@ -100,7 +101,7 @@ function RecordsContent({entry,data,record,page,listUrl,navigate}:{entry:Student
   }
   const detailFields:ReadonlyArray<readonly [string,string]>=[[identifier,'申请编号'],...fields.slice(0,3),...(checkin?[['gender','性别'] as const]:[]),...fields.slice(3,6),[checkin?'expected_check_in_date':'expected_date',checkin?'期望入住日期':'期望办理日期'],...fields.slice(6),...(!checkin?[['completed_at','完成时间'] as const]:[])];
   return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-accommodation aria-busy={loading}>
-    {error&&<p role="alert">{error}</p>}
+    {error&&<StudentWarning>{error}</StudentWarning>}
     {result&&(record===null?<>
       <ul className="links-list links-list-boxed" data-dorma-accommodation-list>{rows.map(row=>{
         const id=String(row[identifier]),url=listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(id);

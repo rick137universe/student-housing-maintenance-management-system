@@ -1,5 +1,6 @@
 'use client';
 
+import {StudentWarning} from './StudentWarning';
 import {useCallback,useEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {api} from '@/utils/auth-session';
@@ -55,7 +56,7 @@ function RepairRecordsContent({entry,data,record,page,navigate}:{entry:StudentPa
  useRepairDocument(root,entry,{key:record===null&&page===1?'page':JSON.stringify([record,page]),editor:evaluate,title,url:detailUrl,listUrl,navigate});
  function link(url:string,event:MouseEvent<HTMLAnchorElement>){event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(url);}
  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-repair aria-busy={loading}>
-  {error&&<p role="alert">{error}</p>}
+  {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-repair-list>{rows.map(row=>{
     const url=listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(String(row.repair_id));
@@ -65,7 +66,7 @@ function RepairRecordsContent({entry,data,record,page,navigate}:{entry:StudentPa
    })}</ul>
    {!rows.length&&<StudentEmptyState/>}
    {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
-  </>:detail&&(!allowed?<p role="alert">{evaluate?'此工单尚未完工或已经评价，不能重复提交。':'记录不存在或不可访问。'}</p>:evaluate?<RepairForm entry={entry} data={data} repair={detail} locked={loading}/>:<>
+  </>:detail&&(!allowed?<StudentWarning>{evaluate?'此工单尚未完工或已经评价，不能重复提交。':'记录不存在或不可访问。'}</StudentWarning>:evaluate?<RepairForm entry={entry} data={data} repair={detail} locked={loading}/>:<>
    <RepairValues row={detail} fields={[...requestFields,...(detail.maintenance_id?maintenanceFields:[]),...(evaluations||detail.repair_status==='evaluated'?evaluationFields:[])]}/>
    {entry.action.startsWith('action-2')&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map(update=><RepairValues key={String(update.update_id)} row={{description:[repairValue('status',update.status),repairValue('created_at',update.created_at),String(update.actor_name??''),String(update.description??'')].filter(Boolean).join(' · ')}} fields={[["description",repairValue('status',update.status)]]}/>)}</div>}
   </>))}
@@ -108,6 +109,6 @@ function RepairForm({entry,data,repair,locked=false}:{entry:StudentPage;data:Stu
  return <div ref={root} data-dorma-application-editor data-dorma-repair-form aria-busy={pending}>
   {repair&&<div className="docs-info-content formatted-text"><RepairValues row={repair} fields={[...requestFields.slice(0,4),['completed_at','完工时间']]}/></div>}
   <RepairEditorFields fields={fields} values={values} active={active} onActive={setActive} pending={pending||locked} onChange={(key,value)=>{setValues(current=>({...current,[key]:value}));setError('');}}/>
-  {error&&<p role="alert">{error}</p>}
+  {error&&<StudentWarning>{error}</StudentWarning>}
  </div>;
 }
