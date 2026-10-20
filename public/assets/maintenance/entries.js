@@ -207,7 +207,7 @@ const entries = [
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-1",
     "url": "/workspace/maintenance/notifications/action-1",
-    "description": "接收业务进度与待办提醒。"
+    "description": "查看业务消息并标记已读。"
   }
 ];
 export default entries;

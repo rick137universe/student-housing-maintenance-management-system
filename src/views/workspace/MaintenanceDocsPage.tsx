@@ -1,10 +1,12 @@
 'use client';
 
-import {useEffect,useLayoutEffect,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
-import {useRouter} from 'next/navigation';
+import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
+import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
 import {featureFor} from '@/data/role-features';
 import {maintenancePages,type MaintenancePage} from '@/data/maintenance-pages';
 import type {Account} from '@/types/auth';
@@ -39,6 +41,24 @@ function MaintenanceBusiness({account,entry,onReady}:{account:Account;entry:Main
 
 export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout}:{account:Account;featureId:string;actionId:string;onReady?:()=>void;onLogout?:()=>void}){
  const router=useRouter(),{refresh}=useAuth(),refreshRef=useRef(refresh),frame=useRef<HTMLIFrameElement>(null);
+ const params=useSearchParams(),queryRef=useRef(params.toString());
+ useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
+ const messages=useMemo(()=>new StudentAnnouncementData(account.id,account.csrfToken),[account.id,account.csrfToken]);
+ useEffect(()=>{
+  const iframe=frame.current!;let detach=()=>{};
+  const bind=()=>{
+   detach();const doc=iframe.contentDocument;if(!doc)return;
+   const warm=(event:Event)=>{
+    const anchor=(event.target as Element).closest?.('a[href]');if(!anchor)return;
+    const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
+    const entry=maintenancePages.find(entry=>entry.url===url.pathname);
+    if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
+   };
+   doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
+   detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
+  };
+  iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
+ },[messages]);
  const [src]=useState(()=>'/assets/maintenance/index.html?entry='+encodeURIComponent((maintenancePages.find(page=>page.feature===featureId&&page.action===actionId)??maintenancePages[0]).id));
  const [view,setView]=useState<{target:Element;entry:MaintenancePage}|null>(null);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
@@ -54,16 +74,19 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(entry.feature==='personal')onReady?.();
+    if(['personal','notifications'].includes(entry.feature))onReady?.();
    }
-   if(location.pathname!==entry.url)router.replace(entry.url,{scroll:false});
+   const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
+   if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
   };
   window.addEventListener('message',receive);frame.current?.contentWindow?.postMessage({type:'dorma-maintenance-connect'},location.origin);
   return()=>window.removeEventListener('message',receive);
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-maintenance-frame src={src} title="维修工作台"/>
-  {view&&createPortal(view.entry.feature==='personal'
+  {view&&createPortal(view.entry.feature==='notifications'
+   ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="维修工作台" contentChangeEvent="dorma-maintenance-content-change"/>
+   :view.entry.feature==='personal'
    ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
    :<MaintenanceBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
  </main>;
