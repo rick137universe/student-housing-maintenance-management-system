@@ -35,7 +35,7 @@ Logo 旁的版本控件在母版核心脚本初始化后移除，初始状态也
 
 学生各列表的“暂无记录。”统一使用 `StudentEmptyState`，复用母版 Getting started 的 `<div class="notice info"><p>…</p></div>`。外层保留 `.formatted-text`，直接继承母版 INFO 标签、蓝色背景、正文颜色、字号、圆角和内边距，不新增样式覆盖。覆盖住宿申请记录、缴费列表、报修记录与评价候选、公告和个人消息，以及 Docs 通用表格的空状态；仍只在数据确认返回空列表后显示，不在加载或读取失败时提前显示空记录提示。
 
-学生端提交校验、字段编辑校验和读取失败等警告统一使用 `StudentWarning`，直接复用母版 CSS Properties 页的 `.formatted-text > .notice.warning > p`。WARNING 标签、橙色背景、正文颜色、字号、圆角和间距均由母版样式提供，不新增覆盖。保留原提示文字、校验及提交逻辑、`role="alert"` 和密码字段的错误描述关联；空记录继续使用 INFO，其他角色不变。
+学生端提交校验、字段编辑校验和读取失败等警告统一使用 `StudentWarning`，直接复用母版 CSS Properties 页的 `.formatted-text > .notice.warning > p`。WARNING 标签、橙色背景、正文颜色、字号、圆角和间距均由母版样式提供，不新增覆盖。保留原提示文字、校验及提交逻辑、`role="alert"` 和密码字段的错误描述关联；空记录继续使用 INFO，其他角色不变。密码页的 WARNING 放在对应代码块外部并紧接其下方；服务端返回“当前密码不正确”时归属原密码，自动回到该字段编辑以便更正，新密码草稿保留。每个输入框仅关联自身错误提示。
 
 住宿申请主页仅提供“提交申请／申请记录”两个母版导航入口，不挂载表单或查询记录。提交页位于 `/workspace/student/accommodation/action-N/submit`，记录页位于 `/workspace/student/accommodation/action-N/records`，两者都属于对应申请的左侧第三级目录。申请主页的“下一个”进入提交子页，两个子页的“上一个”都返回对应申请主页；提交页右侧导航位置改为“提交申请”，记录页继续沿用原顺序的下一页。记录列表不提供搜索，保留分页和独立详情。入住记录查询 `applications`，调宿和退宿分别查询 `changes?type=transfer`、`changes?type=checkout`，仍由后端限制本人范围。
 

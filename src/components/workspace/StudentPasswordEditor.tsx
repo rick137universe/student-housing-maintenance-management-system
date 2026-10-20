@@ -1,7 +1,7 @@
 'use client';
 
 import {StudentWarning} from './StudentWarning';
-import {useLayoutEffect,useRef,useState} from 'react';
+import {Fragment,useLayoutEffect,useRef,useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {api,saveAuthSession} from '@/utils/auth-session';
 
@@ -18,32 +18,39 @@ export function StudentPasswordEditor(){
   const [active,setActive]=useState<FieldKey|null>(null);
   const [draft,setDraft]=useState('');
   const [pending,setPending]=useState(false);
-  const [error,setError]=useState('');
+  const [error,setError]=useState<{field:FieldKey;message:string}|null>(null);
   const saving=useRef(false);
   const input=useRef<HTMLInputElement>(null);
   useLayoutEffect(()=>{if(active){input.current?.focus();input.current?.select();}},[active]);
 
   function edit(key:FieldKey){
     if(active||saving.current)return;
-    setDraft(key==='confirmation'?'':values[key]);setError('');setActive(key);
+    setDraft(key==='confirmation'?'':values[key]);setError(null);setActive(key);
   }
-  function cancel(){if(saving.current)return;setDraft('');setError('');setActive(null);}
+  function cancel(){if(saving.current)return;setDraft('');setError(null);setActive(null);}
+  function warn(field:FieldKey,message:string){
+    setError({field,message});
+    if(active!==field){setDraft(field==='confirmation'?'':values[field]);setActive(field);}
+  }
   async function confirm(key:FieldKey){
     if(active!==key||saving.current)return;
-    if(!draft){setError('请输入'+fields.find(field=>field.key===key)!.label+'。');return;}
-    if(key==='newPassword'&&draft.length<8){setError('新密码至少需要8个字符。');return;}
+    if(!draft){warn(key,'请输入'+fields.find(field=>field.key===key)!.label+'。');return;}
+    if(key==='newPassword'&&draft.length<8){warn(key,'新密码至少需要8个字符。');return;}
     if(key!=='confirmation'){
-      setValues(current=>({...current,[key]:draft}));setDraft('');setError('');setActive(null);return;
+      setValues(current=>({...current,[key]:draft}));setDraft('');setError(null);setActive(null);return;
     }
-    if(!values.currentPassword){setError('请先填写并确认原密码。');return;}
-    if(!values.newPassword){setError('请先填写并确认新密码。');return;}
-    if(draft!==values.newPassword){setError('两次输入的新密码不一致。');return;}
-    saving.current=true;setPending(true);setError('');
+    if(!values.currentPassword){warn('currentPassword','请先填写并确认原密码。');return;}
+    if(!values.newPassword){warn('newPassword','请先填写并确认新密码。');return;}
+    if(draft!==values.newPassword){warn('confirmation','两次输入的新密码不一致。');return;}
+    saving.current=true;setPending(true);setError(null);
     try{
       await api('profile/password',{method:'POST',body:JSON.stringify(values)});
       setValues({currentPassword:'',newPassword:''});setDraft('');setActive(null);
       saveAuthSession(null);router.replace('/login');
-    }catch(reason){setError(reason instanceof Error?reason.message:'修改失败，请重试。');}
+    }catch(reason){
+      const message=reason instanceof Error?reason.message:'修改失败，请重试。';
+      warn(message==='当前密码不正确'?'currentPassword':'confirmation',message);
+    }
     finally{saving.current=false;setPending(false);}
   }
 
@@ -51,7 +58,8 @@ export function StudentPasswordEditor(){
     {fields.map(field=>{
       const editing=active===field.key;
       const entered=field.key!=='confirmation'&&Boolean(values[field.key]);
-      return <section key={field.key} className="code-preview" data-color="0" data-password-field={field.key} aria-labelledby={'password-title-'+field.key}>
+      const fieldError=error?.field===field.key?error.message:null;
+      return <Fragment key={field.key}><section className="code-preview" data-color="0" data-password-field={field.key} aria-labelledby={'password-title-'+field.key}>
         <div className="code-preview-content">
           <header>
             <div className="code-preview-title"><h2 id={'password-title-'+field.key} className="text-ui">{field.label}</h2></div>
@@ -68,8 +76,8 @@ export function StudentPasswordEditor(){
             type="password"
             name={field.key}
             aria-label={field.label}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error?'password-error-'+field.key:undefined}
+            aria-invalid={Boolean(fieldError)}
+            aria-describedby={fieldError?'password-error-'+field.key:undefined}
             autoComplete={field.autocomplete}
             maxLength={128}
             spellCheck={false}
@@ -82,9 +90,8 @@ export function StudentPasswordEditor(){
               if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancel();}
             }}
           />:entered?'••••••••':'—'}</code></pre></div>
-          {editing&&error&&<StudentWarning id={'password-error-'+field.key}>{error}</StudentWarning>}
         </div>
-      </section>;
+      </section>{fieldError&&<StudentWarning id={'password-error-'+field.key}>{fieldError}</StudentWarning>}</Fragment>;
     })}
   </div>;
 }
