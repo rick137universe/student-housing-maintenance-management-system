@@ -4,8 +4,8 @@ import {expect,type Page} from '@playwright/test';
 import {studentPages} from '../src/data/student-pages';
 
 let reference:string|undefined;
-export async function expectStudentBreadcrumbSpacing(page:Page){
- const frame=page.frameLocator('[data-dorma-student-frame]');
+export async function expectStudentBreadcrumbSpacing(page:Page,frameSelector='[data-dorma-student-frame]'){
+ const frame=page.frameLocator(frameSelector);
  await expect(frame.locator('#toggle-search')).toBeEnabled();
  if(!reference){
   const source=await readFile('D:/Development/Anime.js/public/sites/animejs-com-23cc7dc7/documentation--animation--animatable-properties--css-properties-d413c831/index.html','utf8');

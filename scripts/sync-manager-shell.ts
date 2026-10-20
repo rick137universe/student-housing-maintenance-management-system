@@ -9,16 +9,19 @@ const html=(value:string)=>value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt
 const index=await readFile('public/assets/student/index.html','utf8');
 const source=await readFile('public/assets/student/pages/personal-overview.html','utf8');
 const personalTemplates=Object.fromEntries(await Promise.all(['action-1','action-2','action-3'].map(async action=>[action,await readFile(`public/assets/student/pages/personal-${action}.html`,'utf8')])));
+const notificationTemplate=await readFile('public/assets/student/pages/notifications-action-1.html','utf8');
 const arrow=source.match(/<li class="next-link">[\s\S]*?(<svg[\s\S]*?<\/svg>)/)![1];
 const prevArrow=source.match(/<li class="prev-link">[\s\S]*?(<svg[\s\S]*?<\/svg>)/)![1];
 const link=(entry:typeof managerPages[number])=>`<a class="text-ui color-${palette[entry.color]}" data-id="${entry.id}" data-color="${entry.color}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}${arrow}</a>`;
 const routes=Object.fromEntries(managerPages.map(entry=>[entry.url,`/assets/manager/pages/${entry.feature}-${entry.action}.html`]));
 function page(entry:typeof managerPages[number]){
- if(entry.feature==='personal'&&entry.action!=='overview'){
-  let result=personalTemplates[entry.action].replaceAll('/workspace/student/personal','/workspace/dormManager/personal').replaceAll('学生工作台','宿管工作台')
-   .replaceAll('data-color="0"',`data-color="${entry.color}"`).replaceAll('title="个人信息"','title="个人中心"').replaceAll('>个人信息</a>','>个人中心</a>')
+ if(['personal','notifications'].includes(entry.feature)&&entry.action!=='overview'){
+  const template=entry.feature==='personal'?personalTemplates[entry.action]:notificationTemplate;
+  let result=template.replaceAll('/workspace/student/'+entry.feature,'/workspace/dormManager/'+entry.feature).replaceAll('学生工作台','宿管工作台')
+   .replaceAll(`data-color="${entry.feature==='personal'?0:5}"`,`data-color="${entry.color}"`)
    .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)
    .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`);
+  if(entry.feature==='personal')result=result.replaceAll('title="个人信息"','title="个人中心"').replaceAll('>个人信息</a>','>个人中心</a>');
   const position=managerPages.indexOf(entry);
   for(const [direction,neighbor] of [['prev',managerPages[position-1]],['next',managerPages[position+1]]] as const){
    const anchor=neighbor?`<a class="text-ui color-${palette[neighbor.color]}" data-color="${neighbor.color}" data-id="${neighbor.id}" href="${neighbor.url}" title="${html(neighbor.label)}">${direction==='prev'?prevArrow+html(neighbor.label):html(neighbor.label)+arrow}</a>`:'';

@@ -15,16 +15,16 @@ function isReminder(row:StudentRow){return row.title==='缴费提醒'&&row.bill_
 const arrowPoints='17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75';
 function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><g fill="none" fillRule="evenodd"><polygon fill="currentColor" fillRule="nonzero" points={arrowPoints}/></g></svg>;}
 
-export function StudentAnnouncementPage({entry,data}:{entry:StudentPage;data:StudentAnnouncementData}){
+export function StudentAnnouncementPage({entry,data,workspaceTitle='学生工作台',contentChangeEvent='dorma-student-content-change'}:{entry:StudentPage;data:StudentAnnouncementData;workspaceTitle?:string;contentChangeEvent?:string}){
  const params=useSearchParams(),router=useRouter(),record=params.get('record'),requestedPage=Number(params.get('page')??1);
  const page=Number.isSafeInteger(requestedPage)&&requestedPage>0&&requestedPage<=100000?requestedPage:1;
  const navigate=useCallback((url:string)=>router.push(url,{scroll:false}),[router]);
- return <NoticeContent key={[entry.id,record,page].join(':')} entry={entry} data={data} record={record} page={page} navigate={navigate}/>;
+ return <NoticeContent key={[entry.id,record,page].join(':')} entry={entry} data={data} record={record} page={page} navigate={navigate} workspaceTitle={workspaceTitle} contentChangeEvent={contentChangeEvent}/>;
 }
-function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data:StudentAnnouncementData;record:string|null;page:number;navigate:(url:string)=>void}){
+function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentChangeEvent}:{entry:StudentPage;data:StudentAnnouncementData;record:string|null;page:number;navigate:(url:string)=>void;workspaceTitle:string;contentChangeEvent:string}){
  const root=useRef<HTMLDivElement>(null),request=useRef({version:0}),saving=useRef(false),router=useRouter();
  const readAction=useRef<()=>Promise<void>>(async()=>{}),readLink=useRef<HTMLAnchorElement|null>(null);
- const reminder=entry.feature==='announcements'&&entry.action==='action-2',notification=entry.feature==='notifications'||reminder,theme=entry.feature==='notifications'?'lime':'citrus';
+ const reminder=entry.feature==='announcements'&&entry.action==='action-2',notification=entry.feature==='notifications'||reminder,theme=['red','corail','orange','yellow','citrus','lime','green'][entry.color];
  const resource=notification?'notifications':'announcements',identifier=notification?'notification_id':'announcement_id';
  const path=record===null?announcementListPath(entry,page):resource+'/'+record+(reminder?'?type=payment-reminder':'');
  const [result,setResult]=useState(()=>{
@@ -54,14 +54,14 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
   const content=info.querySelector('.docs-info-content.formatted-text')!,parent=business.parentNode!,sibling=business.nextSibling;
   if(record===null)content.after(business);else content.append(business);
   doc.scrollingElement?.scrollTo({top:0,behavior:'instant'});
-  doc.dispatchEvent(new CustomEvent('dorma-student-content-change',{detail:{key:record===null&&page===1?'page':JSON.stringify([record,page])}}));
+  doc.dispatchEvent(new CustomEvent(contentChangeEvent,{detail:{key:record===null&&page===1?'page':JSON.stringify([record,page])}}));
   return()=>{if(info.isConnected)parent.insertBefore(business,sibling?.parentNode===parent?sibling:null);};
- },[record,page]);
+ },[record,page,contentChangeEvent]);
  useLayoutEffect(()=>{
   if(record===null)return;
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector<HTMLElement>('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
   const saved={text:heading.textContent,href:heading.getAttribute('href')!,tooltip:heading.title,hidden:description.hidden,documentTitle:doc.title};
-  heading.textContent=title;heading.href=detailUrl;heading.title=title;description.hidden=true;doc.querySelector('title')!.textContent=title+' · 学生工作台';
+  heading.textContent=title;heading.href=detailUrl;heading.title=title;description.hidden=true;doc.querySelector('title')!.textContent=title+' · '+workspaceTitle;
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),back=doc.createElement('a');
   arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.href=listUrl;back.title=entry.label;back.textContent=entry.label;back.target='_top';crumbs.querySelector('p')!.append(' ',arrow,' ',back);breadcrumb.replaceWith(crumbs);
   const previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,replacement=previous.cloneNode(true) as HTMLAnchorElement;
@@ -86,7 +86,7 @@ function NoticeContent({entry,data,record,page,navigate}:{entry:StudentPage;data
    action?.removeEventListener('click',mark);action?.removeEventListener('keydown',keyboard);if(readLink.current===action)readLink.current=null;
    if(info.isConnected){crumbs.replaceWith(breadcrumb);replacement.replaceWith(previous);empty.replaceWith(next);emptyHeading.replaceWith(nextHeading);heading.textContent=saved.text;heading.href=saved.href;heading.title=saved.tooltip;description.hidden=saved.hidden;doc.querySelector('title')!.textContent=saved.documentTitle;}
   };
- },[record,title,detailUrl,entry.color,entry.label,listUrl,navigate,theme,unread]);
+ },[record,title,detailUrl,entry.color,entry.label,listUrl,navigate,theme,unread,workspaceTitle]);
  function link(url:string,event:MouseEvent<HTMLAnchorElement>){event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(url);}
  async function markRead(){
   if(saving.current||!detail||detail.read_at||!notification)return;

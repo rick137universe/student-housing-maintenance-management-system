@@ -267,7 +267,7 @@ const entries = [
     "id": "timeline-timeline-methods-seek",
     "action": "action-1",
     "url": "/workspace/dormManager/notifications/action-1",
-    "description": "接收业务进度与待办提醒。"
+    "description": "查看业务消息并标记已读。"
   }
 ];
 export default entries;

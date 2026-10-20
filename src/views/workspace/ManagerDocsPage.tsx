@@ -1,10 +1,12 @@
 'use client';
 
-import {useEffect,useLayoutEffect,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
-import {useRouter} from 'next/navigation';
+import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
+import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
 import {featureFor} from '@/data/role-features';
 import {managerPages,type ManagerPage} from '@/data/manager-pages';
 import type {Account} from '@/types/auth';
@@ -42,7 +44,25 @@ function ManagerBusiness({account,entry,onReady}:{account:Account;entry:ManagerP
 
 export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Account;featureId:string;actionId:string;onReady?:()=>void}){
  const router=useRouter(),{refresh}=useAuth();
+ const params=useSearchParams(),queryRef=useRef(params.toString());
+ useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
  const frame=useRef<HTMLIFrameElement>(null),refreshRef=useRef(refresh);
+ const messages=useMemo(()=>new StudentAnnouncementData(account.id,account.csrfToken),[account.id,account.csrfToken]);
+ useEffect(()=>{
+  const iframe=frame.current!;let detach=()=>{};
+  const bind=()=>{
+   detach();const doc=iframe.contentDocument;if(!doc)return;
+   const warm=(event:Event)=>{
+    const anchor=(event.target as Element).closest?.('a[href]');if(!anchor)return;
+    const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
+    const entry=managerPages.find(entry=>entry.url===url.pathname);
+    if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
+   };
+   doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
+   detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
+  };
+  iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
+ },[messages]);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
  const [src]=useState(()=>'/assets/manager/index.html?entry='+encodeURIComponent((managerPages.find(page=>page.feature===featureId&&page.action===actionId)??managerPages[0]).id));
  const [view,setView]=useState<{target:Element;entry:ManagerPage}|null>(null);
@@ -58,16 +78,19 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(entry.feature==='personal')onReady?.();
+    if(['personal','notifications'].includes(entry.feature))onReady?.();
    }
-   if(location.pathname!==entry.url||location.search)router.replace(entry.url,{scroll:false});
+   const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
+   if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
   };
   window.addEventListener('message',receive);frame.current?.contentWindow?.postMessage({type:'dorma-manager-connect'},location.origin);
   return()=>window.removeEventListener('message',receive);
  },[router,onReady]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-manager-frame src={src} title="宿管工作台"/>
-  {view&&createPortal(view.entry.feature==='personal'
+  {view&&createPortal(view.entry.feature==='notifications'
+   ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="宿管工作台" contentChangeEvent="dorma-manager-content-change"/>
+   :view.entry.feature==='personal'
    ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
    :<ManagerBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
  </main>;

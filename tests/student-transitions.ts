@@ -1,7 +1,7 @@
 import {expect,type Page} from '@playwright/test';
 
-export async function expectStudentReveal(page:Page,navigate:()=>Promise<unknown>,title:string){
-  const frame=page.frameLocator('[data-dorma-student-frame]'),content=frame.locator('#docs-info');
+export async function expectStudentReveal(page:Page,navigate:()=>Promise<unknown>,title:string,frameSelector='[data-dorma-student-frame]'){
+  const frame=page.frameLocator(frameSelector),content=frame.locator('#docs-info');
   // Run the rAF probe as browser JavaScript, without tsx's Node-only function-name helpers.
   await content.evaluate((element,source)=>new Function('element',source)(element),String.raw`
     const target=element;
