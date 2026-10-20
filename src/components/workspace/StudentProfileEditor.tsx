@@ -11,7 +11,7 @@ const fields=[
 ] as const;
 type FieldKey=typeof fields[number]['key'];
 
-export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<string,unknown>;loading:boolean;onSaved:()=>Promise<void>}){
+export function StudentProfileEditor({profile,loading,onSaved,color=0}:{profile:Record<string,unknown>;loading:boolean;onSaved:()=>Promise<void>;color?:number}){
   const [active,setActive]=useState<FieldKey|null>(null);
   const [pending,setPending]=useState(false);
   const [error,setError]=useState('');
@@ -59,7 +59,7 @@ export function StudentProfileEditor({profile,loading,onSaved}:{profile:Record<s
   return <div ref={root} data-dorma-profile-editor>
     {fields.map(field=>{
       const editing=active===field.key;
-      return <section key={field.key} className="code-preview" data-color="0" data-profile-field={field.key} aria-labelledby={'profile-title-'+field.key}>
+      return <section key={field.key} className="code-preview" data-color={color} data-profile-field={field.key} aria-labelledby={'profile-title-'+field.key}>
         <div className="code-preview-content">
           <header>
             <div className="code-preview-title"><h2 id={'profile-title-'+field.key} className="text-ui">{field.label}</h2></div>

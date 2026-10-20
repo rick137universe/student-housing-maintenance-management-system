@@ -58,10 +58,11 @@ export async function managerShellRegression(browser:Browser,origin:string,passw
   await page.reload();await ready(managerPages.find(entry=>entry.label==='调宿审核')!);
   await page.goto(origin+'/workspace/dormManager/personal/action-2');await ready(managerPages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);
   const original=(await (await context.request.get(origin+'/api/v1/profile')).json()).data;
-  await frame.getByRole('button',{name:'修改资料',exact:true}).click();const dialog=frame.getByRole('dialog');await expect(dialog).toBeVisible();
-  await dialog.getByLabel('联系电话',{exact:true}).fill('13900001234');await dialog.getByRole('button',{name:'取消',exact:true}).click();await expect(dialog).toHaveCount(0);
+
+  const phone=frame.locator('[data-profile-field="phone"]');
+  await phone.getByRole('button',{name:'编辑联系电话',exact:true}).click();await phone.getByRole('textbox').fill('13900001234');await phone.getByRole('button',{name:'取消',exact:true}).click();await expect(phone.getByRole('textbox')).toHaveCount(0);
   assert.equal((await (await context.request.get(origin+'/api/v1/profile')).json()).data.phone,original.phone);
-  await frame.getByRole('button',{name:'修改资料',exact:true}).click();await dialog.getByLabel('联系电话',{exact:true}).fill('13900001234');await dialog.getByRole('button',{name:'确认提交',exact:true}).click();await expect(dialog).toHaveCount(0);
+  await phone.getByRole('button',{name:'编辑联系电话',exact:true}).click();await phone.getByRole('textbox').fill('13900001234');await phone.getByRole('button',{name:'确认',exact:true}).click();await expect(phone.getByRole('textbox')).toHaveCount(0);
   assert.equal((await (await context.request.get(origin+'/api/v1/profile')).json()).data.phone,'13900001234');
   assert.equal((await context.request.patch(origin+'/api/v1/profile',{headers:{Origin:origin,'X-CSRF-Token':account.csrfToken},data:{fullName:original.full_name,phone:original.phone,email:original.email}})).status(),200);
   await page.goto(origin+'/workspace/dormManager/base-data/action-1');await ready(managerPages[2]);await page.screenshot({path:'docs/qa/backend/manager-shell-desktop.png'});
@@ -71,6 +72,6 @@ export async function managerShellRegression(browser:Browser,origin:string,passw
   await frame.locator('#toggle-site-menu').click();await frame.locator('#site-menu a[data-id="docs"]').click();await ready(managerPages[0]);
   await frame.locator('#toggle-site-menu').click();await frame.locator('[data-dorma-account]').click();await expect(page).toHaveURL(origin+'/');
   assert.equal((await context.request.get(origin+'/api/v1/auth/me')).status(),401);assert.deepEqual(errors,[]);
-  console.log('宿管外壳回归通过：全部目录/预览、搜索、返回/前进、刷新、手机菜单、原表单取消与保存、真实退出。');
+  console.log('宿管外壳回归通过：全部目录/预览、搜索、返回/前进、刷新、手机菜单、资料编辑取消与保存、真实退出。');
  }finally{await context.close();}
 }

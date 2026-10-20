@@ -1,4 +1,5 @@
 import entries from './entries.js';
+import { c as CopyButton } from '/assets/student/assets/js/chunks/chunk-WQVFBASJ.js';
 import { m as waapi, o as utils } from '/assets/student/assets/js/chunks/chunk-WXAKRBIO.js';
 const requested = new URLSearchParams(location.search).get('entry');
 const initial = entries.find(entry => entry.id === requested) ?? entries[0];
@@ -74,7 +75,11 @@ for (const [direction, neighbor, heading] of [
   for (const node of [...link.childNodes]) if (node.nodeType === Node.TEXT_NODE) node.remove();
   if (direction === 'prev') link.append(neighbor.label); else link.prepend(neighbor.label);
 }
-if(initial.action!=='overview'){const content=info.querySelector('.docs-info-content.formatted-text');content.after(info.querySelector('[data-dorma-business]'));content.hidden=true;}
+if(initial.action!=='overview'){
+  const content=info.querySelector('.docs-info-content.formatted-text');
+  if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));
+  content.hidden=initial.feature!=='personal';
+}
 document.title = initial.label + ' · 宿管工作台';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
 document.querySelector('#toggle-search').title = '搜索宿管功能';
@@ -118,6 +123,18 @@ window.addEventListener('message', event => {
   if (event.origin === location.origin && event.source === parent && event.data?.type === 'dorma-manager-connect') announce();
   if (event.origin === location.origin && event.source === parent && event.data?.type === 'dorma-manager-account-changed') void syncAccount();
 });
+// React inserts personal information after the mother highlighter initializes.
+const profileCopies = new WeakMap();
+new MutationObserver(() => {
+  for(const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre')){
+    const value=pre.querySelector('code').textContent;
+    if(profileCopies.get(pre)?.data===value)continue;
+    pre.querySelector('.copy-button')?.remove();
+    const copy=new CopyButton(value);copy.$el.type='button';
+    copy.$el.title='复制'+(pre.closest('[data-profile-field]')?.querySelector('h2').textContent??pre.previousElementSibling.textContent);
+    pre.append(copy.$el);profileCopies.set(pre,copy);
+  }
+}).observe(document.querySelector('#docs-info'),{childList:true,subtree:true,characterData:true});
 window.addEventListener('load', () => {
   // The copied core initializes this widget before the document load event.
   document.querySelector('#docs-versions')?.remove();

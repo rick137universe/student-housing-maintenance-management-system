@@ -10,6 +10,7 @@ import {studentDocsRegression} from './student-browser';
 import {workspacePath} from '../src/utils/workspace-route';
 import {delayedWorkspaceHydration} from './workspace-entry';
 import {managerShellRegression,verifyManagerShell} from './manager-shell';
+import {managerPersonalRegression} from './manager-personal';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
@@ -165,6 +166,7 @@ export async function browserRegression(origin:string,password:string){
   }
   await studentDocsRegression(browser,origin,password);
   await managerShellRegression(browser,origin,password);
+  await managerPersonalRegression(browser,origin,password);
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}

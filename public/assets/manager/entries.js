@@ -227,7 +227,7 @@ const entries = [
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
     "url": "/workspace/dormManager/personal/action-1",
-    "description": "维护个人资料、密码和通知。"
+    "description": "查看本人的账号、姓名、角色和联系方式。"
   },
   {
     "feature": "personal",
@@ -237,7 +237,7 @@ const entries = [
     "id": "timer-timer-callbacks-onbegin",
     "action": "action-2",
     "url": "/workspace/dormManager/personal/action-2",
-    "description": "维护个人资料、密码和通知。"
+    "description": "修改姓名、联系电话及邮箱。"
   },
   {
     "feature": "personal",
@@ -247,7 +247,7 @@ const entries = [
     "id": "timer-timer-callbacks-onupdate",
     "action": "action-3",
     "url": "/workspace/dormManager/personal/action-3",
-    "description": "维护个人资料、密码和通知。"
+    "description": "依次填写并确认三项密码，完成后重新登录。"
   },
   {
     "feature": "notifications",

@@ -4,7 +4,7 @@ import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useRouter} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
-import {LiveWorkspace} from '@/components/workspace/LiveWorkspace';
+import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
 import {featureFor} from '@/data/role-features';
 import {managerPages,type ManagerPage} from '@/data/manager-pages';
 import type {Account} from '@/types/auth';
@@ -58,6 +58,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
+    if(entry.feature==='personal')onReady?.();
    }
    if(location.pathname!==entry.url||location.search)router.replace(entry.url,{scroll:false});
   };
@@ -66,6 +67,8 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
  },[router,onReady]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-manager-frame src={src} title="宿管工作台"/>
-  {view&&createPortal(<ManagerBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
+  {view&&createPortal(view.entry.feature==='personal'
+   ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
+   :<ManagerBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
  </main>;
 }

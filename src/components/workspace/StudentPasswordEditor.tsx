@@ -12,7 +12,7 @@ const fields=[
 ] as const;
 type FieldKey=typeof fields[number]['key'];
 
-export function StudentPasswordEditor(){
+export function StudentPasswordEditor({color=0}:{color?:number}={}){
   const router=useRouter();
   const [values,setValues]=useState({currentPassword:'',newPassword:''});
   const [active,setActive]=useState<FieldKey|null>(null);
@@ -68,7 +68,7 @@ export function StudentPasswordEditor(){
       const editing=active===field.key;
       const entered=field.key!=='confirmation'&&Boolean(values[field.key]);
       const fieldError=error?.field===field.key?error.message:null;
-      return <Fragment key={field.key}><section className="code-preview" data-color="0" data-password-field={field.key} aria-labelledby={'password-title-'+field.key}>
+      return <Fragment key={field.key}><section className="code-preview" data-color={color} data-password-field={field.key} aria-labelledby={'password-title-'+field.key}>
         <div className="code-preview-content">
           <header>
             <div className="code-preview-title"><h2 id={'password-title-'+field.key} className="text-ui">{field.label}</h2></div>

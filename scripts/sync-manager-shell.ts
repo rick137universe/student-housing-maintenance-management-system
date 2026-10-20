@@ -8,10 +8,24 @@ const palette=['red','corail','orange','yellow','citrus','lime','green'];
 const html=(value:string)=>value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!));
 const index=await readFile('public/assets/student/index.html','utf8');
 const source=await readFile('public/assets/student/pages/personal-overview.html','utf8');
+const personalTemplates=Object.fromEntries(await Promise.all(['action-1','action-2','action-3'].map(async action=>[action,await readFile(`public/assets/student/pages/personal-${action}.html`,'utf8')])));
 const arrow=source.match(/<li class="next-link">[\s\S]*?(<svg[\s\S]*?<\/svg>)/)![1];
+const prevArrow=source.match(/<li class="prev-link">[\s\S]*?(<svg[\s\S]*?<\/svg>)/)![1];
 const link=(entry:typeof managerPages[number])=>`<a class="text-ui color-${palette[entry.color]}" data-id="${entry.id}" data-color="${entry.color}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}${arrow}</a>`;
 const routes=Object.fromEntries(managerPages.map(entry=>[entry.url,`/assets/manager/pages/${entry.feature}-${entry.action}.html`]));
 function page(entry:typeof managerPages[number]){
+ if(entry.feature==='personal'&&entry.action!=='overview'){
+  let result=personalTemplates[entry.action].replaceAll('/workspace/student/personal','/workspace/dormManager/personal').replaceAll('学生工作台','宿管工作台')
+   .replaceAll('data-color="0"',`data-color="${entry.color}"`).replaceAll('title="个人信息"','title="个人中心"').replaceAll('>个人信息</a>','>个人中心</a>')
+   .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)
+   .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`);
+  const position=managerPages.indexOf(entry);
+  for(const [direction,neighbor] of [['prev',managerPages[position-1]],['next',managerPages[position+1]]] as const){
+   const anchor=neighbor?`<a class="text-ui color-${palette[neighbor.color]}" data-color="${neighbor.color}" data-id="${neighbor.id}" href="${neighbor.url}" title="${html(neighbor.label)}">${direction==='prev'?prevArrow+html(neighbor.label):html(neighbor.label)+arrow}</a>`:'';
+   result=result.replace(new RegExp(`<li class="${direction}-link">[\\s\\S]*?</li>`),`<li class="${direction}-link">${anchor}</li>`);
+  }
+  return result;
+ }
  const result=source.replace(/<title>[\s\S]*?<\/title>/,`<title>${html(entry.label)} · 宿管工作台</title>`)
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`);
  const start=result.indexOf('<div class="docs-info-content'),end=result.indexOf('<footer id="site-footer"',start);
