@@ -69,8 +69,9 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   await expectStudentReveal(page,()=>page.goBack(),'账单详情');await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
   await page.goForward();await expect(form).toBeVisible();await expectTop();
   await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
-  await pay.click();await form.getByRole('button',{name:'取消',exact:true}).click();await expect(page).toHaveURL(base+'action-2?record='+id);
-  await pay.click();await frame.locator('#docs-info .docs-breadcrumb a').click();await expect(page).toHaveURL(base+'action-2?record='+id);
+  await pay.click();await form.getByRole('button',{name:'取消',exact:true}).click();await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
+  // Wait for the payment page before clicking its breadcrumb; the outgoing detail page also has one.
+  await pay.click();await expect(form).toBeVisible();await frame.locator('#docs-info .docs-breadcrumb a').click();await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
   await pay.click();await expect(form).toBeVisible();await expectTop();
   const periodBox=await code('账期').locator('..').boundingBox(),outstandingHeading=await values.getByRole('heading',{name:'待缴金额',exact:true}).boundingBox(),outstandingBox=await code('待缴金额').locator('..').boundingBox(),amountHeading=await form.getByRole('heading',{name:'支付金额',exact:true}).boundingBox();
   assert.ok(periodBox&&outstandingHeading&&outstandingBox&&amountHeading&&Math.abs((outstandingHeading.y-periodBox.y-periodBox.height)-(amountHeading.y-outstandingBox.y-outstandingBox.height))<1,'支付金额与账单字段应沿用母版相同的标题间距');
