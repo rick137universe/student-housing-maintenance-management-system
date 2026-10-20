@@ -65,7 +65,7 @@ for (const [direction, neighbor, heading] of [
 if(initial.action!=='overview'){
   const content=info.querySelector('.docs-info-content.formatted-text');
   if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));
-  content.hidden=!['personal','notifications'].includes(initial.feature);
+  content.hidden=!['personal','notifications','records'].includes(initial.feature);
 }
 document.title = initial.label + ' · 维修工作台';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
@@ -113,7 +113,8 @@ window.addEventListener('message', event => {
 // Profile data arrives after the mother's highlighter has initialized.
 const profileCopies = new WeakMap();
 new MutationObserver(() => {
-  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre')) {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre, [data-dorma-repair-values] pre, [data-dorma-maintenance-record-editor] .code-editor pre')) {
+    if(pre.querySelector('textarea')){pre.querySelector('.copy-button')?.remove();profileCopies.delete(pre);continue;}
     const value=pre.querySelector('code').textContent;
     if(profileCopies.get(pre)?.data===value)continue;
     pre.querySelector('.copy-button')?.remove();

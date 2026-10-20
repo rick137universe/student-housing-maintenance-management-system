@@ -97,7 +97,7 @@ const entries = [
     "id": "timer-timer-properties",
     "action": "action-1",
     "url": "/workspace/maintenance/records/action-1",
-    "description": "处理说明逐行写入并完成归档。"
+    "description": "填写本人处理中工单的维修说明。"
   },
   {
     "feature": "records",
@@ -107,7 +107,7 @@ const entries = [
     "id": "timeline-add-animations",
     "action": "action-2",
     "url": "/workspace/maintenance/records/action-2",
-    "description": "处理说明逐行写入并完成归档。"
+    "description": "查看已完工或已评价的维修归档。"
   },
   {
     "feature": "analytics",

@@ -7,6 +7,8 @@ import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
 import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
 import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
+import {MaintenanceRecordPage} from '@/components/workspace/MaintenanceRecordPage';
+import {MaintenanceRecordData,maintenanceRecordListPath} from '@/utils/maintenance-record-data';
 import {featureFor} from '@/data/role-features';
 import {maintenancePages,type MaintenancePage} from '@/data/maintenance-pages';
 import type {Account} from '@/types/auth';
@@ -44,6 +46,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
  const params=useSearchParams(),queryRef=useRef(params.toString());
  useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
  const messages=useMemo(()=>new StudentAnnouncementData(account.id,account.csrfToken),[account.id,account.csrfToken]);
+ const records=useMemo(()=>new MaintenanceRecordData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  useEffect(()=>{
   const iframe=frame.current!;let detach=()=>{};
   const bind=()=>{
@@ -53,12 +56,13 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=maintenancePages.find(entry=>entry.url===url.pathname);
     if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry?.feature==='records'&&entry.action!=='overview')void records.load(maintenanceRecordListPath(entry.action)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
   };
   iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
- },[messages]);
+ },[messages,records]);
  const [src]=useState(()=>'/assets/maintenance/index.html?entry='+encodeURIComponent((maintenancePages.find(page=>page.feature===featureId&&page.action===actionId)??maintenancePages[0]).id));
  const [view,setView]=useState<{target:Element;entry:MaintenancePage}|null>(null);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
@@ -74,7 +78,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','records'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -84,7 +88,9 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-maintenance-frame src={src} title="维修工作台"/>
-  {view&&createPortal(view.entry.feature==='notifications'
+  {view&&createPortal(view.entry.feature==='records'
+   ?<MaintenanceRecordPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={records}/>
+   :view.entry.feature==='notifications'
    ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="维修工作台" contentChangeEvent="dorma-maintenance-content-change"/>
    :view.entry.feature==='personal'
    ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
