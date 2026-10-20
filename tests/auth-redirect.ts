@@ -8,7 +8,7 @@ export async function authRedirectRegression(browser:Browser,origin:string,passw
  for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
   const context=await browser.newContext(),page=await context.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
   const first=roleFeatures[role][0],entry=`/workspace/${role}/${first.id}/action-1`,loginFrame=page.locator('[data-dorma-login-frame]');
-  const ready=()=>role==='student'?page.frameLocator('[data-dorma-student-frame]').locator('[data-student-module-links]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]').getByRole('heading',{name:'宿管工作台',level:1,exact:true}):role==='maintenance'?page.frameLocator('[data-dorma-maintenance-frame]').locator('[data-dorma-live-workspace]'):page.locator('[data-dorma-live-workspace]');
+  const ready=()=>role==='student'?page.frameLocator('[data-dorma-student-frame]').locator('[data-student-module-links]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]').getByRole('heading',{name:'宿管工作台',level:1,exact:true}):role==='maintenance'?page.frameLocator('[data-dorma-maintenance-frame]').getByRole('heading',{name:'维修工作台',level:1,exact:true}):page.locator('[data-dorma-live-workspace]');
   async function login(){const response=await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username,password}});assert.equal(response.status(),200);return (await response.json()).data;}
   try{
    // Both module roots and direct feature/detail addresses must skip the old interstitial.
@@ -17,12 +17,12 @@ export async function authRedirectRegression(browser:Browser,origin:string,passw
    }
    await context.addCookies([{name:'dorma_session',value:'invalid-session',url:origin}]);await page.goto(origin+entry);await expect(page).toHaveURL(origin+'/login');await expect(loginFrame).toBeVisible();
    await context.clearCookies();await page.goto(origin);await page.goto(origin+entry);await expect(page).toHaveURL(origin+'/login');await page.goBack();await expect(page).toHaveURL(origin+'/');
-   if(role==='dormManager'){
+   if(role==='dormManager'||role==='maintenance'){
     await page.goto(origin+'/login');
     const form=page.frameLocator('[data-dorma-login-frame]').frameLocator('iframe[title="账号登录"]');
     await form.getByLabel(/账号/).fill(username);await form.getByLabel(/密码/).fill(password);await form.getByRole('button',{name:'登录工作台',exact:true}).click();
-    await expect(page).toHaveURL(origin+'/workspace/dormManager');
-    const entryResponse=await context.request.get(origin+'/workspace',{maxRedirects:0});assert.equal(entryResponse.status(),307);assert.equal(entryResponse.headers().location,'/workspace/dormManager');
+    await expect(page).toHaveURL(origin+'/workspace/'+role);
+    const entryResponse=await context.request.get(origin+'/workspace',{maxRedirects:0});assert.equal(entryResponse.status(),307);assert.equal(entryResponse.headers().location,'/workspace/'+role);
    }else{await login();await page.goto(origin+workspacePath(role));}
    await expect(ready()).toBeVisible();
    const account=(await (await context.request.get(origin+'/api/v1/auth/me')).json()).data;

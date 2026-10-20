@@ -80,6 +80,7 @@ export async function browserRegression(origin:string,password:string){
    await page.waitForURL(origin+workspacePath(role));const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]'):role==='maintenance'?page.frameLocator('[data-dorma-maintenance-frame]'):page;
    if(role==='student')await expect(workspace.locator('[data-student-module-links] a')).toHaveCount(6);
    else if(role==='dormManager'){await expect(page).toHaveURL(origin+'/workspace/dormManager');await expect(workspace.getByRole('heading',{name:'宿管工作台',level:1,exact:true})).toBeVisible();}
+   else if(role==='maintenance'){await expect(page).toHaveURL(origin+'/workspace/maintenance');await expect(workspace.getByRole('heading',{name:'维修工作台',level:1,exact:true})).toBeVisible();}
    else await workspace.locator('[data-dorma-live-workspace]').waitFor();
    const initialResponse=await page.request.get(origin+workspacePath(role)),initialHtml=await initialResponse.text();
    assert.equal(initialResponse.status(),200);
