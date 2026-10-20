@@ -14,6 +14,8 @@ import {ManagerResourcePage} from '@/components/workspace/ManagerResourcePage';
 import {baseDataListPath} from '@/utils/manager-base-data';
 import {ManagerBedData,bedListPath} from '@/utils/manager-bed-data';
 import {ManagerRepairPage} from '@/components/workspace/ManagerRepairPage';
+import {ManagerBillingPage} from '@/components/workspace/ManagerBillingPage';
+import {ManagerBillingData,managerBillingListPath} from '@/utils/manager-billing-data';
 import {ManagerRepairData,managerRepairListPath} from '@/utils/manager-repair-data';
 import {featureFor} from '@/data/role-features';
 import {managerPages,type ManagerPage} from '@/data/manager-pages';
@@ -59,6 +61,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady,onLogout}:{a
  const accommodation=useMemo(()=>new StudentAccommodationData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  const beds=useMemo(()=>new ManagerBedData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  const repairs=useMemo(()=>new ManagerRepairData(account.id,account.csrfToken),[account.id,account.csrfToken]);
+ const billing=useMemo(()=>new ManagerBillingData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  useEffect(()=>{
   const iframe=frame.current!;let detach=()=>{};
   const bind=()=>{
@@ -71,13 +74,14 @@ export function ManagerDocsPage({account,featureId,actionId,onReady,onLogout}:{a
     if(entry?.feature==='accommodation'&&entry.action!=='overview')void accommodation.load(accommodationListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='repair-review'&&entry.action!=='overview')void repairs.load(managerRepairListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='base-data'&&entry.action!=='overview')void beds.load(baseDataListPath(entry.action)).catch(()=>{});
+    if(entry?.feature==='billing'&&entry.action!=='overview')void billing.load(managerBillingListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='beds'&&entry.action!=='overview')void beds.load(bedListPath(entry.action)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
   };
   iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
- },[messages,accommodation,beds,repairs]);
+ },[messages,accommodation,beds,repairs,billing]);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
  const [src]=useState(()=>'/assets/manager/index.html?entry='+encodeURIComponent((managerPages.find(page=>page.feature===featureId&&page.action===actionId)??managerPages[0]).id));
  const [view,setView]=useState<{target:Element;entry:ManagerPage}|null>(null);
@@ -93,7 +97,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady,onLogout}:{a
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','accommodation','beds','repair-review','base-data'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','accommodation','beds','repair-review','base-data','billing'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -103,7 +107,9 @@ export function ManagerDocsPage({account,featureId,actionId,onReady,onLogout}:{a
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-manager-frame src={src} title="宿管工作台"/>
-  {view&&createPortal(view.entry.feature==='base-data'
+  {view&&createPortal(view.entry.feature==='billing'
+   ?<ManagerBillingPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={billing}/>
+   :view.entry.feature==='base-data'
    ?<ManagerResourcePage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={beds}/>
    :view.entry.feature==='repair-review'
    ?<ManagerRepairPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={repairs}/>

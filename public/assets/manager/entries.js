@@ -187,7 +187,7 @@ const entries = [
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
     "url": "/workspace/dormManager/billing/action-1",
-    "description": "账期、金额与欠费记录逐行对齐。"
+    "description": "查看授权范围内的账单资料，确认账单核对结果。"
   },
   {
     "feature": "billing",
@@ -197,7 +197,7 @@ const entries = [
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
     "url": "/workspace/dormManager/billing/action-2",
-    "description": "账期、金额与欠费记录逐行对齐。"
+    "description": "查看尚未缴清的账单，发送缴费提醒。"
   },
   {
     "feature": "billing",
@@ -207,7 +207,7 @@ const entries = [
     "id": "timeline-add-timers",
     "action": "action-3",
     "url": "/workspace/dormManager/billing/action-3",
-    "description": "账期、金额与欠费记录逐行对齐。"
+    "description": "查看催缴内容、发送时间及已读状态。"
   },
   {
     "feature": "personal",
