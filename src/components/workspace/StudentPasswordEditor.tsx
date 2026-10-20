@@ -36,7 +36,16 @@ export function StudentPasswordEditor(){
     if(active!==key||saving.current)return;
     if(!draft){warn(key,'请输入'+fields.find(field=>field.key===key)!.label+'。');return;}
     if(key==='newPassword'&&draft.length<8){warn(key,'新密码至少需要8个字符。');return;}
-    if(key!=='confirmation'){
+    if(key==='currentPassword'){
+      saving.current=true;setPending(true);setError(null);
+      try{
+        await api('profile/password/verify',{method:'POST',body:JSON.stringify({currentPassword:draft})});
+        setValues(current=>({...current,currentPassword:draft}));setDraft('');setActive(null);
+      }catch(reason){warn(key,reason instanceof Error?reason.message:'密码校验失败，请重试。');}
+      finally{saving.current=false;setPending(false);}
+      return;
+    }
+    if(key==='newPassword'){
       setValues(current=>({...current,[key]:draft}));setDraft('');setError(null);setActive(null);return;
     }
     if(!values.currentPassword){warn('currentPassword','请先填写并确认原密码。');return;}
@@ -66,7 +75,7 @@ export function StudentPasswordEditor(){
             <nav aria-label={field.label+'编辑操作'}>
               <button type="button" className="code-preview-button text-ui" disabled={!editing||pending} onClick={event=>{event.stopPropagation();void confirm(field.key);}}>确认</button>
               <button type="button" className="code-preview-button text-ui" disabled={!editing||pending} onClick={event=>{event.stopPropagation();cancel();}}>取消</button>
-              <button type="button" className="ui-input code-edit-button text-ui" title={'编辑'+field.label} aria-pressed={editing} disabled={pending||Boolean(active)} onClick={event=>{event.stopPropagation();edit(field.key);}}>
+              <button type="button" className="ui-input code-edit-button text-ui" title={'编辑'+field.label} aria-pressed={editing} disabled={pending||Boolean(active)||(field.key!=='currentPassword'&&!values.currentPassword)} onClick={event=>{event.stopPropagation();edit(field.key);}}>
                 <svg className="icon" width="24" height="24" viewBox="0 0 24 24"><g fill="none" strokeWidth="1.75"><polygon stroke="currentColor" points="13.5 8.5 7.5 14.5 7.5 17.5 10.5 17.5 16.5 11.5"/><path stroke="currentColor" d="M18.0857864,7.08578644 L17.9142136,6.91421356 C17.133165,6.13316498 15.866835,6.13316498 15.0857864,6.91421356 L13.5,8.5 L13.5,8.5 L16.5,11.5 L18.0857864,9.91421356 C18.866835,9.13316498 18.866835,7.86683502 18.0857864,7.08578644 Z"/></g></svg>
               </button>
             </nav>
@@ -84,6 +93,12 @@ export function StudentPasswordEditor(){
             disabled={pending}
             value={draft}
             onChange={event=>setDraft(event.target.value)}
+            onBlur={event=>{
+              if(field.key!=='currentPassword'||!draft)return;
+              const next=event.relatedTarget as HTMLElement|null;
+              if(next&&event.currentTarget.closest('section')?.querySelector('nav')?.contains(next))return;
+              void confirm(field.key);
+            }}
             onKeyDown={event=>{
               if(event.nativeEvent.isComposing)return;
               if(event.key==='Enter'){event.preventDefault();event.stopPropagation();void confirm(field.key);}

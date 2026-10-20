@@ -5,7 +5,7 @@ import { AppError, requireValue } from './errors';
 import { accountSql, currentAccount, digest, mapAccount, sameOrigin, token, verifyPassword, audit, authorize } from './security';
 import { isResourceKind, listResource, resourceWrite, resourceDefinitions, type Row } from './resources';
 import { submitAccommodation, reviewAccommodation, submitRepair, repairAction, repairHistory, payBill, generateBills } from './workflows';
-import { profile, changeProfile, changePassword, accountWrite, permissionWrite, authorizationWrite, adminSetting, announcementWrite, billWrite, billReview, statistics, importCsv, encodeCsv } from './system';
+import { profile, changeProfile, changePassword, verifyCurrentPassword, accountWrite, permissionWrite, authorizationWrite, adminSetting, announcementWrite, billWrite, billReview, statistics, importCsv, encodeCsv } from './system';
 import { backupPolicy, enqueueBackup, health } from './tasks';
 
 const cookie=(value:string,request:Request,clear=false)=>`dorma_session=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${clear?0:28800}${new URL(process.env.APP_ORIGIN??request.url).protocol==='https:'?'; Secure':''}`;
@@ -52,8 +52,9 @@ export async function handle(request:Request,path:string[]) {
    }
   }
   if(resource==='profile'){
+   if(id==='password'&&action==='verify'&&method==='POST')return response({data:await verifyCurrentPassword(account,body)});
    if(method==='GET'){await authorize(account,'profile','read');return response({data:await profile(account)});}
-   if(id==='password'&&method==='POST')return response({data:await changePassword(account,body)},{'Set-Cookie':cookie('',request,true)});
+   if(id==='password'&&!action&&method==='POST')return response({data:await changePassword(account,body)},{'Set-Cookie':cookie('',request,true)});
    if(method==='PATCH')return response({data:await changeProfile(account,body)});
   }
   if(resource==='statistics'&&method==='GET'){const stats=await statistics(account,params);if(id==='export'){

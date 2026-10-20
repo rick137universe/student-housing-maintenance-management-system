@@ -8,9 +8,9 @@
 
 `POST auth/login` 接收 `{username,password}`，返回账号和 CSRF 令牌，同时设置 HttpOnly 会话 Cookie。`GET auth/me` 读取当前账号，`POST auth/logout` 退出。会话保存8小时；密码、角色或账号状态改变会撤销相关会话。密码使用随机盐 scrypt（N=131072，r=8，p=1）。
 
-所有写请求必须来自 `APP_ORIGIN`，登录后的写请求额外带 `X-CSRF-Token`。Cookie 在 HTTPS 下启用 Secure，使用 SameSite=Lax。开发直连默认不信任代理头；只有受控反向代理配置正确时才设置 `TRUST_PROXY=true`。登录失败按账号和来源在15分钟窗口限流。
+所有写请求必须来自 `APP_ORIGIN`，登录后的写请求额外带 `X-CSRF-Token`。Cookie 在 HTTPS 下启用 Secure，使用 SameSite=Lax。开发直连默认不信任代理头；只有受控反向代理配置正确时才设置 `TRUST_PROXY=true`。登录失败按账号和来源在15分钟窗口限流。原密码预校验及最终改密共享本人账号的失败次数，15分钟内累计10次失败后拒绝继续校验；请求沿用身份、同源和 CSRF 检查，最终改密仍重新验证原密码。
 
-成功响应 `{data,meta?}`；列表 meta 为 `{page,limit,total}`，默认20条、最大100条。错误为 `{error:{code,message,fieldErrors?}}`。HTTP 400表示输入错误，401表示登录失效，403表示权限或来源校验失败，404表示记录不存在或不可访问，409表示业务冲突，413表示请求超过5MB，429表示登录限流。
+成功响应 `{data,meta?}`；列表 meta 为 `{page,limit,total}`，默认20条、最大100条。错误为 `{error:{code,message,fieldErrors?}}`。HTTP 400表示输入错误，401表示登录失效，403表示权限或来源校验失败，404表示记录不存在或不可访问，409表示业务冲突，413表示请求超过5MB，429表示登录或密码校验限流。
 
 bigint ID 使用字符串，金额使用十进制字符串，时间使用 ISO 8601，日历日期使用 YYYY-MM-DD。应用角色为 student、dormManager、maintenance、admin；数据库中的 dorm_manager 在响应中映射为 dormManager。
 
@@ -21,6 +21,7 @@ bigint ID 使用字符串，金额使用十进制字符串，时间使用 ISO 86
 | `health` | GET | 应用、数据库及任务进程心跳状态 |
 | `auth/login`、`auth/me`、`auth/logout` | POST、GET、POST | 登录、获取身份、退出 |
 | `profile`、`profile/password` | GET/PATCH、POST | 个人资料、修改密码 |
+| `profile/password/verify` | POST | 接收 `{currentPassword}`，验证当前登录账号的原密码，成功返回 `{verified:true}`，不改密或撤销会话 |
 | `students`、`buildings`、`rooms`、`beds` | GET/POST | 查询、新增资源 |
 | 上述资源的 `/{id}` | GET/PATCH/DELETE | 详情、修改、删除未引用资源；学生通过停用处理 |
 | `occupancies` | GET | 当前与历史入住记录 |

@@ -104,6 +104,16 @@ try{
  assert.equal(restored.run_status,'succeeded',restored.result_description);restoredNames.push(restored.restored_database);assert(restored.validation_result.tableCount>=20);checks++;
  const content=await readFile(backupRow.external_file_reference);await writeFile(backupRow.external_file_reference,'damaged');const damaged=(await administrator.request('backups/restore','POST',{sourceBackupId:backup.backup_run_id})).data;await command('scripts/jobs.ts',['--once']);assert.equal((await administrator.request('backups/'+damaged.backup_run_id)).data.run_status,'failed');await writeFile(backupRow.external_file_reference,content);checks++;
  if(process.argv.includes('--browser'))await browserRegression(origin,env.SEED_PASSWORD);
+ // 原密码预校验只检查当前账号，不修改密码或撤销会话；最终提交仍重新验证。
+ await new Session().request('profile/password/verify','POST',{currentPassword:env.SEED_PASSWORD},401);
+ await student.request('profile/password/verify','POST',{currentPassword:'WrongOnly2026'},400);
+ assert.equal((await student.request('profile/password/verify','POST',{currentPassword:env.SEED_PASSWORD})).data.verified,true);
+ await student.request('auth/me');await student.request('profile/password/verify','POST',{currentPassword:''},400);
+ await student.request('profile/password/verify','POST',{currentPassword:env.SEED_PASSWORD,accountId:'1'},400);
+ await student.request('profile/password','POST',{currentPassword:'WrongOnly2026',newPassword:'ChangedOnly2026'},400);
+ const verifyWithoutCsrf=await fetch(origin+'/api/v1/profile/password/verify',{method:'POST',headers:{Origin:origin,Cookie:student.cookie,'Content-Type':'application/json'},body:JSON.stringify({currentPassword:env.SEED_PASSWORD})});assert.equal(verifyWithoutCsrf.status,403);checks+=7;
+ for(let attempt=0;attempt<10;attempt++)await incoming.request('profile/password/verify','POST',{currentPassword:'WrongOnly2026'},400);
+ await incoming.request('profile/password/verify','POST',{currentPassword:env.SEED_PASSWORD},429);checks++;
  await student.request('profile/password','POST',{currentPassword:env.SEED_PASSWORD,newPassword:'ChangedOnly2026'});await student.request('auth/me','GET',undefined,401);checks++;
  await manager.request('auth/logout','POST',{});await manager.request('auth/me','GET',undefined,401);checks++;
  console.log(`集成测试通过：${checks} 项检查（包括全部页面接口、事务、权限、真实备份和隔离恢复）。`);

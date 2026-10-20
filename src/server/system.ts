@@ -21,9 +21,23 @@ export async function changeProfile(account:Account,input:unknown) {
   await audit(c,account,'update','profile',account.id);return {updated:true};
  });
 }
+async function assertCurrentPassword(account:Account,password:string) {
+ const failures=Number((await query("SELECT count(*) FROM login_attempts WHERE username=$1 AND NOT succeeded AND attempted_at>now()-interval '15 minutes'",[account.username])).rows[0].count);
+ if(failures>=10)throw new AppError(429,'RATE_LIMITED','密码校验失败次数过多，请15分钟后重试');
+ const row=(await query(`${accountSql} WHERE a.account_id=$1`,[account.id])).rows[0];
+ const valid=Boolean(row&&await verifyPassword(password,row.password_hash));
+ await query("INSERT INTO login_attempts(username,source,succeeded) VALUES($1,'password-check',$2)",[account.username,valid]);
+ requireValue(valid,'当前密码不正确',400);
+}
+export async function verifyCurrentPassword(account:Account,input:unknown) {
+ await authorize(account,'profile','write');
+ const data=z.object({currentPassword:z.string().min(1).max(128)}).strict().parse(input);
+ await assertCurrentPassword(account,data.currentPassword);
+ return {verified:true};
+}
 export async function changePassword(account:Account,input:unknown) {
  const data=z.object({currentPassword:z.string().max(128),newPassword:z.string().min(8).max(128)}).strict().parse(input);
- const row=(await query(`${accountSql} WHERE a.account_id=$1`,[account.id])).rows[0];requireValue(await verifyPassword(data.currentPassword,row.password_hash),'当前密码不正确',400);
+ await assertCurrentPassword(account,data.currentPassword);
  return transaction(async c=>{
   await authorize(account,'profile','write',c);const hash=await passwordHash(data.newPassword);
   if(account.studentNumber)await query('UPDATE students SET password_hash=$2 WHERE student_number=$1',[account.studentNumber,hash],c);
