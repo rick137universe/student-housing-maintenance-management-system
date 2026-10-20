@@ -5,6 +5,7 @@ import {studentPages,studentChildren,type StudentPage} from '../src/data/student
 // Synchronize project HTML offline. Mother files are read-only, and its CSS/runtime stay unchanged.
 const root='public/assets/student/';
 const mother='D:/Development/Anime.js/public/sites/animejs-com-23cc7dc7/';
+const localAssets=(source:string)=>source.replaceAll('/sites/animejs-com-23cc7dc7/documentation-ec29569f/','/assets/student/');
 const palette=['red','corail','orange','yellow','citrus','lime'];
 const html=(value:string)=>value.replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]!));
 function elementEnd(source:string,start:number,tag:string){
@@ -13,7 +14,7 @@ function elementEnd(source:string,start:number,tag:string){
  throw new Error('Unclosed template element: '+tag);
 }
 const pages=new Map<string,string>();
-for(const entry of studentPages.filter(entry=>!entry.parent))pages.set(entry.id,await readFile(root+`pages/${entry.feature}-${entry.action}.html`,'utf8'));
+for(const entry of studentPages.filter(entry=>!entry.parent))pages.set(entry.id,localAssets(await readFile(root+`pages/${entry.feature}-${entry.action}.html`,'utf8')));
 const overview=pages.get('timer')!;
 const arrows=Object.fromEntries(['prev','next'].map(direction=>[direction,overview.match(new RegExp(`<li class="${direction}-link">[\\s\\S]*?(<svg[\\s\\S]*?</svg>)`))![1]]));
 function link(entry:StudentPage,direction='next',sidebar=false){
@@ -23,7 +24,7 @@ function link(entry:StudentPage,direction='next',sidebar=false){
 const nativeSidebar=await readFile(mother+'documentation-ec29569f/index.html','utf8');
 const nestedStart=nativeSidebar.indexOf('<ul',nativeSidebar.indexOf('data-id="animation-animatable-properties"'));
 const nestedOpening=nativeSidebar.slice(nestedStart,nativeSidebar.indexOf('>',nestedStart)+1);
-let index=await readFile(root+'index.html','utf8');
+let index=localAssets(await readFile(root+'index.html','utf8'));
 for(const parentId of new Set(studentChildren.map(entry=>entry.parent!))){
  const children=studentChildren.filter(entry=>entry.parent===parentId);
  const entry=children[0];
