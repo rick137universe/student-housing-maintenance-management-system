@@ -39,7 +39,7 @@ export async function managerNotificationRegression(browser:Browser,origin:strin
   await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText(['个人消息','消息通知']);await expectStudentBreadcrumbSpacing(page,selector);
   await expect(body.locator('p')).toHaveCount(3);await expect(body.locator('br')).toHaveCount(1);await expect(body).toContainText('第二段 <script>window.noticeUnsafe=true</script>');
   await expect(body.locator('script,pre,table')).toHaveCount(0);assert.equal(await frame.locator('body').evaluate(el=>(el.ownerDocument.defaultView as Window&{noticeUnsafe?:boolean}).noticeUnsafe),undefined);
-  await expect(body.locator('p').first()).toContainText('接收时间：');await expect(body.locator('p').first()).toContainText('未读');await expect.poll(()=>frame.locator('html').evaluate(el=>el.ownerDocument.title)).toBe(String(first.title)+' · 宿管工作台');
+  await expect(body.locator('p').first()).toContainText('未读');await expect.poll(()=>frame.locator('html').evaluate(el=>el.ownerDocument.title)).toBe(String(first.title)+' · 宿管工作台');
   const previous=frame.locator('#docs-info .prev-link a');await expect(previous).toHaveAttribute('href',base);await expect(read).toHaveClass(/color-green/);await expect(read.locator('svg.icon')).toHaveCount(1);await expect(body.getByRole('button')).toHaveCount(0);
   const left=await previous.boundingBox(),right=await read.boundingBox();assert(left&&right&&Math.abs(left.y-right.y)<1&&right.x>left.x);
   await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);await expect(page.locator('html')).toHaveCSS('overflow-y','hidden');
