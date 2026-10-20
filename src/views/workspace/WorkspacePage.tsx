@@ -15,6 +15,7 @@ import { ThemeSelect } from '@/components/theme/ThemeProvider';
 import { StudentDocsPage } from './StudentDocsPage';
 import {studentPages} from '@/data/student-pages';
 import {ManagerDocsPage} from './ManagerDocsPage';
+import {MaintenanceDocsPage} from './MaintenanceDocsPage';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -37,7 +38,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     return () => document.documentElement.removeAttribute('data-dorma-workspace-active');
   }, []);
   useLayoutEffect(()=>{
-    if(account!==undefined&&!(account?.role===role&&(role==='student'||role==='dormManager')&&(!params.feature||feature)))onReady?.();
+    if(account!==undefined&&!(account?.role===role&&(role==='student'||role==='dormManager'||role==='maintenance')&&(!params.feature||feature)))onReady?.();
   },[account,role,params.feature,feature,onReady]);
 
   async function logout() {
@@ -59,6 +60,9 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   if(account?.role==='dormManager'&&role==='dormManager'&&!params.feature){
     return <ManagerDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady} onLogout={docsLogout}/>;
   }
+  if(account.role==='maintenance'&&role==='maintenance'&&!params.feature){
+    return <MaintenanceDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady} onLogout={docsLogout}/>;
+  }
 
   if (!role || !feature || account.role !== role || !roleFeatures[account.role].some(item => item.id === feature.id)) return <main className={s.denied}>
     <ShieldAlert />
@@ -74,6 +78,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? studentAction??action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   }
   if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
+  if(role==='maintenance')return <MaintenanceDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 
   return <div className={s.page}>
     <header className={s.topbar}>

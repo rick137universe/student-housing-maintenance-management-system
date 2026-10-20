@@ -36,4 +36,4 @@ html:has(main[aria-label="Dorma 角色功能镜头"]){overflow-y:scroll;scrollba
 html{scrollbar-gutter:stable}
 
 /* Legacy workspaces reserve a scrollbar; Docs shells scroll inside their iframe. */
-html[data-dorma-workspace-active]:not(:has([data-dorma-student-frame],[data-dorma-manager-frame])){overflow-y:scroll!important;scrollbar-gutter:stable}
+html[data-dorma-workspace-active]:not(:has([data-dorma-student-frame],[data-dorma-manager-frame],[data-dorma-maintenance-frame])){overflow-y:scroll!important;scrollbar-gutter:stable}

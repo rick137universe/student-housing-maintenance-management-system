@@ -8,7 +8,7 @@ export async function authRedirectRegression(browser:Browser,origin:string,passw
  for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
   const context=await browser.newContext(),page=await context.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
   const first=roleFeatures[role][0],entry=`/workspace/${role}/${first.id}/action-1`,loginFrame=page.locator('[data-dorma-login-frame]');
-  const ready=()=>role==='student'?page.frameLocator('[data-dorma-student-frame]').locator('[data-student-module-links]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]').getByRole('heading',{name:'宿管工作台',level:1,exact:true}):page.locator('[data-dorma-live-workspace]');
+  const ready=()=>role==='student'?page.frameLocator('[data-dorma-student-frame]').locator('[data-student-module-links]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]').getByRole('heading',{name:'宿管工作台',level:1,exact:true}):role==='maintenance'?page.frameLocator('[data-dorma-maintenance-frame]').locator('[data-dorma-live-workspace]'):page.locator('[data-dorma-live-workspace]');
   async function login(){const response=await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username,password}});assert.equal(response.status(),200);return (await response.json()).data;}
   try{
    // Both module roots and direct feature/detail addresses must skip the old interstitial.
@@ -32,7 +32,7 @@ export async function authRedirectRegression(browser:Browser,origin:string,passw
    await login();await page.goto(origin+workspacePath(role));await expect(ready()).toBeVisible();
    const deniedRole=role==='student'?'dormManager':'student';await page.goto(origin+'/workspace/'+deniedRole+'/'+roleFeatures[deniedRole][0].id+'/action-1');await expect(page.getByRole('heading',{name:'当前身份无权访问。'})).toBeVisible();await expect(loginFrame).toHaveCount(0);
    await page.goto(origin+workspacePath(role));await expect(ready()).toBeVisible();
-   if(role==='student'||role==='dormManager')await page.frameLocator(role==='student'?'[data-dorma-student-frame]':'[data-dorma-manager-frame]').locator('[data-dorma-account]').click();
+   if(role!=='admin')await page.frameLocator(role==='student'?'[data-dorma-student-frame]':role==='dormManager'?'[data-dorma-manager-frame]':'[data-dorma-maintenance-frame]').locator('[data-dorma-account]').click();
    else await page.getByRole('button',{name:'退出登录',exact:true}).click();
    await expect(page).toHaveURL(origin+'/');
    assert.deepEqual(errors,[]);

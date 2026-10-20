@@ -18,12 +18,14 @@ import {managerRepairRegression} from './manager-repairs';
 import {managerBaseDataRegression} from './manager-base-data';
 import {managerBillingRegression} from './manager-billing';
 import {authRedirectRegression} from './auth-redirect';
+import {maintenanceShellRegression,verifyMaintenanceShell} from './maintenance-shell';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
  await verifyHomeTemplate();
  await verifyStudentTemplate();
  await verifyManagerShell();
+ await verifyMaintenanceShell();
  const browser=await chromium.launch({channel:'msedge',headless:true});
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
@@ -75,7 +77,7 @@ export async function browserRegression(origin:string,password:string){
     await page.setViewportSize({width:1440,height:1000});
    }
    await loginForm.getByLabel(/账号/).fill(username);await loginForm.getByLabel(/密码/).fill(password);await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
-   await page.waitForURL(origin+workspacePath(role));const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]'):page;
+   await page.waitForURL(origin+workspacePath(role));const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]'):role==='maintenance'?page.frameLocator('[data-dorma-maintenance-frame]'):page;
    if(role==='student')await expect(workspace.locator('[data-student-module-links] a')).toHaveCount(6);
    else if(role==='dormManager'){await expect(page).toHaveURL(origin+'/workspace/dormManager');await expect(workspace.getByRole('heading',{name:'宿管工作台',level:1,exact:true})).toBeVisible();}
    else await workspace.locator('[data-dorma-live-workspace]').waitFor();
@@ -84,7 +86,7 @@ export async function browserRegression(origin:string,password:string){
    assert(!initialHtml.includes('正在确认身份'),'首屏不应包含客户端身份加载提示');
    assert.match(initialResponse.headers()['cache-control'],/no-store|no-cache/,'身份首屏必须禁止缓存复用或强制重新校验（开发服务使用no-cache）');
    assert(!/public|s-maxage/.test(initialResponse.headers()['cache-control']),'身份首屏不能使用公共缓存');
-   assert(initialHtml.includes(role==='student'?'data-dorma-student-frame':role==='dormManager'?'data-dorma-manager-frame':'data-dorma-live-workspace'),'服务端应直接输出对应身份的工作台首屏');
+   assert(initialHtml.includes(role==='student'?'data-dorma-student-frame':role==='dormManager'?'data-dorma-manager-frame':role==='maintenance'?'data-dorma-maintenance-frame':'data-dorma-live-workspace'),'服务端应直接输出对应身份的工作台首屏');
    if(role==='student')await delayedWorkspaceHydration(page,origin);
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
@@ -101,7 +103,7 @@ export async function browserRegression(origin:string,password:string){
      await expect(nativePage.locator('#docs-info')).toHaveCSS('opacity','1');
      await expect(nativePage.locator('#toggle-search')).toBeEnabled();
     }
-    for(const theme of role==='student'||role==='dormManager'?['母版']:['浅色','深色']){if(role!=='student'&&role!=='dormManager')await workspace.getByRole('button',{name:theme,exact:true}).click();await page.screenshot({path:`docs/qa/backend/${role}-${size}-${theme}.png`,fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${role} ${size} overflow`);}
+    for(const theme of role!=='admin'?['母版']:['浅色','深色']){if(role==='admin')await workspace.getByRole('button',{name:theme,exact:true}).click();await page.screenshot({path:`docs/qa/backend/${role}-${size}-${theme}.png`,fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${role} ${size} overflow`);}
    }
    if(role==='student'){
     await page.goto(`${origin}/workspace/student/personal/action-2`);const nameEditor=workspace.locator('[data-profile-field="fullName"]');await nameEditor.getByRole('button',{name:'编辑姓名',exact:true}).click();await nameEditor.getByRole('textbox',{name:'姓名',exact:true}).fill('林晓屿');await nameEditor.getByRole('button',{name:'确认',exact:true}).click();await expect(nameEditor.getByRole('textbox')).toHaveCount(0);await expect(nameEditor.locator('code')).toHaveText('林晓屿');await expect(workspace.locator('[data-dorma-profile-editor]').getByRole('status')).toHaveCount(0);
@@ -182,6 +184,7 @@ export async function browserRegression(origin:string,password:string){
   await managerRepairRegression(browser,origin,password);
   await managerBaseDataRegression(browser,origin,password);
   await managerBillingRegression(browser,origin,password);
+  await maintenanceShellRegression(browser,origin,password);
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}
