@@ -67,7 +67,7 @@ const entries = [
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
     "url": "/workspace/dormManager/accommodation/action-1",
-    "description": "登记、调宿与退宿驱动床位实时变化。"
+    "description": "查看入住申请，审核并分配床位。"
   },
   {
     "feature": "accommodation",
@@ -77,7 +77,7 @@ const entries = [
     "id": "animation-animatable-properties-css-variables",
     "action": "action-2",
     "url": "/workspace/dormManager/accommodation/action-2",
-    "description": "登记、调宿与退宿驱动床位实时变化。"
+    "description": "查看调宿申请，审核并办理床位变更。"
   },
   {
     "feature": "accommodation",
@@ -87,7 +87,7 @@ const entries = [
     "id": "timer-timer-properties",
     "action": "action-3",
     "url": "/workspace/dormManager/accommodation/action-3",
-    "description": "登记、调宿与退宿驱动床位实时变化。"
+    "description": "查看退宿申请，审核并办理退宿登记。"
   },
   {
     "feature": "beds",

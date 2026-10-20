@@ -4,7 +4,7 @@ import { query, transaction } from './db';
 import { AppError, requireValue } from './errors';
 import { accountSql, currentAccount, digest, mapAccount, sameOrigin, token, verifyPassword, audit, authorize } from './security';
 import { isResourceKind, listResource, resourceWrite, resourceDefinitions, type Row } from './resources';
-import { submitAccommodation, reviewAccommodation, submitRepair, repairAction, repairHistory, payBill, generateBills } from './workflows';
+import { submitAccommodation, reviewAccommodation, accommodationBedOptions, submitRepair, repairAction, repairHistory, payBill, generateBills } from './workflows';
 import { profile, changeProfile, changePassword, verifyCurrentPassword, accountWrite, permissionWrite, authorizationWrite, adminSetting, announcementWrite, billWrite, billReview, statistics, importCsv, encodeCsv } from './system';
 import { backupPolicy, enqueueBackup, health } from './tasks';
 
@@ -75,6 +75,7 @@ export async function handle(request:Request,path:string[]) {
    return new Response(encodeCsv(rows),{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':`attachment; filename="${id}.csv"`,'Cache-Control':'no-store'}});
   }
   if(method==='GET'){
+   if((resource==='applications'||resource==='changes')&&id&&action==='beds')return response(await accommodationBedOptions(account,resource,id,params));
    if(resource==='repairs'&&id&&action==='history')return response({data:await repairHistory(account,id)});
    return response(await listResource(account,resource,params,id));
   }

@@ -4,7 +4,7 @@ import { query, transaction } from './db';
 import { AppError, requireValue } from './errors';
 import { assertBuilding, audit, authorize, notify } from './security';
 import type { Account } from '../types/auth';
-import type { Row } from './resources';
+import {listResource,type Row} from './resources';
 
 const id=z.string().min(1).max(150);
 const note=z.string().trim().max(4000);
@@ -15,15 +15,32 @@ export async function currentStay(student:string,client:PoolClient,lock=false) {
  return (await query(`SELECT o.*,b.room_id,r.building_id FROM occupancy_records o JOIN beds b USING(bed_id) JOIN rooms r USING(room_id)
  WHERE o.student_number=$1 AND o.check_out_date IS NULL${lock?' FOR UPDATE OF o':''}`,[student],client)).rows[0];
 }
-async function candidateBed(account:Account,student:string,preferred:string|null,chosen:string|undefined,c:PoolClient) {
- await query('SELECT 1 FROM students WHERE student_number=$1 FOR UPDATE',[student],c);
+function bedCandidateFilter(account:Account,student:string,preferred:string|null,chosen?:string){
  const values:unknown[]=[student];let filter=`b.bed_status='available' AND r.room_status='available' AND (a.gender_restriction='any' OR a.gender_restriction=s.gender)`;
  if(preferred){values.push(preferred);filter+=` AND a.building_id=$${values.length}`;}
  if(chosen){values.push(chosen);filter+=` AND b.bed_id=$${values.length}`;}
  if(account.role==='dormManager'){values.push(account.id);filter+=` AND (a.manager_account_id=$${values.length} OR EXISTS(SELECT 1 FROM building_authorizations x WHERE x.building_id=a.building_id AND x.account_id=$${values.length}))`;}
+ return {values,filter};
+}
+async function candidateBed(account:Account,student:string,preferred:string|null,chosen:string|undefined,c:PoolClient) {
+ await query('SELECT 1 FROM students WHERE student_number=$1 FOR UPDATE',[student],c);
+ const {values,filter}=bedCandidateFilter(account,student,preferred,chosen);
  const rows=(await query(`SELECT b.bed_id,b.room_id,r.building_id FROM beds b JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id)
  CROSS JOIN students s WHERE s.student_number=$1 AND ${filter} ORDER BY a.building_id,r.floor_number,r.room_id,b.bed_number FOR UPDATE OF r,b SKIP LOCKED LIMIT 1`,values,c)).rows;
  requireValue(rows[0],'没有符合楼栋、性别和可用状态的空床位');return rows[0];
+}
+export async function accommodationBedOptions(account:Account,kind:'applications'|'changes',recordId:string,params:URLSearchParams){
+ await authorize(account,kind,'review');
+ const row=(await listResource(account,kind,new URLSearchParams(),recordId)).data as Row;
+ requireValue(row.review_status==='pending','该申请已审核');
+ requireValue(kind==='applications'||row.business_type==='transfer','退宿无需分配床位',400);
+ const page=z.coerce.number().int().min(1).parse(params.get('page')??1),limit=z.coerce.number().int().min(1).max(100).parse(params.get('limit')??100);
+ const {values,filter}=bedCandidateFilter(account,String(row.student_number),row.preferred_building_id as string|null);
+ const from=`beds b JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id) CROSS JOIN students s`;
+ const where=`s.student_number=$1 AND ${filter}`;
+ const total=Number((await query(`SELECT count(*) FROM ${from} WHERE ${where}`,values)).rows[0].count);
+ const rows=(await query(`SELECT b.bed_id,b.room_id,r.building_id,a.building_name,r.floor_number FROM ${from} WHERE ${where} ORDER BY a.building_id,r.floor_number,r.room_id,b.bed_number LIMIT $${values.length+1} OFFSET $${values.length+2}`,[...values,limit,(page-1)*limit])).rows;
+ return {data:rows,meta:{page,limit,total}};
 }
 export async function submitAccommodation(account:Account,kind:'applications'|'changes',input:unknown) {
  await authorize(account,kind,'write');requireValue(account.role==='student','仅学生可以提交申请',403);
