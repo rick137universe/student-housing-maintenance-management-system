@@ -15,8 +15,8 @@ const prevArrow=source.match(/<li class="prev-link">[\s\S]*?(<svg[\s\S]*?<\/svg>
 const link=(entry:typeof managerPages[number])=>`<a class="text-ui color-${palette[entry.color]}" data-id="${entry.id}" data-color="${entry.color}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}${arrow}</a>`;
 const routes=Object.fromEntries(managerPages.map(entry=>[entry.url,`/assets/manager/pages/${entry.feature}-${entry.action}.html`]));
 function page(entry:typeof managerPages[number]){
- if(['personal','notifications','accommodation','beds'].includes(entry.feature)&&entry.action!=='overview'){
-  const recordPage=['accommodation','beds'].includes(entry.feature);
+ if(['personal','notifications','accommodation','beds','repair-review'].includes(entry.feature)&&entry.action!=='overview'){
+  const recordPage=['accommodation','beds','repair-review'].includes(entry.feature);
   const template=entry.feature==='notifications'?notificationTemplate:personalTemplates[recordPage?'action-1':entry.action];
   const sourceFeature=entry.feature==='notifications'?'notifications':'personal';
   let result=template.replaceAll('/workspace/student/'+sourceFeature+'/action-'+(recordPage?'1':entry.action.split('-')[1]),entry.url)

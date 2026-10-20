@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+import {expect,type Browser,type BrowserContext} from '@playwright/test';
+import {expectStudentReveal} from './student-transitions';
+import {expectStudentBreadcrumbSpacing} from './student-breadcrumbs';
+
+type Row=Record<string,unknown>;
+// Real initial reviews run only in the disposable integration database.
+export async function managerRepairRegression(browser:Browser,origin:string,password:string){
+ const admin=await browser.newContext(),owner=await browser.newContext({viewport:{width:1440,height:1000}}),student=await browser.newContext(),peer=await browser.newContext();
+ const accounts=new Map<BrowserContext,Row>(),page=await owner.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+ async function call(context:BrowserContext,path:string,body?:object,method=body?'POST':'GET',expected=200){const response=await context.request.fetch(origin+'/api/v1/'+path,{method,headers:{Origin:origin,'X-CSRF-Token':String(accounts.get(context)?.csrfToken??'')},...(body?{data:body}:{})});const result=await response.json();assert.equal(response.status(),expected,JSON.stringify(result));return result.data;}
+ async function login(context:BrowserContext,username:string){const account=await call(context,'auth/login',{username,password});accounts.set(context,account);return account;}
+ const selector='[data-dorma-manager-frame]',frame=page.frameLocator(selector),base='/workspace/dormManager/repair-review/';
+ const list=frame.locator('[data-dorma-manager-repair-list]'),values=frame.locator('[data-dorma-repair-values]'),editor=frame.locator('[data-dorma-repair-review-editor]'),send=frame.getByRole('button',{name:'提交审核',exact:true});
+ const code=(label:string)=>values.getByRole('heading',{name:label,exact:true}).locator('+ pre > code');
+ async function open(action:number,id?:string,review=false){await page.goto(origin+base+'action-'+action+(id!==undefined?'?record='+id+(review?'&review=1':''):''));await expect(frame.locator('[data-dorma-manager-repair]')).toHaveAttribute('aria-busy','false');await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');}
+ async function choose(value:string){const field=editor.locator('[data-profile-field="decision"]');await field.getByRole('button',{name:'编辑审核结果',exact:true}).click();await field.getByRole('combobox').selectOption(value);await field.getByRole('button',{name:'确认',exact:true}).click();await expect(field.getByRole('combobox')).toHaveCount(0);}
+ async function note(value:string){const field=editor.locator('[data-profile-field="note"]');await field.getByRole('button',{name:'编辑审核意见',exact:true}).click();await field.getByRole('textbox').fill(value);await field.getByRole('textbox').press('Control+Enter');await expect(field.getByRole('textbox')).toHaveCount(0);}
+ try{
+  await login(admin,'admin');const suffix=Date.now(),username='dmRepair'+suffix,number='MR'+suffix,building='RT'+suffix,room=building+'-1',bed=room+'-01';
+  const manager=await call(admin,'accounts',{username,fullName:'初审回归宿管',role:'dormManager',password});await login(owner,username);
+  for(const action of [1,2,3]){await open(action);await expect(frame.locator('[data-dorma-empty-state] .notice.info')).toHaveText('暂无记录。');}
+  await call(admin,'buildings',{building_id:building,building_name:'初审回归楼',total_floors:2,building_attribute:'male',manager_account_id:manager.accountId,gender_restriction:'male'});
+  await call(admin,'rooms',{room_id:room,building_id:building,floor_number:1,room_type:'单人间',bed_capacity:1,room_status:'available'});
+  await call(admin,'beds',{bed_id:bed,room_id:room,bed_number:'01',bed_status:'available'});
+  await call(admin,'students',{student_number:number,full_name:'初审回归学生',gender:'male',college:'计算机学院',grade:'2026',password});await login(student,'stu'+number);
+  const stay=await call(student,'applications',{preferredBuildingId:building});await call(owner,`applications/${stay.application_id}/review`,{decision:'approve',bedId:bed});
+  const create=(description='水龙头漏水\n<b>纯文本</b>')=>call(student,'repairs',{roomId:room,faultType:'水电设施',description,phone:'13800000001'});
+  const first=await create(),second=await create('照明故障');const firstId=String(first.repair_id),secondId=String(second.repair_id);
+  for(let i=0;i<21;i++)await create('分页工单 '+i);
+  await open(1);await expect(list.locator('a')).toHaveCount(20);await expect(list.locator('a').first()).toHaveClass(/color-yellow/);await expect(frame.locator('[data-dorma-manager-repair] table, [data-dorma-manager-repair] input, dialog, [data-dorma-manager-business-host]')).toHaveCount(0);
+  await page.screenshot({path:'docs/qa/backend/manager-repair-list.png'});
+  await expectStudentReveal(page,()=>list.locator('a').first().click(),'报修工单详情',selector);await expectStudentBreadcrumbSpacing(page,selector);await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);await expect(code('工单状态')).toHaveText('待初审');await expect(values.locator('.copy-button')).toHaveCount(await values.locator('h3').count());
+  await open(1,firstId);await expect(code('故障描述')).toHaveText('水龙头漏水\n<b>纯文本</b>');await expect(values.locator('b')).toHaveCount(0);await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-1');await page.screenshot({path:'docs/qa/backend/manager-repair-detail.png'});
+  await expectStudentReveal(page,()=>frame.locator('#docs-info .next-link a').click(),'报修初审办理',selector);await expect(send).toBeVisible();await expectStudentBreadcrumbSpacing(page,selector);await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-1?record='+firstId);await expect(editor.locator('section[data-color="3"]')).toHaveCount(2);
+  await send.click();await expect(editor.getByRole('alert')).toHaveText('请先选择并确认审核结果。');assert.equal(await editor.getByRole('alert').evaluate(el=>Boolean(el.closest('.code-preview'))),false);
+  const decision=editor.locator('[data-profile-field="decision"]');await decision.getByRole('button',{name:'编辑审核结果',exact:true}).click();await expect(send).toHaveAttribute('aria-disabled','true');await expect(decision.getByRole('combobox')).toHaveCSS('border-top-width','0px');await expect(decision.getByRole('combobox')).toHaveCSS('outline-style','none');await expect(decision.locator('.copy-button')).toHaveCount(0);await decision.getByRole('combobox').selectOption('approve');await decision.getByRole('button',{name:'取消',exact:true}).click();await expect(decision.locator('code')).toHaveText('—');
+  await choose('reject');await send.click();await expect(editor.getByRole('alert')).toHaveText('驳回报修时，请填写并确认审核意见。');await note('重复报修，请合并工单。');
+  await page.screenshot({path:'docs/qa/backend/manager-repair-review.png'});await page.setViewportSize({width:390,height:844});await page.screenshot({path:'docs/qa/backend/manager-repair-review-mobile.png'});assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);await expect(page.locator('html')).toHaveCSS('overflow-y','hidden');await page.setViewportSize({width:1440,height:1000});
+  await send.focus();await page.keyboard.press('Space');await expect(code('工单状态')).toHaveText('已驳回');await expect(code('审核意见')).toHaveText('重复报修，请合并工单。');await expect(frame.locator('[data-dorma-repair-history]')).toContainText('重复报修，请合并工单。');await expect(frame.locator('#docs-info .next-link a')).toHaveCount(0);
+  await call(owner,`repairs/${firstId}/review`,{decision:'approve'},'POST',409);await open(1,firstId,true);await expect(frame.locator('.notice.info')).toContainText('该工单已初审');await expect(send).toHaveCount(0);
+  await open(3);await expect(list.locator('a')).toHaveCount(1);await expect(list.locator('a')).toHaveText('初审回归学生 · '+room+' · 水电设施 · 已驳回');await list.locator('a').click();await expect(code('工单状态')).toHaveText('已驳回');await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-3');await expect(frame.locator('#docs-info .next-link a')).toHaveCount(0);
+  await open(1,secondId,true);await expect(send).toBeVisible();await choose('approve');await note('通过初审，上报维修。');
+  const reviewRoute='**/api/v1/repairs/'+secondId+'/review';await page.route(reviewRoute,route=>route.fulfill({status:503,json:{error:{message:'初审提交失败，请重试。'}}}));await send.click();await expect(editor.getByRole('alert')).toHaveText('初审提交失败，请重试。');await page.unroute(reviewRoute);await send.click();await expect(code('工单状态')).toHaveText('待派工');
+  await open(2);await expect(list.locator('a')).toHaveCount(1);await list.locator('a').click();await expect(code('审核意见')).toHaveText('通过初审，上报维修。');await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-2');await expect(frame.locator('#docs-info .next-link a')).toHaveCount(0);await page.reload();await expect(code('工单状态')).toHaveText('待派工');await expect(frame.getByText('操作已保存。',{exact:true})).toHaveCount(0);
+  assert((await call(student,'notifications') as Row[]).some(row=>String(row.content).includes('通过初审，上报维修。')));await call(owner,`repairs/${secondId}/dispatch`,{},'POST',403);
+  await open(2,secondId,true);await expect(send).toHaveCount(0);await expect(frame.locator('.notice.info')).toBeVisible();
+  await open(1);await expect(list.locator('a')).toHaveCount(20);await frame.getByRole('button',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'action-1?page=2');await expect(list.locator('a')).toHaveCount(1);await expect(list.locator('a').first()).toHaveAttribute('href',/page=2&record=/);await list.locator('a').first().click();await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-1?page=2');await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(origin+base+'action-1?page=2');await page.goBack();await expect(code('工单状态')).toHaveText('待初审');await page.goForward();await expect(list).toBeVisible();
+  await login(peer,'dm0301');await call(peer,'repairs/'+firstId,undefined,'GET',404);await call(peer,'repairs/'+firstId+'/history',undefined,'GET',403);await call(peer,'repairs/'+firstId+'/review',{decision:'approve'},'POST',403);await call(student,'repairs/'+secondId+'/review',{decision:'approve'},'POST',403);
+  const foreign=(await call(peer,'repairs?limit=1') as Row[])[0];if(foreign){await open(1,String(foreign.repair_id));await expect(frame.getByRole('alert')).toHaveClass('notice warning');await expect(values).toHaveCount(0);}
+  for(const id of ['invalid','0','9999999999999999999']){await open(1,id);await expect(frame.getByRole('alert')).toHaveClass('notice warning');await expect(send).toHaveCount(0);}
+  await page.route(/\/api\/v1\/repairs\?/,route=>route.fulfill({status:503,json:{error:{message:'工单读取失败，请重试。'}}}));await open(1);await expect(frame.getByRole('alert')).toHaveText('工单读取失败，请重试。');await page.unroute(/\/api\/v1\/repairs\?/);
+  assert.deepEqual(errors,[]);console.log('宿管报修初审通过：三类导航/详情/处理过程、可编辑初审、真实通过上报及驳回、草稿取消、失败重试、重复初审与楼栋/角色权限、分页刷新返回、INFO/WARNING、复制/母版间距/渐显及手机布局。');
+ }finally{await owner.close();await student.close();await peer.close();await admin.close();}
+}

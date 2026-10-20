@@ -14,6 +14,7 @@ import {managerPersonalRegression} from './manager-personal';
 import {managerNotificationRegression} from './manager-notifications';
 import {managerAccommodationRegression} from './manager-accommodation';
 import {managerBedsRegression} from './manager-beds';
+import {managerRepairRegression} from './manager-repairs';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
@@ -173,6 +174,7 @@ export async function browserRegression(origin:string,password:string){
   await managerNotificationRegression(browser,origin,password);
   await managerAccommodationRegression(browser,origin,password);
   await managerBedsRegression(browser,origin,password);
+  await managerRepairRegression(browser,origin,password);
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}

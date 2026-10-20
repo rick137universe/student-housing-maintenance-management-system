@@ -147,7 +147,7 @@ const entries = [
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-1",
     "url": "/workspace/dormManager/repair-review/action-1",
-    "description": "有效工单继续前进，无效信息原路退回。"
+    "description": "查看待初审工单，核对报修资料并提交初审结果。"
   },
   {
     "feature": "repair-review",
@@ -157,7 +157,7 @@ const entries = [
     "id": "animation-animatable-properties-svg-attributes",
     "action": "action-2",
     "url": "/workspace/dormManager/repair-review/action-2",
-    "description": "有效工单继续前进，无效信息原路退回。"
+    "description": "查看通过初审并上报维修的工单。"
   },
   {
     "feature": "repair-review",
@@ -167,7 +167,7 @@ const entries = [
     "id": "animation-animation-properties",
     "action": "action-3",
     "url": "/workspace/dormManager/repair-review/action-3",
-    "description": "有效工单继续前进，无效信息原路退回。"
+    "description": "查看已驳回工单及审核意见。"
   },
   {
     "feature": "billing",
