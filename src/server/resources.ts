@@ -79,7 +79,18 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
   if(account.role==='dormManager'){from+=` JOIN occupancy_records o ON o.student_number=s.student_number AND o.check_out_date IS NULL JOIN beds b USING(bed_id) JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id)`;condition=manager();}else if(account.role==='student')condition=student();break;
  case 'buildings':resource='resources';from='apartment_buildings a';columns='a.*';key='a.building_id';if(account.role==='dormManager')condition=manager();break;
  case 'rooms':resource='resources';from='rooms r JOIN apartment_buildings a USING(building_id)';columns='r.*,a.building_name';key='r.room_id';if(account.role==='dormManager')condition=manager();break;
- case 'beds':resource='resources';from='beds b JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id)';columns='b.*,r.building_id,a.building_name';key='b.bed_id';if(account.role==='dormManager')condition=manager();break;
+ case 'beds':case 'anomalies':{
+  resource='resources';from='beds b JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id)';
+  const occupied='EXISTS(SELECT 1 FROM occupancy_records o WHERE o.bed_id=b.bed_id AND o.check_out_date IS NULL)';
+  columns=`b.*,r.building_id,a.building_name,r.floor_number,r.room_type,r.room_status,a.gender_restriction,${occupied} actual_occupied`;key='b.bed_id';
+  if(account.role==='dormManager')condition=manager();
+  if(kind==='anomalies'){
+   requireValue(account.role==='admin'||account.role==='dormManager','不能检查资源异常',403);
+   condition+=` AND ((b.bed_status='occupied')<>${occupied} OR b.bed_status='maintenance')`;
+   columns+=`,b.bed_id "bedId",concat_ws('；',CASE WHEN (b.bed_status='occupied')<>${occupied} THEN '床位状态与有效入住不一致' END,CASE WHEN b.bed_status='maintenance' THEN '维修停用，需人工检查后恢复' END) issue`;
+  }
+  break;
+ }
  case 'occupancies':from='occupancy_records o JOIN students s USING(student_number) JOIN beds b USING(bed_id) JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id)';columns='o.*,s.full_name,r.room_id,r.building_id';key='o.occupancy_id';if(account.role==='student')condition=student();else if(account.role==='dormManager')condition=manager();break;
  case 'applications':from='accommodation_applications x JOIN students s USING(student_number) LEFT JOIN apartment_buildings a ON a.building_id=x.preferred_building_id';columns="x.*,s.full_name,s.gender,'checkin'::text business_type,NULL::text original_bed_id,(SELECT o.bed_id FROM occupancy_records o WHERE o.application_id=x.application_id) new_bed_id,x.applied_at+make_interval(days=>COALESCE((SELECT (setting_value->>'processingDays')::int FROM system_settings WHERE setting_key='accommodation'),7)) processing_due_at";key='x.application_id';if(account.role==='student')condition=student();else if(account.role==='dormManager')condition=manager();break;
  case 'changes':from='accommodation_changes x JOIN students s USING(student_number) JOIN beds b ON b.bed_id=x.original_bed_id JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id)';columns="x.*,s.full_name,x.applied_at+make_interval(days=>COALESCE((SELECT (setting_value->>'processingDays')::int FROM system_settings WHERE setting_key='accommodation'),7)) processing_due_at";key='x.change_id';if(account.role==='student')condition=student();else if(account.role==='dormManager')condition=manager();break;
@@ -105,7 +116,7 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  }
  await authorize(account,resource,'read');
  if(id)condition+=` AND ${key}=${add(id)}`;
- const q=params.get('q');if(q){const alias=kind==='students'?'s':kind==='buildings'?'a':kind==='rooms'?'r':kind==='beds'?'b':kind==='occupancies'?'o':'x';condition+=` AND (to_jsonb(${alias})-'password_hash')::text ILIKE ${add(`%${q.slice(0,100)}%`)}`;}
+ const q=params.get('q');if(q){const alias=kind==='students'?'s':kind==='buildings'?'a':kind==='rooms'?'r':['beds','anomalies'].includes(kind)?'b':kind==='occupancies'?'o':'x';condition+=` AND (to_jsonb(${alias})-'password_hash')::text ILIKE ${add(`%${q.slice(0,100)}%`)}`;}
  const status=params.get('status');const statusColumn:Record<string,string>={applications:'x.review_status',changes:'x.review_status',repairs:'x.repair_status',maintenance:'rr.repair_status',bills:'x.bill_status',backups:'x.run_status',beds:'b.bed_status'};
  if(status&&statusColumn[kind])condition+=` AND ${statusColumn[kind]}=ANY(${add(status.split(','))}::text[])`;
  if(params.get('type')&&kind==='changes')condition+=` AND x.business_type=${add(params.get('type'))}`;
@@ -113,7 +124,7 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  if(params.get('unpaid')==='true'&&kind==='bills')condition+=' AND balance.outstanding_amount>0';
  if(params.get('unread')==='true'&&kind==='notifications')condition+=' AND x.read_at IS NULL';
  if(params.get('type')==='payment-reminder'&&kind==='notifications')condition+=" AND x.title='缴费提醒' AND x.bill_id IS NOT NULL";
- const building=params.get('buildingId');if(building&&['rooms','beds','repairs','occupancies','buildings'].includes(kind))condition+=` AND a.building_id=${add(building)}`;
+ const building=params.get('buildingId');if(building&&['rooms','beds','anomalies','repairs','occupancies','buildings'].includes(kind))condition+=` AND a.building_id=${add(building)}`;
  const dateColumn:Record<string,string>={audit:'x.occurred_at',repairs:'x.submitted_at',maintenance:'x.dispatched_at',payments:'x.paid_at',bills:'x.generated_at'};
  for(const [filter,op] of [['from','>='],['to','<']] as const){const value=params.get(filter);if(value&&dateColumn[kind]){z.iso.date().parse(value);condition+=` AND ${dateColumn[kind]} ${op} ${add(value)}::date${filter==='to'?"+interval '1 day'":''}`;}}
  const page=z.coerce.number().int().min(1).parse(params.get('page')??1);const limit=z.coerce.number().int().min(1).max(100).parse(params.get('limit')??20);

@@ -9,6 +9,8 @@ import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncemen
 import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
 import {ManagerAccommodationPage} from '@/components/workspace/ManagerAccommodationPage';
 import {StudentAccommodationData,accommodationListPath} from '@/utils/student-accommodation-data';
+import {ManagerBedsPage} from '@/components/workspace/ManagerBedsPage';
+import {ManagerBedData,bedListPath} from '@/utils/manager-bed-data';
 import {featureFor} from '@/data/role-features';
 import {managerPages,type ManagerPage} from '@/data/manager-pages';
 import type {Account} from '@/types/auth';
@@ -51,6 +53,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
  const frame=useRef<HTMLIFrameElement>(null),refreshRef=useRef(refresh);
  const messages=useMemo(()=>new StudentAnnouncementData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  const accommodation=useMemo(()=>new StudentAccommodationData(account.id,account.csrfToken),[account.id,account.csrfToken]);
+ const beds=useMemo(()=>new ManagerBedData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  useEffect(()=>{
   const iframe=frame.current!;let detach=()=>{};
   const bind=()=>{
@@ -61,12 +64,13 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
     const entry=managerPages.find(entry=>entry.url===url.pathname);
     if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
     if(entry?.feature==='accommodation'&&entry.action!=='overview')void accommodation.load(accommodationListPath(entry.action)).catch(()=>{});
+    if(entry?.feature==='beds'&&entry.action!=='overview')void beds.load(bedListPath(entry.action)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
   };
   iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
- },[messages,accommodation]);
+ },[messages,accommodation,beds]);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
  const [src]=useState(()=>'/assets/manager/index.html?entry='+encodeURIComponent((managerPages.find(page=>page.feature===featureId&&page.action===actionId)??managerPages[0]).id));
  const [view,setView]=useState<{target:Element;entry:ManagerPage}|null>(null);
@@ -82,7 +86,7 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','accommodation'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','accommodation','beds'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -92,7 +96,9 @@ export function ManagerDocsPage({account,featureId,actionId,onReady}:{account:Ac
  },[router,onReady]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-manager-frame src={src} title="宿管工作台"/>
-  {view&&createPortal(view.entry.feature==='accommodation'
+  {view&&createPortal(view.entry.feature==='beds'
+   ?<ManagerBedsPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={beds}/>
+   :view.entry.feature==='accommodation'
    ?<ManagerAccommodationPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={accommodation}/>
    :view.entry.feature==='notifications'
    ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="宿管工作台" contentChangeEvent="dorma-manager-content-change"/>

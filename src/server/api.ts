@@ -63,11 +63,6 @@ export async function handle(request:Request,path:string[]) {
    for(const month of stats.workload)for(const [metric,value] of Object.entries(month))rows.push({category:'维修工作量',object:month.month,metric,value});
    return new Response(encodeCsv(rows),{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="statistics.csv"','Cache-Control':'no-store'}});
   }return response({data:stats});}
-  if(resource==='anomalies'&&method==='GET'){
-   await authorize(account,'resources','read');requireValue(account.role==='admin'||account.role==='dormManager','不能检查资源异常',403);
-   const beds=(await listResource(account,'beds',new URLSearchParams({limit:'100'}))).data as Row[];
-   const reports:Row[]=[];for(const bed of beds){const occupied=Boolean((await query('SELECT 1 FROM occupancy_records WHERE bed_id=$1 AND check_out_date IS NULL',[bed.bed_id])).rowCount);if((bed.bed_status==='occupied')!==occupied)reports.push({bedId:bed.bed_id,issue:'床位状态与有效入住不一致'});if(bed.bed_status==='maintenance')reports.push({bedId:bed.bed_id,issue:'维修停用，需人工检查后恢复'});}return response({data:reports});
-  }
   if(resource==='import'&&method==='POST')return response({data:await importCsv(account,id??'',raw)});
   if(resource==='export'&&method==='GET'){
    if(action==='template'){requireValue(isResourceKind(id??''),'不存在此模板',404);await authorize(account,'resources','write');const def=resourceDefinitions[id as keyof typeof resourceDefinitions];return new Response(Object.keys(def.schema.shape).join(',')+'\r\n',{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':`attachment; filename="${id}-template.csv"`}});}

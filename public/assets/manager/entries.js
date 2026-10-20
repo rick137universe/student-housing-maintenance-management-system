@@ -107,7 +107,7 @@ const entries = [
     "id": "timeline-add-animations",
     "action": "action-1",
     "url": "/workspace/dormManager/beds/action-1",
-    "description": "状态矩阵直接显示空闲、入住与异常。"
+    "description": "查看床位、所属房间及当前状态。"
   },
   {
     "feature": "beds",
@@ -117,7 +117,7 @@ const entries = [
     "id": "animation-animatable-properties-javascript-object-properties",
     "action": "action-2",
     "url": "/workspace/dormManager/beds/action-2",
-    "description": "状态矩阵直接显示空闲、入住与异常。"
+    "description": "查看床位资料并更新床位号和状态。"
   },
   {
     "feature": "beds",
@@ -127,7 +127,7 @@ const entries = [
     "id": "timeline-timeline-properties",
     "action": "action-3",
     "url": "/workspace/dormManager/beds/action-3",
-    "description": "状态矩阵直接显示空闲、入住与异常。"
+    "description": "核对床位登记状态与实际入住，查看维修停用等异常。"
   },
   {
     "feature": "repair-review",
