@@ -77,6 +77,7 @@ export async function browserRegression(origin:string,password:string){
    await loginForm.getByLabel(/账号/).fill(username);await loginForm.getByLabel(/密码/).fill(password);await loginForm.getByRole('button',{name:'登录工作台',exact:true}).click();
    await page.waitForURL(origin+workspacePath(role));const workspace=role==='student'?page.frameLocator('[data-dorma-student-frame]'):role==='dormManager'?page.frameLocator('[data-dorma-manager-frame]'):page;
    if(role==='student')await expect(workspace.locator('[data-student-module-links] a')).toHaveCount(6);
+   else if(role==='dormManager'){await expect(page).toHaveURL(origin+'/workspace/dormManager');await expect(workspace.getByRole('heading',{name:'宿管工作台',level:1,exact:true})).toBeVisible();}
    else await workspace.locator('[data-dorma-live-workspace]').waitFor();
    const initialResponse=await page.request.get(origin+workspacePath(role)),initialHtml=await initialResponse.text();
    assert.equal(initialResponse.status(),200);
