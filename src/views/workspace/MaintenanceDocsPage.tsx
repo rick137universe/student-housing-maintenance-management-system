@@ -4,7 +4,7 @@ import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useRouter} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
-import {LiveWorkspace} from '@/components/workspace/LiveWorkspace';
+import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
 import {featureFor} from '@/data/role-features';
 import {maintenancePages,type MaintenancePage} from '@/data/maintenance-pages';
 import type {Account} from '@/types/auth';
@@ -54,6 +54,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
+    if(entry.feature==='personal')onReady?.();
    }
    if(location.pathname!==entry.url)router.replace(entry.url,{scroll:false});
   };
@@ -62,6 +63,8 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-maintenance-frame src={src} title="维修工作台"/>
-  {view&&createPortal(<MaintenanceBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
+  {view&&createPortal(view.entry.feature==='personal'
+   ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
+   :<MaintenanceBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
  </main>;
 }

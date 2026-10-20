@@ -19,6 +19,7 @@ import {managerBaseDataRegression} from './manager-base-data';
 import {managerBillingRegression} from './manager-billing';
 import {authRedirectRegression} from './auth-redirect';
 import {maintenanceShellRegression,verifyMaintenanceShell} from './maintenance-shell';
+import {maintenancePersonalRegression} from './maintenance-personal';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
@@ -186,6 +187,7 @@ export async function browserRegression(origin:string,password:string){
   await managerBaseDataRegression(browser,origin,password);
   await managerBillingRegression(browser,origin,password);
   await maintenanceShellRegression(browser,origin,password);
+  await maintenancePersonalRegression(browser,origin,password);
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}

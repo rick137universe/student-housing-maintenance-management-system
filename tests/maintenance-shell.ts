@@ -57,7 +57,7 @@ export async function maintenanceShellRegression(browser:Browser,origin:string,p
    const repair=await context.request.get(origin+'/api/v1/repairs/'+id);assert.equal((await repair.json()).data.repair_status,'accepted');
   }
   await page.goto(origin+'/workspace/maintenance/personal/action-2');await ready(maintenancePages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);
-  await frame.getByRole('button',{name:'修改资料',exact:true}).click();await expect(frame.getByRole('dialog')).toBeVisible();await frame.getByRole('dialog').getByRole('button',{name:'取消',exact:true}).click();await expect(frame.getByRole('dialog')).toHaveCount(0);
+  const name=frame.locator('[data-profile-field="fullName"]');await name.getByRole('button',{name:'编辑姓名',exact:true}).click();await expect(name.getByRole('textbox')).toBeVisible();await name.getByRole('button',{name:'取消',exact:true}).click();await expect(name.getByRole('textbox')).toHaveCount(0);await expect(frame.getByRole('dialog')).toHaveCount(0);
   await page.goto(origin+'/workspace/maintenance/orders/action-1');await ready(maintenancePages[2]);await page.screenshot({path:'docs/qa/backend/maintenance-shell-desktop.png'});
   await page.setViewportSize({width:390,height:844});await frame.locator('#toggle-sidebar').click();await expect(frame.locator('#docs-sidebar')).toHaveClass(/is-active/);
   await frame.locator('#docs-sidebar a[title="维修处理"]').click();await ready(maintenancePages.find(entry=>entry.feature==='repair'&&entry.action==='overview')!);
