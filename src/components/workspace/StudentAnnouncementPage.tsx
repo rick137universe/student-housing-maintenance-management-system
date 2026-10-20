@@ -108,7 +108,7 @@ function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentCh
    {!rows.length&&<StudentEmptyState/>}
    {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
   </>:detail&&<div data-dorma-announcement-body>
-   <p>{notification?(reminder?'提醒时间：':'接收时间：'):'发布时间：'}{date(detail[notification?'created_at':'published_at'])}{notification?' · '+(detail.read_at?'已读':'未读'):''}</p>
+   <p>{notification?(reminder?'提醒时间：':'接收时间：'):'发布时间：'}<code>{date(detail[notification?'created_at':'published_at'])}</code>{notification&&<> <code>{detail.read_at?'已读':'未读'}</code></>}</p>
    {paragraphs.map((paragraph,index)=><p key={index}>{paragraph.split('\n').map((line,lineIndex)=><Fragment key={lineIndex}>{lineIndex>0&&<br/>}{line}</Fragment>)}</p>)}
   </div>)}
  </div>;
