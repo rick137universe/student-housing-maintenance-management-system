@@ -35,4 +35,4 @@ const routes = {
   "/workspace/student/notifications": "/assets/student/pages/notifications-overview.html",
   "/workspace/student/notifications/action-1": "/assets/student/pages/notifications-action-1.html"
 };
-export const documentationArchivePath = url => routes[new URL(url, location.href).pathname] ?? url;
+export const documentationArchivePath = url => (window.dormaDocumentationRoutes ?? routes)[new URL(url, location.href).pathname] ?? url;

@@ -76,5 +76,5 @@ for(const entry of [...studentChildren].reverse()){
 await writeFile(root+'assets/html/student-demos.html',demos);
 await writeFile(root+'assets/js/student-entries.js','const entries = '+JSON.stringify(studentPages,null,2)+';\nexport default entries;\n');
 const routes=Object.fromEntries(studentPages.map(entry=>[entry.url,`/assets/student/pages/${entry.feature}-${entry.action}.html`]));
-await writeFile(root+'assets/js/documentation-archive-map.js','// Application routes supplied to the unchanged Docs runtime.\nconst routes = '+JSON.stringify(routes,null,2)+';\nexport const documentationArchivePath = url => routes[new URL(url, location.href).pathname] ?? url;\n');
+await writeFile(root+'assets/js/documentation-archive-map.js','// Application routes supplied to the unchanged Docs runtime.\nconst routes = '+JSON.stringify(routes,null,2)+';\nexport const documentationArchivePath = url => (window.dormaDocumentationRoutes ?? routes)[new URL(url, location.href).pathname] ?? url;\n');
 console.log('已同步住宿与报修三级目录、操作及记录页面、页内入口与相邻导航。');

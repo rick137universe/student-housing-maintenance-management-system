@@ -14,6 +14,7 @@ import s from './WorkspacePage.module.css';
 import { ThemeSelect } from '@/components/theme/ThemeProvider';
 import { StudentDocsPage } from './StudentDocsPage';
 import {studentPages} from '@/data/student-pages';
+import {ManagerDocsPage} from './ManagerDocsPage';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -34,7 +35,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     return () => document.documentElement.removeAttribute('data-dorma-workspace-active');
   }, []);
   useLayoutEffect(()=>{
-    if(account!==undefined&&!(account?.role==='student'&&role==='student'&&(!params.feature||feature)))onReady?.();
+    if(account!==undefined&&!(account?.role===role&&(role==='student'||role==='dormManager')&&(!params.feature||feature)))onReady?.();
   },[account,role,params.feature,feature,onReady]);
 
   async function logout() {
@@ -46,6 +47,9 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
 
   if (account?.role === 'student' && role === 'student' && !params.feature) {
     return <StudentDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
+  }
+  if(account?.role==='dormManager'&&role==='dormManager'&&!params.feature){
+    return <ManagerDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
   }
 
   if (!account || !role || !feature) return <main className={s.denied}>
@@ -69,6 +73,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     const studentAction=studentPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
     return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? studentAction??action?.id??'action-1':'overview'} onReady={onReady}/>;
   }
+  if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady}/>;
 
   return <div className={s.page}>
     <header className={s.topbar}>

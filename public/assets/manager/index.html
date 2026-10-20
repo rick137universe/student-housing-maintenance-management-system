@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="darkreader-lock">
+  <link rel="icon" href="/assets/student/assets/images/favicon.png">
+  <title>宿管工作台</title>
+  <meta name="description" content="A fast, multipurpose and lightweight JavaScript animation library">
+  <meta property="og:title" content="Documentation | Anime.js | JavaScript Animation Engine">
+  <meta property="og:url" content="https://animejs.com/documentation">
+  <meta property="og:image" content="/assets/student/media/pages/documentation/c5370b24f4-1787698628/generated-og-image.en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:description" content="A fast, multipurpose and lightweight JavaScript animation library">
+  <meta name="twitter:title" content="Documentation | Anime.js | JavaScript Animation Engine">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/assets/student/media/pages/documentation/c5370b24f4-1787698628/generated-og-image.en.png">
+  <meta name="twitter:description" content="A fast, multipurpose and lightweight JavaScript animation library">
+    <link href="/assets/student/assets/css/core.css?v=1787698626" rel="stylesheet">  <link href="/assets/student/assets/css/docs.css?v=1787698626" rel="stylesheet"><script>
+  window.dormaDocumentationRoutes = {"/workspace/dormManager":"/assets/manager/pages/overview-overview.html","/workspace/dormManager/base-data":"/assets/manager/pages/base-data-overview.html","/workspace/dormManager/base-data/action-1":"/assets/manager/pages/base-data-action-1.html","/workspace/dormManager/base-data/action-2":"/assets/manager/pages/base-data-action-2.html","/workspace/dormManager/base-data/action-3":"/assets/manager/pages/base-data-action-3.html","/workspace/dormManager/accommodation":"/assets/manager/pages/accommodation-overview.html","/workspace/dormManager/accommodation/action-1":"/assets/manager/pages/accommodation-action-1.html","/workspace/dormManager/accommodation/action-2":"/assets/manager/pages/accommodation-action-2.html","/workspace/dormManager/accommodation/action-3":"/assets/manager/pages/accommodation-action-3.html","/workspace/dormManager/beds":"/assets/manager/pages/beds-overview.html","/workspace/dormManager/beds/action-1":"/assets/manager/pages/beds-action-1.html","/workspace/dormManager/beds/action-2":"/assets/manager/pages/beds-action-2.html","/workspace/dormManager/beds/action-3":"/assets/manager/pages/beds-action-3.html","/workspace/dormManager/repair-review":"/assets/manager/pages/repair-review-overview.html","/workspace/dormManager/repair-review/action-1":"/assets/manager/pages/repair-review-action-1.html","/workspace/dormManager/repair-review/action-2":"/assets/manager/pages/repair-review-action-2.html","/workspace/dormManager/repair-review/action-3":"/assets/manager/pages/repair-review-action-3.html","/workspace/dormManager/billing":"/assets/manager/pages/billing-overview.html","/workspace/dormManager/billing/action-1":"/assets/manager/pages/billing-action-1.html","/workspace/dormManager/billing/action-2":"/assets/manager/pages/billing-action-2.html","/workspace/dormManager/billing/action-3":"/assets/manager/pages/billing-action-3.html","/workspace/dormManager/personal":"/assets/manager/pages/personal-overview.html","/workspace/dormManager/personal/action-1":"/assets/manager/pages/personal-action-1.html","/workspace/dormManager/personal/action-2":"/assets/manager/pages/personal-action-2.html","/workspace/dormManager/personal/action-3":"/assets/manager/pages/personal-action-3.html","/workspace/dormManager/notifications":"/assets/manager/pages/notifications-overview.html","/workspace/dormManager/notifications/action-1":"/assets/manager/pages/notifications-action-1.html"};
+  window.paths = {
+    demos: '/assets/manager/demos.html',
+    'easings': '/assets/student/assets/json/easings.json',
+    'github-sponsors': '/assets/student/assets/json/sponsors-github-sponsors.json',
+    'platinum-sponsors': '/assets/student/assets/json/sponsors-platinum-sponsors.json',
+    'gold-sponsors': '/assets/student/assets/json/sponsors-gold-sponsors.json',
+    'silver-sponsors': '/assets/student/assets/json/sponsors-silver-sponsors.json',
+  };
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-16LTPBS8QC');
+</script><link rel="stylesheet" href="/assets/login/assets/css/account-button.css"><link rel="stylesheet" href="/assets/student/assets/css/profile-editor.css"><link rel="stylesheet" href="/assets/student/assets/css/application-editor.css"></head>
+
+
+<body data-template="docs">
+  <div class="page">
+    <header id="site-header" class="layout-container text-ui ui-overlay">
+  <div id="site-header-content">
+    <h1 class="heading-logo header-logo">
+      <a href="/" target="_top" aria-label="返回项目首页">
+        <img src="/assets/login/assets/images/flight_shmms_white.svg" alt="学生公寓住宿与报修管理系统" width="1081" height="208">
+        <span>学生公寓住宿与报修管理系统</span>
+      </a>
+      <label id="docs-versions" class="ui-select ui-input" style="display:none">
+        <select class="ui-input" name="docs-versions" aria-label="当前工作台"><option value="student">学生端</option></select>
+      </label>
+    </h1>
+    <nav id="site-menu">
+      <ul>
+                                        <li><a class="main-nav-link docs-link is-active" data-id="docs" href="/workspace/dormManager" target="_top" title="学生工作台"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="sidebar" fill="none" fill-rule="evenodd">
+    <path id="rectangle" fill="#FFFFFF" fill-rule="nonzero" d="M16.167 6.125H7.833A3.375 3.375 0 0 0 4.458 9.5v5a3.375 3.375 0 0 0 3.375 3.375h8.334a3.375 3.375 0 0 0 3.375-3.375v-5a3.375 3.375 0 0 0-3.375-3.375zm-8.334 1.75h8.334c.897 0 1.625.728 1.625 1.625v5c0 .897-.728 1.625-1.625 1.625H7.833A1.625 1.625 0 0 1 6.208 14.5v-5c0-.897.728-1.625 1.625-1.625z"></path>
+    <polyline id="Path-42" stroke="#FFFFFF" stroke-width="1.75" points="9.5 7.75 9.5 12 9.5 16.25" data-points="13.5 8.75 10.5 12 13.5 15.25"></polyline>
+  </g>
+</svg>
+<span>Docs</span></a></li>
+        <li><a class="main-nav-link" href="https://animejs.com/easing-editor" target="_top" title="Easing functions editor"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="icon"><path fill="none" stroke="currentColor" stroke-width="1.75" d="M4.5,17 C14.5967876,17 8.37571813,7 19.5,7"></path></svg><span>Easings</span></a></li>
+        <li><a class="main-nav-link" href="https://animejs.com/learn" target="_top" title="Learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="icon">
+  <g fill="none"><path fill="currentColor" d="M16.1666667,6.125 L7.83333333,6.125 C5.9693723,6.125 4.45833333,7.63603897 4.45833333,9.5 L4.45833333,14.5 C4.45833333,16.363961 5.9693723,17.875 7.83333333,17.875 L16.1666667,17.875 C18.0306277,17.875 19.5416667,16.363961 19.5416667,14.5 L19.5416667,9.5 C19.5416667,7.63603897 18.0306277,6.125 16.1666667,6.125 Z M7.83333333,7.875 L16.1666667,7.875 C17.0641294,7.875 17.7916667,8.60253728 17.7916667,9.5 L17.7916667,14.5 C17.7916667,15.3974627 17.0641294,16.125 16.1666667,16.125 L7.83333333,16.125 C6.93587061,16.125 6.20833333,15.3974627 6.20833333,14.5 L6.20833333,9.5 C6.20833333,8.60253728 6.93587061,7.875 7.83333333,7.875 Z"></path><path fill="currentColor" fill-rule="evenodd" d="M10,10.0706309 L10,13.9294941 C10,14.2445758 10.2554242,14.5 10.5705059,14.5 C10.6590742,14.5 10.7464261,14.479379 10.8256439,14.4397701 L14.6845071,12.5103385 C14.9663248,12.3694297 15.0805539,12.0267421 14.9396451,11.7449245 C14.8844409,11.634516 14.7949156,11.5449908 14.6845071,11.4897865 L10.8256439,9.56035488 C10.5438263,9.41944606 10.2011387,9.53367523 10.0602299,9.81549288 C10.033824,9.86830478 10.0158571,9.92473182 10.0068132,9.9827243 L10,10.0706309 Z"></path></g>
+</svg><span>Learn</span></a></li>
+        <li><a class="main-nav-link nav-link-retractable" href="https://codepen.io/collection/Poerqa?cursor=eyJwYWdlIjoxfQ==/" target="_blank" title="CodePen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="codepen" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+    <path id="Shape" stroke="#FFFFFF" stroke-width="1.75" d="M5 14.355L12 19l7-4.645v-4.71L12 5 5 9.645v4.71zm14 0l-7-4.71-7 4.71m0-4.71l7 4.646 7-4.646M12 5v4.645m0 4.71V19"></path>
+  </g>
+</svg>
+<span>Examples</span></a></li>
+        <li><a class="main-nav-link nav-link-retractable" href="https://github.com/juliangarnier/anime" target="_blank" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <path fill="currentColor" d="M12.007 4C7.579 4 4 7.606 4 12.066a8.06 8.06 0 0 0 5.475 7.652c.397.08.543-.173.543-.387 0-.187-.013-.828-.013-1.496-2.227.481-2.691-.961-2.691-.961-.358-.935-.888-1.175-.888-1.175-.73-.495.053-.495.053-.495.808.054 1.233.828 1.233.828.715 1.229 1.869.882 2.333.668.066-.52.278-.881.504-1.082-1.777-.187-3.646-.881-3.646-3.98 0-.88.318-1.602.822-2.163-.08-.2-.358-1.028.08-2.136 0 0 .676-.214 2.2.828a7.698 7.698 0 0 1 2.002-.268 7.7 7.7 0 0 1 2.001.268c1.525-1.042 2.2-.828 2.2-.828.438 1.108.16 1.936.08 2.136.517.561.822 1.282.822 2.164 0 3.098-1.869 3.779-3.659 3.98.292.253.544.734.544 1.495 0 1.082-.013 1.95-.013 2.217 0 .214.146.467.543.387A8.06 8.06 0 0 0 20 12.066C20.013 7.606 16.42 4 12.007 4z"></path>
+  </g>
+</svg>
+<span>GitHub</span></a></li>
+        <!-- <li><a class="main-nav-link nav-link-retractable" href="https://github.com/sponsors/juliangarnier" target="_blank" title="Discord"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <path fill="currentColor" d="M17.5446757,7.01094204 C16.5248898,6.54302092 15.4313236,6.19827727 14.2879321,6.00082826 C14.2671096,5.99701756 14.2463096,6.00654094 14.2355828,6.0255877 C14.0949406,6.27573079 13.9391547,6.60206318 13.8300617,6.85855894 C12.6002702,6.67444627 11.3767885,6.67444627 10.1722139,6.85855894 C10.0630984,6.59636177 9.90165617,6.27573079 9.76038294,6.0255877 C9.74965618,6.00717643 9.72885618,5.99765305 9.70803364,6.00082826 C8.56527311,6.19764628 7.47170693,6.54238994 6.45129006,7.01094204 C6.44245625,7.01475049 6.43488442,7.02110542 6.42985907,7.02935331 C4.35559433,10.1282603 3.78736652,13.1509982 4.06612009,16.1362601 C4.06738138,16.1508629 4.07557992,16.1648348 4.08693203,16.1737137 C5.45547262,17.178739 6.78113794,17.7888798 8.08218579,18.1932967 C8.10300833,18.1996516 8.1250703,18.1920347 8.138321,18.1748854 C8.44608438,17.7546038 8.72042803,17.3114488 8.95565056,16.8454207 C8.96953225,16.8181305 8.95628155,16.7857474 8.92790972,16.7749531 C8.4927548,16.6098827 8.07839988,16.4086207 7.67981961,16.1800686 C7.64829285,16.1616573 7.6457689,16.1165644 7.67477172,16.0949756 C7.75864777,16.0321249 7.84254636,15.9667277 7.9226365,15.9006996 C7.93712664,15.8886432 7.95731819,15.8860968 7.97435481,15.8937137 C10.5928562,17.0892291 13.4276955,17.0892291 16.0153011,15.8937137 C16.0323377,15.8854658 16.0525293,15.8880122 16.0676504,15.9000686 C16.1477631,15.9660968 16.2316391,16.0321249 16.3161462,16.0949756 C16.345149,16.1165644 16.343256,16.1616573 16.3117293,16.1800686 C15.913149,16.4130601 15.4987941,16.6098827 15.0630082,16.7743221 C15.0346363,16.7851165 15.0220166,16.8181305 15.0358983,16.8454207 C15.2761687,17.3107953 15.5505124,17.7539502 15.8525969,18.1742544 C15.8652166,18.1920347 15.8879096,18.1996516 15.9087321,18.1932967 C17.2160898,17.7888798 18.5417461,17.178739 19.9102869,16.1737137 C19.9222757,16.1648348 19.9298475,16.1514939 19.9311095,16.1368911 C20.2647207,12.6856011 19.3723264,9.68765183 17.5654757,7.02998429 C17.5610588,7.02110542 17.5535095,7.01475049 17.5446757,7.01094204 Z M9.34668154,14.3185475 C8.55833226,14.3185475 7.90875481,13.5947841 7.90875481,12.7059278 C7.90875481,11.8170715 8.54573508,11.0933081 9.34668154,11.0933081 C10.1539153,11.0933081 10.7972054,11.8234264 10.7845857,12.7059278 C10.7845857,13.5947841 10.1476055,14.3185475 9.34668154,14.3185475 Z M14.6631659,14.3185475 C13.8748392,14.3185475 13.2252617,13.5947841 13.2252617,12.7059278 C13.2252617,11.8170715 13.8622195,11.0933081 14.6631659,11.0933081 C15.4704222,11.0933081 16.1136898,11.8234264 16.1010926,12.7059278 C16.1010926,13.5947841 15.4704222,14.3185475 14.6631659,14.3185475 Z"/>
+</svg>
+<span>Discord</span></a></li> -->
+        <li>
+          <sponsor-button>
+          <button type="button" class="main-nav-link sponsor-button dorma-account" data-dorma-account="" aria-label="前往登录">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <path fill="currentColor" fill-rule="nonzero" d="M12 18.445a.778.778 0 0 1-.34-.078C11.39 18.235 5 15.077 5 9.889a3.889 3.889 0 0 1 6.638-2.75L12 7.5l.362-.361A3.889 3.889 0 0 1 19 9.889c0 5.17-6.387 8.344-6.66 8.478a.778.778 0 0 1-.34.078z"></path>
+  </g>
+</svg>
+            <span class="dorma-account-label"><span data-dorma-account-name="">未登录</span><span data-dorma-account-action="">前往登录</span></span>
+          </button>
+          </sponsor-button>
+        </li>
+      </ul>
+    </nav>
+    <button id="toggle-site-menu" class="ui-input trigger-pane" title="Toggle site menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="menu" fill="none" fill-rule="evenodd">
+    <rect id="Rectangle" width="16" height="1.75" x="4" y="8" fill="currentColor"></rect>
+    <rect id="Rectangle-Copy" width="16" height="1.75" x="4" y="14" fill="currentColor"></rect>
+  </g>
+</svg>
+</button>
+  </div>
+  </header>
+
+<div id="docs-nav">
+  <div id="docs-nav-menu" class="ui-group text-ui">
+    <button id="toggle-sidebar" class="ui-input" title="Toggle sidebar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="sidebar" fill="none" fill-rule="evenodd">
+    <path id="rectangle" fill="#FFFFFF" fill-rule="nonzero" d="M16.167 6.125H7.833A3.375 3.375 0 0 0 4.458 9.5v5a3.375 3.375 0 0 0 3.375 3.375h8.334a3.375 3.375 0 0 0 3.375-3.375v-5a3.375 3.375 0 0 0-3.375-3.375zm-8.334 1.75h8.334c.897 0 1.625.728 1.625 1.625v5c0 .897-.728 1.625-1.625 1.625H7.833A1.625 1.625 0 0 1 6.208 14.5v-5c0-.897.728-1.625 1.625-1.625z"></path>
+    <polyline id="Path-42" stroke="#FFFFFF" stroke-width="1.75" points="9.5 7.75 9.5 12 9.5 16.25" data-points="13.5 8.75 10.5 12 13.5 15.25"></polyline>
+  </g>
+</svg>
+<span>Documentation</span></button>
+    <div id="search-nav" class="ui-group">
+      <button id="toggle-search" class="ui-input" title="Search (⌘ + K)" disabled=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="search" fill="none" fill-rule="evenodd">
+    <path id="Shape" fill="#FFFFFF" fill-rule="nonzero" d="M12.5 5.625a5.875 5.875 0 1 1-3.489 10.602l-3.582 3.58-1.237-1.236 3.58-3.582A5.875 5.875 0 0 1 12.5 5.625zm0 1.75a4.125 4.125 0 0 0-3.336 6.551l.903.905A4.125 4.125 0 1 0 12.5 7.375z"></path>
+  </g>
+</svg>
+<span>搜索</span></button>
+      <div id="prev-next" class="ui-group">
+        <button id="prev-demo" class="ui-input" title="Previous demo" disabled=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="arrow-up" fill="none" fill-rule="evenodd">
+    <polygon id="Path" fill="#FFFFFF" fill-rule="nonzero" points="12 6.763 17.237 12 16 13.237 12.875 10.112 12.875 18 11.125 18 11.125 10.112 8 13.237 6.763 12"></polygon>
+  </g>
+</svg>
+</button>
+        <button id="next-demo" class="ui-input" title="Next demo" disabled=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="12 18 17.237 12.763 16 11.525 12.875 14.651 12.875 6.763 11.125 6.763 11.125 14.651 8 11.525 6.763 12.763"></polygon>
+  </g>
+</svg>
+</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main id="docs" class="layout-container ui-overlay">
+
+<!-- SIDEBAR -->
+
+  <aside id="docs-sidebar" class="sidebar"><nav class="sidebar-nav text-ui"><ul class="docs-nav-item is-active"><li class="docs-nav-item docs-group color-red" data-color="0"><a class="docs-link" data-id="getting-started" href="/workspace/dormManager/base-data" title="基础信息">基础信息</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-red" data-color="0"><a class="docs-link" data-id="animation-animatable-properties-css-properties" href="/workspace/dormManager/base-data/action-1" title="学生信息">学生信息</a></li><li class="docs-nav-item docs-action color-red" data-color="0"><a class="docs-link" data-id="animatable-animatable-methods-setters" href="/workspace/dormManager/base-data/action-2" title="房间信息">房间信息</a></li><li class="docs-nav-item docs-action color-red" data-color="0"><a class="docs-link" data-id="animation-animatable-properties-html-attributes" href="/workspace/dormManager/base-data/action-3" title="床位信息">床位信息</a></li></ul></li><li class="docs-nav-item docs-group color-corail" data-color="1"><a class="docs-link" data-id="timer" href="/workspace/dormManager/accommodation" title="住宿事务">住宿事务</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-corail" data-color="1"><a class="docs-link" data-id="animation-animatable-properties-css-transforms" href="/workspace/dormManager/accommodation/action-1" title="入住登记与分配">入住登记与分配</a></li><li class="docs-nav-item docs-action color-corail" data-color="1"><a class="docs-link" data-id="animation-animatable-properties-css-variables" href="/workspace/dormManager/accommodation/action-2" title="调宿审核">调宿审核</a></li><li class="docs-nav-item docs-action color-corail" data-color="1"><a class="docs-link" data-id="timer-timer-properties" href="/workspace/dormManager/accommodation/action-3" title="退宿登记">退宿登记</a></li></ul></li><li class="docs-nav-item docs-group color-orange" data-color="2"><a class="docs-link" data-id="animation" href="/workspace/dormManager/beds" title="床位状态">床位状态</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-orange" data-color="2"><a class="docs-link" data-id="timeline-add-animations" href="/workspace/dormManager/beds/action-1" title="床位总览">床位总览</a></li><li class="docs-nav-item docs-action color-orange" data-color="2"><a class="docs-link" data-id="animation-animatable-properties-javascript-object-properties" href="/workspace/dormManager/beds/action-2" title="状态更新">状态更新</a></li><li class="docs-nav-item docs-action color-orange" data-color="2"><a class="docs-link" data-id="timeline-timeline-properties" href="/workspace/dormManager/beds/action-3" title="异常校验">异常校验</a></li></ul></li><li class="docs-nav-item docs-group color-yellow" data-color="3"><a class="docs-link" data-id="timeline" href="/workspace/dormManager/repair-review" title="报修初审">报修初审</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-yellow" data-color="3"><a class="docs-link" data-id="animation-animation-playback-settings-reversed" href="/workspace/dormManager/repair-review/action-1" title="待初审工单">待初审工单</a></li><li class="docs-nav-item docs-action color-yellow" data-color="3"><a class="docs-link" data-id="animation-animatable-properties-svg-attributes" href="/workspace/dormManager/repair-review/action-2" title="上报维修">上报维修</a></li><li class="docs-nav-item docs-action color-yellow" data-color="3"><a class="docs-link" data-id="animation-animation-properties" href="/workspace/dormManager/repair-review/action-3" title="驳回报修">驳回报修</a></li></ul></li><li class="docs-nav-item docs-group color-citrus" data-color="4"><a class="docs-link" data-id="animatable" href="/workspace/dormManager/billing" title="账单核对">账单核对</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-citrus" data-color="4"><a class="docs-link" data-id="timer-timer-playback-settings-duration" href="/workspace/dormManager/billing/action-1" title="账单核对">账单核对</a></li><li class="docs-nav-item docs-action color-citrus" data-color="4"><a class="docs-link" data-id="animation-animation-callbacks-oncomplete" href="/workspace/dormManager/billing/action-2" title="欠费名单">欠费名单</a></li><li class="docs-nav-item docs-action color-citrus" data-color="4"><a class="docs-link" data-id="timeline-add-timers" href="/workspace/dormManager/billing/action-3" title="催缴记录">催缴记录</a></li></ul></li><li class="docs-nav-item docs-group color-lime" data-color="5"><a class="docs-link" data-id="draggable" href="/workspace/dormManager/personal" title="个人中心">个人中心</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-lime" data-color="5"><a class="docs-link" data-id="animation-animation-methods-refresh" href="/workspace/dormManager/personal/action-1" title="查看个人信息">查看个人信息</a></li><li class="docs-nav-item docs-action color-lime" data-color="5"><a class="docs-link" data-id="timer-timer-callbacks-onbegin" href="/workspace/dormManager/personal/action-2" title="修改个人信息">修改个人信息</a></li><li class="docs-nav-item docs-action color-lime" data-color="5"><a class="docs-link" data-id="timer-timer-callbacks-onupdate" href="/workspace/dormManager/personal/action-3" title="修改登录密码">修改登录密码</a></li></ul></li><li class="docs-nav-item docs-group color-green" data-color="6"><a class="docs-link" data-id="layout" href="/workspace/dormManager/notifications" title="个人消息">个人消息</a><ul class="docs-nav-item"><li class="docs-nav-item docs-action color-green" data-color="6"><a class="docs-link" data-id="timeline-timeline-methods-seek" href="/workspace/dormManager/notifications/action-1" title="消息通知">消息通知</a></li></ul></li></ul></nav></aside>
+
+<!-- !SIDEBAR -->
+
+<!-- INFOS -->
+
+  <article id="docs-info"><div class="docs-info is-active" data-color="0" data-id="docs">
+
+      <div class="docs-info-content formatted-text"><div class="docs-breadcrumb text-ui" data-color="0">
+          <p>
+            <a title="个人信息" href="/workspace/dormManager/personal">个人信息</a>
+
+                      </p>
+
+          <p>
+
+                      </p>
+        </div><h1 data-color="0"><a title="学生工作台" href="/workspace/dormManager">学生工作台</a></h1><p data-dorma-description="">查看个人信息，办理住宿、缴费与报修业务。</p><div data-dorma-business=""></div></div>
+
+                <h6 class="links-list-heading">功能模块</h6>
+        <ul class="links-list links-list-boxed" data-student-module-links=""><li><a class="text-ui color-red" data-color="0" data-id="getting-started" title="个人信息" href="/workspace/dormManager/personal">个人信息<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li><li><a class="text-ui color-corail" data-color="1" data-id="timer" title="住宿业务" href="/workspace/dormManager/accommodation">住宿业务<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li><li><a class="text-ui color-orange" data-color="2" data-id="animation" title="缴费管理" href="/workspace/dormManager/payment">缴费管理<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li><li><a class="text-ui color-yellow" data-color="3" data-id="timeline" title="报修服务" href="/workspace/dormManager/repair">报修服务<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li><li><a class="text-ui color-citrus" data-color="4" data-id="animatable" title="公告查看" href="/workspace/dormManager/announcements">公告查看<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li><li><a class="text-ui color-lime" data-color="5" data-id="draggable" title="个人消息" href="/workspace/dormManager/notifications">个人消息<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li></ul>
+                        <div class="prev-next-heading text-ui">
+          <h6 class="links-list-heading"></h6>
+          <h6 class="links-list-heading">下一个</h6>
+        </div>
+        <ul class="links-list links-list-boxed prev-next-links">
+          <li class="prev-link"><a class="text-ui color-red" data-color="0" data-id="docs" title="学生工作台" href="/workspace/dormManager"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="arrow-left" fill="none" fill-rule="evenodd">
+    <polygon id="Path" fill="#FFFFFF" fill-rule="nonzero" points="6.5 11.987 11.737 17.225 12.975 15.987 9.849 12.862 17.737 12.862 17.737 11.112 9.849 11.112 12.975 7.987 11.737 6.75"></polygon>
+  </g>
+</svg>学生工作台</a></li>
+          <li class="next-link"><a class="text-ui color-red" data-color="0" data-id="getting-started" title="个人信息" href="/workspace/dormManager/personal">个人信息<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g fill="none" fill-rule="evenodd">
+    <polygon fill="currentColor" fill-rule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"></polygon>
+  </g>
+</svg></a></li>
+        </ul>
+
+        <footer id="site-footer" class="layout-container text-ui" data-color="fg">
+  <div id="site-footer-content">
+    <div class="footer-row">
+      <div class="footer-block footer-block-sponsors">
+        <h6 class="links-list-heading">Sponsors</h6>
+        <div id="carbon-responsive" class="carbon-ad">
+
+</div>
+                  <ul class="links-list">
+                                          <li>  <a class="sponsor" href="https://github.com/sponsors/juliangarnier" target="_blank" title="Become a sponsor" data-url-params="" data-url-params-docs="">
+          <img src="/assets/student/media/pages/sponsors/platinum-sponsors/ef1c9c6c85-1787698629/sponsor-placeholder.svg" alt="Become a sponsor" width="100" height="100" loading="lazy">
+        <span>Become a sponsor</span>
+  </a>
+</li>
+                                    </ul>
+              </div>
+      <div class="footer-block footer-block-links">
+        <div class="footer-block">
+          <h6 class="links-list-heading">Site</h6>
+          <ul class="links-list">
+            <li><a href="/" target="_top" title="Documentation">Home</a></li>
+            <li><a href="https://animejs.com/documentation" target="_top" title="Documentation">Documentation</a></li>
+            <li><a href="https://animejs.com/easing-editor" target="_top" title="Easing functions editor">Easings editor</a></li>
+            <li><a href="https://animejs.com/learn" target="_top" title="Learn">Learn</a></li>
+          </ul>
+        </div>
+        <div class="footer-block">
+          <h6 class="links-list-heading">Socials</h6>
+          <ul class="links-list">
+            <li><a target="_blank" href="https://x.com/juliangarnier">X / Twitter</a></li>
+            <li><a target="_blank" href="https://bsky.app/profile/animejs.com">Bluesky</a></li>
+            <li><a target="_blank" href="https://github.com/juliangarnier/anime">GitHub</a></li>
+            <li><a target="_blank" href="https://codepen.io/collection/Poerqa">CodePen</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-row">
+      <div class="footer-block footer-logo-block">
+        <div class="heading-logo footer-logo">
+          <a href="/" target="_top">
+            <img src="/assets/student/assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118">
+            <span>Anime.js | JavaScript Animation Engine</span>
+          </a>
+        </div>
+        <div class="footer-copyright">
+          © 2026 <a href="https://juliangarnier.com" target="_blank">Julian Garnier</a>
+        </div>
+      </div>
+      <div class="footer-block">
+        <h6 class="links-list-heading">Stay in the loop</h6>
+        <email-signup url="https://buttondown.com/api/emails/embed-subscribe/juliangarnier?tag=footer" class="email-signup-form">
+          <form>
+  <div id="form-fields" class="email-signup-fields is-active">
+    <input class="email-signup-field email-signup-input" type="email" name="email" placeholder="Enter your email" required="">
+    <input class="email-signup-field email-signup-submit text-ui" type="submit" value="Subscribe">
+  </div>
+
+  <div id="success-message" class="email-signup-alert email-signup-success">
+    <p>Thanks! Check your inbox to confirm your subscription.</p>
+  </div>
+
+  <div id="error-message" class="email-signup-alert email-signup-error">
+    <p>Something went wrong. Please try again later or email me directly at <a href="mailto:julian@animejs.com">julian@animejs.com</a></p>
+  </div>
+</form>        </email-signup>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </div></article>
+
+<!-- !INFOS -->
+
+</main>
+
+<!-- SEARCH -->
+
+<div id="docs-search-container" class="ui-overlay">
+  <div id="docs-search-modal">
+    <div id="docs-search">
+      <div id="docs-search-bar" class="text-l">
+        <input id="docs-search-input" class="ui-input" placeholder="搜索宿管功能…" spellcheck="false" value="">
+        <button id="docs-close-search" class="ui-input" disabled="" title="Close search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="search" fill="none" fill-rule="evenodd">
+    <path id="Shape" fill="#FFFFFF" fill-rule="nonzero" d="M12.5 5.625a5.875 5.875 0 1 1-3.489 10.602l-3.582 3.58-1.237-1.236 3.58-3.582A5.875 5.875 0 0 1 12.5 5.625zm0 1.75a4.125 4.125 0 0 0-3.336 6.551l.903.905A4.125 4.125 0 1 0 12.5 7.375z"></path>
+  </g>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+  <g id="close" fill="none" fill-rule="evenodd">
+    <polygon id="Path" fill="#FFFFFF" points="16.331 6.307 17.568 7.544 13.237 11.875 17.568 16.206 16.331 17.443 12 13.112 7.669 17.443 6.432 16.206 10.763 11.875 6.432 7.544 7.669 6.307 12 10.638"></polygon>
+  </g>
+</svg>
+</button>
+      </div>
+      <div id="docs-search-results-container">
+        <div id="docs-search-results">
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- !SEARCH -->
+
+<!-- DEMOS -->
+
+<script>
+  window.demos = {};
+</script>
+
+<div id="docs-demos-container" class="layout-container">
+  <div id="docs-demos-scroll-container"></div>
+    <div id="docs-demos"></div>
+  </div>
+</div>
+
+<!-- !DEMOS -->
+
+<script type="module" src="/assets/manager/bridge.js"></script><script src="/assets/student/assets/js/docs.js?v=1787698626" type="module"></script>
+
+</body></html>
