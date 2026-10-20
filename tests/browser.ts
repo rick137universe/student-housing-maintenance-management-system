@@ -15,6 +15,7 @@ import {managerNotificationRegression} from './manager-notifications';
 import {managerAccommodationRegression} from './manager-accommodation';
 import {managerBedsRegression} from './manager-beds';
 import {managerRepairRegression} from './manager-repairs';
+import {authRedirectRegression} from './auth-redirect';
 
 export async function browserRegression(origin:string,password:string){
  await verifyLoginTemplate();
@@ -25,6 +26,7 @@ export async function browserRegression(origin:string,password:string){
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
  try{
+  await authRedirectRegression(browser,origin,password);
   for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
    const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
    await page.goto(origin);
@@ -148,7 +150,7 @@ export async function browserRegression(origin:string,password:string){
    await accountButton.click();await page.mouse.move(0,500);
    await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText('未登录');
    assert.equal((await page.request.get(origin+'/api/v1/auth/me')).status(),401);
-   await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await page.getByRole('heading',{name:'需要先登录。'}).waitFor();
+   await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await expect(page).toHaveURL(origin+'/login');await expect(page.locator('[data-dorma-login-frame]')).toBeVisible();
    await context.close();
   }
   // 首页在真实会话退出后的公共页面仍保持可访问。

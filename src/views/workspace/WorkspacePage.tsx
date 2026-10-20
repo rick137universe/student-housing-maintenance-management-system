@@ -3,7 +3,7 @@
 
 import { useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { redirect, useParams, usePathname, useRouter } from 'next/navigation';
 import { ArrowLeft, LogOut, Menu, ShieldAlert, X } from 'lucide-react';
 import { LiveWorkspace } from '@/components/workspace/LiveWorkspace';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -44,6 +44,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   }
 
   if (account === undefined) return null;
+  if (!account) redirect('/login');
 
   if (account?.role === 'student' && role === 'student' && !params.feature) {
     return <StudentDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
@@ -52,15 +53,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     return <ManagerDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady}/>;
   }
 
-  if (!account || !role || !feature) return <main className={s.denied}>
-    <ShieldAlert />
-    <p>DORMA / SESSION REQUIRED</p>
-    <h1>需要先登录。</h1>
-    <span>请登录系统账号，再进入对应功能。</span>
-    <Link href="/login">前往登录</Link>
-  </main>;
-
-  if (account.role !== role || !roleFeatures[account.role].some(item => item.id === feature.id)) return <main className={s.denied}>
+  if (!role || !feature || account.role !== role || !roleFeatures[account.role].some(item => item.id === feature.id)) return <main className={s.denied}>
     <ShieldAlert />
     <p>DORMA / ACCESS DENIED</p>
     <h1>当前身份无权访问。</h1>
