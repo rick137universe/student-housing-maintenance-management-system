@@ -54,7 +54,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
     const anchor=(event.target as Element).closest?.('a[href]');if(!anchor)return;
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=adminPages.find(entry=>entry.url===url.pathname);
-    if(entry&&['notifications','announcements'].includes(entry.feature)&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry&&(entry.feature==='notifications'&&entry.action!=='overview'||entry.feature==='announcements'&&entry.kind==='records'))void messages.load(announcementListPath(entry)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};

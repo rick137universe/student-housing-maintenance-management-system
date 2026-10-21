@@ -310,6 +310,30 @@ const entries = [
     "description": "发布公寓公告与服务信息，查看和维护已有公告。"
   },
   {
+    "feature": "announcements",
+    "group": "公告管理",
+    "color": 7,
+    "label": "发布公告",
+    "id": "getting-started-installation",
+    "action": "action-1/submit",
+    "url": "/workspace/admin/announcements/action-1/submit",
+    "description": "填写公告正文、发布范围和状态，确认后发布。",
+    "parent": "utilities-stagger-stagger-parameters-stagger-grid",
+    "kind": "submit"
+  },
+  {
+    "feature": "announcements",
+    "group": "公告管理",
+    "color": 7,
+    "label": "公告记录",
+    "id": "getting-started-module-imports",
+    "action": "action-1/records",
+    "url": "/workspace/admin/announcements/action-1/records",
+    "description": "查看公告正文，维护发布范围、到期时间与启用状态。",
+    "parent": "utilities-stagger-stagger-parameters-stagger-grid",
+    "kind": "records"
+  },
+  {
     "feature": "personal",
     "group": "个人中心",
     "color": 8,

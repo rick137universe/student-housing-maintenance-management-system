@@ -13,34 +13,41 @@ const notificationTemplate=await readFile('public/assets/student/pages/notificat
 const arrow=source.match(/<li class="next-link">[\s\S]*?(<svg[\s\S]*?<\/svg>)/)![1];
 const prevArrow=source.match(/<li class="prev-link">[\s\S]*?(<svg[\s\S]*?<\/svg>)/)![1];
 const link=(entry:typeof adminPages[number])=>`<a class="text-ui color-${palette[entry.color]}" data-id="${entry.id}" data-color="${entry.color}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}${arrow}</a>`;
-const routes=Object.fromEntries(adminPages.map(entry=>[entry.url,`/assets/admin/pages/${entry.feature}-${entry.action}.html`]));
+const pageFile=(entry:typeof adminPages[number])=>`pages/${entry.feature}-${entry.action.replaceAll('/','-')}.html`;
+const routes=Object.fromEntries(adminPages.map(entry=>[entry.url,`/assets/admin/${pageFile(entry)}`]));
 for(const [position,entry] of adminPages.entries()){
  if(['personal','notifications','announcements'].includes(entry.feature)&&entry.action!=='overview'){
-  const announcements=entry.feature==='announcements',notifications=entry.feature==='notifications'||announcements,sourceFeature=notifications?'notifications':'personal';
-  let result=(notifications?notificationTemplate:personalTemplates[entry.action]).replaceAll('/workspace/student/'+sourceFeature+'/'+entry.action,entry.url)
+  const announcements=entry.feature==='announcements',notifications=entry.feature==='notifications'||announcements,sourceFeature=notifications?'notifications':'personal',sourceAction=notifications?'action-1':entry.action;
+  let result=(notifications?notificationTemplate:personalTemplates[entry.action]).replaceAll('/workspace/student/'+sourceFeature+'/'+sourceAction,entry.url)
    .replaceAll('/workspace/student/'+sourceFeature,'/workspace/admin/'+sourceFeature).replaceAll('学生工作台','管理员工作台')
    .replaceAll(`data-color="${notifications?5:0}"`,`data-color="${entry.color}"`)
    .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)
    .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`)
    .replaceAll('title="个人信息"','title="个人中心"').replaceAll('>个人信息</a>','>个人中心</a>');
   if(announcements)result=result.replaceAll('消息通知',entry.label).replaceAll('个人消息',entry.group).replaceAll('/workspace/admin/notifications','/workspace/admin/announcements');
-  for(const [direction,neighbor] of [['prev',adminPages[position-1]],['next',adminPages[position+1]]] as const){
+  if(entry.parent){const parent=adminPages.find(page=>page.id===entry.parent)!;result=result.replace(/(<a title="公告管理"[^>]*>公告管理<\/a>)/,`$1 <span class="docs-breadcrumb-arrow">&#xE0B1;</span> <a title="${html(parent.label)}" href="${parent.url}">${html(parent.label)}</a>`);}
+  for(const [direction,neighbor] of [['prev',entry.parent?adminPages.find(page=>page.id===entry.parent):adminPages[position-1]],['next',adminPages[position+1]]] as const){
    const anchor=neighbor?`<a class="text-ui color-${palette[neighbor.color]}" data-color="${neighbor.color}" data-id="${neighbor.id}" href="${neighbor.url}" title="${html(neighbor.label)}">${direction==='prev'?prevArrow+html(neighbor.label):html(neighbor.label)+arrow}</a>`:'';
    result=result.replace(new RegExp(`<li class="${direction}-link">[\\s\\S]*?</li>`),`<li class="${direction}-link">${anchor}</li>`);
   }
-  await writeFile(root+`pages/${entry.feature}-${entry.action}.html`,result);continue;
+  if(announcements)result=result.replace(/<div class="prev-next-heading text-ui">[\s\S]*?<\/div>/,`<div class="prev-next-heading text-ui"><h6 class="links-list-heading">${entry.parent||adminPages[position-1]?'上一个':''}</h6><h6 class="links-list-heading">${adminPages[position+1]?'下一个':''}</h6></div>`);
+  await writeFile(root+pageFile(entry),result);continue;
  }
  const result=source.replace(/<title>[\s\S]*?<\/title>/,`<title>${html(entry.label)} · 管理员工作台</title>`)
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`);
  const start=result.indexOf('<div class="docs-info-content'),end=result.indexOf('<footer id="site-footer"',start);
- const children=adminPages.filter(child=>entry.feature==='overview'?child.action==='overview'&&child.feature!=='overview':child.feature===entry.feature&&child.action!=='overview');
+ const children=adminPages.filter(child=>entry.feature==='overview'?child.action==='overview'&&child.feature!=='overview':child.feature===entry.feature&&child.action!=='overview'&&!child.parent);
  const header=`<div class="docs-info-content formatted-text"${entry.action==='overview'?'':' hidden'}><h1 data-color="${entry.color}"><a href="${entry.url}">${html(entry.label)}</a></h1><p data-dorma-description="">${html(entry.description)}</p></div>`;
  const content=entry.action==='overview'?`<h6 class="links-list-heading">${entry.feature==='overview'?'功能模块':'本模块功能'}</h6><ul class="links-list links-list-boxed">${children.map(child=>'<li>'+link(child)+'</li>').join('')}</ul>`:'<div data-dorma-business=""></div>';
  const previous=adminPages[position-1],next=adminPages[position+1];
  const navigation=`<div class="prev-next-heading text-ui"><h6 class="links-list-heading">${previous?'上一个':''}</h6><h6 class="links-list-heading">${next?'下一个':''}</h6></div><ul class="links-list links-list-boxed prev-next-links"><li class="prev-link">${previous?link(previous).replace(arrow,'').replace('>'+html(previous.label), '>'+prevArrow+html(previous.label)):''}</li><li class="next-link">${next?link(next):''}</li></ul>`;
  await writeFile(root+`pages/${entry.feature}-${entry.action}.html`,result.slice(0,start)+header+content+navigation+result.slice(end));
 }
-const sidebar=adminPages.filter(entry=>entry.action==='overview'&&entry.feature!=='overview').map(group=>`<li class="docs-nav-item docs-group color-${palette[group.color]}" data-color="${group.color}"><a class="docs-link" data-id="${group.id}" href="${group.url}" title="${html(group.label)}">${html(group.label)}</a><ul class="docs-nav-item">${adminPages.filter(entry=>entry.feature===group.feature&&entry.action!=='overview').map(entry=>`<li class="docs-nav-item docs-action color-${palette[entry.color]}" data-color="${entry.color}"><a class="docs-link" data-id="${entry.id}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}</a></li>`).join('')}</ul></li>`).join('');
+const sidebarItem=(entry:typeof adminPages[number]):string=>{
+ const children=adminPages.filter(page=>page.parent===entry.id);
+ return `<li class="docs-nav-item docs-action color-${palette[entry.color]}" data-color="${entry.color}"><a class="docs-link" data-id="${entry.id}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}</a>${children.length?'<ul class="docs-nav-item">'+children.map(sidebarItem).join('')+'</ul>':''}</li>`;
+};
+const sidebar=adminPages.filter(entry=>entry.action==='overview'&&entry.feature!=='overview').map(group=>`<li class="docs-nav-item docs-group color-${palette[group.color]}" data-color="${group.color}"><a class="docs-link" data-id="${group.id}" href="${group.url}" title="${html(group.label)}">${html(group.label)}</a><ul class="docs-nav-item">${adminPages.filter(entry=>entry.feature===group.feature&&entry.action!=='overview'&&!entry.parent).map(sidebarItem).join('')}</ul></li>`).join('');
 let shell=index.replace(/<title>[^<]*<\/title>/,'<title>管理员工作台</title>')
  .replace(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/,`<aside id="docs-sidebar" class="sidebar"><nav class="sidebar-nav text-ui"><ul class="docs-nav-item is-active">${sidebar}</ul></nav></aside>`)
  .replaceAll('/workspace/student','/workspace/admin')

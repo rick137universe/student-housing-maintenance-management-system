@@ -13,6 +13,7 @@ import { StudentDocsPage } from './StudentDocsPage';
 import {studentPages} from '@/data/student-pages';
 import {ManagerDocsPage} from './ManagerDocsPage';
 import {MaintenanceDocsPage} from './MaintenanceDocsPage';
+import {adminPages} from '@/data/admin-pages';
 import {AdminDocsPage} from './AdminDocsPage';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
@@ -74,5 +75,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   if(role==='maintenance')return <MaintenanceDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 
-  return <AdminDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
+  const nestedAction=pathname.split('/').slice(4).join('/');
+  const adminAction=adminPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
+  return <AdminDocsPage account={account} featureId={feature.id} actionId={actionId?adminAction??action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 }

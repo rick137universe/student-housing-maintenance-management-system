@@ -2,7 +2,7 @@
 
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent,type RefObject} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
-import type {AdminPage} from '@/data/admin-pages';
+import {adminPages,type AdminPage} from '@/data/admin-pages';
 import type {StudentRow} from '@/utils/student-record-data';
 import {announcementListPath,type StudentAnnouncementData} from '@/utils/student-announcement-data';
 import {api} from '@/utils/auth-session';
@@ -16,16 +16,27 @@ function localDate(value:unknown){return value?date(value).slice(0,16).replace('
 const theme='turquoise';
 
 export function AdminAnnouncementPage({entry,data}:{entry:AdminPage;data:StudentAnnouncementData}){
- const params=useSearchParams(),router=useRouter(),record=params.get('record'),mode=params.get('mode'),requestedPage=Number(params.get('page')??1);
+ const root=useRef<HTMLDivElement>(null),params=useSearchParams(),router=useRouter(),record=entry.kind==='submit'?null:params.get('record'),mode=params.get('mode'),requestedPage=Number(params.get('page')??1);
  const page=Number.isSafeInteger(requestedPage)&&requestedPage>0&&requestedPage<=100000?requestedPage:1;
- const navigate=useCallback((url:string)=>router.push(url,{scroll:false}),[router]);
- return <AnnouncementContent key={[entry.id,record,mode,page].join(':')} entry={entry} data={data} record={record} mode={mode} page={page} navigate={navigate}/>;
+ const navigate=useCallback((url:string)=>{
+  const target=adminPages.find(page=>page.url===url.split('?')[0]);
+  if(target&&target.id!==entry.id){root.current?.ownerDocument.querySelector<HTMLAnchorElement>(`#docs-sidebar a[data-id="${target.id}"]`)?.click();return;}
+  router.push(url,{scroll:false});
+ },[router,entry.id]);
+ return <div ref={root}>{entry.action==='action-1'?<AnnouncementNavigation entry={entry}/>:<AnnouncementContent key={[entry.id,record,mode,page].join(':')} entry={entry} data={data} record={record} mode={mode} page={page} navigate={navigate}/>}</div>;
+}
+
+function AnnouncementNavigation({entry}:{entry:AdminPage}){
+ const root=useRef<HTMLDivElement>(null);
+ useLayoutEffect(()=>{const doc=root.current!.ownerDocument;doc.scrollingElement?.scrollTo({top:0,behavior:'instant'});doc.dispatchEvent(new CustomEvent('dorma-admin-content-change',{detail:{key:'page'}}));},[]);
+ return <div ref={root} className="docs-info-content" data-dorma-live-workspace><h6 className="links-list-heading">本页功能</h6><ul className="links-list links-list-boxed" data-dorma-admin-announcement-navigation>{adminPages.filter(page=>page.parent===entry.id).map(page=><li key={page.id}><a className={'text-ui color-'+theme} data-color={page.color} data-id={page.id} href={page.url} title={page.label}>{page.label}<RepairArrow/></a></li>)}</ul></div>;
 }
 
 function AnnouncementContent({entry,data,record,mode,page,navigate}:{entry:AdminPage;data:StudentAnnouncementData;record:string|null;mode:string|null;page:number;navigate:(url:string)=>void}){
  const root=useRef<HTMLDivElement>(null),request=useRef({version:0}),submitAction=useRef<()=>Promise<void>>(async()=>{}),submitLink=useRef<HTMLAnchorElement|null>(null);
- const publish=mode==='publish'&&record===null,editing=mode==='edit'&&record!==null,form=publish||editing;
- const listUrl=entry.url+(page>1?'?page='+page:''),publishUrl=listUrl+(page>1?'&':'?')+'mode=publish';
+ const parent=adminPages.find(page=>page.id===entry.parent)!,records=adminPages.find(page=>page.parent===parent.id&&page.kind==='records')!,submission=adminPages.find(page=>page.parent===parent.id&&page.kind==='submit')!;
+ const publish=entry.kind==='submit',editing=mode==='edit'&&record!==null,form=publish||editing;
+ const listUrl=records.url+(page>1?'?page='+page:''),publishUrl=submission.url;
  const detailUrl=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(record??''),editUrl=detailUrl+'&mode=edit';
  const path=record===null?announcementListPath(entry,page):'announcements/'+record;
  const [result,setResult]=useState(()=>data.peek(path)),[loading,setLoading]=useState(!publish),[error,setError]=useState(''),[disabled,setDisabled]=useState(form);
@@ -66,12 +77,12 @@ function AnnouncementContent({entry,data,record,mode,page,navigate}:{entry:Admin
    anchor.addEventListener('click',click);handlers.push(()=>anchor.removeEventListener('click',click));
   };
   function crumb(label:string,target:string){const arrow=doc.createElement('span'),back=doc.createElement('a');arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.textContent=label;back.title=label;back.href=target;route(back,target);crumbs.querySelector('p')!.append(' ',arrow,' ',back);}
-  if(form||record!==null)crumb(entry.label,listUrl);
+  if(record!==null)crumb(entry.label,listUrl);
   if(editing&&detail)crumb(String(detail.title),detailUrl);
   breadcrumb.replaceWith(crumbs);
   const oldPrevious=info.querySelector('.prev-link')!,oldNext=info.querySelector('.next-link')!,nextHeading=info.querySelector('.prev-next-heading')!.children[1],savedNext=nextHeading.textContent;
   const previous=oldPrevious.cloneNode(true) as HTMLElement,next=doc.createElement('li');next.className='next-link';
-  if(form||record!==null){const back=previous.querySelector('a')!;back.removeAttribute('data-id');back.className='text-ui color-'+theme;back.dataset.color=String(entry.color);back.href=editing?detailUrl:listUrl;back.title=editing?'公告详情':entry.label;for(const node of [...back.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();back.append(editing?'公告详情':entry.label);route(back,back.getAttribute('href')!);}
+  if(form||record!==null){const back=previous.querySelector('a')!;back.removeAttribute('data-id');back.className='text-ui color-'+theme;back.dataset.color=String(entry.color);back.href=editing?detailUrl:publish?parent.url:listUrl;back.title=editing?'公告详情':publish?parent.label:entry.label;for(const node of [...back.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();back.append(editing?'公告详情':publish?parent.label:entry.label);route(back,back.getAttribute('href')!);}
   const label=form?(publish?'发布公告':'保存修改'):record!==null?'编辑公告':'发布公告';
   if(record===null||detail){
    const button=doc.createElement('a');button.className='text-ui color-'+theme;button.dataset.color=String(entry.color);button.title=label;button.textContent=label;button.href=form?url:record!==null?editUrl:publishUrl;
@@ -86,17 +97,16 @@ function AnnouncementContent({entry,data,record,mode,page,navigate}:{entry:Admin
   }
   nextHeading.textContent=next.children.length?'下一个':'';oldPrevious.replaceWith(previous);oldNext.replaceWith(next);
   return()=>{handlers.forEach(cleanup=>cleanup());heading.removeEventListener('click',stay);submitLink.current=null;if(info.isConnected){previous.replaceWith(oldPrevious);next.replaceWith(oldNext);nextHeading.textContent=savedNext;crumbs.replaceWith(breadcrumb);heading.textContent=saved.text;heading.href=saved.href;heading.title=saved.title;description.textContent=saved.description;description.hidden=saved.hidden;doc.querySelector('title')!.textContent=saved.documentTitle;}};
- },[entry.color,entry.label,title,listUrl,publishUrl,detailUrl,editUrl,publish,editing,form,record,detail,navigate]);
+ },[entry.color,entry.label,title,listUrl,publishUrl,detailUrl,editUrl,publish,editing,form,record,detail,navigate,parent.label,parent.url]);
  useLayoutEffect(()=>{submitLink.current?.setAttribute('aria-disabled',String(disabled));submitLink.current?.setAttribute('aria-busy',String(disabled));},[disabled,title,detail]);
  function link(url:string,event:MouseEvent<HTMLAnchorElement>){event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(url);}
  const paragraphs=detail?String(detail.content??'').replace(/\r\n?/g,'\n').split(/\n\s*\n/).filter(paragraph=>paragraph.trim()):[];
  return <div ref={root} className={record===null&&!publish?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-admin-announcements aria-busy={loading}>
   {error&&<StudentWarning>{error}</StudentWarning>}
-  {publish||editing&&detail?<AnnouncementEditor entry={entry} row={editing?detail:null} data={data} submitAction={submitAction} onDisabled={setDisabled} onSaved={id=>navigate(listUrl+(page>1?'&':'?')+'record='+id)}/>:result&&(record===null?<>
-   <ul className="links-list links-list-boxed"><li><a className={'text-ui color-'+theme} data-color={entry.color} href={publishUrl} target="_top" onClick={event=>link(publishUrl,event)}>发布公告<RepairArrow/></a></li></ul>
-   <h6 className="links-list-heading">公告记录</h6><ul className="links-list links-list-boxed" data-dorma-admin-announcement-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+row.announcement_id;return <li key={String(row.announcement_id)}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onClick={event=>link(url,event)}>{String(row.title)}<RepairArrow/></a></li>;})}</ul>
+  {publish||editing&&detail?<AnnouncementEditor entry={entry} row={editing?detail:null} data={data} submitAction={submitAction} onDisabled={setDisabled} onSaved={id=>navigate(publish?records.url:listUrl+(page>1?'&':'?')+'record='+id)}/>:result&&(record===null?<>
+   <ul className="links-list links-list-boxed" data-dorma-admin-announcement-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+row.announcement_id;return <li key={String(row.announcement_id)}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onClick={event=>link(url,event)}>{String(row.title)}<RepairArrow/></a></li>;})}</ul>
    {!rows.length&&<StudentEmptyState/>}
-   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(records.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(records.url+'?page='+(page+1))}>下一页</button></div></>}
   </>:!editing&&detail&&<div data-dorma-admin-announcement-body>
    <p><code>{date(detail.published_at)}</code>{' '}<code>{String(detail.announcement_type)}</code>{' '}<code>{detail.enabled?'已启用':'已停用'}</code></p>
    <p>发布范围：<code>{detail.building_id?String(detail.building_id):'全部楼栋'}</code>{Boolean(detail.expires_at)&&<> 到期时间：<code>{date(detail.expires_at)}</code></>}</p>

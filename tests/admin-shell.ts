@@ -8,11 +8,11 @@ import {expectStudentReveal} from './student-transitions';
 export async function verifyAdminShell(){
  const index=await readFile('public/assets/admin/index.html','utf8'),sidebar=index.match(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/)![0];
  assert.equal(new Set(adminPages.map(entry=>entry.id)).size,adminPages.length);assert.equal(adminPages.filter(entry=>entry.action==='overview'&&entry.feature!=='overview').length,10);
- assert.equal(adminPages.filter(entry=>entry.action!=='overview').length,roleFeatures.admin.flatMap(group=>group.actions).length);
+ assert.equal(adminPages.filter(entry=>entry.action!=='overview'&&!entry.parent).length,roleFeatures.admin.flatMap(group=>group.actions).length);
  assert(!/<a\b[^>]*\bdata-color=/.test(sidebar),'未选中的导航保持母版默认颜色');
  for(const resource of ['css/core.css','css/docs.css','js/docs.js'])assert(index.includes('/assets/student/assets/'+resource));
  const demos=await readFile('public/assets/admin/demos.html','utf8');
- for(const entry of adminPages){const page=await readFile(`public/assets/admin/pages/${entry.feature}-${entry.action}.html`,'utf8');assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));if(entry.feature!=='overview')assert(sidebar.includes(`href="${entry.url}"`));assert.equal(page.includes('data-dorma-business'),entry.action!=='overview');}
+ for(const entry of adminPages){const page=await readFile(`public/assets/admin/pages/${entry.feature}-${entry.action.replaceAll('/','-')}.html`,'utf8');assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));if(entry.feature!=='overview')assert(sidebar.includes(`href="${entry.url}"`));assert.equal(page.includes('data-dorma-business'),entry.action!=='overview');}
 }
 
 export async function adminShellRegression(browser:Browser,origin:string,password:string){
@@ -50,6 +50,6 @@ export async function adminShellRegression(browser:Browser,origin:string,passwor
   await expect.poll(()=>frame.locator('#docs-sidebar').evaluate(el=>el.getBoundingClientRect().right)).toBeLessThanOrEqual(0.5);
   assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);assert.equal(await page.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);await page.screenshot({path:'docs/qa/backend/admin-shell-mobile.png'});
   await frame.locator('#toggle-site-menu').click();await frame.locator('#site-menu a[data-id="docs"]').click();await ready(adminPages[0]);await frame.locator('#toggle-site-menu').click();await frame.locator('[data-dorma-account]').click();await expect(page).toHaveURL(origin+'/');assert.equal((await context.request.get(origin+'/api/v1/auth/me')).status(),401);
-  assert.deepEqual(errors,[]);console.log('管理员外壳通过：10 组目录/26 个业务入口、顶部菜单搜索/双栏预览/渐显、根首页/历史/刷新、原有详情/规则弹窗/真实资料保存/CSV导出、手机菜单、单滚动条和退出。');
+  assert.deepEqual(errors,[]);console.log('管理员外壳通过：10 组目录/26 个主入口及公告三级目录、顶部菜单搜索/双栏预览/渐显、根首页/历史/刷新、原有详情/规则弹窗/真实资料保存/CSV导出、手机菜单、单滚动条和退出。');
  }finally{await context.close();}
 }
