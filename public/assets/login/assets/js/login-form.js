@@ -5,7 +5,7 @@ const button = document.querySelector('button');
 const buttonLabel = button.querySelector('.button-label');
 const error = document.querySelector('#login-error');
 let pending = false;
-const resize = () => parent.postMessage({ type: 'dorma-login-size', height: Math.ceil(form.getBoundingClientRect().height + 40) }, location.origin);
+const resize = () => parent.postMessage({ type: 'dorma-login-size', height: Math.ceil(form.getBoundingClientRect().height) }, location.origin);
 new ResizeObserver(resize).observe(form);
 const update = () => { button.disabled = pending || !form.checkValidity(); };
 form.addEventListener('input', update);

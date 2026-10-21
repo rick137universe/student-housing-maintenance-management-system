@@ -1,0 +1,14 @@
+/* Keep the native login layout and animation, with the form as its only card. */
+#learn-animejs {
+  width: 100%;
+}
+#learn-header .learn-email-signup {
+  margin-top: var(--margin-l);
+  margin-bottom: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.learn-email-signup .signup-iframe {
+  display: block;
+}
