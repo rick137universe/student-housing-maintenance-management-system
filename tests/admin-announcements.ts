@@ -17,6 +17,14 @@ export async function adminAnnouncementRegression(browser:Browser,origin:string,
  }
  const list=frame.locator('[data-dorma-admin-announcement-list]'),body=frame.locator('[data-dorma-admin-announcement-body]'),editor=frame.locator('[data-dorma-admin-announcement-editor]');
  const previous=frame.locator('#docs-info .prev-link a'),next=frame.locator('#docs-info .next-link a');
+ async function navigationStyle(){
+  await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await frame.locator('html').evaluate(el=>el.ownerDocument.fonts.ready);
+  return frame.locator('[data-dorma-admin-announcement-navigation]').evaluate(list=>({
+   list:((style)=>({paddingLeft:style.paddingLeft,paddingRight:style.paddingRight,marginTop:style.marginTop,marginBottom:style.marginBottom}))(getComputedStyle(list)),
+   buttons:[...list.querySelectorAll('a')].map(button=>{const style=getComputedStyle(button);return {display:style.display,fontSize:style.fontSize,fontFamily:style.fontFamily,lineHeight:style.lineHeight,padding:style.padding,textDecoration:style.textDecorationLine,height:Math.round(button.getBoundingClientRect().height*100)/100};}),
+  }));
+ }
+
  async function field(key:string,value:string,select=false){
   const section=editor.locator(`[data-profile-field="${key}"]`);await section.locator('.code-edit-button').click();
   const input=section.locator('input,textarea,select');await expect(input).toHaveCSS('outline-style','none');
@@ -28,12 +36,16 @@ export async function adminAnnouncementRegression(browser:Browser,origin:string,
   const suffix=Date.now(),content='第一段第一行\n第一段第二行\n\n第二段 <script>window.announcementUnsafe=true</script>';
   for(let index=0;index<21;index++)await call('announcements',{title:'管理公告 '+suffix+' '+index,content,type:'公寓通知',buildingId:null,expiresAt:null,enabled:true});
   const rows=await call('announcements?limit=100') as Row[],first=rows[0],id=String(first.announcement_id),detail=origin+base+'?record='+id;
-  await page.goto(origin+parent);
+  await page.goto(origin+'/workspace/admin/personal/action-1');await expect(frame.locator('[data-dorma-profile]')).toBeVisible();
+  await frame.locator('#docs-sidebar a[title="公告管理"]').click();await frame.locator('#docs-sidebar a[href="'+parent+'"]').click();await expect(page).toHaveURL(origin+parent);
   const navigation=frame.locator('[data-dorma-admin-announcement-navigation]');await expect(navigation.locator('a')).toHaveText(['发布公告','公告记录']);await expect(list).toHaveCount(0);await expect(editor).toHaveCount(0);await expect(next).toHaveAttribute('href',publishUrl);
   const third=frame.locator('#docs-sidebar a[href="'+parent+'"]').locator('..').locator(':scope > ul > li');await expect(third.locator('a')).toHaveText(['发布公告','公告记录']);await expect(third.filter({has:frame.locator('.is-active')})).toHaveCount(0);
-  await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/admin-announcement-navigation.png'});
+  const switchedStyle=await navigationStyle();await page.screenshot({path:'docs/qa/backend/admin-announcement-navigation-switch.png'});
+  await page.reload();await expect(navigation.locator('a')).toHaveText(['发布公告','公告记录']);const refreshedStyle=await navigationStyle();assert.deepEqual(switchedStyle,refreshedStyle,'切换和刷新后的导航字号、下划线、内边距及按钮高度应一致');
+  for(const button of refreshedStyle.buttons){assert.equal(button.textDecoration,'none');assert.equal(button.display,'flex');}
+  await page.screenshot({path:'docs/qa/backend/admin-announcement-navigation.png'});
   await expectStudentReveal(page,()=>next.click(),'发布公告',selector);await expect(page).toHaveURL(origin+publishUrl);await expect(previous).toHaveAttribute('href',parent);await expect(next).toHaveText('发布公告');await expect(editor).toBeVisible();
-  await previous.click();await expect(page).toHaveURL(origin+parent);await expect(navigation).toBeVisible();await navigation.getByRole('link',{name:'公告记录',exact:true}).click();await expect(page).toHaveURL(origin+base);await expect(previous).toHaveAttribute('href',parent);
+  await previous.click();await expect(page).toHaveURL(origin+parent);await expect(navigation).toBeVisible();assert.deepEqual(await navigationStyle(),refreshedStyle);await navigation.getByRole('link',{name:'公告记录',exact:true}).click();await expect(page).toHaveURL(origin+base);await expect(previous).toHaveAttribute('href',parent);
   await expect(list.locator('a')).toHaveText(rows.slice(0,20).map(row=>String(row.title)));
   await expect(frame.locator('[data-dorma-admin-business-host],dialog,[data-dorma-admin-announcements] table,[data-dorma-admin-announcements] input')).toHaveCount(0);
   await expect(frame.getByText('正在读取…',{exact:true})).toHaveCount(0);await expect(list.locator('a').first()).toHaveClass(/color-turquoise/);

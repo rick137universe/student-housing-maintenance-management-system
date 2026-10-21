@@ -28,7 +28,14 @@ export function AdminAnnouncementPage({entry,data}:{entry:AdminPage;data:Student
 
 function AnnouncementNavigation({entry}:{entry:AdminPage}){
  const root=useRef<HTMLDivElement>(null);
- useLayoutEffect(()=>{const doc=root.current!.ownerDocument;doc.scrollingElement?.scrollTo({top:0,behavior:'instant'});doc.dispatchEvent(new CustomEvent('dorma-admin-content-change',{detail:{key:'page'}}));},[]);
+ useLayoutEffect(()=>{
+  const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,business=root.current!.closest('[data-dorma-business]')!;
+  const content=info.querySelector('.docs-info-content.formatted-text')!,parent=business.parentNode!,sibling=business.nextSibling;
+  // Keep navigation outside prose styling on both initial loads and Docs page switches.
+  content.after(business);
+  doc.scrollingElement?.scrollTo({top:0,behavior:'instant'});doc.dispatchEvent(new CustomEvent('dorma-admin-content-change',{detail:{key:'page'}}));
+  return()=>{if(info.isConnected)parent.insertBefore(business,sibling?.parentNode===parent?sibling:null);};
+ },[]);
  return <div ref={root} className="docs-info-content" data-dorma-live-workspace><h6 className="links-list-heading">本页功能</h6><ul className="links-list links-list-boxed" data-dorma-admin-announcement-navigation>{adminPages.filter(page=>page.parent===entry.id).map(page=><li key={page.id}><a className={'text-ui color-'+theme} data-color={page.color} data-id={page.id} href={page.url} title={page.label}>{page.label}<RepairArrow/></a></li>)}</ul></div>;
 }
 
