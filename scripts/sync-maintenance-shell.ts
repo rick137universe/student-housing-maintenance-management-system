@@ -15,15 +15,15 @@ const prevArrow=source.match(/<li class="prev-link">[\s\S]*?(<svg[\s\S]*?<\/svg>
 const link=(entry:typeof maintenancePages[number])=>`<a class="text-ui color-${palette[entry.color]}" data-id="${entry.id}" data-color="${entry.color}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}${arrow}</a>`;
 const routes=Object.fromEntries(maintenancePages.map(entry=>[entry.url,`/assets/maintenance/pages/${entry.feature}-${entry.action}.html`]));
 for(const [position,entry] of maintenancePages.entries()){
- if(['personal','notifications','records'].includes(entry.feature)&&entry.action!=='overview'){
-  const notifications=entry.feature==='notifications',records=entry.feature==='records',sourceFeature=notifications?'notifications':'personal',sourceAction=records?'action-1':entry.action;
+ if(['personal','notifications','records','orders'].includes(entry.feature)&&entry.action!=='overview'){
+  const notifications=entry.feature==='notifications',business=['records','orders'].includes(entry.feature),sourceFeature=notifications?'notifications':'personal',sourceAction=business?'action-1':entry.action;
   let result=(notifications?notificationTemplate:personalTemplates[sourceAction]).replaceAll('/workspace/student/'+sourceFeature+'/'+sourceAction,entry.url)
    .replaceAll('/workspace/student/'+sourceFeature,'/workspace/maintenance/'+entry.feature).replaceAll('学生工作台','维修工作台')
    .replaceAll(`data-color="${notifications?5:0}"`,`data-color="${entry.color}"`)
    .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)
    .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`);
   if(entry.feature==='personal')result=result.replaceAll('title="个人信息"','title="个人中心"').replaceAll('>个人信息</a>','>个人中心</a>');
-  if(records)result=result.replaceAll('查看个人信息',entry.label).replaceAll('title="个人信息"','title="维修记录"').replaceAll('>个人信息</a>','>维修记录</a>');
+  if(business)result=result.replaceAll('查看个人信息',entry.label).replaceAll('title="个人信息"',`title="${entry.group}"`).replaceAll('>个人信息</a>',`>${entry.group}</a>`);
   for(const [direction,neighbor] of [['prev',maintenancePages[position-1]],['next',maintenancePages[position+1]]] as const){
    const anchor=neighbor?`<a class="text-ui color-${palette[neighbor.color]}" data-color="${neighbor.color}" data-id="${neighbor.id}" href="${neighbor.url}" title="${html(neighbor.label)}">${direction==='prev'?prevArrow+html(neighbor.label):html(neighbor.label)+arrow}</a>`:'';
    result=result.replace(new RegExp(`<li class="${direction}-link">[\\s\\S]*?</li>`),`<li class="${direction}-link">${anchor}</li>`);

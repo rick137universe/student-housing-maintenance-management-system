@@ -50,10 +50,11 @@ export async function maintenanceShellRegression(browser:Browser,origin:string,p
   await frame.locator('#toggle-search').click();await frame.locator('#docs-search-input').fill('确认接单');await frame.locator('#docs-search-results a').first().click();
   const intake=maintenancePages.find(entry=>entry.label==='确认接单')!;await ready(intake);
   await page.goBack();await ready(maintenancePages.find(entry=>entry.label==='消息通知')!);await page.goForward();await ready(intake);await page.reload();await ready(intake);
-  const row=frame.locator('[data-dorma-live-workspace] tbody tr').filter({has:frame.getByRole('button',{name:'确认接单',exact:true})}).first();
+  const row=frame.locator('[data-dorma-maintenance-order-list] a').first();
   if(await row.count()){
-   const id=(await row.locator('td').first().innerText()).trim();await row.getByRole('button',{name:'详情',exact:true}).click();await expect(frame.getByRole('heading',{name:'记录详情',exact:true})).toBeVisible();await frame.getByRole('button',{name:'关闭详情',exact:true}).click();
-   await row.getByRole('button',{name:'确认接单',exact:true}).click();await expect(frame.getByRole('status')).toHaveText('操作已保存。');
+   const id=new URL((await row.getAttribute('href'))!,origin).searchParams.get('record')!;await row.click();await expect(frame.getByRole('heading',{name:'维修工单详情',exact:true})).toBeVisible();
+   await frame.getByRole('button',{name:'确认接单',exact:true}).click();await expect(frame.locator('#docs-info .next-link a')).toHaveCount(0);
+   await expect(frame.getByRole('heading',{name:'工单状态',exact:true}).locator('+ pre code')).toHaveText('已接单');await expect(frame.getByText('操作已保存。',{exact:true})).toHaveCount(0);
    const repair=await context.request.get(origin+'/api/v1/repairs/'+id);assert.equal((await repair.json()).data.repair_status,'accepted');
   }
   await page.goto(origin+'/workspace/maintenance/personal/action-2');await ready(maintenancePages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);

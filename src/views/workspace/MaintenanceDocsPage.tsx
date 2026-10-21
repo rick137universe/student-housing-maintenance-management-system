@@ -7,8 +7,9 @@ import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
 import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
 import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
+import {MaintenanceOrderPage} from '@/components/workspace/MaintenanceOrderPage';
 import {MaintenanceRecordPage} from '@/components/workspace/MaintenanceRecordPage';
-import {MaintenanceRecordData,maintenanceRecordListPath} from '@/utils/maintenance-record-data';
+import {MaintenanceRecordData,maintenanceRecordListPath,maintenanceOrderListPath} from '@/utils/maintenance-record-data';
 import {featureFor} from '@/data/role-features';
 import {maintenancePages,type MaintenancePage} from '@/data/maintenance-pages';
 import type {Account} from '@/types/auth';
@@ -56,6 +57,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=maintenancePages.find(entry=>entry.url===url.pathname);
     if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry?.feature==='orders'&&entry.action!=='overview')void records.load(maintenanceOrderListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='records'&&entry.action!=='overview')void records.load(maintenanceRecordListPath(entry.action)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
@@ -78,7 +80,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','records'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','records','orders'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -88,7 +90,9 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-maintenance-frame src={src} title="维修工作台"/>
-  {view&&createPortal(view.entry.feature==='records'
+  {view&&createPortal(view.entry.feature==='orders'
+   ?<MaintenanceOrderPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={records}/>
+   :view.entry.feature==='records'
    ?<MaintenanceRecordPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={records}/>
    :view.entry.feature==='notifications'
    ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="维修工作台" contentChangeEvent="dorma-maintenance-content-change"/>

@@ -27,7 +27,7 @@ const entries = [
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
     "url": "/workspace/maintenance/orders/action-1",
-    "description": "派发工单沿轨道进入你的处理队列。"
+    "description": "查看本人获派工单的报修资料和处理进度。"
   },
   {
     "feature": "orders",
@@ -37,7 +37,7 @@ const entries = [
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
     "url": "/workspace/maintenance/orders/action-2",
-    "description": "派发工单沿轨道进入你的处理队列。"
+    "description": "核对待接单工单的报修信息并确认接单。"
   },
   {
     "feature": "repair",
