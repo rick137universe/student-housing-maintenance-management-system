@@ -8,7 +8,7 @@ import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace'
 import {AdminReportPage} from '@/components/workspace/AdminReportPage';
 import {adminReportPath,reportFilters,reportFilterError} from '@/utils/admin-report-data';
 import {AdminBaseDataPage} from '@/components/workspace/AdminBaseDataPage';
-import {baseResource,baseListPath} from '@/utils/admin-base-data';
+import {isBaseResource,baseListPath} from '@/utils/admin-base-data';
 import {AdminProcessPage,adminProcessPath} from '@/components/workspace/AdminProcessPage';
 import {AdminDispatchPage,adminDispatchListPath} from '@/components/workspace/AdminDispatchPage';
 import {AdminPermissionPage,adminPermissionListPath} from '@/components/workspace/AdminPermissionPage';
@@ -85,7 +85,8 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
     const entry=adminPages.find(entry=>entry.url===url.pathname);
     if(entry&&(entry.feature==='notifications'&&entry.action!=='overview'||entry.feature==='announcements'&&entry.kind==='records'))void messages.load(announcementListPath(entry)).catch(()=>{});
     if(entry?.feature==='reports'&&!entry.kind&&entry.action!=='overview'&&entry.action!=='action-3'&&!reportFilterError(reportFilters(url.searchParams)))void reports.load(adminReportPath(reportFilters(url.searchParams))).catch(()=>{});
-    if(entry?.feature==='base-data'&&entry.kind==='base-records')void bases.load(baseListPath(baseResource(url.searchParams.get('type')))).catch(()=>{});
+    const baseType=url.searchParams.get('type');
+    if(entry?.feature==='base-data'&&entry.kind==='base-records'&&isBaseResource(baseType))void bases.load(baseListPath(baseType)).catch(()=>{});
     if(entry?.feature==='process'&&entry.action!=='overview')void processes.load(adminProcessPath).catch(()=>{});
     if(entry?.feature==='dispatch'&&entry.action!=='overview')void dispatches.load(adminDispatchListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='permissions'&&(entry.kind==='records'||entry.kind==='authorization-records'||entry.action==='action-3'))void permissions.load(adminPermissionListPath(entry)).catch(()=>{});

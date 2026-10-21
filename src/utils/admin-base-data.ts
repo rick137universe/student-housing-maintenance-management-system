@@ -11,7 +11,8 @@ export const baseDetails:Record<BaseResource,ReadonlyArray<readonly [string,stri
  rooms:[['room_id','房间编号'],['building_id','所属楼栋'],['floor_number','楼层'],['room_type','房型'],['bed_capacity','床位容量'],['room_status','房间状态']],
  beds:[['bed_id','床位编号'],['room_id','所属房间'],['bed_number','床位号'],['bed_status','床位状态']],
 };
-export function baseResource(value:string|null):BaseResource{return baseResources.includes(value as BaseResource)?value as BaseResource:'students';}
+export function isBaseResource(value:string|null):value is BaseResource{return baseResources.includes(value as BaseResource);}
+export function baseResource(value:string|null):BaseResource{return isBaseResource(value)?value:'students';}
 export const baseListPath=(resource:BaseResource,page=1)=>resource+'?'+new URLSearchParams({page:String(page),limit:'20'});
 export function baseFields(resource:BaseResource,editing:boolean,options:Record<string,StudentRow[]>):RepairField[]{
  const text=(key:string,label:string,maxLength:number,required=true):RepairField=>({key,label,type:'text',maxLength,required});
