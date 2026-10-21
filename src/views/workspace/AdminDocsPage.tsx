@@ -5,6 +5,8 @@ import {createPortal} from 'react-dom';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {AdminBackupPage,adminBackupListPath} from '@/components/workspace/AdminBackupPage';
+import {StudentRecordData} from '@/utils/student-record-data';
 import {AdminBillingPage,adminBillingListPath} from '@/components/workspace/AdminBillingPage';
 import {StudentFinanceData} from '@/utils/student-finance-data';
 import {AdminAnnouncementPage} from '@/components/workspace/AdminAnnouncementPage';
@@ -47,6 +49,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  const params=useSearchParams(),queryRef=useRef(params.toString());
  useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
+ const backups=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{'backup-policies':'policy_id',backups:'backup_run_id'}),[account.id,account.csrfToken]);
  const finances=useMemo(()=>new StudentFinanceData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  const messages=useMemo(()=>new StudentAnnouncementData(account.id,account.csrfToken),[account.id,account.csrfToken]);
  useEffect(()=>{
@@ -58,13 +61,14 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=adminPages.find(entry=>entry.url===url.pathname);
     if(entry&&(entry.feature==='notifications'&&entry.action!=='overview'||entry.feature==='announcements'&&entry.kind==='records'))void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry?.feature==='backup'&&(entry.kind==='records'||entry.action==='action-3'))void backups.load(adminBackupListPath(entry)).catch(()=>{});
     if(entry?.feature==='billing'&&(entry.kind==='records'||entry.action==='action-3'))void finances.load(adminBillingListPath(entry)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
   };
   iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
- },[messages,finances]);
+ },[messages,finances,backups]);
  const [src]=useState(()=>'/assets/admin/index.html?entry='+encodeURIComponent((adminPages.find(page=>page.feature===featureId&&page.action===actionId)??adminPages[0]).id));
  const [view,setView]=useState<{target:Element;entry:AdminPage}|null>(null);
  useEffect(()=>{frame.current?.contentWindow?.postMessage({type:'dorma-admin-account-changed'},location.origin);},[account.displayName]);
@@ -79,7 +83,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','announcements','billing'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','announcements','billing','backup'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -89,7 +93,9 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-admin-frame src={src} title="管理员工作台"/>
-  {view&&createPortal(view.entry.feature==='billing'
+  {view&&createPortal(view.entry.feature==='backup'
+   ?<AdminBackupPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={backups}/>
+   :view.entry.feature==='billing'
    ?<AdminBillingPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={finances}/>
    :view.entry.feature==='announcements'
    ?<AdminAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages}/>

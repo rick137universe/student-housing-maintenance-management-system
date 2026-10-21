@@ -227,7 +227,31 @@ const entries = [
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
     "url": "/workspace/admin/backup/action-1",
-    "description": "数据环完成复制，也能沿时间轴返回。"
+    "description": "配置每日备份时间、保留天数及启用状态。"
+  },
+  {
+    "feature": "backup",
+    "group": "备份恢复",
+    "color": 5,
+    "label": "新增备份策略",
+    "id": "timer-timer-playback-settings",
+    "action": "action-1/submit",
+    "url": "/workspace/admin/backup/action-1/submit",
+    "description": "设置策略名称、每日时间、保留天数和启用状态。",
+    "parent": "animation-animation-methods-refresh",
+    "kind": "policy-create"
+  },
+  {
+    "feature": "backup",
+    "group": "备份恢复",
+    "color": 5,
+    "label": "策略记录",
+    "id": "timer-timer-playback-settings-playback-loopdelay",
+    "action": "action-1/records",
+    "url": "/workspace/admin/backup/action-1/records",
+    "description": "查看并维护已配置的备份策略。",
+    "parent": "animation-animation-methods-refresh",
+    "kind": "records"
   },
   {
     "feature": "backup",
@@ -237,7 +261,31 @@ const entries = [
     "id": "timer-timer-callbacks-onbegin",
     "action": "action-2",
     "url": "/workspace/admin/backup/action-2",
-    "description": "数据环完成复制，也能沿时间轴返回。"
+    "description": "创建备份任务，查看执行状态与备份结果。"
+  },
+  {
+    "feature": "backup",
+    "group": "备份恢复",
+    "color": 5,
+    "label": "创建备份",
+    "id": "timer-timer-playback-settings-alternate",
+    "action": "action-2/submit",
+    "url": "/workspace/admin/backup/action-2/submit",
+    "description": "确认后创建备份任务，执行结果可在备份记录中查看。",
+    "parent": "timer-timer-callbacks-onbegin",
+    "kind": "backup-create"
+  },
+  {
+    "feature": "backup",
+    "group": "备份恢复",
+    "color": 5,
+    "label": "备份记录",
+    "id": "timer-timer-playback-settings-reversed",
+    "action": "action-2/records",
+    "url": "/workspace/admin/backup/action-2/records",
+    "description": "查看备份与恢复任务的执行状态和结果。",
+    "parent": "timer-timer-callbacks-onbegin",
+    "kind": "records"
   },
   {
     "feature": "backup",
@@ -247,7 +295,7 @@ const entries = [
     "id": "timer-timer-callbacks-onupdate",
     "action": "action-3",
     "url": "/workspace/admin/backup/action-3",
-    "description": "数据环完成复制，也能沿时间轴返回。"
+    "description": "查看备份与恢复记录，将有效备份恢复到独立副本。"
   },
   {
     "feature": "billing",
