@@ -5,6 +5,7 @@ import {createPortal} from 'react-dom';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {AdminDispatchPage,adminDispatchListPath} from '@/components/workspace/AdminDispatchPage';
 import {AdminPermissionPage,adminPermissionListPath} from '@/components/workspace/AdminPermissionPage';
 import {AdminBackupPage,adminBackupListPath} from '@/components/workspace/AdminBackupPage';
 import {StudentRecordData} from '@/utils/student-record-data';
@@ -50,6 +51,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  const params=useSearchParams(),queryRef=useRef(params.toString());
  useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
+ const dispatches=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{repairs:'repair_id'}),[account.id,account.csrfToken]);
  const permissions=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{accounts:'account_id',audit:'audit_id'}),[account.id,account.csrfToken]);
  const backups=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{'backup-policies':'policy_id',backups:'backup_run_id'}),[account.id,account.csrfToken]);
  const finances=useMemo(()=>new StudentFinanceData(account.id,account.csrfToken),[account.id,account.csrfToken]);
@@ -63,6 +65,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=adminPages.find(entry=>entry.url===url.pathname);
     if(entry&&(entry.feature==='notifications'&&entry.action!=='overview'||entry.feature==='announcements'&&entry.kind==='records'))void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry?.feature==='dispatch'&&entry.action!=='overview')void dispatches.load(adminDispatchListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='permissions'&&(entry.kind==='records'||entry.kind==='authorization-records'||entry.action==='action-3'))void permissions.load(adminPermissionListPath(entry)).catch(()=>{});
     if(entry?.feature==='backup'&&(entry.kind==='records'||entry.action==='action-3'))void backups.load(adminBackupListPath(entry)).catch(()=>{});
     if(entry?.feature==='billing'&&(entry.kind==='records'||entry.action==='action-3'))void finances.load(adminBillingListPath(entry)).catch(()=>{});
@@ -71,7 +74,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
   };
   iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
- },[messages,finances,backups,permissions]);
+ },[messages,finances,backups,permissions,dispatches]);
  const [src]=useState(()=>'/assets/admin/index.html?entry='+encodeURIComponent((adminPages.find(page=>page.feature===featureId&&page.action===actionId)??adminPages[0]).id));
  const [view,setView]=useState<{target:Element;entry:AdminPage}|null>(null);
  useEffect(()=>{frame.current?.contentWindow?.postMessage({type:'dorma-admin-account-changed'},location.origin);},[account.displayName]);
@@ -86,7 +89,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','announcements','billing','backup','permissions'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','announcements','billing','backup','permissions','dispatch'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -96,7 +99,9 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-admin-frame src={src} title="管理员工作台"/>
-  {view&&createPortal(view.entry.feature==='permissions'
+  {view&&createPortal(view.entry.feature==='dispatch'
+   ?<AdminDispatchPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={dispatches}/>
+   :view.entry.feature==='permissions'
    ?<AdminPermissionPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={permissions}/>
    :view.entry.feature==='backup'
    ?<AdminBackupPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={backups}/>

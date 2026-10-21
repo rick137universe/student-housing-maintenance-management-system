@@ -107,7 +107,7 @@ const entries = [
     "id": "timeline-add-animations",
     "action": "action-1",
     "url": "/workspace/admin/dispatch/action-1",
-    "description": "工单从中心分流到匹配的维修节点。"
+    "description": "查看通过初审的报修工单，选择维修人员并派工。"
   },
   {
     "feature": "dispatch",
@@ -117,7 +117,7 @@ const entries = [
     "id": "animation-animatable-properties-javascript-object-properties",
     "action": "action-2",
     "url": "/workspace/admin/dispatch/action-2",
-    "description": "工单从中心分流到匹配的维修节点。"
+    "description": "按未完工工单数量分配维修人员，确认后提交派工。"
   },
   {
     "feature": "dispatch",
@@ -127,7 +127,7 @@ const entries = [
     "id": "timeline-timeline-properties",
     "action": "action-3",
     "url": "/workspace/admin/dispatch/action-3",
-    "description": "工单从中心分流到匹配的维修节点。"
+    "description": "查看报修、派工与维修进度及完整处理过程。"
   },
   {
     "feature": "reports",
