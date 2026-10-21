@@ -27,7 +27,31 @@ const entries = [
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
     "url": "/workspace/admin/base-data/action-1",
-    "description": "全校基础信息分层展开并保持同步。"
+    "description": "维护学生、楼栋、房间与床位资料，查看记录并办理新增和修改。"
+  },
+  {
+    "feature": "base-data",
+    "group": "基础数据",
+    "color": 0,
+    "label": "新增数据",
+    "id": "timer-timer-methods-reverse",
+    "action": "action-1/submit",
+    "url": "/workspace/admin/base-data/action-1/submit",
+    "description": "选择数据类型，逐项填写并确认基础资料。",
+    "parent": "animation-animatable-properties-css-properties",
+    "kind": "base-create"
+  },
+  {
+    "feature": "base-data",
+    "group": "基础数据",
+    "color": 0,
+    "label": "数据记录",
+    "id": "timer-timer-methods-pause",
+    "action": "action-1/records",
+    "url": "/workspace/admin/base-data/action-1/records",
+    "description": "选择数据类型，查看和维护完整基础资料。",
+    "parent": "animation-animatable-properties-css-properties",
+    "kind": "base-records"
   },
   {
     "feature": "base-data",
@@ -37,7 +61,7 @@ const entries = [
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
     "url": "/workspace/admin/base-data/action-2",
-    "description": "全校基础信息分层展开并保持同步。"
+    "description": "按数据类型下载模板并批量导入基础资料。"
   },
   {
     "feature": "base-data",
@@ -47,7 +71,7 @@ const entries = [
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-3",
     "url": "/workspace/admin/base-data/action-3",
-    "description": "全校基础信息分层展开并保持同步。"
+    "description": "导出学生、楼栋、房间与床位基础资料。"
   },
   {
     "feature": "process",
