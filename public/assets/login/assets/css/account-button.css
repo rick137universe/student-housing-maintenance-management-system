@@ -1,3 +1,5 @@
+@import url("/assets/fonts/source-han-sans-sc.css");
+
 /* Keep the template's sponsor animation; reserve both labels to avoid hover shifts. */
 #site-menu .dorma-account{border:0;background:transparent;font:inherit;cursor:pointer}
 #site-menu sponsor-button button.dorma-account .dorma-account-label{display:grid;max-width:12rem;font-family:var(--font-body);text-transform:none}

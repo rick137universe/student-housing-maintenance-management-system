@@ -1,0 +1,70 @@
+/* CJK glyphs only: Latin letters, ASCII punctuation and digits retain the mother fonts. */
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-ExtraLight.woff2") format("woff2");
+  font-weight: 250;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-Normal.woff2") format("woff2");
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC;
+  src: url("/assets/fonts/SourceHanSansSC-Heavy.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF, U+31C0-31EF, U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF, U+20000-323AF;
+}
+
+:root {
+  --font-body: "DIN", "SourceHanSansSC", Helvetica Neue, Helvetica, Arial, sans-serif;
+  --font-code: "Mono", "SourceHanSansSC", monospace;
+}
+.docs-demo-html .row .value.lcd {
+  font-family: Digital-7, "SourceHanSansSC", monospace;
+}
+/* The isolated login form uses system-ui, which already covers CJK. Place the
+   CJK-only face first here while preserving its original Latin font selection. */
+[data-dorma-login-form], [data-dorma-login-form] input {
+  font-family: "SourceHanSansSC", Inter, system-ui, Arial, sans-serif;
+}

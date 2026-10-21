@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '../../public/assets/fonts/source-han-sans-sc.css';
 import '@/styles/globals.css';
 import { AnimeHomePage } from '@/views/home/AnimeHomePage';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';

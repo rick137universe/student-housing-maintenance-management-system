@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>账号登录</title>
+  <link rel="stylesheet" href="/assets/fonts/source-han-sans-sc.css">
   <style>
     @font-face { font-family: DIN; src: url(../fonts/DINish[slnt,wdth,wght].woff2) format("woff2"); font-variation-settings: "wdth" 125; font-weight: 100 900; font-stretch: 50% 125%; font-style: oblique 0deg 12deg; font-display: swap; }
-    :root { --font-body: "DIN", Helvetica Neue, Helvetica, Arial, sans-serif; }
+    :root { --font-body: "DIN", "SourceHanSansSC", Helvetica Neue, Helvetica, Arial, sans-serif; }
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; }
     body { display: flex; align-items: center; justify-content: center; padding: 20px; background: #252423; color: #cccac8; color-scheme: dark; font-family: Inter, system-ui, Arial, sans-serif; }
@@ -23,7 +24,7 @@
     @media (prefers-reduced-motion: reduce) { .button-label { transition: none; } }
   </style>
 </head>
-<body>
+<body data-dorma-login-form>
   <form>
     <label for="username">账号 <span aria-hidden="true">*</span></label>
     <input id="username" name="username" type="text" placeholder="请输入账号" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="64" required>
