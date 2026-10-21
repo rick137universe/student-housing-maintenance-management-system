@@ -21,7 +21,7 @@ const runFields=[['backup_run_id','任务编号'],['operation_type','任务类�
 function BackupValues({row,policies=false}:{row:StudentRow;policies?:boolean}){return <div data-dorma-backup-values>{(policies?policyFields:runFields).map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{key==='schedule_expression'?scheduleTime(row[key]):display(key,row[key])}</code></pre></Fragment>)}</div>;}
 function scheduleTime(value:unknown){const parts=String(value??'').split(' ');return parts.length===5?'每日 '+parts[1].padStart(2,'0')+':'+parts[0].padStart(2,'0'):String(value??'—');}
 function restorable(row:StudentRow){return row.operation_type==='backup'&&row.run_status==='succeeded'&&!row.file_deleted_at;}
-function BackupInfo({children}:{children:React.ReactNode}){return <div className="formatted-text"><div className="notice info"><p>{children}</p></div></div>;}
+function BackupInfo({children}:{children:React.ReactNode}){return <div className="docs-info-content formatted-text"><div className="notice info"><p>{children}</p></div></div>;}
 
 export function AdminBackupPage({entry,data}:{entry:AdminPage;data:StudentRecordData}){
  const root=useRef<HTMLDivElement>(null),params=useSearchParams(),router=useRouter(),record=['policy-create','backup-create'].includes(entry.kind??'')?null:params.get('record'),mode=params.get('mode'),requestedPage=Number(params.get('page')??1);
