@@ -37,6 +37,8 @@
         <footer id="site-footer" class="layout-container text-ui" data-color="fg">
   <div id="site-footer-content">
     <div class="footer-row">
+      <!-- Preserve the mother layout column and its responsive height without sponsor content. -->
+      <div class="footer-block" aria-hidden="true" style="min-height:calc(1lh + var(--margin-s) + 1.5rem)"></div>
       <div class="footer-block footer-block-links">
         <div class="footer-block">
           <h6 class="links-list-heading">Site</h6>
@@ -69,6 +71,8 @@
           © 2026 FLIGHT INC.
         </div>
       </div>
+      <!-- Keep the logo aligned with the original subscription row. -->
+      <div class="footer-block" aria-hidden="true" style="min-height:calc(1lh + var(--margin-s) + 2.75rem)"></div>
     </div>
   </div>
 </footer>
