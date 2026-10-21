@@ -4,18 +4,16 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { redirect, useParams, usePathname, useRouter } from 'next/navigation';
-import { ArrowLeft, LogOut, Menu, ShieldAlert, X } from 'lucide-react';
-import { LiveWorkspace } from '@/components/workspace/LiveWorkspace';
+import { ShieldAlert } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { api, saveAuthSession } from '@/utils/auth-session';
 import { featureFor, roleFeatures } from '@/data/role-features';
 import { demoAccounts, type RoleId } from '@/data/accounts';
 import s from './WorkspacePage.module.css';
-import { ThemeSelect } from '@/components/theme/ThemeProvider';
 import { StudentDocsPage } from './StudentDocsPage';
 import {studentPages} from '@/data/student-pages';
 import {ManagerDocsPage} from './ManagerDocsPage';
 import {MaintenanceDocsPage} from './MaintenanceDocsPage';
+import {AdminDocsPage} from './AdminDocsPage';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -23,11 +21,9 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   const params = useParams<{ role: string; feature?: string; action?: string[] }>();
   const pathname = usePathname();
   const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
   const { account, refresh } = useAuth();
   const leavingRef=useRef(false),[leaving,setLeaving]=useState(false);
   const docsLogout=useCallback(()=>{leavingRef.current=true;setLeaving(true);void refresh().then(()=>router.push('/'));},[refresh,router]);
-  const [error, setError] = useState('');
   const role = validRoles.includes(params.role as RoleId) ? params.role as RoleId : null;
   const feature = role && params.feature ? featureFor(role, params.feature) : undefined;
   const actionId = pathname.split('/')[4];
@@ -38,14 +34,8 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     return () => document.documentElement.removeAttribute('data-dorma-workspace-active');
   }, []);
   useLayoutEffect(()=>{
-    if(account!==undefined&&!(account?.role===role&&(role==='student'||role==='dormManager'||role==='maintenance')&&(!params.feature||feature)))onReady?.();
+    if(account!==undefined&&!(account?.role===role&&(role==='student'||role==='dormManager'||role==='maintenance'||role==='admin')&&(!params.feature||feature)))onReady?.();
   },[account,role,params.feature,feature,onReady]);
-
-  async function logout() {
-    if(leavingRef.current)return;leavingRef.current=true;setLeaving(true);
-    try { await api('auth/logout', {method:'POST',body:'{}'}); saveAuthSession(null); router.push('/'); }
-    catch(error) { leavingRef.current=false;setLeaving(false);setError(error instanceof Error ? error.message : '退出失败'); }
-  }
 
   if (account === undefined) return null;
   if (!account) {
@@ -64,6 +54,10 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
     return <MaintenanceDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady} onLogout={docsLogout}/>;
   }
 
+  if(account.role==='admin'&&role==='admin'&&!params.feature){
+    return <AdminDocsPage account={account} featureId="overview" actionId="overview" onReady={onReady} onLogout={docsLogout}/>;
+  }
+
   if (!role || !feature || account.role !== role || !roleFeatures[account.role].some(item => item.id === feature.id)) return <main className={s.denied}>
     <ShieldAlert />
     <p>DORMA / ACCESS DENIED</p>
@@ -80,37 +74,5 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   if(role==='maintenance')return <MaintenanceDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 
-  return <div className={s.page}>
-    <header className={s.topbar}>
-      <Link href="/" className={s.brand}>dorma<span>.</span></Link>
-      <div className={s.topbarIdentity}><span>{account.roleName}</span><strong>{account.displayName}</strong></div>
-      <div className={s.topbarTools}><Link className={s.homeLink} href="/"><ArrowLeft size={14} />返回首页</Link><ThemeSelect /><button onClick={logout}><LogOut size={14} />退出登录</button></div>
-    </header>
-    <div className={s.mobileNavigation}>
-      <button type="button" onClick={() => setMenuOpen(value => !value)} aria-expanded={menuOpen} aria-controls="role-navigation"><Menu size={17} />功能菜单</button>
-      <span>{feature.title} / {action?.label}</span>
-    </div>
-    <div className={s.layout}>
-      {menuOpen && <button className={s.menuBackdrop} aria-label="关闭功能菜单" onClick={() => setMenuOpen(false)} />}
-      <aside className={s.sidebar} id="role-navigation" data-open={menuOpen}>
-        <div className={s.sidebarHeading}><span>我的工作台</span><button type="button" aria-label="关闭功能菜单" onClick={() => setMenuOpen(false)}><X size={18} /></button></div>
-        <nav aria-label={account.roleName + '功能导航'}>
-          {roleFeatures[account.role].map(group => <section key={group.id} className={s.navGroup} data-active={group.id === feature.id}>
-            <Link className={s.groupLink} href={'/workspace/' + role + '/' + group.id + '/' + group.actions[0].id} onClick={() => setMenuOpen(false)}>{group.title}</Link>
-            <ul>{group.actions.map(item => {
-              const selected = group.id === feature.id && item.id === action?.id;
-              return <li key={item.id}><Link href={'/workspace/' + role + '/' + group.id + '/' + item.id} aria-current={selected ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{item.label}</Link></li>;
-            })}</ul>
-          </section>)}
-        </nav>
-      </aside>
-      <main className={s.content}>
-        <div className={s.actionTitle}><p>{account.roleName} / {feature.title}</p><h1>{action?.label}</h1><span>{feature.description}</span></div>
-        <div className={s.workspaceContent}>
-          {error && <p role="alert">{error}</p>}
-          <LiveWorkspace key={pathname} account={account} featureId={feature.id} actionId={action?.id ?? 'action-1'} />
-        </div>
-      </main>
-    </div>
-  </div>;
+  return <AdminDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 }
