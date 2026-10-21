@@ -67,7 +67,19 @@ const entries = [
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
     "url": "/workspace/admin/process/action-1",
-    "description": "规则闸门决定业务如何继续流转。"
+    "description": "查看和配置自动分床规则。"
+  },
+  {
+    "feature": "process",
+    "group": "流程管控",
+    "color": 1,
+    "label": "配置分床规则",
+    "id": "timer-timer-callbacks-then",
+    "action": "action-1/edit",
+    "url": "/workspace/admin/process/action-1/edit",
+    "description": "确认自动分床状态，完成后保存。",
+    "parent": "animation-animatable-properties-css-transforms",
+    "kind": "process-edit"
   },
   {
     "feature": "process",
@@ -77,7 +89,19 @@ const entries = [
     "id": "animation-animatable-properties-css-variables",
     "action": "action-2",
     "url": "/workspace/admin/process/action-2",
-    "description": "规则闸门决定业务如何继续流转。"
+    "description": "查看住宿审核要求与办理时限，配置住宿业务流程。"
+  },
+  {
+    "feature": "process",
+    "group": "流程管控",
+    "color": 1,
+    "label": "配置住宿流程",
+    "id": "timer-timer-methods",
+    "action": "action-2/edit",
+    "url": "/workspace/admin/process/action-2/edit",
+    "description": "确认审核要求和办理时限，完成后保存。",
+    "parent": "animation-animatable-properties-css-variables",
+    "kind": "process-edit"
   },
   {
     "feature": "process",
@@ -87,7 +111,19 @@ const entries = [
     "id": "timer-timer-properties",
     "action": "action-3",
     "url": "/workspace/admin/process/action-3",
-    "description": "规则闸门决定业务如何继续流转。"
+    "description": "查看固定月费及缴费期限，配置后续账单生成规则。"
+  },
+  {
+    "feature": "process",
+    "group": "流程管控",
+    "color": 1,
+    "label": "配置缴费流程",
+    "id": "timer-timer-methods-play",
+    "action": "action-3/edit",
+    "url": "/workspace/admin/process/action-3/edit",
+    "description": "确认固定月费和缴费期限，完成后保存。",
+    "parent": "timer-timer-properties",
+    "kind": "process-edit"
   },
   {
     "feature": "dispatch",
