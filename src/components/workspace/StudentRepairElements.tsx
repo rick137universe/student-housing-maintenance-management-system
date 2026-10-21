@@ -67,8 +67,8 @@ export function useRepairSubmitFooter(root:RefObject<HTMLDivElement|null>,label:
  useLayoutEffect(()=>{link.current?.setAttribute('aria-disabled',String(disabled));link.current?.setAttribute('aria-busy',String(disabled));},[disabled]);
 }
 
-export type RepairField={key:string;label:string;type?:'select'|'textarea'|'tel';options?:ReadonlyArray<readonly [string,string]>;required?:boolean;maxLength?:number;validate?:(value:string)=>string|undefined};
-export function RepairEditorFields({fields,values,onChange,active,onActive,pending}:{fields:RepairField[];values:Record<string,string>;onChange:(key:string,value:string)=>void;active:string|null;onActive:(key:string|null)=>void;pending:boolean}){
+export type RepairField={key:string;label:string;type?:'select'|'textarea'|'tel'|'number'|'datetime-local';options?:ReadonlyArray<readonly [string,string]>;required?:boolean;maxLength?:number;validate?:(value:string)=>string|undefined};
+export function RepairEditorFields({fields,values,onChange,active,onActive,pending,color=3}:{color?:number;fields:RepairField[];values:Record<string,string>;onChange:(key:string,value:string)=>void;active:string|null;onActive:(key:string|null)=>void;pending:boolean}){
  const [draft,setDraft]=useState(''),[error,setError]=useState('');const input=useRef<HTMLSelectElement|HTMLInputElement|HTMLTextAreaElement>(null);
  useLayoutEffect(()=>{if(active)input.current?.focus();},[active]);
  function cancel(){if(pending)return;onActive(null);setError('');setDraft('');}
@@ -79,14 +79,14 @@ export function RepairEditorFields({fields,values,onChange,active,onActive,pendi
  }
  return <>{fields.map(field=>{
   const editing=active===field.key,value=field.options?.find(([id])=>id===values[field.key])?.[1]??values[field.key]??'';
-  return <section key={field.key} className="code-preview" data-color="3" data-profile-field={field.key}>
+  return <Fragment key={field.key}><section className="code-preview" data-color={color} data-profile-field={field.key}>
    <div className="code-preview-content"><header><div className="code-preview-title"><h2 className="text-ui">{field.label}</h2></div><nav aria-label={field.label+'编辑操作'}>
     <button type="button" className="code-preview-button text-ui" disabled={!editing||pending} onClick={event=>{event.stopPropagation();confirm(field);}}>确认</button>
     <button type="button" className="code-preview-button text-ui" disabled={!editing||pending} onClick={event=>{event.stopPropagation();cancel();}}>取消</button>
     <button type="button" className="ui-input code-edit-button text-ui" title={'编辑'+field.label} aria-pressed={editing} disabled={pending||Boolean(active)||(field.type==='select'&&!field.options?.length)} onClick={event=>{event.stopPropagation();setDraft(values[field.key]??'');setError('');onActive(field.key);}}><svg className="icon" width="24" height="24" viewBox="0 0 24 24"><g fill="none" strokeWidth="1.75"><polygon stroke="currentColor" points="13.5 8.5 7.5 14.5 7.5 17.5 10.5 17.5 16.5 11.5"/><path stroke="currentColor" d="M18.0857864,7.08578644 L17.9142136,6.91421356 C17.133165,6.13316498 15.866835,6.13316498 15.0857864,6.91421356 L13.5,8.5 L13.5,8.5 L16.5,11.5 L18.0857864,9.91421356 C18.866835,9.13316498 18.866835,7.86683502 18.0857864,7.08578644 Z"/></g></svg></button>
    </nav></header><div className="code-editor"><pre className="is-active"><code className="hljs language-plaintext" onKeyDown={event=>{if(event.nativeEvent.isComposing)return;if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancel();}if(event.key==='Enter'&&(field.type!=='textarea'||event.ctrlKey||event.metaKey)){event.preventDefault();event.stopPropagation();confirm(field);}}}>
-    {editing?(field.type==='select'?<select ref={node=>{input.current=node;}} aria-label={field.label} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}><option value="">请选择{field.label}</option>{field.options!.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>:field.type==='textarea'?<textarea ref={node=>{input.current=node;}} aria-label={field.label} rows={3} maxLength={field.maxLength??4000} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>:<input ref={node=>{input.current=node;}} type="tel" aria-label={field.label} maxLength={field.maxLength??32} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>):value||'—'}
-   </code></pre></div>{editing&&error&&<StudentWarning>{error}</StudentWarning>}</div>
-  </section>;
+    {editing?(field.type==='select'?<select ref={node=>{input.current=node;}} aria-label={field.label} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}><option value="">请选择{field.label}</option>{field.options!.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>:field.type==='textarea'?<textarea ref={node=>{input.current=node;}} aria-label={field.label} rows={3} maxLength={field.maxLength??4000} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>:<input ref={node=>{input.current=node;}} type={field.type??"tel"} step={field.type==='number'?'any':undefined} aria-label={field.label} maxLength={field.maxLength??32} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>):value||'—'}
+   </code></pre></div></div>
+  </section>{editing&&error&&<StudentWarning>{error}</StudentWarning>}</Fragment>;
  })}</>;
 }

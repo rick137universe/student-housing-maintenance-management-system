@@ -57,7 +57,7 @@ const entries = [
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-1",
     "url": "/workspace/maintenance/repair/action-1",
-    "description": "记录维修处理进展，跟进任务直到完成。"
+    "description": "查看已接单工单，确认开始维修。"
   },
   {
     "feature": "repair",
@@ -67,7 +67,7 @@ const entries = [
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-2",
     "url": "/workspace/maintenance/repair/action-2",
-    "description": "记录维修处理进展，跟进任务直到完成。"
+    "description": "记录处理进展、维修状态与预计完成时间。"
   },
   {
     "feature": "repair",
@@ -77,7 +77,7 @@ const entries = [
     "id": "animation-animatable-properties-css-variables",
     "action": "action-3",
     "url": "/workspace/maintenance/repair/action-3",
-    "description": "记录维修处理进展，跟进任务直到完成。"
+    "description": "填写维修结果、使用材料及实际工时，确认完工。"
   },
   {
     "feature": "records",
