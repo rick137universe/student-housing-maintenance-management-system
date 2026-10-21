@@ -82,7 +82,7 @@ export async function adminSetting(account:Account,key:string,input:unknown) {
  const schema=key==='billing'?z.object({accommodationFee:z.string().regex(/^\d{1,10}(\.\d{1,2})?$/),utilityFee:z.string().regex(/^\d{1,10}(\.\d{1,2})?$/),dueDays:z.coerce.number().int().min(1).max(365)}).strict():
   key==='allocation'?z.object({automatic:z.boolean()}).strict():key==='accommodation'?z.object({reviewRequired:z.literal(true),processingDays:z.coerce.number().int().min(1).max(90)}).strict():null;
  requireValue(schema,'未知配置项',400);const data=schema.parse(input);
- return transaction(async c=>{await authorize(account,'settings','write',c);await query('INSERT INTO system_settings(setting_key,setting_value,description,updated_by) VALUES($1,$2,$1,$3) ON CONFLICT(setting_key) DO UPDATE SET setting_value=excluded.setting_value,updated_by=excluded.updated_by,updated_at=now()',[key,JSON.stringify(data),account.id],c);await audit(c,account,'configure','settings',key);return data;});
+ return transaction(async c=>{await authorize(account,'settings','write',c);await query('INSERT INTO system_settings(setting_key,setting_value,description,updated_by) VALUES($1,$2,$3,$4) ON CONFLICT(setting_key) DO UPDATE SET setting_value=excluded.setting_value,updated_by=excluded.updated_by,updated_at=now()',[key,JSON.stringify(data),key,account.id],c);await audit(c,account,'configure','settings',key);return data;});
 }
 export async function permissionWrite(account:Account,input:unknown) {
  const data=z.object({role:z.enum(['student','dorm_manager','maintenance','admin']),resource:z.string().min(1).max(80),operation:z.enum(['read','write','review','dispatch']),enabled:z.boolean()}).strict().parse(input);
