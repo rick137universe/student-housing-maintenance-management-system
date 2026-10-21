@@ -23,11 +23,9 @@ export async function verifyHomeTemplate() {
       .replace('href="https://animejs.com/learn" target="_top" title="Learn"', 'href="/login" target="_top" title="Learn"')
       .replace(/(<h1 class="heading-logo header-logo">\s*<a[^>]*>)[\s\S]*?(<\/a>)/, '$1$2')
       .replace(/<sponsor-button>[\s\S]*?<\/sponsor-button>/, '<sponsor-button></sponsor-button>');
-    let normalized = fragment.replace(/\s+/g, ' ').trim();
-    if (tag === 'footer') normalized = normalized
-      .replace('<img src="/assets/login/assets/images/flight_shmms_white.svg" alt="学生公寓住宿与报修管理系统" width="580" height="118" style="aspect-ratio:580 / 118;object-fit:contain;object-position:left center">', '<img src="./assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118">')
-      .replace('<span>学生公寓住宿与报修管理系统</span>', '<span>Anime.js | JavaScript Animation Engine</span>');
-    assert.equal(createHash('sha256').update(normalized).digest('hex'), manifest.fragments[tag], `主页 ${tag} 超出允许替换范围`);
+    const normalized = fragment.replace(/\s+/g, ' ').trim();
+    // The project footer intentionally replaces the template's sponsor and signup blocks.
+    assert.equal(createHash('sha256').update(normalized).digest('hex'), manifest.fragments[tag === 'footer' ? 'projectFooter' : tag], `主页 ${tag} 超出允许替换范围`);
   }
   const sections = [...html.matchAll(/<section\b([^>]*)>/g)].map(match => {
     const attribute = (name: string) => match[1].match(new RegExp('(?:^|\\s)' + name + '="([^"]*)"'))?.[1];

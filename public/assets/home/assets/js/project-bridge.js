@@ -63,11 +63,3 @@ const translate = element => {
 };
 new MutationObserver(() => translate(document)).observe(document.body, { childList: true, subtree: true });
 translate(document);
-
-const footerForm = document.querySelector('#site-footer form');
-footerForm.addEventListener('submit', event => {
-  event.preventDefault(); event.stopImmediatePropagation();
-  const input = footerForm.querySelector('input[type=email]');
-  input.setCustomValidity('此处仅保留母版订阅界面，请使用上方登录入口。'); input.reportValidity();
-}, true);
-footerForm.addEventListener('input', () => footerForm.querySelector('input[type=email]').setCustomValidity(''));

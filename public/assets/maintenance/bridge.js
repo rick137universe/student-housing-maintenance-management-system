@@ -157,6 +157,3 @@ button.addEventListener('click', async () => {
 window.addEventListener('focus', syncAccount);
 document.addEventListener('dorma-profile-saved', syncAccount);
 void syncAccount();
-const form = document.querySelector('#site-footer form');
-form.addEventListener('submit', event => { event.preventDefault(); event.stopImmediatePropagation(); const input=form.querySelector('input[type=email]');input.setCustomValidity('请使用工作台内的个人消息。');input.reportValidity(); }, true);
-form.addEventListener('input',()=>form.querySelector('input[type=email]').setCustomValidity(''));
