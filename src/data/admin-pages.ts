@@ -10,4 +10,4 @@ export const adminPages:AdminPage[]=[{
  feature:'overview',group:'管理员工作台',color:0,label:'管理员工作台',id:'docs',action:'overview',url:'/workspace/admin',description:'维护基础数据，管控业务流程，统筹派工、账单与系统管理。',
 },...roleFeatures.admin.flatMap((feature,color)=>[{
  feature:feature.id,group:feature.title,color,label:feature.title,id:groups[color],action:'overview',url:'/workspace/admin/'+feature.id,description:feature.description,
-},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:'/workspace/admin/'+feature.id+'/'+action.id,description:feature.id==='personal'?personalDescriptions[index]:feature.description}))])];
+},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:'/workspace/admin/'+feature.id+'/'+action.id,description:feature.id==='personal'?personalDescriptions[index]:feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];

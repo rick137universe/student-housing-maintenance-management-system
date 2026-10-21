@@ -24,7 +24,7 @@ export function StudentAnnouncementPage({entry,data,workspaceTitle='学生工作
 function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentChangeEvent}:{entry:StudentPage;data:StudentAnnouncementData;record:string|null;page:number;navigate:(url:string)=>void;workspaceTitle:string;contentChangeEvent:string}){
  const root=useRef<HTMLDivElement>(null),request=useRef({version:0}),saving=useRef(false),router=useRouter();
  const readAction=useRef<()=>Promise<void>>(async()=>{}),readLink=useRef<HTMLAnchorElement|null>(null);
- const reminder=entry.feature==='announcements'&&entry.action==='action-2',notification=entry.feature==='notifications'||reminder,theme=['red','corail','orange','yellow','citrus','lime','green'][entry.color];
+ const reminder=entry.feature==='announcements'&&entry.action==='action-2',notification=entry.feature==='notifications'||reminder,theme=['red','corail','orange','yellow','citrus','lime','green','turquoise','cyan','sky'][entry.color];
  const resource=notification?'notifications':'announcements',identifier=notification?'notification_id':'announcement_id';
  const path=record===null?announcementListPath(entry,page):resource+'/'+record+(reminder?'?type=payment-reminder':'');
  const [result,setResult]=useState(()=>{

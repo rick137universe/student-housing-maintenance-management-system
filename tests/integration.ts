@@ -103,7 +103,7 @@ try{
  for(let i=0;i<5&&['queued','running'].includes(restored.run_status);i++){await command('scripts/jobs.ts',['--once']);restored=(await administrator.request('backups/'+restore.backup_run_id)).data;}
  assert.equal(restored.run_status,'succeeded',restored.result_description);restoredNames.push(restored.restored_database);assert(restored.validation_result.tableCount>=20);checks++;
  const content=await readFile(backupRow.external_file_reference);await writeFile(backupRow.external_file_reference,'damaged');const damaged=(await administrator.request('backups/restore','POST',{sourceBackupId:backup.backup_run_id})).data;await command('scripts/jobs.ts',['--once']);assert.equal((await administrator.request('backups/'+damaged.backup_run_id)).data.run_status,'failed');await writeFile(backupRow.external_file_reference,content);checks++;
- if(process.argv.includes('--browser'))await browserRegression(origin,env.SEED_PASSWORD);
+ if(process.argv.includes('--browser'))await browserRegression(origin,env.SEED_PASSWORD,testPool);
  // 原密码预校验只检查当前账号，不修改密码或撤销会话；最终提交仍重新验证。
  await new Session().request('profile/password/verify','POST',{currentPassword:env.SEED_PASSWORD},401);
  await student.request('profile/password/verify','POST',{currentPassword:'WrongOnly2026'},400);

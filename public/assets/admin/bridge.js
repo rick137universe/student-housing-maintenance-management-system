@@ -64,7 +64,7 @@ for (const [direction, neighbor, heading] of [
 }
 if(initial.action!=='overview'){
   const content=info.querySelector('.docs-info-content.formatted-text');
-  if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));content.hidden=initial.feature!=='personal';
+  if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));content.hidden=!['personal','notifications'].includes(initial.feature);
 }
 document.title = initial.label + ' · 管理员工作台';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;

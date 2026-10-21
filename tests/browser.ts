@@ -1,3 +1,4 @@
+import type {Pool} from 'pg';
 import {chromium,expect} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {mkdir} from 'node:fs/promises';
@@ -23,12 +24,13 @@ import {maintenancePersonalRegression} from './maintenance-personal';
 import {maintenanceNotificationRegression} from './maintenance-notifications';
 import {adminShellRegression,verifyAdminShell} from './admin-shell';
 import {adminPersonalRegression} from './admin-personal';
+import {adminNotificationRegression} from './admin-notifications';
 import {maintenanceAnalyticsRegression} from './maintenance-analytics';
 import {maintenanceProcessingRegression} from './maintenance-processing';
 import {maintenanceOrderRegression} from './maintenance-orders';
 import {maintenanceRecordRegression} from './maintenance-records';
 
-export async function browserRegression(origin:string,password:string){
+export async function browserRegression(origin:string,password:string,database:Pool){
  await verifyLoginTemplate();
  await verifyHomeTemplate();
  await verifyStudentTemplate();
@@ -196,6 +198,7 @@ export async function browserRegression(origin:string,password:string){
   await managerBillingRegression(browser,origin,password);
   await adminShellRegression(browser,origin,password);
   await adminPersonalRegression(browser,origin,password);
+  await adminNotificationRegression(browser,origin,password,database);
   await maintenanceShellRegression(browser,origin,password);
   await maintenancePersonalRegression(browser,origin,password);
   await maintenanceNotificationRegression(browser,origin,password);
