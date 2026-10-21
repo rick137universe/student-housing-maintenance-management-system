@@ -267,7 +267,31 @@ const entries = [
     "id": "timeline-timeline-methods-seek",
     "action": "action-1",
     "url": "/workspace/admin/billing/action-1",
-    "description": "生成、维护账单并核对缴费结果。"
+    "description": "按账期为当前在住学生生成月账单。"
+  },
+  {
+    "feature": "billing",
+    "group": "账单管理",
+    "color": 6,
+    "label": "生成月账单",
+    "id": "getting-started-using-with-vanilla-js",
+    "action": "action-1/submit",
+    "url": "/workspace/admin/billing/action-1/submit",
+    "description": "确认账期后，按已配置的费用生成当前在住学生账单。",
+    "parent": "timeline-timeline-methods-seek",
+    "kind": "generate"
+  },
+  {
+    "feature": "billing",
+    "group": "账单管理",
+    "color": 6,
+    "label": "账单记录",
+    "id": "getting-started-using-with-react",
+    "action": "action-1/records",
+    "url": "/workspace/admin/billing/action-1/records",
+    "description": "查看账单费用、缴费状态及核对信息。",
+    "parent": "timeline-timeline-methods-seek",
+    "kind": "records"
   },
   {
     "feature": "billing",
@@ -277,7 +301,31 @@ const entries = [
     "id": "animation-animation-callbacks-onupdate",
     "action": "action-2",
     "url": "/workspace/admin/billing/action-2",
-    "description": "生成、维护账单并核对缴费结果。"
+    "description": "新增账单，维护费用及缴费截止日期。"
+  },
+  {
+    "feature": "billing",
+    "group": "账单管理",
+    "color": 6,
+    "label": "新增账单",
+    "id": "timer-timer-playback-settings-delay",
+    "action": "action-2/submit",
+    "url": "/workspace/admin/billing/action-2/submit",
+    "description": "填写学生、账期、费用及截止日期，确认后新增账单。",
+    "parent": "animation-animation-callbacks-onupdate",
+    "kind": "create"
+  },
+  {
+    "feature": "billing",
+    "group": "账单管理",
+    "color": 6,
+    "label": "账单记录",
+    "id": "timer-timer-playback-settings-loop",
+    "action": "action-2/records",
+    "url": "/workspace/admin/billing/action-2/records",
+    "description": "查看账单费用、缴费状态及核对信息。",
+    "parent": "animation-animation-callbacks-onupdate",
+    "kind": "records"
   },
   {
     "feature": "billing",
@@ -287,7 +335,7 @@ const entries = [
     "id": "animation-animation-callbacks-onloop",
     "action": "action-3",
     "url": "/workspace/admin/billing/action-3",
-    "description": "生成、维护账单并核对缴费结果。"
+    "description": "查看缴费流水及每笔缴费详情。"
   },
   {
     "feature": "announcements",

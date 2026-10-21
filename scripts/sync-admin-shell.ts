@@ -16,16 +16,16 @@ const link=(entry:typeof adminPages[number])=>`<a class="text-ui color-${palette
 const pageFile=(entry:typeof adminPages[number])=>`pages/${entry.feature}-${entry.action.replaceAll('/','-')}.html`;
 const routes=Object.fromEntries(adminPages.map(entry=>[entry.url,`/assets/admin/${pageFile(entry)}`]));
 for(const [position,entry] of adminPages.entries()){
- if(['personal','notifications','announcements'].includes(entry.feature)&&entry.action!=='overview'){
-  const announcements=entry.feature==='announcements',notifications=entry.feature==='notifications'||announcements,sourceFeature=notifications?'notifications':'personal',sourceAction=notifications?'action-1':entry.action;
+ if(['personal','notifications','announcements','billing'].includes(entry.feature)&&entry.action!=='overview'){
+  const announcements=['announcements','billing'].includes(entry.feature),notifications=entry.feature==='notifications'||announcements,sourceFeature=notifications?'notifications':'personal',sourceAction=notifications?'action-1':entry.action;
   let result=(notifications?notificationTemplate:personalTemplates[entry.action]).replaceAll('/workspace/student/'+sourceFeature+'/'+sourceAction,entry.url)
    .replaceAll('/workspace/student/'+sourceFeature,'/workspace/admin/'+sourceFeature).replaceAll('学生工作台','管理员工作台')
    .replaceAll(`data-color="${notifications?5:0}"`,`data-color="${entry.color}"`)
    .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)
    .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`)
    .replaceAll('title="个人信息"','title="个人中心"').replaceAll('>个人信息</a>','>个人中心</a>');
-  if(announcements)result=result.replaceAll('消息通知',entry.label).replaceAll('个人消息',entry.group).replaceAll('/workspace/admin/notifications','/workspace/admin/announcements');
-  if(entry.parent){const parent=adminPages.find(page=>page.id===entry.parent)!;result=result.replace(/(<a title="公告管理"[^>]*>公告管理<\/a>)/,`$1 <span class="docs-breadcrumb-arrow">&#xE0B1;</span> <a title="${html(parent.label)}" href="${parent.url}">${html(parent.label)}</a>`);}
+  if(announcements)result=result.replaceAll('消息通知',entry.label).replaceAll('个人消息',entry.group).replaceAll('/workspace/admin/notifications','/workspace/admin/'+entry.feature);
+  if(entry.parent){const parent=adminPages.find(page=>page.id===entry.parent)!;result=result.replace(new RegExp('(<a title="'+html(entry.group)+'"[^>]*>'+html(entry.group)+'<\\/a>)'),`$1 <span class="docs-breadcrumb-arrow">&#xE0B1;</span> <a title="${html(parent.label)}" href="${parent.url}">${html(parent.label)}</a>`);}
   for(const [direction,neighbor] of [['prev',entry.parent?adminPages.find(page=>page.id===entry.parent):adminPages[position-1]],['next',adminPages[position+1]]] as const){
    const anchor=neighbor?`<a class="text-ui color-${palette[neighbor.color]}" data-color="${neighbor.color}" data-id="${neighbor.id}" href="${neighbor.url}" title="${html(neighbor.label)}">${direction==='prev'?prevArrow+html(neighbor.label):html(neighbor.label)+arrow}</a>`:'';
    result=result.replace(new RegExp(`<li class="${direction}-link">[\\s\\S]*?</li>`),`<li class="${direction}-link">${anchor}</li>`);

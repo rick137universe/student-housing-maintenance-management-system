@@ -26,6 +26,7 @@ import {adminShellRegression,verifyAdminShell} from './admin-shell';
 import {adminPersonalRegression} from './admin-personal';
 import {adminNotificationRegression} from './admin-notifications';
 import {adminAnnouncementRegression} from './admin-announcements';
+import {adminBillingRegression} from './admin-billing';
 import {maintenanceAnalyticsRegression} from './maintenance-analytics';
 import {maintenanceProcessingRegression} from './maintenance-processing';
 import {maintenanceOrderRegression} from './maintenance-orders';
@@ -201,6 +202,7 @@ export async function browserRegression(origin:string,password:string,database:P
   await adminPersonalRegression(browser,origin,password);
   await adminNotificationRegression(browser,origin,password,database);
   await adminAnnouncementRegression(browser,origin,password);
+  await adminBillingRegression(browser,origin,password);
   await maintenanceShellRegression(browser,origin,password);
   await maintenancePersonalRegression(browser,origin,password);
   await maintenanceNotificationRegression(browser,origin,password);
