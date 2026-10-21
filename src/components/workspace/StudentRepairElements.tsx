@@ -21,8 +21,8 @@ export function RepairValues({row,fields}:{row:StudentRow;fields:ReadonlyArray<r
 const historyFields=[['created_at','处理时间'],['status','状态'],['actor_name','处理人员'],['description','处理说明']] as const;
 export function RepairHistory({history,title='处理过程'}:{history:StudentRow[];title?:string}){
  return <><h2>{title}</h2><div className="scroll-container scroll-x" data-dorma-repair-history>
-  {history.length?<table className="responsive-table" aria-label={title} style={{minWidth:'40rem'}}><thead><tr>{historyFields.map(([key,label])=><th key={key} scope="col">{label}</th>)}</tr></thead><tbody>
-   {history.map((update,index)=><tr key={String(update.update_id??index)}>{historyFields.map(([key,label])=><td key={key} data-label={label} style={key==='description'?{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}:undefined}>{repairValue(key,update[key])}</td>)}</tr>)}
+  {history.length?<table className="responsive-table" aria-label={title} style={{minWidth:'40rem'}}><thead><tr>{historyFields.map(([key,label])=><th key={key} scope="col" style={key==='description'?undefined:{paddingRight:'var(--margin-l)'}}>{label}</th>)}</tr></thead><tbody>
+   {history.map((update,index)=><tr key={String(update.update_id??index)}>{historyFields.map(([key,label])=><td key={key} data-label={label} style={key==='description'?{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}:{paddingRight:'var(--margin-l)'}}>{repairValue(key,update[key])}</td>)}</tr>)}
   </tbody></table>:<StudentEmptyState/>}
  </div></>;
 }
