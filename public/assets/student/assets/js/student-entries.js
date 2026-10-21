@@ -26,7 +26,7 @@ const entries = [
     "label": "查看个人信息",
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
-    "url": "/workspace/student/personal/action-1",
+    "url": "/workspace/student/personal/profile",
     "description": "查看账号资料和当前住宿记录。"
   },
   {
@@ -36,7 +36,7 @@ const entries = [
     "label": "修改个人信息",
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
-    "url": "/workspace/student/personal/action-2",
+    "url": "/workspace/student/personal/edit-profile",
     "description": "修改姓名、联系电话及邮箱。"
   },
   {
@@ -46,7 +46,7 @@ const entries = [
     "label": "修改登录密码",
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-3",
-    "url": "/workspace/student/personal/action-3",
+    "url": "/workspace/student/personal/change-password",
     "description": "依次填写并确认三项密码，完成后重新登录。"
   },
   {
@@ -66,7 +66,7 @@ const entries = [
     "label": "入住申请",
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
-    "url": "/workspace/student/accommodation/action-1",
+    "url": "/workspace/student/accommodation/check-in",
     "description": "提交入住申请，选择意向楼栋和期望入住日期。"
   },
   {
@@ -78,7 +78,7 @@ const entries = [
     "action": "action-1/submit",
     "parent": "animation-animatable-properties-css-transforms",
     "kind": "submit",
-    "url": "/workspace/student/accommodation/action-1/submit",
+    "url": "/workspace/student/accommodation/check-in/submit",
     "description": "填写意向楼栋、期望办理日期及申请说明，确认后提交入住申请。"
   },
   {
@@ -89,7 +89,7 @@ const entries = [
     "id": "timer-timer-properties",
     "action": "action-1/records",
     "parent": "animation-animatable-properties-css-transforms",
-    "url": "/workspace/student/accommodation/action-1/records",
+    "url": "/workspace/student/accommodation/check-in/records",
     "description": "查看已提交的入住申请及审核结果。"
   },
   {
@@ -99,7 +99,7 @@ const entries = [
     "label": "调宿申请",
     "id": "timeline-add-animations",
     "action": "action-2",
-    "url": "/workspace/student/accommodation/action-2",
+    "url": "/workspace/student/accommodation/room-change",
     "description": "提交调宿意向，审核通过后完成床位变更。"
   },
   {
@@ -111,7 +111,7 @@ const entries = [
     "action": "action-2/submit",
     "parent": "timeline-add-animations",
     "kind": "submit",
-    "url": "/workspace/student/accommodation/action-2/submit",
+    "url": "/workspace/student/accommodation/room-change/submit",
     "description": "填写意向楼栋、期望办理日期及申请说明，确认后提交调宿申请。"
   },
   {
@@ -122,7 +122,7 @@ const entries = [
     "id": "timeline-timeline-properties",
     "action": "action-2/records",
     "parent": "timeline-add-animations",
-    "url": "/workspace/student/accommodation/action-2/records",
+    "url": "/workspace/student/accommodation/room-change/records",
     "description": "查看调宿申请、审核意见及床位变更结果。"
   },
   {
@@ -132,7 +132,7 @@ const entries = [
     "label": "退宿申请",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
-    "url": "/workspace/student/accommodation/action-3",
+    "url": "/workspace/student/accommodation/check-out",
     "description": "提交退宿申请，填写期望办理日期和申请说明。"
   },
   {
@@ -144,7 +144,7 @@ const entries = [
     "action": "action-3/submit",
     "parent": "animation-animation-playback-settings-reversed",
     "kind": "submit",
-    "url": "/workspace/student/accommodation/action-3/submit",
+    "url": "/workspace/student/accommodation/check-out/submit",
     "description": "填写期望办理日期及申请说明，确认后提交退宿申请。"
   },
   {
@@ -155,7 +155,7 @@ const entries = [
     "id": "animation-animation-properties",
     "action": "action-3/records",
     "parent": "animation-animation-playback-settings-reversed",
-    "url": "/workspace/student/accommodation/action-3/records",
+    "url": "/workspace/student/accommodation/check-out/records",
     "description": "查看退宿申请及办理结果。"
   },
   {
@@ -175,7 +175,7 @@ const entries = [
     "label": "查看账单",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
-    "url": "/workspace/student/payment/action-1",
+    "url": "/workspace/student/payment/bills",
     "description": "查看住宿费、水电费和账单余额。"
   },
   {
@@ -185,7 +185,7 @@ const entries = [
     "label": "在线缴费",
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
-    "url": "/workspace/student/payment/action-2",
+    "url": "/workspace/student/payment/online-payment",
     "description": "选择未缴清账单进行测试支付，不产生真实扣款。"
   },
   {
@@ -195,7 +195,7 @@ const entries = [
     "label": "缴费记录",
     "id": "timeline-add-timers",
     "action": "action-3",
-    "url": "/workspace/student/payment/action-3",
+    "url": "/workspace/student/payment/payment-history",
     "description": "查询已经入账的缴费记录。"
   },
   {
@@ -215,7 +215,7 @@ const entries = [
     "label": "提交报修",
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
-    "url": "/workspace/student/repair/action-1",
+    "url": "/workspace/student/repair/requests",
     "description": "选择当前住宿房间，填写故障情况与联系方式。"
   },
   {
@@ -227,7 +227,7 @@ const entries = [
     "action": "action-1/submit",
     "parent": "animation-animation-methods-refresh",
     "kind": "repair-submit",
-    "url": "/workspace/student/repair/action-1/submit",
+    "url": "/workspace/student/repair/requests/submit",
     "description": "选择本人住宿房间，填写故障信息及联系电话，确认后提交申请。"
   },
   {
@@ -239,7 +239,7 @@ const entries = [
     "action": "action-1/records",
     "parent": "animation-animation-methods-refresh",
     "kind": "repair-records",
-    "url": "/workspace/student/repair/action-1/records",
+    "url": "/workspace/student/repair/requests/records",
     "description": "查看本人提交的报修申请、审核状态及详细信息。"
   },
   {
@@ -249,7 +249,7 @@ const entries = [
     "label": "查看进度",
     "id": "timeline-timeline-methods-seek",
     "action": "action-2",
-    "url": "/workspace/student/repair/action-2",
+    "url": "/workspace/student/repair/progress",
     "description": "查询报修审核、派工和维修处理进度。"
   },
   {
@@ -261,7 +261,7 @@ const entries = [
     "action": "action-2/current",
     "parent": "timeline-timeline-methods-seek",
     "kind": "repair-current",
-    "url": "/workspace/student/repair/action-2/current",
+    "url": "/workspace/student/repair/progress/current",
     "description": "查看正在审核、派工和维修中的工单及处理过程。"
   },
   {
@@ -273,7 +273,7 @@ const entries = [
     "action": "action-2/records",
     "parent": "timeline-timeline-methods-seek",
     "kind": "repair-records",
-    "url": "/workspace/student/repair/action-2/records",
+    "url": "/workspace/student/repair/progress/records",
     "description": "查看已结束报修的审核结果、维修过程和完工信息。"
   },
   {
@@ -283,7 +283,7 @@ const entries = [
     "label": "服务评价",
     "id": "utilities-stagger-stagger-parameters-stagger-grid",
     "action": "action-3",
-    "url": "/workspace/student/repair/action-3",
+    "url": "/workspace/student/repair/reviews",
     "description": "对已完成的报修服务评价，每次处理可评价一次。"
   },
   {
@@ -295,7 +295,7 @@ const entries = [
     "action": "action-3/submit",
     "parent": "utilities-stagger-stagger-parameters-stagger-grid",
     "kind": "repair-evaluate",
-    "url": "/workspace/student/repair/action-3/submit",
+    "url": "/workspace/student/repair/reviews/submit",
     "description": "选择本人已完工且未评价的报修，填写评分及评价内容。"
   },
   {
@@ -307,7 +307,7 @@ const entries = [
     "action": "action-3/records",
     "parent": "utilities-stagger-stagger-parameters-stagger-grid",
     "kind": "repair-records",
-    "url": "/workspace/student/repair/action-3/records",
+    "url": "/workspace/student/repair/reviews/records",
     "description": "查看已提交的服务评分、评价内容及对应维修信息。"
   },
   {
@@ -327,7 +327,7 @@ const entries = [
     "label": "公寓通知",
     "id": "text-splittext",
     "action": "action-1",
-    "url": "/workspace/student/announcements/action-1",
+    "url": "/workspace/student/announcements/notices",
     "description": "查看与本人住宿楼栋相关的公寓公告。"
   },
   {
@@ -337,7 +337,7 @@ const entries = [
     "label": "缴费提醒",
     "id": "timer-timer-callbacks-oncomplete",
     "action": "action-2",
-    "url": "/workspace/student/announcements/action-2",
+    "url": "/workspace/student/announcements/payment-reminders",
     "description": "查看缴费事项与催缴通知。"
   },
   {
@@ -357,7 +357,7 @@ const entries = [
     "label": "消息通知",
     "id": "timeline-call-functions",
     "action": "action-1",
-    "url": "/workspace/student/notifications/action-1",
+    "url": "/workspace/student/notifications/messages",
     "description": "查看业务消息并标记已读。"
   }
 ];

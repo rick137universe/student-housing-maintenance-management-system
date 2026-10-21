@@ -26,7 +26,7 @@ const entries = [
     "label": "学生信息",
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
-    "url": "/workspace/dormManager/base-data/action-1",
+    "url": "/workspace/dormManager/base-data/students",
     "description": "查看授权楼栋内学生的资料，维护姓名及联系方式。"
   },
   {
@@ -36,7 +36,7 @@ const entries = [
     "label": "房间信息",
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
-    "url": "/workspace/dormManager/base-data/action-2",
+    "url": "/workspace/dormManager/base-data/rooms",
     "description": "查看房间资料，维护楼层、房型、容量及状态。"
   },
   {
@@ -46,7 +46,7 @@ const entries = [
     "label": "床位信息",
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-3",
-    "url": "/workspace/dormManager/base-data/action-3",
+    "url": "/workspace/dormManager/base-data/beds",
     "description": "查看床位资料，维护床位号及状态。"
   },
   {
@@ -66,7 +66,7 @@ const entries = [
     "label": "入住登记与分配",
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
-    "url": "/workspace/dormManager/accommodation/action-1",
+    "url": "/workspace/dormManager/accommodation/check-in",
     "description": "查看入住申请，审核并分配床位。"
   },
   {
@@ -76,7 +76,7 @@ const entries = [
     "label": "调宿审核",
     "id": "animation-animatable-properties-css-variables",
     "action": "action-2",
-    "url": "/workspace/dormManager/accommodation/action-2",
+    "url": "/workspace/dormManager/accommodation/room-change",
     "description": "查看调宿申请，审核并办理床位变更。"
   },
   {
@@ -86,7 +86,7 @@ const entries = [
     "label": "退宿登记",
     "id": "timer-timer-properties",
     "action": "action-3",
-    "url": "/workspace/dormManager/accommodation/action-3",
+    "url": "/workspace/dormManager/accommodation/check-out",
     "description": "查看退宿申请，审核并办理退宿登记。"
   },
   {
@@ -106,7 +106,7 @@ const entries = [
     "label": "床位总览",
     "id": "timeline-add-animations",
     "action": "action-1",
-    "url": "/workspace/dormManager/beds/action-1",
+    "url": "/workspace/dormManager/beds/inventory",
     "description": "查看床位、所属房间及当前状态。"
   },
   {
@@ -116,7 +116,7 @@ const entries = [
     "label": "状态更新",
     "id": "animation-animatable-properties-javascript-object-properties",
     "action": "action-2",
-    "url": "/workspace/dormManager/beds/action-2",
+    "url": "/workspace/dormManager/beds/update-status",
     "description": "查看床位资料并更新床位号和状态。"
   },
   {
@@ -126,7 +126,7 @@ const entries = [
     "label": "异常校验",
     "id": "timeline-timeline-properties",
     "action": "action-3",
-    "url": "/workspace/dormManager/beds/action-3",
+    "url": "/workspace/dormManager/beds/anomalies",
     "description": "核对床位登记状态与实际入住，查看维修停用等异常。"
   },
   {
@@ -146,7 +146,7 @@ const entries = [
     "label": "待初审工单",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-1",
-    "url": "/workspace/dormManager/repair-review/action-1",
+    "url": "/workspace/dormManager/repair-review/pending",
     "description": "查看待初审工单，核对报修资料并提交初审结果。"
   },
   {
@@ -156,7 +156,7 @@ const entries = [
     "label": "上报维修",
     "id": "animation-animatable-properties-svg-attributes",
     "action": "action-2",
-    "url": "/workspace/dormManager/repair-review/action-2",
+    "url": "/workspace/dormManager/repair-review/reported",
     "description": "查看通过初审并上报维修的工单。"
   },
   {
@@ -166,7 +166,7 @@ const entries = [
     "label": "驳回报修",
     "id": "animation-animation-properties",
     "action": "action-3",
-    "url": "/workspace/dormManager/repair-review/action-3",
+    "url": "/workspace/dormManager/repair-review/rejected",
     "description": "查看已驳回工单及审核意见。"
   },
   {
@@ -186,7 +186,7 @@ const entries = [
     "label": "账单核对",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
-    "url": "/workspace/dormManager/billing/action-1",
+    "url": "/workspace/dormManager/billing/verification",
     "description": "查看授权范围内的账单资料，确认账单核对结果。"
   },
   {
@@ -196,7 +196,7 @@ const entries = [
     "label": "欠费名单",
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
-    "url": "/workspace/dormManager/billing/action-2",
+    "url": "/workspace/dormManager/billing/arrears",
     "description": "查看尚未缴清的账单，发送缴费提醒。"
   },
   {
@@ -206,7 +206,7 @@ const entries = [
     "label": "催缴记录",
     "id": "timeline-add-timers",
     "action": "action-3",
-    "url": "/workspace/dormManager/billing/action-3",
+    "url": "/workspace/dormManager/billing/reminders",
     "description": "查看催缴内容、发送时间及已读状态。"
   },
   {
@@ -226,7 +226,7 @@ const entries = [
     "label": "查看个人信息",
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
-    "url": "/workspace/dormManager/personal/action-1",
+    "url": "/workspace/dormManager/personal/profile",
     "description": "查看本人的账号、姓名、角色和联系方式。"
   },
   {
@@ -236,7 +236,7 @@ const entries = [
     "label": "修改个人信息",
     "id": "timer-timer-callbacks-onbegin",
     "action": "action-2",
-    "url": "/workspace/dormManager/personal/action-2",
+    "url": "/workspace/dormManager/personal/edit-profile",
     "description": "修改姓名、联系电话及邮箱。"
   },
   {
@@ -246,7 +246,7 @@ const entries = [
     "label": "修改登录密码",
     "id": "timer-timer-callbacks-onupdate",
     "action": "action-3",
-    "url": "/workspace/dormManager/personal/action-3",
+    "url": "/workspace/dormManager/personal/change-password",
     "description": "依次填写并确认三项密码，完成后重新登录。"
   },
   {
@@ -266,7 +266,7 @@ const entries = [
     "label": "消息通知",
     "id": "timeline-timeline-methods-seek",
     "action": "action-1",
-    "url": "/workspace/dormManager/notifications/action-1",
+    "url": "/workspace/dormManager/notifications/messages",
     "description": "查看业务消息并标记已读。"
   }
 ];

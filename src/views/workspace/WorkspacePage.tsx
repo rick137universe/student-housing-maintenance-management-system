@@ -15,6 +15,7 @@ import {ManagerDocsPage} from './ManagerDocsPage';
 import {MaintenanceDocsPage} from './MaintenanceDocsPage';
 import {adminPages} from '@/data/admin-pages';
 import {AdminDocsPage} from './AdminDocsPage';
+import {workspaceActionId} from '@/data/workspace-paths';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -27,7 +28,8 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   const docsLogout=useCallback(()=>{leavingRef.current=true;setLeaving(true);void refresh().then(()=>router.push('/'));},[refresh,router]);
   const role = validRoles.includes(params.role as RoleId) ? params.role as RoleId : null;
   const feature = role && params.feature ? featureFor(role, params.feature) : undefined;
-  const actionId = pathname.split('/')[4];
+  const nestedAction=role&&feature?workspaceActionId(role,feature.id,pathname.split('/').slice(4).join('/')):'';
+  const actionId = nestedAction.split('/')[0];
   const action = feature?.actions.find(item => item.id === actionId) ?? feature?.actions[0];
 
   useLayoutEffect(() => {
@@ -68,14 +70,12 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   </main>;
 
   if (role === 'student') {
-    const nestedAction=pathname.split('/').slice(4).join('/');
     const studentAction=studentPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
     return <StudentDocsPage account={account} featureId={feature.id} actionId={actionId ? studentAction??action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   }
   if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   if(role==='maintenance')return <MaintenanceDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 
-  const nestedAction=pathname.split('/').slice(4).join('/');
   const adminAction=adminPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
   return <AdminDocsPage account={account} featureId={feature.id} actionId={actionId?adminAction??action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
 }

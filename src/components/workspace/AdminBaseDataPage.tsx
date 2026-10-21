@@ -13,7 +13,7 @@ import {RepairArrow,RepairEditorFields} from './StudentRepairElements';
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
-const rootUrl='/workspace/admin/base-data/action-1',recordsUrl=rootUrl+'/records';
+const rootUrl='/workspace/admin/base-data/manage',recordsUrl=rootUrl+'/records';
 function url(path:string,resource:BaseResource,page=1,record?:string,mode?:string){const params=new URLSearchParams({type:resource});if(page>1)params.set('page',String(page));if(record!==undefined)params.set('record',record);if(mode)params.set('mode',mode);return path+'?'+params;}
 function display(value:unknown){return value===null||value===undefined||value===''?'—':valueLabels[String(value)]??String(value);}
 function Values({row,resource}:{row:StudentRow;resource:BaseResource}){return <div data-dorma-base-values>{baseDetails[resource].map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(row[key])}</code></pre></Fragment>)}</div>;}

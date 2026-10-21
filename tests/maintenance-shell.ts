@@ -35,7 +35,7 @@ export async function maintenanceShellRegression(browser:Browser,origin:string,p
  try{
   const response=await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username:'mt008',password}});assert.equal(response.status(),200);
   const account=(await response.json()).data;
-  await page.goto(origin+'/workspace/maintenance/orders/action-1');await ready(maintenancePages[2]);
+  await page.goto(origin+'/workspace/maintenance/orders/assigned');await ready(maintenancePages[2]);
   await expect(frame.locator('[data-dorma-account-name]')).toHaveText(account.displayName);
   await expect(page.locator('html')).toHaveCSS('overflow-y','hidden');assert.equal(await page.locator('html').evaluate(el=>el.scrollHeight>innerHeight),false);
   const shell=await frame.locator('#docs-demos').elementHandle();
@@ -57,9 +57,9 @@ export async function maintenanceShellRegression(browser:Browser,origin:string,p
    await expect(frame.getByRole('heading',{name:'工单状态',exact:true}).locator('+ pre code')).toHaveText('已接单');await expect(frame.getByText('操作已保存。',{exact:true})).toHaveCount(0);
    const repair=await context.request.get(origin+'/api/v1/repairs/'+id);assert.equal((await repair.json()).data.repair_status,'accepted');
   }
-  await page.goto(origin+'/workspace/maintenance/personal/action-2');await ready(maintenancePages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);
+  await page.goto(origin+'/workspace/maintenance/personal/edit-profile');await ready(maintenancePages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);
   const name=frame.locator('[data-profile-field="fullName"]');await name.getByRole('button',{name:'编辑姓名',exact:true}).click();await expect(name.getByRole('textbox')).toBeVisible();await name.getByRole('button',{name:'取消',exact:true}).click();await expect(name.getByRole('textbox')).toHaveCount(0);await expect(frame.getByRole('dialog')).toHaveCount(0);
-  await page.goto(origin+'/workspace/maintenance/orders/action-1');await ready(maintenancePages[2]);await page.screenshot({path:'docs/qa/backend/maintenance-shell-desktop.png'});
+  await page.goto(origin+'/workspace/maintenance/orders/assigned');await ready(maintenancePages[2]);await page.screenshot({path:'docs/qa/backend/maintenance-shell-desktop.png'});
   await page.setViewportSize({width:390,height:844});await frame.locator('#toggle-sidebar').click();await expect(frame.locator('#docs-sidebar')).toHaveClass(/is-active/);
   await frame.locator('#docs-sidebar a[title="维修处理"]').click();await ready(maintenancePages.find(entry=>entry.feature==='repair'&&entry.action==='overview')!);
   if(!(await frame.locator('#docs-sidebar').getAttribute('class'))?.includes('is-active'))await frame.locator('#toggle-sidebar').click();

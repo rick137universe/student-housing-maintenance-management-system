@@ -26,7 +26,7 @@ const entries = [
     "label": "数据维护",
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
-    "url": "/workspace/admin/base-data/action-1",
+    "url": "/workspace/admin/base-data/manage",
     "description": "维护学生、楼栋、房间与床位资料，查看记录并办理新增和修改。"
   },
   {
@@ -36,7 +36,7 @@ const entries = [
     "label": "新增数据",
     "id": "timer-timer-methods-reverse",
     "action": "action-1/submit",
-    "url": "/workspace/admin/base-data/action-1/submit",
+    "url": "/workspace/admin/base-data/manage/submit",
     "description": "选择数据类型，逐项填写并确认基础资料。",
     "parent": "animation-animatable-properties-css-properties",
     "kind": "base-create"
@@ -48,7 +48,7 @@ const entries = [
     "label": "数据记录",
     "id": "timer-timer-methods-pause",
     "action": "action-1/records",
-    "url": "/workspace/admin/base-data/action-1/records",
+    "url": "/workspace/admin/base-data/manage/records",
     "description": "选择数据类型，查看和维护完整基础资料。",
     "parent": "animation-animatable-properties-css-properties",
     "kind": "base-records"
@@ -60,7 +60,7 @@ const entries = [
     "label": "批量导入",
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
-    "url": "/workspace/admin/base-data/action-2",
+    "url": "/workspace/admin/base-data/import",
     "description": "按数据类型下载模板并批量导入基础资料。"
   },
   {
@@ -70,7 +70,7 @@ const entries = [
     "label": "数据导出",
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-3",
-    "url": "/workspace/admin/base-data/action-3",
+    "url": "/workspace/admin/base-data/export",
     "description": "导出学生、楼栋、房间与床位基础资料。"
   },
   {
@@ -90,7 +90,7 @@ const entries = [
     "label": "分床规则",
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
-    "url": "/workspace/admin/process/action-1",
+    "url": "/workspace/admin/process/bed-assignment",
     "description": "查看和配置自动分床规则。"
   },
   {
@@ -100,7 +100,7 @@ const entries = [
     "label": "配置分床规则",
     "id": "timer-timer-callbacks-then",
     "action": "action-1/edit",
-    "url": "/workspace/admin/process/action-1/edit",
+    "url": "/workspace/admin/process/bed-assignment/edit",
     "description": "确认自动分床状态，完成后保存。",
     "parent": "animation-animatable-properties-css-transforms",
     "kind": "process-edit"
@@ -112,7 +112,7 @@ const entries = [
     "label": "住宿流程",
     "id": "animation-animatable-properties-css-variables",
     "action": "action-2",
-    "url": "/workspace/admin/process/action-2",
+    "url": "/workspace/admin/process/accommodation",
     "description": "查看住宿审核要求与办理时限，配置住宿业务流程。"
   },
   {
@@ -122,7 +122,7 @@ const entries = [
     "label": "配置住宿流程",
     "id": "timer-timer-methods",
     "action": "action-2/edit",
-    "url": "/workspace/admin/process/action-2/edit",
+    "url": "/workspace/admin/process/accommodation/edit",
     "description": "确认审核要求和办理时限，完成后保存。",
     "parent": "animation-animatable-properties-css-variables",
     "kind": "process-edit"
@@ -134,7 +134,7 @@ const entries = [
     "label": "缴费流程",
     "id": "timer-timer-properties",
     "action": "action-3",
-    "url": "/workspace/admin/process/action-3",
+    "url": "/workspace/admin/process/payment",
     "description": "查看固定月费及缴费期限，配置后续账单生成规则。"
   },
   {
@@ -144,7 +144,7 @@ const entries = [
     "label": "配置缴费流程",
     "id": "timer-timer-methods-play",
     "action": "action-3/edit",
-    "url": "/workspace/admin/process/action-3/edit",
+    "url": "/workspace/admin/process/payment/edit",
     "description": "确认固定月费和缴费期限，完成后保存。",
     "parent": "timer-timer-properties",
     "kind": "process-edit"
@@ -166,7 +166,7 @@ const entries = [
     "label": "待派工",
     "id": "timeline-add-animations",
     "action": "action-1",
-    "url": "/workspace/admin/dispatch/action-1",
+    "url": "/workspace/admin/dispatch/pending",
     "description": "查看通过初审的报修工单，选择维修人员并派工。"
   },
   {
@@ -176,7 +176,7 @@ const entries = [
     "label": "智能派工",
     "id": "animation-animatable-properties-javascript-object-properties",
     "action": "action-2",
-    "url": "/workspace/admin/dispatch/action-2",
+    "url": "/workspace/admin/dispatch/automatic",
     "description": "按未完工工单数量分配维修人员，确认后提交派工。"
   },
   {
@@ -186,7 +186,7 @@ const entries = [
     "label": "进度监控",
     "id": "timeline-timeline-properties",
     "action": "action-3",
-    "url": "/workspace/admin/dispatch/action-3",
+    "url": "/workspace/admin/dispatch/progress",
     "description": "查看报修、派工与维修进度及完整处理过程。"
   },
   {
@@ -206,7 +206,7 @@ const entries = [
     "label": "运营统计",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-1",
-    "url": "/workspace/admin/reports/action-1",
+    "url": "/workspace/admin/reports/operations",
     "description": "查看楼栋床位、当前入住率和待缴金额，按楼栋查看统计详情。"
   },
   {
@@ -216,7 +216,7 @@ const entries = [
     "label": "筛选运营统计",
     "id": "timer-timer-methods-restart",
     "action": "action-1/filter",
-    "url": "/workspace/admin/reports/action-1/filter",
+    "url": "/workspace/admin/reports/operations/filter",
     "description": "选择日期与楼栋范围，确认后查看统计。",
     "parent": "animation-animation-playback-settings-reversed",
     "kind": "report-filter"
@@ -228,7 +228,7 @@ const entries = [
     "label": "维修统计",
     "id": "animation-animatable-properties-svg-attributes",
     "action": "action-2",
-    "url": "/workspace/admin/reports/action-2",
+    "url": "/workspace/admin/reports/maintenance",
     "description": "查看报修总量、完成率、服务评分及每月维修工作量。"
   },
   {
@@ -238,7 +238,7 @@ const entries = [
     "label": "筛选维修统计",
     "id": "timer-timer-methods-alternate",
     "action": "action-2/filter",
-    "url": "/workspace/admin/reports/action-2/filter",
+    "url": "/workspace/admin/reports/maintenance/filter",
     "description": "选择日期与楼栋范围，确认后查看统计。",
     "parent": "animation-animatable-properties-svg-attributes",
     "kind": "report-filter"
@@ -250,7 +250,7 @@ const entries = [
     "label": "导出报表",
     "id": "animation-animation-properties",
     "action": "action-3",
-    "url": "/workspace/admin/reports/action-3",
+    "url": "/workspace/admin/reports/export",
     "description": "选择日期和楼栋范围，导出运营与维修统计 CSV 报表。"
   },
   {
@@ -270,7 +270,7 @@ const entries = [
     "label": "用户账号",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
-    "url": "/workspace/admin/permissions/action-1",
+    "url": "/workspace/admin/permissions/accounts",
     "description": "新增员工账号，查看和维护账号资料、角色及状态。"
   },
   {
@@ -280,7 +280,7 @@ const entries = [
     "label": "新增员工账号",
     "id": "timer-timer-playback-settings-autoplay",
     "action": "action-1/submit",
-    "url": "/workspace/admin/permissions/action-1/submit",
+    "url": "/workspace/admin/permissions/accounts/submit",
     "description": "填写员工账号、姓名、角色、状态与初始密码。",
     "parent": "timer-timer-playback-settings-duration",
     "kind": "account-create"
@@ -292,7 +292,7 @@ const entries = [
     "label": "账号记录",
     "id": "timer-timer-playback-settings-framerate",
     "action": "action-1/records",
-    "url": "/workspace/admin/permissions/action-1/records",
+    "url": "/workspace/admin/permissions/accounts/records",
     "description": "查看和维护学生及员工账号。",
     "parent": "timer-timer-playback-settings-duration",
     "kind": "records"
@@ -304,7 +304,7 @@ const entries = [
     "label": "角色权限",
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
-    "url": "/workspace/admin/permissions/action-2",
+    "url": "/workspace/admin/permissions/roles",
     "description": "配置角色权限，维护宿管人员的额外楼栋授权。"
   },
   {
@@ -314,7 +314,7 @@ const entries = [
     "label": "配置角色权限",
     "id": "timer-timer-playback-settings-playbackrate",
     "action": "action-2/submit",
-    "url": "/workspace/admin/permissions/action-2/submit",
+    "url": "/workspace/admin/permissions/roles/submit",
     "description": "选择角色、资源、操作和权限状态。",
     "parent": "animation-animation-callbacks-oncomplete",
     "kind": "permission-create"
@@ -326,7 +326,7 @@ const entries = [
     "label": "权限记录",
     "id": "timer-timer-callbacks",
     "action": "action-2/records",
-    "url": "/workspace/admin/permissions/action-2/records",
+    "url": "/workspace/admin/permissions/roles/records",
     "description": "查看各角色的资源权限与数据范围。",
     "parent": "animation-animation-callbacks-oncomplete",
     "kind": "records"
@@ -338,7 +338,7 @@ const entries = [
     "label": "楼栋授权",
     "id": "timer-timer-callbacks-onloop",
     "action": "action-2/authorize",
-    "url": "/workspace/admin/permissions/action-2/authorize",
+    "url": "/workspace/admin/permissions/roles/authorize",
     "description": "为宿管人员授予或撤销额外楼栋授权。",
     "parent": "animation-animation-callbacks-oncomplete",
     "kind": "authorization-create"
@@ -350,7 +350,7 @@ const entries = [
     "label": "授权记录",
     "id": "timer-timer-callbacks-onpause",
     "action": "action-2/authorizations",
-    "url": "/workspace/admin/permissions/action-2/authorizations",
+    "url": "/workspace/admin/permissions/roles/authorizations",
     "description": "查看宿管人员的额外楼栋授权。",
     "parent": "animation-animation-callbacks-oncomplete",
     "kind": "authorization-records"
@@ -362,7 +362,7 @@ const entries = [
     "label": "权限审计",
     "id": "timeline-add-timers",
     "action": "action-3",
-    "url": "/workspace/admin/permissions/action-3",
+    "url": "/workspace/admin/permissions/audit",
     "description": "查看操作审计记录及每次操作的详细信息。"
   },
   {
@@ -382,7 +382,7 @@ const entries = [
     "label": "备份策略",
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
-    "url": "/workspace/admin/backup/action-1",
+    "url": "/workspace/admin/backup/policies",
     "description": "配置每日备份时间、保留天数及启用状态。"
   },
   {
@@ -392,7 +392,7 @@ const entries = [
     "label": "新增备份策略",
     "id": "timer-timer-playback-settings",
     "action": "action-1/submit",
-    "url": "/workspace/admin/backup/action-1/submit",
+    "url": "/workspace/admin/backup/policies/submit",
     "description": "设置策略名称、每日时间、保留天数和启用状态。",
     "parent": "animation-animation-methods-refresh",
     "kind": "policy-create"
@@ -404,7 +404,7 @@ const entries = [
     "label": "策略记录",
     "id": "timer-timer-playback-settings-playback-loopdelay",
     "action": "action-1/records",
-    "url": "/workspace/admin/backup/action-1/records",
+    "url": "/workspace/admin/backup/policies/records",
     "description": "查看并维护已配置的备份策略。",
     "parent": "animation-animation-methods-refresh",
     "kind": "records"
@@ -416,7 +416,7 @@ const entries = [
     "label": "立即备份",
     "id": "timer-timer-callbacks-onbegin",
     "action": "action-2",
-    "url": "/workspace/admin/backup/action-2",
+    "url": "/workspace/admin/backup/tasks",
     "description": "创建备份任务，查看执行状态与备份结果。"
   },
   {
@@ -426,7 +426,7 @@ const entries = [
     "label": "创建备份",
     "id": "timer-timer-playback-settings-alternate",
     "action": "action-2/submit",
-    "url": "/workspace/admin/backup/action-2/submit",
+    "url": "/workspace/admin/backup/tasks/submit",
     "description": "确认后创建备份任务，执行结果可在备份记录中查看。",
     "parent": "timer-timer-callbacks-onbegin",
     "kind": "backup-create"
@@ -438,7 +438,7 @@ const entries = [
     "label": "备份记录",
     "id": "timer-timer-playback-settings-reversed",
     "action": "action-2/records",
-    "url": "/workspace/admin/backup/action-2/records",
+    "url": "/workspace/admin/backup/tasks/records",
     "description": "查看备份与恢复任务的执行状态和结果。",
     "parent": "timer-timer-callbacks-onbegin",
     "kind": "records"
@@ -450,7 +450,7 @@ const entries = [
     "label": "数据恢复",
     "id": "timer-timer-callbacks-onupdate",
     "action": "action-3",
-    "url": "/workspace/admin/backup/action-3",
+    "url": "/workspace/admin/backup/restore",
     "description": "查看备份与恢复记录，将有效备份恢复到独立副本。"
   },
   {
@@ -470,7 +470,7 @@ const entries = [
     "label": "账单生成",
     "id": "timeline-timeline-methods-seek",
     "action": "action-1",
-    "url": "/workspace/admin/billing/action-1",
+    "url": "/workspace/admin/billing/generate",
     "description": "按账期为当前在住学生生成月账单。"
   },
   {
@@ -480,7 +480,7 @@ const entries = [
     "label": "生成月账单",
     "id": "getting-started-using-with-vanilla-js",
     "action": "action-1/submit",
-    "url": "/workspace/admin/billing/action-1/submit",
+    "url": "/workspace/admin/billing/generate/submit",
     "description": "确认账期后，按已配置的费用生成当前在住学生账单。",
     "parent": "timeline-timeline-methods-seek",
     "kind": "generate"
@@ -492,7 +492,7 @@ const entries = [
     "label": "账单记录",
     "id": "getting-started-using-with-react",
     "action": "action-1/records",
-    "url": "/workspace/admin/billing/action-1/records",
+    "url": "/workspace/admin/billing/generate/records",
     "description": "查看账单费用、缴费状态及核对信息。",
     "parent": "timeline-timeline-methods-seek",
     "kind": "records"
@@ -504,7 +504,7 @@ const entries = [
     "label": "账单维护",
     "id": "animation-animation-callbacks-onupdate",
     "action": "action-2",
-    "url": "/workspace/admin/billing/action-2",
+    "url": "/workspace/admin/billing/manage",
     "description": "新增账单，维护费用及缴费截止日期。"
   },
   {
@@ -514,7 +514,7 @@ const entries = [
     "label": "新增账单",
     "id": "timer-timer-playback-settings-delay",
     "action": "action-2/submit",
-    "url": "/workspace/admin/billing/action-2/submit",
+    "url": "/workspace/admin/billing/manage/submit",
     "description": "填写学生、账期、费用及截止日期，确认后新增账单。",
     "parent": "animation-animation-callbacks-onupdate",
     "kind": "create"
@@ -526,7 +526,7 @@ const entries = [
     "label": "账单记录",
     "id": "timer-timer-playback-settings-loop",
     "action": "action-2/records",
-    "url": "/workspace/admin/billing/action-2/records",
+    "url": "/workspace/admin/billing/manage/records",
     "description": "查看账单费用、缴费状态及核对信息。",
     "parent": "animation-animation-callbacks-onupdate",
     "kind": "records"
@@ -538,7 +538,7 @@ const entries = [
     "label": "缴费流水",
     "id": "animation-animation-callbacks-onloop",
     "action": "action-3",
-    "url": "/workspace/admin/billing/action-3",
+    "url": "/workspace/admin/billing/payments",
     "description": "查看缴费流水及每笔缴费详情。"
   },
   {
@@ -558,7 +558,7 @@ const entries = [
     "label": "公告发布",
     "id": "utilities-stagger-stagger-parameters-stagger-grid",
     "action": "action-1",
-    "url": "/workspace/admin/announcements/action-1",
+    "url": "/workspace/admin/announcements/publish",
     "description": "发布公寓公告与服务信息，查看和维护已有公告。"
   },
   {
@@ -568,7 +568,7 @@ const entries = [
     "label": "发布公告",
     "id": "getting-started-installation",
     "action": "action-1/submit",
-    "url": "/workspace/admin/announcements/action-1/submit",
+    "url": "/workspace/admin/announcements/publish/submit",
     "description": "填写公告正文、发布范围和状态，确认后发布。",
     "parent": "utilities-stagger-stagger-parameters-stagger-grid",
     "kind": "submit"
@@ -580,7 +580,7 @@ const entries = [
     "label": "公告记录",
     "id": "getting-started-module-imports",
     "action": "action-1/records",
-    "url": "/workspace/admin/announcements/action-1/records",
+    "url": "/workspace/admin/announcements/publish/records",
     "description": "查看公告正文，维护发布范围、到期时间与启用状态。",
     "parent": "utilities-stagger-stagger-parameters-stagger-grid",
     "kind": "records"
@@ -602,7 +602,7 @@ const entries = [
     "label": "查看个人信息",
     "id": "animation-animation-callbacks-onpause",
     "action": "action-1",
-    "url": "/workspace/admin/personal/action-1",
+    "url": "/workspace/admin/personal/profile",
     "description": "查看本人的账号、姓名、角色和联系方式。"
   },
   {
@@ -612,7 +612,7 @@ const entries = [
     "label": "修改个人信息",
     "id": "animation-animation-callbacks-then",
     "action": "action-2",
-    "url": "/workspace/admin/personal/action-2",
+    "url": "/workspace/admin/personal/edit-profile",
     "description": "修改姓名、联系电话及邮箱。"
   },
   {
@@ -622,7 +622,7 @@ const entries = [
     "label": "修改登录密码",
     "id": "text-splittext",
     "action": "action-3",
-    "url": "/workspace/admin/personal/action-3",
+    "url": "/workspace/admin/personal/change-password",
     "description": "依次填写并确认三项密码，完成后重新登录。"
   },
   {
@@ -642,7 +642,7 @@ const entries = [
     "label": "消息通知",
     "id": "timer-timer-callbacks-oncomplete",
     "action": "action-1",
-    "url": "/workspace/admin/notifications/action-1",
+    "url": "/workspace/admin/notifications/messages",
     "description": "查看业务消息并标记已读。"
   }
 ];

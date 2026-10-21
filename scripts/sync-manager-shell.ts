@@ -1,3 +1,4 @@
+import {canonicalWorkspaceUrl} from '../src/data/workspace-paths';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {managerPages} from '../src/data/manager-pages';
 
@@ -19,7 +20,7 @@ function page(entry:typeof managerPages[number]){
   const recordPage=['accommodation','beds','repair-review','base-data','billing'].includes(entry.feature);
   const template=entry.feature==='notifications'?notificationTemplate:personalTemplates[recordPage?'action-1':entry.action];
   const sourceFeature=entry.feature==='notifications'?'notifications':'personal';
-  let result=template.replaceAll('/workspace/student/'+sourceFeature+'/action-'+(recordPage?'1':entry.action.split('-')[1]),entry.url)
+  let result=template.replaceAll(canonicalWorkspaceUrl('/workspace/student/'+sourceFeature+'/action-'+(recordPage?'1':entry.action.split('-')[1])),entry.url)
    .replaceAll('/workspace/student/'+sourceFeature,'/workspace/dormManager/'+entry.feature).replaceAll('学生工作台','宿管工作台')
    .replaceAll(`data-color="${entry.feature==='notifications'?5:0}"`,`data-color="${entry.color}"`)
    .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)

@@ -20,7 +20,7 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   };
   const slowLists=async(route:import('@playwright/test').Route)=>{await new Promise(resolve=>setTimeout(resolve,500));await route.continue();};
   page.on('request',track);await page.route(/\/api\/v1\/(bills|payments)\?/,slowLists);
-  await page.goto(base+'action-1');
+  await page.goto(base+'bills');
   await expect(frame.locator('[data-dorma-finance]')).toBeAttached();
   await expect(frame.locator('[data-dorma-finance]').getByText('正在读取…',{exact:true})).toHaveCount(0);
   await expect(frame.locator('[data-dorma-finance]').getByText('暂无记录。',{exact:true})).toHaveCount(0);
@@ -30,7 +30,7 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   await expect(frame.locator('[data-dorma-finance] table')).toHaveCount(0);
   await expect(frame.locator('[data-dorma-finance] input')).toHaveCount(0);
   await expect(frame.locator('#toggle-search')).toBeEnabled();
-  await expectStudentReveal(page,()=>list.locator('a').click(),'账单详情');await expect(page).toHaveURL(base+`action-1?record=${id}`);
+  await expectStudentReveal(page,()=>list.locator('a').click(),'账单详情');await expect(page).toHaveURL(base+`bills?record=${id}`);
   await expect(frame.locator('#docs-info h1')).toHaveText('账单详情');
   await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText('查看账单');
   await expectTop();
@@ -43,35 +43,35 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   await expect(frame.locator('#docs-info .prev-next-heading h6:not([aria-hidden="true"])')).toHaveText(['上一个']);
   await page.reload();await expect(code('账单编号')).toHaveText(id);
   await expectTop();
-  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'action-1');await expect(list.locator('a')).toHaveCount(1);
+  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'bills');await expect(list.locator('a')).toHaveCount(1);
   await expectTop();
   await expect(frame.locator('#docs-info .next-link a')).toHaveText('在线缴费');
   await page.goBack();await expect(code('账单编号')).toHaveText(id);
   await page.goForward();await expect(list.locator('a')).toHaveCount(1);
-  await page.goto(base+'action-2');await expect(list.locator('a')).toHaveText([`${bill.billing_period} · 12.00 · 未缴`]);await list.locator('a').click();
-  await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
+  await page.goto(base+'online-payment');await expect(list.locator('a')).toHaveText([`${bill.billing_period} · 12.00 · 未缴`]);await list.locator('a').click();
+  await expect(page).toHaveURL(base+'online-payment?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
   await expectTop();
   await expect(frame.locator('#docs-info .prev-link a')).toHaveText('在线缴费');
   const pay=frame.locator('#docs-info .next-link').getByRole('link',{name:'支付',exact:true});
-  await expect(pay).toHaveText('支付');await expect(pay).toHaveAttribute('href',base.replace(origin,'')+'action-2?record='+id+'&step=pay');
+  await expect(pay).toHaveText('支付');await expect(pay).toHaveAttribute('href',base.replace(origin,'')+'online-payment?record='+id+'&step=pay');
   await expect(frame.getByRole('button',{name:'测试支付',exact:true})).toHaveCount(0);
   const backBounds=await frame.locator('#docs-info .prev-link a').boundingBox(),payBounds=await pay.boundingBox();
   assert.ok(backBounds&&payBounds&&Math.abs(backBounds.y-payBounds.y)<1&&payBounds.x>backBounds.x,'支付入口应位于母版下一页导航位置');
   await pay.hover();await expect(pay).toHaveCSS('color','rgb(255, 168, 40)');
   await frame.locator('#docs-info .prev-next-links').screenshot({path:'docs/qa/backend/student-payment-navigation.png'});
-  await expectStudentReveal(page,()=>pay.click(),'测试支付');await expect(page).toHaveURL(base+'action-2?record='+id+'&step=pay');
+  await expectStudentReveal(page,()=>pay.click(),'测试支付');await expect(page).toHaveURL(base+'online-payment?record='+id+'&step=pay');
   const form=frame.getByRole('form',{name:'测试支付',exact:true});
   await expect(frame.locator('#docs-info h1')).toHaveText('测试支付');await expectTop();
   await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText('账单详情');
   await expect(frame.locator('#docs-info .prev-link a')).toHaveText('账单详情');await expect(pay).toHaveCount(0);
   await expect(form.getByLabel('支付金额',{exact:true})).toHaveValue('12.00');
   await page.reload();await expect(form.getByLabel('支付金额',{exact:true})).toHaveValue('12.00');await expectTop();
-  await expectStudentReveal(page,()=>page.goBack(),'账单详情');await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
+  await expectStudentReveal(page,()=>page.goBack(),'账单详情');await expect(page).toHaveURL(base+'online-payment?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
   await page.goForward();await expect(form).toBeVisible();await expectTop();
-  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
-  await pay.click();await form.getByRole('button',{name:'取消',exact:true}).click();await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
+  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'online-payment?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
+  await pay.click();await form.getByRole('button',{name:'取消',exact:true}).click();await expect(page).toHaveURL(base+'online-payment?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
   // Wait for the payment page before clicking its breadcrumb; the outgoing detail page also has one.
-  await pay.click();await expect(form).toBeVisible();await frame.locator('#docs-info .docs-breadcrumb a').click();await expect(page).toHaveURL(base+'action-2?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
+  await pay.click();await expect(form).toBeVisible();await frame.locator('#docs-info .docs-breadcrumb a').click();await expect(page).toHaveURL(base+'online-payment?record='+id);await expect(code('待缴金额')).toHaveText('12.00');
   await pay.click();await expect(form).toBeVisible();await expectTop();
   const periodBox=await code('账期').locator('..').boundingBox(),outstandingHeading=await values.getByRole('heading',{name:'待缴金额',exact:true}).boundingBox(),outstandingBox=await code('待缴金额').locator('..').boundingBox(),amountHeading=await form.getByRole('heading',{name:'支付金额',exact:true}).boundingBox();
   assert.ok(periodBox&&outstandingHeading&&outstandingBox&&amountHeading&&Math.abs((outstandingHeading.y-periodBox.y-periodBox.height)-(amountHeading.y-outstandingBox.y-outstandingBox.height))<1,'支付金额与账单字段应沿用母版相同的标题间距');
@@ -85,7 +85,7 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   await expect(form.getByRole('alert')).toContainText('测试支付失败');assert.equal((await get('payments')).length,0);
   await form.getByLabel('测试支付结果',{exact:true}).selectOption('cancelled');await form.getByRole('button',{name:'确认支付',exact:true}).click();
   await expect(form).toHaveCount(0);await expect(code('待缴金额')).toHaveText('12.00');assert.equal((await get('payments')).length,0);
-  await expect(page).toHaveURL(base+'action-2?record='+id);await expectTop();
+  await expect(page).toHaveURL(base+'online-payment?record='+id);await expectTop();
   await pay.click();await form.getByLabel('支付金额',{exact:true}).fill('5.00');await form.getByRole('button',{name:'确认支付',exact:true}).click();
   await expect(code('待缴金额')).toHaveText('7.00');await expect(code('账单状态')).toHaveText('部分缴费');assert.equal((await get('payments')).length,1);
   await frame.locator('#docs-info .prev-link a').click();await expect(list.locator('a')).toHaveText([`${bill.billing_period} · 12.00 · 部分缴费`]);
@@ -96,7 +96,7 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   await page.goBack();await expect(frame.getByText('账单已缴清。',{exact:true})).toBeVisible();await expect(form).toHaveCount(0);await expectTop();
   await frame.locator('#docs-info .prev-link a').click();await expect(code('账单状态')).toHaveText('已缴清');
   await frame.locator('#docs-info .docs-breadcrumb a').click();await expect(list.locator('a')).toHaveCount(0);await expect(frame.getByText('暂无记录。',{exact:true})).toBeVisible();
-  await page.goto(base+'action-3');await expect(list.locator('a')).toHaveCount(2);
+  await page.goto(base+'payment-history');await expect(list.locator('a')).toHaveCount(2);
   await expectTop();
   const records=await get('payments');
   const format=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
@@ -110,14 +110,14 @@ export async function studentFinanceRegression(page:Page,foreignBillId:string){
   assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);
   await page.screenshot({path:'docs/qa/backend/student-payment-detail-mobile.png'});
   await page.setViewportSize({width:1440,height:1000});
-  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'action-3');await expect(list.locator('a')).toHaveCount(2);
+  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(base+'payment-history');await expect(list.locator('a')).toHaveCount(2);
   await expectTop();
   await page.goBack();await expect(code('金额')).toHaveText('7.00');
   await frame.locator('#docs-sidebar .docs-action a').filter({hasText:'查看账单'}).click();await expect(list.locator('a')).toHaveText([`${bill.billing_period} · 12.00 · 已缴清`]);
   await page.goBack();await expect(frame.locator('#docs-info h1')).toHaveText('缴费记录详情');await expect(code('金额')).toHaveText('7.00');
   for(const record of [foreignBillId,'999999999999999999','9999999999999999999','invalid']){
-    await page.goto(base+'action-1?record='+record);await expect(frame.locator('[data-dorma-finance]').getByRole('alert')).toContainText('不存在或不可访问');await expect(values).toHaveCount(0);
+    await page.goto(base+'bills?record='+record);await expect(frame.locator('[data-dorma-finance]').getByRole('alert')).toContainText('不存在或不可访问');await expect(values).toHaveCount(0);
   }
-  await page.goto(base+'action-2?record='+foreignBillId+'&step=pay');await expect(frame.locator('[data-dorma-finance]').getByRole('alert')).toContainText('不存在或不可访问');await expect(form).toHaveCount(0);await expect(pay).toHaveCount(0);
+  await page.goto(base+'online-payment?record='+foreignBillId+'&step=pay');await expect(frame.locator('[data-dorma-finance]').getByRole('alert')).toContainText('不存在或不可访问');await expect(form).toHaveCount(0);await expect(pay).toHaveCount(0);
   console.log('学生缴费页面回归通过：预读去重、详情右侧支付导航、独立支付子页直达/刷新/前后返回及顶部定位、取消/失败/分批缴清、已缴清禁付、跨账号拒绝及手机布局。');
 }

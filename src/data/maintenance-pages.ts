@@ -1,5 +1,6 @@
 import {roleFeatures} from './role-features';
 import {studentPages} from './student-pages';
+import {canonicalWorkspaceUrl} from './workspace-paths';
 
 export type MaintenancePage={feature:string;group:string;color:number;label:string;id:string;action:string;url:string;description:string};
 const groups=['getting-started','timer','animation','timeline','animatable','draggable'];
@@ -14,4 +15,4 @@ export const maintenancePages:MaintenancePage[]=[{
  feature:'overview',group:'维修工作台',color:0,label:'维修工作台',id:'docs',action:'overview',url:'/workspace/maintenance',description:'接收维修工单，记录处理进展，查看维修记录与个人统计。',
 },...roleFeatures.maintenance.flatMap((feature,color)=>[{
  feature:feature.id,group:feature.title,color,label:feature.title,id:groups[color],action:'overview',url:'/workspace/maintenance/'+feature.id,description:feature.description,
-},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:'/workspace/maintenance/'+feature.id+'/'+action.id,description:feature.id==='personal'?personalDescriptions[index]:feature.id==='orders'?orderDescriptions[index]:feature.id==='repair'?processingDescriptions[index]:feature.id==='analytics'?analyticsDescriptions[index]:feature.id==='records'?recordDescriptions[index]:feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
+},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:canonicalWorkspaceUrl('/workspace/maintenance/'+feature.id+'/'+action.id),description:feature.id==='personal'?personalDescriptions[index]:feature.id==='orders'?orderDescriptions[index]:feature.id==='repair'?processingDescriptions[index]:feature.id==='analytics'?analyticsDescriptions[index]:feature.id==='records'?recordDescriptions[index]:feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];

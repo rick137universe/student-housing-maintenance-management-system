@@ -16,7 +16,7 @@ export async function adminNotificationRegression(browser:Browser,origin:string,
   const result=await response.json();assert.equal(response.status(),200,JSON.stringify(result));return result.data;
  }
  async function login(context:BrowserContext,username:string){const account=await call(context,'auth/login',{username,password});accounts.set(context,account);return account;}
- const selector='[data-dorma-admin-frame]',frame=page.frameLocator(selector),base='/workspace/admin/notifications/action-1';
+ const selector='[data-dorma-admin-frame]',frame=page.frameLocator(selector),base='/workspace/admin/notifications/messages';
  const list=frame.locator('[data-dorma-announcement-list]'),body=frame.locator('[data-dorma-announcement-body]'),read=frame.getByRole('button',{name:'标为已读',exact:true});
  try{
   await login(admin,'admin');const suffix=Date.now(),username='adminNotice'+suffix;

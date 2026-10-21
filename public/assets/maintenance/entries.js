@@ -26,7 +26,7 @@ const entries = [
     "label": "查看工单",
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
-    "url": "/workspace/maintenance/orders/action-1",
+    "url": "/workspace/maintenance/orders/assigned",
     "description": "查看本人获派工单的报修资料和处理进度。"
   },
   {
@@ -36,7 +36,7 @@ const entries = [
     "label": "确认接单",
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
-    "url": "/workspace/maintenance/orders/action-2",
+    "url": "/workspace/maintenance/orders/accept",
     "description": "核对待接单工单的报修信息并确认接单。"
   },
   {
@@ -56,7 +56,7 @@ const entries = [
     "label": "开始维修",
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-1",
-    "url": "/workspace/maintenance/repair/action-1",
+    "url": "/workspace/maintenance/repair/start",
     "description": "查看已接单工单，确认开始维修。"
   },
   {
@@ -66,7 +66,7 @@ const entries = [
     "label": "更新状态",
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-2",
-    "url": "/workspace/maintenance/repair/action-2",
+    "url": "/workspace/maintenance/repair/update-status",
     "description": "记录处理进展、维修状态与预计完成时间。"
   },
   {
@@ -76,7 +76,7 @@ const entries = [
     "label": "完成工单",
     "id": "animation-animatable-properties-css-variables",
     "action": "action-3",
-    "url": "/workspace/maintenance/repair/action-3",
+    "url": "/workspace/maintenance/repair/complete",
     "description": "填写维修结果、使用材料及实际工时，确认完工。"
   },
   {
@@ -96,7 +96,7 @@ const entries = [
     "label": "填写记录",
     "id": "timer-timer-properties",
     "action": "action-1",
-    "url": "/workspace/maintenance/records/action-1",
+    "url": "/workspace/maintenance/records/write",
     "description": "填写本人处理中工单的维修说明。"
   },
   {
@@ -106,7 +106,7 @@ const entries = [
     "label": "维修归档",
     "id": "timeline-add-animations",
     "action": "action-2",
-    "url": "/workspace/maintenance/records/action-2",
+    "url": "/workspace/maintenance/records/archive",
     "description": "查看已完工或已评价的维修归档。"
   },
   {
@@ -126,7 +126,7 @@ const entries = [
     "label": "工作量统计",
     "id": "animation-animatable-properties-javascript-object-properties",
     "action": "action-1",
-    "url": "/workspace/maintenance/analytics/action-1",
+    "url": "/workspace/maintenance/analytics/workload",
     "description": "按派工月份查看本人的工作量与完成数量。"
   },
   {
@@ -136,7 +136,7 @@ const entries = [
     "label": "完成率",
     "id": "timeline-timeline-properties",
     "action": "action-2",
-    "url": "/workspace/maintenance/analytics/action-2",
+    "url": "/workspace/maintenance/analytics/completion-rate",
     "description": "查看本人获派工单的总体完成率与每月完成情况。"
   },
   {
@@ -146,7 +146,7 @@ const entries = [
     "label": "服务评价",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
-    "url": "/workspace/maintenance/analytics/action-3",
+    "url": "/workspace/maintenance/analytics/reviews",
     "description": "查看本人收到的服务评分与评价内容。"
   },
   {
@@ -166,7 +166,7 @@ const entries = [
     "label": "查看个人信息",
     "id": "animation-animatable-properties-svg-attributes",
     "action": "action-1",
-    "url": "/workspace/maintenance/personal/action-1",
+    "url": "/workspace/maintenance/personal/profile",
     "description": "查看本人的账号、姓名、角色和联系方式。"
   },
   {
@@ -176,7 +176,7 @@ const entries = [
     "label": "修改个人信息",
     "id": "animation-animation-properties",
     "action": "action-2",
-    "url": "/workspace/maintenance/personal/action-2",
+    "url": "/workspace/maintenance/personal/edit-profile",
     "description": "修改姓名、联系电话及邮箱。"
   },
   {
@@ -186,7 +186,7 @@ const entries = [
     "label": "修改登录密码",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-3",
-    "url": "/workspace/maintenance/personal/action-3",
+    "url": "/workspace/maintenance/personal/change-password",
     "description": "依次填写并确认三项密码，完成后重新登录。"
   },
   {
@@ -206,7 +206,7 @@ const entries = [
     "label": "消息通知",
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-1",
-    "url": "/workspace/maintenance/notifications/action-1",
+    "url": "/workspace/maintenance/notifications/messages",
     "description": "查看业务消息并标记已读。"
   }
 ];

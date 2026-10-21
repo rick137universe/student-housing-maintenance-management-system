@@ -6,7 +6,7 @@
     "label": "查看个人信息",
     "id": "animation-animatable-properties-css-properties",
     "action": "action-1",
-    "url": "/workspace/student/personal/action-1",
+    "url": "/workspace/student/personal/profile",
     "description": "查看账号资料和当前住宿记录。"
   },
   {
@@ -16,7 +16,7 @@
     "label": "修改个人信息",
     "id": "animatable-animatable-methods-setters",
     "action": "action-2",
-    "url": "/workspace/student/personal/action-2",
+    "url": "/workspace/student/personal/edit-profile",
     "description": "修改姓名、联系电话及邮箱。"
   },
   {
@@ -26,7 +26,7 @@
     "label": "修改登录密码",
     "id": "animation-animatable-properties-html-attributes",
     "action": "action-3",
-    "url": "/workspace/student/personal/action-3",
+    "url": "/workspace/student/personal/change-password",
     "description": "依次填写并确认三项密码，完成后重新登录。"
   },
   {
@@ -36,7 +36,7 @@
     "label": "入住申请",
     "id": "animation-animatable-properties-css-transforms",
     "action": "action-1",
-    "url": "/workspace/student/accommodation/action-1",
+    "url": "/workspace/student/accommodation/check-in",
     "description": "提交入住申请，选择意向楼栋和期望入住日期。"
   },
   {
@@ -46,7 +46,7 @@
     "label": "调宿申请",
     "id": "timeline-add-animations",
     "action": "action-2",
-    "url": "/workspace/student/accommodation/action-2",
+    "url": "/workspace/student/accommodation/room-change",
     "description": "提交调宿意向，审核通过后完成床位变更。"
   },
   {
@@ -56,7 +56,7 @@
     "label": "退宿申请",
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
-    "url": "/workspace/student/accommodation/action-3",
+    "url": "/workspace/student/accommodation/check-out",
     "description": "提交退宿申请，填写期望办理日期和申请说明。"
   },
   {
@@ -66,7 +66,7 @@
     "label": "查看账单",
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
-    "url": "/workspace/student/payment/action-1",
+    "url": "/workspace/student/payment/bills",
     "description": "查看住宿费、水电费和账单余额。"
   },
   {
@@ -76,7 +76,7 @@
     "label": "在线缴费",
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
-    "url": "/workspace/student/payment/action-2",
+    "url": "/workspace/student/payment/online-payment",
     "description": "选择未缴清账单进行测试支付，不产生真实扣款。"
   },
   {
@@ -86,7 +86,7 @@
     "label": "缴费记录",
     "id": "timeline-add-timers",
     "action": "action-3",
-    "url": "/workspace/student/payment/action-3",
+    "url": "/workspace/student/payment/payment-history",
     "description": "查询已经入账的缴费记录。"
   },
   {
@@ -96,7 +96,7 @@
     "label": "提交报修",
     "id": "animation-animation-methods-refresh",
     "action": "action-1",
-    "url": "/workspace/student/repair/action-1",
+    "url": "/workspace/student/repair/requests",
     "description": "选择当前住宿房间，填写故障情况与联系方式。"
   },
   {
@@ -106,7 +106,7 @@
     "label": "查看进度",
     "id": "timeline-timeline-methods-seek",
     "action": "action-2",
-    "url": "/workspace/student/repair/action-2",
+    "url": "/workspace/student/repair/progress",
     "description": "查询报修审核、派工和维修处理进度。"
   },
   {
@@ -116,7 +116,7 @@
     "label": "服务评价",
     "id": "utilities-stagger-stagger-parameters-stagger-grid",
     "action": "action-3",
-    "url": "/workspace/student/repair/action-3",
+    "url": "/workspace/student/repair/reviews",
     "description": "对已完成的报修服务评价，每次处理可评价一次。"
   },
   {
@@ -126,7 +126,7 @@
     "label": "公寓通知",
     "id": "text-splittext",
     "action": "action-1",
-    "url": "/workspace/student/announcements/action-1",
+    "url": "/workspace/student/announcements/notices",
     "description": "查看与本人住宿楼栋相关的公寓公告。"
   },
   {
@@ -136,7 +136,7 @@
     "label": "缴费提醒",
     "id": "timer-timer-callbacks-oncomplete",
     "action": "action-2",
-    "url": "/workspace/student/announcements/action-2",
+    "url": "/workspace/student/announcements/payment-reminders",
     "description": "查看缴费事项与催缴通知。"
   },
   {
@@ -146,7 +146,7 @@
     "label": "消息通知",
     "id": "timeline-call-functions",
     "action": "action-1",
-    "url": "/workspace/student/notifications/action-1",
+    "url": "/workspace/student/notifications/messages",
     "description": "查看业务消息并标记已读。"
   }
 ]

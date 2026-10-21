@@ -1,5 +1,6 @@
 import {roleFeatures} from './role-features';
 import {studentPages} from './student-pages';
+import {canonicalWorkspaceUrl} from './workspace-paths';
 
 export type AdminPage={feature:string;group:string;color:number;label:string;id:string;action:string;url:string;description:string;parent?:string;kind?:string};
 const groups=['getting-started','timer','animation','timeline','animatable','draggable','layout','scope','events','svg'];
@@ -17,7 +18,7 @@ const pages:AdminPage[]=[{
  feature:'overview',group:'管理员工作台',color:0,label:'管理员工作台',id:'docs',action:'overview',url:'/workspace/admin',description:'维护基础数据，管控业务流程，统筹派工、账单与系统管理。',
 },...roleFeatures.admin.flatMap((feature,color)=>[{
  feature:feature.id,group:feature.title,color,label:feature.title,id:groups[color],action:'overview',url:'/workspace/admin/'+feature.id,description:feature.description,
-},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:'/workspace/admin/'+feature.id+'/'+action.id,description:feature.id==='reports'?reportDescriptions[index]:feature.id==='base-data'?baseDescriptions[index]:feature.id==='personal'?personalDescriptions[index]:feature.id==='process'?processDescriptions[index]:feature.id==='dispatch'?dispatchDescriptions[index]:feature.id==='permissions'?permissionDescriptions[index]:feature.id==='backup'?backupDescriptions[index]:feature.id==='billing'?billingDescriptions[index]:feature.id==='announcements'?'发布公寓公告与服务信息，查看和维护已有公告。':feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
+},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:canonicalWorkspaceUrl('/workspace/admin/'+feature.id+'/'+action.id),description:feature.id==='reports'?reportDescriptions[index]:feature.id==='base-data'?baseDescriptions[index]:feature.id==='personal'?personalDescriptions[index]:feature.id==='process'?processDescriptions[index]:feature.id==='dispatch'?dispatchDescriptions[index]:feature.id==='permissions'?permissionDescriptions[index]:feature.id==='backup'?backupDescriptions[index]:feature.id==='billing'?billingDescriptions[index]:feature.id==='announcements'?'发布公寓公告与服务信息，查看和维护已有公告。':feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
 
 const announcement=pages.find(page=>page.feature==='announcements'&&page.action==='action-1')!;
 const withAnnouncements:AdminPage[]=pages.flatMap(page=>page!==announcement?[page]:[page,

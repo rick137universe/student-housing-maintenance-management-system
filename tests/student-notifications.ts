@@ -8,7 +8,7 @@ type Client={call:(path:string,body?:object)=>Promise<unknown>};
 
 // Fixtures and all writes belong only to the integration suite's disposable database.
 export async function studentNotificationRegression(page:Page,admin:Client,peer:Client){
- const origin=new URL(page.url()).origin,base='/workspace/student/notifications/action-1',frame=page.frameLocator('[data-dorma-student-frame]');
+ const origin=new URL(page.url()).origin,base='/workspace/student/notifications/messages',frame=page.frameLocator('[data-dorma-student-frame]');
  const list=frame.locator('[data-dorma-announcement-list]'),body=frame.locator('[data-dorma-announcement-body]');
  async function get(path:string){const response=await page.request.get(origin+'/api/v1/'+path);assert.equal(response.status(),200);return (await response.json()).data;}
  const me=await get('auth/me'),bill=await admin.call('bills',{studentNumber:me.studentNumber,period:'2027-02',accommodationFee:'3.00',utilityFee:'1.00',dueDate:'2027-12-31'}) as {billId:string};
@@ -35,7 +35,7 @@ export async function studentNotificationRegression(page:Page,admin:Client,peer:
  await frame.locator('#docs-info .prev-link a').click();await expect(target).toHaveText(String(first.title)+' · 已读');
  await page.goBack();await expect(body).toContainText('已读');await page.reload();await expect(body).toContainText('已读');await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);
  await frame.locator('#docs-info .docs-breadcrumb a').last().click();await expect(target).toHaveText(String(first.title)+' · 已读');
- await page.goto(origin+'/workspace/student/announcements/action-2');await expect(list.locator(`a[href$="record=${id}"]`)).toHaveText('缴费提醒 · 已读');
+ await page.goto(origin+'/workspace/student/announcements/payment-reminders');await expect(list.locator(`a[href$="record=${id}"]`)).toHaveText('缴费提醒 · 已读');
  await page.goto(origin+base);await frame.getByRole('link',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'?page=2');
  const page2=await get('notifications?page=2') as Row[];await expect(list.locator('a')).toHaveText(page2.map(row=>`${row.title} · ${row.read_at?'已读':'未读'}`));
  const general=page2.find(row=>row.title!=='缴费提醒');assert(general);await list.locator(`a[href$="record=${general.notification_id}"]`).click();await expect(body).toContainText(String(general.content));

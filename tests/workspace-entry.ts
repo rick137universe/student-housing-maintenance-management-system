@@ -7,7 +7,7 @@ export async function delayedWorkspaceHydration(page:Page,origin:string){
   try{
     // The server-rendered Docs iframe can finish before the parent's JavaScript.
     // Its same-origin handshake must still mount real business content afterwards.
-    await page.goto(origin+'/workspace/student/personal/action-1');
+    await page.goto(origin+'/workspace/student/personal/profile');
     const frame=page.frameLocator('[data-dorma-student-frame]');
     await expect(frame.locator('[data-dorma-live-workspace]')).toBeVisible();
     await expect(frame.locator('[data-dorma-profile] code').first()).toHaveText('stu202602341');

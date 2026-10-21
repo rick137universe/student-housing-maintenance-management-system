@@ -1,3 +1,4 @@
+import {workspaceActionPaths} from '../src/data/workspace-paths';
 import assert from 'node:assert/strict';
 import {expect,type Page} from '@playwright/test';
 import records from '../src/data/student-records.json';
@@ -61,7 +62,7 @@ export async function studentAccommodationNavigationRegression(page:Page){
 
 export async function expectAccommodationRecord(page:Page,action:number,id:string,status:string){
  const origin=new URL(page.url()).origin,frame=page.frameLocator('[data-dorma-student-frame]');
- const url=origin+`/workspace/student/accommodation/action-${action}/records`,resource=action===1?'applications':'changes';
+ const url=origin+`/workspace/student/accommodation/${workspaceActionPaths.student.accommodation[action-1]}/records`,resource=action===1?'applications':'changes';
  const response=await page.request.get(origin+`/api/v1/${resource}/${id}`);assert.equal(response.status(),200);
  const {data}=await response.json(),business=['入住','调宿','退宿'][action-1];
  const summary=[business,data.original_bed_id??'—',data.new_bed_id??'—',status].join(' · ');

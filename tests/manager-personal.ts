@@ -15,7 +15,7 @@ export async function managerPersonalRegression(browser:Browser,origin:string,pa
   const base=origin+'/workspace/dormManager/personal',frame=page.frameLocator('[data-dorma-manager-frame]');
   const entries=managerPages.filter(entry=>entry.feature==='personal'&&entry.action!=='overview');
   async function open(action:string){
-   await page.goto(base+'/'+action);await expect(frame.locator('#toggle-search')).toBeEnabled();await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');
+   await page.goto(origin+entries.find(entry=>entry.action===action)!.url);await expect(frame.locator('#toggle-search')).toBeEnabled();await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');
    await expect(frame.locator('#docs-info .docs-breadcrumb a')).toHaveText('个人中心');
    await expect(frame.locator('[data-dorma-manager-business-host]')).toHaveCount(0);await expect(frame.locator('dialog')).toHaveCount(0);
    await expect(page.locator('html')).toHaveCSS('overflow-y','hidden');
@@ -24,7 +24,7 @@ export async function managerPersonalRegression(browser:Browser,origin:string,pa
   await expect(frame.locator('[data-dorma-profile] code')).toHaveText([username,'宿管资料回归','宿管人员','13800001234','—']);
   await expect(frame.locator('[data-dorma-profile] .copy-button')).toHaveCount(5);await expect(frame.locator('[data-dorma-profile] table')).toHaveCount(0);
   await page.screenshot({path:'docs/qa/backend/manager-personal-view.png'});
-  const next=frame.locator('#docs-info .next-link a');await expect(next).toHaveAttribute('href',entries[1].url);await next.click();await expect(page).toHaveURL(base+'/action-2');
+  const next=frame.locator('#docs-info .next-link a');await expect(next).toHaveAttribute('href',entries[1].url);await next.click();await expect(page).toHaveURL(base+'/edit-profile');
   const editor=frame.locator('[data-dorma-profile-editor]'),name=editor.locator('[data-profile-field="fullName"]'),phone=editor.locator('[data-profile-field="phone"]'),email=editor.locator('[data-profile-field="email"]');
   await expect(editor.locator('.code-preview-title h2')).toHaveText(['姓名','联系电话','邮箱']);await expect(editor.locator('section[data-color="5"]')).toHaveCount(3);
   await name.getByRole('button',{name:'编辑姓名',exact:true}).click();await name.getByRole('textbox').fill('取消姓名');await name.getByRole('button',{name:'取消',exact:true}).click();await expect(name.locator('code')).toHaveText('宿管资料回归');

@@ -3,21 +3,21 @@
     "feature": "accommodation", "group": "住宿业务", "color": 1,
     "label": "入住申请记录", "id": "timer-timer-properties",
     "action": "action-1/records", "parent": "animation-animatable-properties-css-transforms",
-    "url": "/workspace/student/accommodation/action-1/records",
+    "url": "/workspace/student/accommodation/check-in/records",
     "description": "查看已提交的入住申请及审核结果。"
   },
   {
     "feature": "accommodation", "group": "住宿业务", "color": 1,
     "label": "调宿申请记录", "id": "timeline-timeline-properties",
     "action": "action-2/records", "parent": "timeline-add-animations",
-    "url": "/workspace/student/accommodation/action-2/records",
+    "url": "/workspace/student/accommodation/room-change/records",
     "description": "查看调宿申请、审核意见及床位变更结果。"
   },
   {
     "feature": "accommodation", "group": "住宿业务", "color": 1,
     "label": "退宿申请记录", "id": "animation-animation-properties",
     "action": "action-3/records", "parent": "animation-animation-playback-settings-reversed",
-    "url": "/workspace/student/accommodation/action-3/records",
+    "url": "/workspace/student/accommodation/check-out/records",
     "description": "查看退宿申请及办理结果。"
   }
 ]

@@ -29,7 +29,7 @@ export async function managerShellRegression(browser:Browser,origin:string,passw
  try{
   const response=await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username:'dm0301',password}});assert.equal(response.status(),200);
   const account=(await response.json()).data;
-  await page.goto(origin+'/workspace/dormManager/base-data/action-1');
+  await page.goto(origin+'/workspace/dormManager/base-data/students');
   const frame=page.frameLocator('[data-dorma-manager-frame]');
   async function ready(entry:typeof managerPages[number]){
    await expect(page).toHaveURL(origin+entry.url);await expect(frame.locator('#toggle-search')).toBeEnabled();
@@ -56,7 +56,7 @@ export async function managerShellRegression(browser:Browser,origin:string,passw
   await page.goBack();await ready(managerPages.find(entry=>entry.label==='消息通知')!);
   await page.goForward();await ready(managerPages.find(entry=>entry.label==='调宿审核')!);
   await page.reload();await ready(managerPages.find(entry=>entry.label==='调宿审核')!);
-  await page.goto(origin+'/workspace/dormManager/personal/action-2');await ready(managerPages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);
+  await page.goto(origin+'/workspace/dormManager/personal/edit-profile');await ready(managerPages.find(entry=>entry.feature==='personal'&&entry.action==='action-2')!);
   const original=(await (await context.request.get(origin+'/api/v1/profile')).json()).data;
 
   const phone=frame.locator('[data-profile-field="phone"]');
@@ -65,7 +65,7 @@ export async function managerShellRegression(browser:Browser,origin:string,passw
   await phone.getByRole('button',{name:'编辑联系电话',exact:true}).click();await phone.getByRole('textbox').fill('13900001234');await phone.getByRole('button',{name:'确认',exact:true}).click();await expect(phone.getByRole('textbox')).toHaveCount(0);
   assert.equal((await (await context.request.get(origin+'/api/v1/profile')).json()).data.phone,'13900001234');
   assert.equal((await context.request.patch(origin+'/api/v1/profile',{headers:{Origin:origin,'X-CSRF-Token':account.csrfToken},data:{fullName:original.full_name,phone:original.phone,email:original.email}})).status(),200);
-  await page.goto(origin+'/workspace/dormManager/base-data/action-1');await ready(managerPages[2]);await page.screenshot({path:'docs/qa/backend/manager-shell-desktop.png'});
+  await page.goto(origin+'/workspace/dormManager/base-data/students');await ready(managerPages[2]);await page.screenshot({path:'docs/qa/backend/manager-shell-desktop.png'});
   await page.setViewportSize({width:390,height:844});await frame.locator('#toggle-sidebar').click();await expect(frame.locator('#docs-sidebar')).toHaveClass(/is-active/);
   await frame.locator('#docs-sidebar a[title="房间信息"]').click();await ready(managerPages.find(entry=>entry.label==='房间信息')!);
   assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);await page.screenshot({path:'docs/qa/backend/manager-shell-mobile.png'});

@@ -9,7 +9,7 @@ type Row=Record<string,unknown>;
 export async function adminAnnouncementRegression(browser:Browser,origin:string,password:string){
  const context=await browser.newContext({viewport:{width:1440,height:1000}}),student=await browser.newContext(),page=await context.newPage(),errors:string[]=[];
  page.on('pageerror',error=>errors.push(error.message));
- const selector='[data-dorma-admin-frame]',frame=page.frameLocator(selector),parent='/workspace/admin/announcements/action-1',base=parent+'/records',publishUrl=parent+'/submit';
+ const selector='[data-dorma-admin-frame]',frame=page.frameLocator(selector),parent='/workspace/admin/announcements/publish',base=parent+'/records',publishUrl=parent+'/submit';
  let csrf='';
  async function call(path:string,body?:object,method='POST'){
   const response=body?await context.request.fetch(origin+'/api/v1/'+path,{method,headers:{Origin:origin,'X-CSRF-Token':csrf},data:body}):await context.request.get(origin+'/api/v1/'+path);
@@ -36,7 +36,7 @@ export async function adminAnnouncementRegression(browser:Browser,origin:string,
   const suffix=Date.now(),content='第一段第一行\n第一段第二行\n\n第二段 <script>window.announcementUnsafe=true</script>';
   for(let index=0;index<21;index++)await call('announcements',{title:'管理公告 '+suffix+' '+index,content,type:'公寓通知',buildingId:null,expiresAt:null,enabled:true});
   const rows=await call('announcements?limit=100') as Row[],first=rows[0],id=String(first.announcement_id),detail=origin+base+'?record='+id;
-  await page.goto(origin+'/workspace/admin/personal/action-1');await expect(frame.locator('[data-dorma-profile]')).toBeVisible();
+  await page.goto(origin+'/workspace/admin/personal/profile');await expect(frame.locator('[data-dorma-profile]')).toBeVisible();
   await frame.locator('#docs-sidebar a[title="公告管理"]').click();await frame.locator('#docs-sidebar a[href="'+parent+'"]').click();await expect(page).toHaveURL(origin+parent);
   const navigation=frame.locator('[data-dorma-admin-announcement-navigation]');await expect(navigation.locator('a')).toHaveText(['发布公告','公告记录']);await expect(list).toHaveCount(0);await expect(editor).toHaveCount(0);await expect(next).toHaveAttribute('href',publishUrl);
   const third=frame.locator('#docs-sidebar a[href="'+parent+'"]').locator('..').locator(':scope > ul > li');await expect(third.locator('a')).toHaveText(['发布公告','公告记录']);await expect(third.filter({has:frame.locator('.is-active')})).toHaveCount(0);

@@ -8,6 +8,7 @@ import { LensExperience } from '@/components/home/LensExperience';
 import { LensBootIntro } from '@/components/home/LensBootIntro';
 import { readAuthSession, saveAuthSession } from '@/utils/auth-session';
 import { roleFeatures, type RoleFeature } from '@/data/role-features';
+import {canonicalWorkspaceUrl} from '@/data/workspace-paths';
 import type { DemoAccount } from '@/data/accounts';
 import h from './HomePage.module.css';
 import { useTheme } from '@/components/theme/ThemeProvider';
@@ -142,7 +143,7 @@ export function HomePage() {
     if (!session || transitioning) return;
     setTransitioning(true);
     window.sessionStorage.setItem('dorma-return-progress', String(progress));
-    window.setTimeout(() => router.push('/workspace/' + session.role + '/' + active.id + '/' + actionId), 840);
+    window.setTimeout(() => router.push(canonicalWorkspaceUrl('/workspace/' + session.role + '/' + active.id + '/' + actionId)), 840);
   }
 
   function logout() {
@@ -159,7 +160,7 @@ export function HomePage() {
       <button className={h.brand} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>dorma<span>●</span><small>校园生活服务</small></button>
       {session && <nav className={h.chapterNames} aria-label="功能导航">
         {features.map((feature) => <Link key={feature.id}
-          href={'/workspace/' + session.role + '/' + feature.id + '/' + feature.actions[0].id}
+          href={canonicalWorkspaceUrl('/workspace/' + session.role + '/' + feature.id + '/' + feature.actions[0].id)}
           onClick={() => window.sessionStorage.setItem('dorma-return-progress', String(progress))}>
           {feature.title}
         </Link>)}

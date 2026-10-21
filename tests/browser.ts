@@ -1,3 +1,4 @@
+import {canonicalWorkspaceUrl,workspaceActionPaths} from '../src/data/workspace-paths';
 import type {Pool} from 'pg';
 import {chromium,expect} from '@playwright/test';
 import assert from 'node:assert/strict';
@@ -38,8 +39,10 @@ import {maintenanceAnalyticsRegression} from './maintenance-analytics';
 import {maintenanceProcessingRegression} from './maintenance-processing';
 import {maintenanceOrderRegression} from './maintenance-orders';
 import {maintenanceRecordRegression} from './maintenance-records';
+import {verifyWorkspacePaths,workspaceRedirectRegression} from './workspace-paths';
 
 export async function browserRegression(origin:string,password:string,database:Pool){
+ await verifyWorkspacePaths();
  await verifyLoginTemplate();
  await verifyHomeTemplate();
  await verifyStudentTemplate();
@@ -50,6 +53,7 @@ export async function browserRegression(origin:string,password:string,database:P
  const errors:string[]=[];let visited=0;
  await mkdir('docs/qa/backend',{recursive:true});
  try{
+  await workspaceRedirectRegression(browser,origin);
   await authRedirectRegression(browser,origin,password);
   for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
    const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
@@ -111,12 +115,12 @@ export async function browserRegression(origin:string,password:string,database:P
    if(role==='student')await delayedWorkspaceHydration(page,origin);
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
-    await page.goto(`${origin}/workspace/${role}/${feature.id}/${action.id}`);
+    await page.goto(origin+canonicalWorkspaceUrl(`/workspace/${role}/${feature.id}/${action.id}`));
     await workspace.locator(role==='student'&&['accommodation','repair'].includes(feature.id)?'[data-student-record-links]':'[data-dorma-live-workspace]').waitFor();
     await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});
     assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0,`${role}/${feature.id}/${action.id}`);visited++;
    }
-   const first=roleFeatures[role][0];await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});await workspace.locator('[data-dorma-live-workspace]').waitFor();
+   const first=roleFeatures[role][0];await page.goto(`${origin}/workspace/${role}/${first.id}/${workspaceActionPaths[role][first.id][0]}`);await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});await workspace.locator('[data-dorma-live-workspace]').waitFor();
    for(const [size,width,height] of [['desktop',1440,1000],['mobile',390,844]] as const){
     await page.setViewportSize({width,height});
     if(role==='student'){
@@ -127,7 +131,7 @@ export async function browserRegression(origin:string,password:string,database:P
     for(const theme of ['母版']){await page.screenshot({path:`docs/qa/backend/${role}-${size}-${theme}.png`,fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${role} ${size} overflow`);}
    }
    if(role==='student'){
-    await page.goto(`${origin}/workspace/student/personal/action-2`);const nameEditor=workspace.locator('[data-profile-field="fullName"]');await nameEditor.getByRole('button',{name:'编辑姓名',exact:true}).click();await nameEditor.getByRole('textbox',{name:'姓名',exact:true}).fill('林晓屿');await nameEditor.getByRole('button',{name:'确认',exact:true}).click();await expect(nameEditor.getByRole('textbox')).toHaveCount(0);await expect(nameEditor.locator('code')).toHaveText('林晓屿');await expect(workspace.locator('[data-dorma-profile-editor]').getByRole('status')).toHaveCount(0);
+    await page.goto(`${origin}/workspace/student/personal/edit-profile`);const nameEditor=workspace.locator('[data-profile-field="fullName"]');await nameEditor.getByRole('button',{name:'编辑姓名',exact:true}).click();await nameEditor.getByRole('textbox',{name:'姓名',exact:true}).fill('林晓屿');await nameEditor.getByRole('button',{name:'确认',exact:true}).click();await expect(nameEditor.getByRole('textbox')).toHaveCount(0);await expect(nameEditor.locator('code')).toHaveText('林晓屿');await expect(workspace.locator('[data-dorma-profile-editor]').getByRole('status')).toHaveCount(0);
     await page.reload();await expect(nameEditor.locator('code')).toHaveText('林晓屿');assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0);
    }
    const me=await (await page.request.get(origin+'/api/v1/auth/me')).json();
@@ -176,7 +180,7 @@ export async function browserRegression(origin:string,password:string,database:P
    await accountButton.click();await page.mouse.move(0,500);
    await expect(accountButton.locator('[data-dorma-account-name]')).toHaveText('未登录');
    assert.equal((await page.request.get(origin+'/api/v1/auth/me')).status(),401);
-   await page.goto(`${origin}/workspace/${role}/${first.id}/action-1`);await expect(page).toHaveURL(origin+'/login');await expect(page.locator('[data-dorma-login-frame]')).toBeVisible();
+   await page.goto(`${origin}/workspace/${role}/${first.id}/${workspaceActionPaths[role][first.id][0]}`);await expect(page).toHaveURL(origin+'/login');await expect(page.locator('[data-dorma-login-frame]')).toBeVisible();
    await context.close();
   }
   // 首页在真实会话退出后的公共页面仍保持可访问。

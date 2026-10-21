@@ -1,3 +1,4 @@
+import {workspaceActionPaths} from '../src/data/workspace-paths';
 import assert from 'node:assert/strict';
 import type { Browser, BrowserContext } from '@playwright/test';
 import { expect } from '@playwright/test';
@@ -36,7 +37,7 @@ export async function studentDocsRegression(browser: Browser, origin: string, pa
     const errors: string[] = []; page.on('pageerror', error => errors.push(page.url()+': '+(error.stack??error.message)));
     const frame = page.frameLocator('[data-dorma-student-frame]');
     async function go(feature: string, action: number) {
-      await page.goto(`${origin}/workspace/student/${feature}/action-${action}`);
+      await page.goto(`${origin}/workspace/student/${feature}/${workspaceActionPaths.student[feature][action-1]}`);
       await frame.locator('[data-dorma-live-workspace]').waitFor();
       await frame.getByText('正在读取…', { exact: true }).waitFor({ state: 'hidden' });
     }

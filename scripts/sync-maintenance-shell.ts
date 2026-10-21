@@ -1,3 +1,4 @@
+import {canonicalWorkspaceUrl} from '../src/data/workspace-paths';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {maintenancePages} from '../src/data/maintenance-pages';
 
@@ -17,7 +18,7 @@ const routes=Object.fromEntries(maintenancePages.map(entry=>[entry.url,`/assets/
 for(const [position,entry] of maintenancePages.entries()){
  if(['personal','notifications','records','orders','repair','analytics'].includes(entry.feature)&&entry.action!=='overview'){
   const notifications=entry.feature==='notifications',business=['records','orders','repair','analytics'].includes(entry.feature),sourceFeature=notifications?'notifications':'personal',sourceAction=business?'action-1':entry.action;
-  let result=(notifications?notificationTemplate:personalTemplates[sourceAction]).replaceAll('/workspace/student/'+sourceFeature+'/'+sourceAction,entry.url)
+  let result=(notifications?notificationTemplate:personalTemplates[sourceAction]).replaceAll(canonicalWorkspaceUrl('/workspace/student/'+sourceFeature+'/'+sourceAction),entry.url)
    .replaceAll('/workspace/student/'+sourceFeature,'/workspace/maintenance/'+entry.feature).replaceAll('学生工作台','维修工作台')
    .replaceAll(`data-color="${notifications?5:0}"`,`data-color="${entry.color}"`)
    .replace(/(<div class="docs-info is-active" data-color="[^"]+" data-id=")[^"]+/,`$1${entry.id}`)

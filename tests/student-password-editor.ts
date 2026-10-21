@@ -44,7 +44,7 @@ export async function studentPasswordEditorRegression(page:Page,password:string,
     assert.equal((await other.request.get(origin+'/api/v1/auth/me')).status(),401);
     const oldLogin=await page.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username:me.username,password}});assert.equal(oldLogin.status(),401);
     const newLogin=await page.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username:me.username,password:replacement}});assert.equal(newLogin.status(),200);
-    await page.goto(origin+workspaceBase+'/personal/action-3');await expect(editor.locator('pre code')).toHaveText(['—','—','—']);
+    await page.goto(origin+workspaceBase+'/personal/change-password');await expect(editor.locator('pre code')).toHaveText(['—','—','—']);
     await expect(editor.getByRole('status')).toHaveCount(0);
     console.log('密码编辑回归通过：遮罩、取消、原密码提前校验/失焦校验、最小长度/重复校验、真实改密、全部会话撤销及新密码重新登录。');
   }finally{page.off('request',track);await other.close();}

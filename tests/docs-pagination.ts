@@ -25,12 +25,12 @@ export async function docsPaginationRegression(browser:Browser,origin:string,pas
  await database.query("INSERT INTO housing.accommodation_bills(student_number,billing_period,accommodation_fee,utility_fee,due_date) SELECT '202602341',to_char(date '2198-01-01'+i*interval '1 month','YYYY-MM'),1,0,CURRENT_DATE+14 FROM generate_series(1,21) i ON CONFLICT DO NOTHING");
  for(let i=0;i<21;i++){const repair=(await database.query("INSERT INTO housing.repair_requests(student_number,room_id,fault_type,fault_description,repair_status) VALUES('202602341','NY3-502','水电设施',$1,'dispatched') RETURNING repair_id",['分页验证 '+suffix+' '+i])).rows[0];await database.query('INSERT INTO housing.maintenance_records(repair_id,technician_account_id,dispatcher_account_id) VALUES($1,$2,$3)',[repair.repair_id,ids.mt008,ids.admin]);}
  const cases=[
-  {username:'admin',role:'admin',url:'/workspace/admin/permissions/action-2/records',api:'permissions',list:'[data-dorma-admin-permission-list]',values:'[data-dorma-permission-values]'},
-  {username:'stu202602341',role:'student',url:'/workspace/student/notifications/action-1',api:'notifications',list:'[data-dorma-announcement-list]',values:'[data-dorma-announcement-content]'},
-  {username:'dm0301',role:'manager',url:'/workspace/dormManager/base-data/action-2',api:'rooms',list:'[data-dorma-base-list]',values:'[data-dorma-base-values]'},
-  {username:'mt008',role:'maintenance',url:'/workspace/maintenance/orders/action-1',api:'repairs',list:'[data-dorma-maintenance-order-list]',values:'[data-dorma-repair-values]'},
-  {username:'admin',role:'admin',url:'/workspace/admin/base-data/action-1/records?type=rooms',api:'rooms',list:'[data-dorma-base-list]',values:'[data-dorma-base-values]'},
-  {username:'stu202602341',role:'student',url:'/workspace/student/payment/action-1',api:'bills',list:'[data-dorma-finance-list]',values:'[data-dorma-finance-values]'},
+  {username:'admin',role:'admin',url:'/workspace/admin/permissions/roles/records',api:'permissions',list:'[data-dorma-admin-permission-list]',values:'[data-dorma-permission-values]'},
+  {username:'stu202602341',role:'student',url:'/workspace/student/notifications/messages',api:'notifications',list:'[data-dorma-announcement-list]',values:'[data-dorma-announcement-content]'},
+  {username:'dm0301',role:'manager',url:'/workspace/dormManager/base-data/rooms',api:'rooms',list:'[data-dorma-base-list]',values:'[data-dorma-base-values]'},
+  {username:'mt008',role:'maintenance',url:'/workspace/maintenance/orders/assigned',api:'repairs',list:'[data-dorma-maintenance-order-list]',values:'[data-dorma-repair-values]'},
+  {username:'admin',role:'admin',url:'/workspace/admin/base-data/manage/records?type=rooms',api:'rooms',list:'[data-dorma-base-list]',values:'[data-dorma-base-values]'},
+  {username:'stu202602341',role:'student',url:'/workspace/student/payment/bills',api:'bills',list:'[data-dorma-finance-list]',values:'[data-dorma-finance-values]'},
  ];
  for(const item of cases){
   const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
