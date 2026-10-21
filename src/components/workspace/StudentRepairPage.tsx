@@ -10,7 +10,7 @@ import {studentPages,type StudentPage} from '@/data/student-pages';
 import {repairListPath,type StudentRepairData} from '@/utils/student-repair-data';
 import type {StudentRow} from '@/utils/student-record-data';
 import {StudentEmptyState} from './StudentEmptyState';
-import {RepairArrow,RepairEditorFields,RepairValues,repairValue,useRepairDocument,useRepairSubmitFooter,type RepairField} from './StudentRepairElements';
+import {RepairHistory,RepairArrow,RepairEditorFields,RepairValues,repairValue,useRepairDocument,useRepairSubmitFooter,type RepairField} from './StudentRepairElements';
 
 const requestFields=[['repair_id','报修编号'],['room_id','报修房间'],['fault_type','故障类型'],['fault_description','故障描述'],['contact_phone','联系电话'],['repair_status','工单状态'],['submitted_at','提交时间'],['reviewed_at','审核时间'],['review_note','审核意见']] as const;
 const maintenanceFields=[['technician_name','维修人员'],['dispatched_at','派工时间'],['accepted_at','接单时间'],['maintenance_at','开始维修时间'],['processing_description','处理说明'],['expected_completion_at','预计完成时间'],['completed_at','完工时间'],['materials','使用材料'],['hours','实际工时']] as const;
@@ -70,7 +70,7 @@ function RepairRecordsContent({entry,data,record,page,navigate}:{entry:StudentPa
    <DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(!allowed?<StudentWarning>{evaluate?'此工单尚未完工或已经评价，不能重复提交。':'记录不存在或不可访问。'}</StudentWarning>:evaluate?<RepairForm entry={entry} data={data} repair={detail} locked={loading}/>:<>
    <RepairValues row={detail} fields={[...requestFields,...(detail.maintenance_id?maintenanceFields:[]),...(evaluations||detail.repair_status==='evaluated'?evaluationFields:[])]}/>
-   {entry.action.startsWith('action-2')&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map(update=><RepairValues key={String(update.update_id)} row={{description:[repairValue('status',update.status),repairValue('created_at',update.created_at),String(update.actor_name??''),String(update.description??'')].filter(Boolean).join(' · ')}} fields={[["description",repairValue('status',update.status)]]}/>)}</div>}
+   {entry.action.startsWith('action-2')&&<RepairHistory history={history}/>}
   </>))}
  </div>;
 }

@@ -7,7 +7,7 @@ import {useRouter,useSearchParams} from 'next/navigation';
 import type {AdminPage} from '@/data/admin-pages';
 import type {StudentRecordData,StudentRow} from '@/utils/student-record-data';
 import {api} from '@/utils/auth-session';
-import {RepairArrow,RepairValues,repairValue,RepairEditorFields,type RepairField} from './StudentRepairElements';
+import {RepairHistory,RepairArrow,RepairValues,repairValue,RepairEditorFields,type RepairField} from './StudentRepairElements';
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
@@ -72,7 +72,7 @@ function DispatchContent({entry,data,record,page,dispatching,navigate}:{entry:Ad
    {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(dispatching?(canDispatch?<DispatchEditor row={detail} entry={entry} data={data} submitAction={submitAction} onDisabled={setDisabled} onSaved={()=>navigate(detailUrl)}/>:<div className="docs-info-content formatted-text"><div className="notice info"><p>该工单已派工或尚未通过初审，请返回详情查看最新状态。</p></div></div>):<>
    <RepairValues row={detail} fields={repairFields}/>{Boolean(detail.maintenance_id)&&<><h2>派工与维修</h2><RepairValues row={detail} fields={maintenanceFields}/></>}
-   {history.length>0&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map(update=><section key={String(update.update_id)}><h3>{repairValue('created_at',update.created_at)} · {repairValue('status',update.status)}</h3><RepairValues row={update} fields={[["actor_name","处理人员"],["description","处理说明"]]}/></section>)}</div>}
+   {history.length>0&&<RepairHistory history={history}/>}
   </>))}
  </div>;
 }

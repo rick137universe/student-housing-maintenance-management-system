@@ -6,7 +6,7 @@ import {useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} f
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {ManagerPage} from '@/data/manager-pages';
 import {managerRepairListPath,type ManagerRepairData} from '@/utils/manager-repair-data';
-import {RepairValues,repairValue} from './StudentRepairElements';
+import {RepairHistory,RepairValues,repairValue} from './StudentRepairElements';
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 import {ManagerRepairReview} from './ManagerRepairReview';
@@ -71,6 +71,6 @@ function RepairContent({entry,data,record,page,review,navigate}:{entry:ManagerPa
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-manager-repair-list>{rows.map(row=>{const id=String(row[identifier]),url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(id);return <li key={id}><a className="text-ui color-yellow" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{['full_name','room_id','fault_type','repair_status'].map(key=>repairValue(key,row[key])).join(' · ')}<Arrow/></a></li>;})}</ul>
    {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
-  </>:detail&&(review?(pending?<ManagerRepairReview entry={entry} row={detail} detailUrl={detailUrl} data={data} navigate={navigate}/>:<div className="docs-info-content formatted-text"><div className="notice info"><p>该工单已初审或不属于待初审模块，请返回详情查看处理结果。</p></div></div>):<><RepairValues row={detail} fields={fields}/>{Array.isArray(history)&&history.length>0&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map((update,index)=><section key={String(update.update_id??index)}><h3>{repairValue('created_at',update.created_at)} · {repairValue('status',update.status)}</h3><RepairValues row={update} fields={[["actor_name","处理人员"],["description","处理说明"]]}/></section>)}</div>}</>))}
+  </>:detail&&(review?(pending?<ManagerRepairReview entry={entry} row={detail} detailUrl={detailUrl} data={data} navigate={navigate}/>:<div className="docs-info-content formatted-text"><div className="notice info"><p>该工单已初审或不属于待初审模块，请返回详情查看处理结果。</p></div></div>):<><RepairValues row={detail} fields={fields}/>{Array.isArray(history)&&history.length>0&&<RepairHistory history={history}/>}</>))}
  </div>;
 }

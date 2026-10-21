@@ -10,6 +10,7 @@ import {StudentProfileEditor} from './StudentProfileEditor';
 import {StudentPasswordEditor} from './StudentPasswordEditor';
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
+import {RepairHistory} from './StudentRepairElements';
 
 const DocsAppearance=createContext(false);
 function useStyles(){
@@ -148,6 +149,6 @@ export function LiveWorkspace({account,featureId,actionId,docsColor=0}:{account:
  </section>
  {editor&&<EditDialog editor={editor} pending={pending} error={error} onClose={()=>{setEditor(null);setError('');}} onSubmit={values=>void mutate(editor.path,values,editor.method??'POST')}/>}
  {detail&&<DetailsTag {...(docs?{}:{open:true})} className={l.details}><section className={s.panel}><h2>记录详情</h2><dl className={s.profile}>{Object.entries(detail).filter(([key])=>!['idempotency_key','lease_expires_at','worker_id'].includes(key)).map(([key,value])=><div key={key}><dt>{columnLabels[key]??key}</dt><dd>{text(value)}</dd></div>)}</dl><button className={l.button} onClick={()=>setDetail(null)}>关闭详情</button></section></DetailsTag>}
- {history&&<DetailsTag {...(docs?{}:{open:true})} className={l.details}><section className={s.panel}><h2>报修处理进度</h2><ol className={s.timeline}>{history.map(row=><li key={val(row,'update_id')}><strong>{text(row.status)}</strong><span>{val(row,'description')} · {val(row,'actor_name')} · {val(row,'created_at')}</span></li>)}</ol><button className={l.button} onClick={()=>setHistory(null)}>关闭进度</button></section></DetailsTag>}
+ {history&&<DetailsTag {...(docs?{}:{open:true})} className={l.details}><section className={s.panel}><RepairHistory history={history} title="报修处理进度"/><button className={l.button} onClick={()=>setHistory(null)}>关闭进度</button></section></DetailsTag>}
  </div>;
 }

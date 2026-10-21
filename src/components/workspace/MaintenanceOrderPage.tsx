@@ -8,7 +8,7 @@ import {api} from '@/utils/auth-session';
 import type {MaintenancePage} from '@/data/maintenance-pages';
 import type {StudentRow} from '@/utils/student-record-data';
 import {maintenanceOrderListPath,type MaintenanceRecordData} from '@/utils/maintenance-record-data';
-import {RepairValues,repairValue,RepairArrow} from './StudentRepairElements';
+import {RepairHistory,RepairValues,repairValue,RepairArrow} from './StudentRepairElements';
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
@@ -80,6 +80,6 @@ function OrderContent({entry,data,record,page,navigate}:{entry:MaintenancePage;d
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-maintenance-order-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(String(row.repair_id));return <li key={String(row.repair_id)}><a className="text-ui color-red" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>warm(row,url)} onFocus={()=>warm(row,url)} onClick={event=>link(url,event)}>{['full_name','room_id','fault_type','repair_status'].map(key=>repairValue(key,row[key])).join(' · ')}<RepairArrow/></a></li>;})}</ul>
    {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
-  </>:detail&&<><RepairValues row={detail} fields={fields}/>{history.length>0&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map((update,index)=><section key={String(update.update_id??index)}><h3>{repairValue('created_at',update.created_at)} · {repairValue('status',update.status)}</h3><RepairValues row={update} fields={[["actor_name","处理人员"],["description","处理说明"]]}/></section>)}</div>}</>)}
+  </>:detail&&<><RepairValues row={detail} fields={fields}/>{history.length>0&&<RepairHistory history={history}/>}</>)}
  </div>;
 }
