@@ -67,7 +67,7 @@ export function useRepairSubmitFooter(root:RefObject<HTMLDivElement|null>,label:
  useLayoutEffect(()=>{link.current?.setAttribute('aria-disabled',String(disabled));link.current?.setAttribute('aria-busy',String(disabled));},[disabled]);
 }
 
-export type RepairField={key:string;label:string;type?:'select'|'textarea'|'tel'|'number'|'datetime-local';options?:ReadonlyArray<readonly [string,string]>;required?:boolean;maxLength?:number;validate?:(value:string)=>string|undefined};
+export type RepairField={key:string;label:string;type?:'select'|'textarea'|'text'|'tel'|'number'|'datetime-local';options?:ReadonlyArray<readonly [string,string]>;required?:boolean;maxLength?:number;validate?:(value:string)=>string|undefined};
 export function RepairEditorFields({fields,values,onChange,active,onActive,pending,color=3}:{color?:number;fields:RepairField[];values:Record<string,string>;onChange:(key:string,value:string)=>void;active:string|null;onActive:(key:string|null)=>void;pending:boolean}){
  const [draft,setDraft]=useState(''),[error,setError]=useState('');const input=useRef<HTMLSelectElement|HTMLInputElement|HTMLTextAreaElement>(null);
  useLayoutEffect(()=>{if(active)input.current?.focus();},[active]);

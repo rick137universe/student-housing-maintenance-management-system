@@ -5,6 +5,7 @@ import {createPortal} from 'react-dom';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {AdminAnnouncementPage} from '@/components/workspace/AdminAnnouncementPage';
 import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
 import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
 import {featureFor} from '@/data/role-features';
@@ -53,7 +54,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
     const anchor=(event.target as Element).closest?.('a[href]');if(!anchor)return;
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=adminPages.find(entry=>entry.url===url.pathname);
-    if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry&&['notifications','announcements'].includes(entry.feature)&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
@@ -74,7 +75,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','announcements'].includes(entry.feature))onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -84,7 +85,9 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-admin-frame src={src} title="管理员工作台"/>
-  {view&&createPortal(view.entry.feature==='notifications'
+  {view&&createPortal(view.entry.feature==='announcements'
+   ?<AdminAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages}/>
+   :view.entry.feature==='notifications'
    ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="管理员工作台" contentChangeEvent="dorma-admin-content-change"/>
    :view.entry.feature==='personal'
    ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>

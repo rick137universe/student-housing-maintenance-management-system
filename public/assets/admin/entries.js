@@ -307,7 +307,7 @@ const entries = [
     "id": "utilities-stagger-stagger-parameters-stagger-grid",
     "action": "action-1",
     "url": "/workspace/admin/announcements/action-1",
-    "description": "发布公寓公告与服务信息。"
+    "description": "发布公寓公告与服务信息，查看和维护已有公告。"
   },
   {
     "feature": "personal",
