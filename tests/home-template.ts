@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
+import {verifyHomeShortcuts} from './home-shortcuts';
 
 export async function verifyHomeTemplate() {
+  verifyHomeShortcuts();
   const manifest = JSON.parse(await readFile('docs/home-template-source.json', 'utf8')) as {
     sha256: Record<string, string>; fragments: Record<string, string>;
     sections: { id: string; className: string; style: string | null }[];

@@ -1,0 +1,250 @@
+{
+  "student": [
+    {
+      "label": "学生工作台",
+      "url": "/workspace/student",
+      "color": 0
+    },
+    {
+      "label": "个人信息",
+      "url": "/workspace/student/personal",
+      "color": 0
+    },
+    {
+      "label": "住宿业务",
+      "url": "/workspace/student/accommodation",
+      "color": 1
+    },
+    {
+      "label": "缴费管理",
+      "url": "/workspace/student/payment",
+      "color": 2
+    },
+    {
+      "label": "报修服务",
+      "url": "/workspace/student/repair",
+      "color": 3
+    },
+    {
+      "label": "公告查看",
+      "url": "/workspace/student/announcements",
+      "color": 4
+    },
+    {
+      "label": "个人消息",
+      "url": "/workspace/student/notifications",
+      "color": 5
+    },
+    {
+      "label": "查看个人信息",
+      "url": "/workspace/student/personal/profile",
+      "color": 0
+    },
+    {
+      "label": "入住申请",
+      "url": "/workspace/student/accommodation/check-in",
+      "color": 1
+    },
+    {
+      "label": "查看账单",
+      "url": "/workspace/student/payment/bills",
+      "color": 2
+    },
+    {
+      "label": "提交报修",
+      "url": "/workspace/student/repair/requests",
+      "color": 3
+    },
+    {
+      "label": "公寓通知",
+      "url": "/workspace/student/announcements/notices",
+      "color": 4
+    }
+  ],
+  "dormManager": [
+    {
+      "label": "宿管工作台",
+      "url": "/workspace/dormManager",
+      "color": 0
+    },
+    {
+      "label": "基础信息",
+      "url": "/workspace/dormManager/base-data",
+      "color": 0
+    },
+    {
+      "label": "住宿事务",
+      "url": "/workspace/dormManager/accommodation",
+      "color": 1
+    },
+    {
+      "label": "床位状态",
+      "url": "/workspace/dormManager/beds",
+      "color": 2
+    },
+    {
+      "label": "报修初审",
+      "url": "/workspace/dormManager/repair-review",
+      "color": 3
+    },
+    {
+      "label": "账单核对",
+      "url": "/workspace/dormManager/billing",
+      "color": 4
+    },
+    {
+      "label": "个人中心",
+      "url": "/workspace/dormManager/personal",
+      "color": 5
+    },
+    {
+      "label": "个人消息",
+      "url": "/workspace/dormManager/notifications",
+      "color": 6
+    },
+    {
+      "label": "学生信息",
+      "url": "/workspace/dormManager/base-data/students",
+      "color": 0
+    },
+    {
+      "label": "入住登记与分配",
+      "url": "/workspace/dormManager/accommodation/check-in",
+      "color": 1
+    },
+    {
+      "label": "床位总览",
+      "url": "/workspace/dormManager/beds/inventory",
+      "color": 2
+    },
+    {
+      "label": "待初审工单",
+      "url": "/workspace/dormManager/repair-review/pending",
+      "color": 3
+    }
+  ],
+  "maintenance": [
+    {
+      "label": "维修工作台",
+      "url": "/workspace/maintenance",
+      "color": 0
+    },
+    {
+      "label": "工单接收",
+      "url": "/workspace/maintenance/orders",
+      "color": 0
+    },
+    {
+      "label": "维修处理",
+      "url": "/workspace/maintenance/repair",
+      "color": 1
+    },
+    {
+      "label": "维修记录",
+      "url": "/workspace/maintenance/records",
+      "color": 2
+    },
+    {
+      "label": "个人统计",
+      "url": "/workspace/maintenance/analytics",
+      "color": 3
+    },
+    {
+      "label": "个人中心",
+      "url": "/workspace/maintenance/personal",
+      "color": 4
+    },
+    {
+      "label": "个人消息",
+      "url": "/workspace/maintenance/notifications",
+      "color": 5
+    },
+    {
+      "label": "查看工单",
+      "url": "/workspace/maintenance/orders/assigned",
+      "color": 0
+    },
+    {
+      "label": "开始维修",
+      "url": "/workspace/maintenance/repair/start",
+      "color": 1
+    },
+    {
+      "label": "填写记录",
+      "url": "/workspace/maintenance/records/write",
+      "color": 2
+    },
+    {
+      "label": "工作量统计",
+      "url": "/workspace/maintenance/analytics/workload",
+      "color": 3
+    },
+    {
+      "label": "查看个人信息",
+      "url": "/workspace/maintenance/personal/profile",
+      "color": 4
+    }
+  ],
+  "admin": [
+    {
+      "label": "管理员工作台",
+      "url": "/workspace/admin",
+      "color": 0
+    },
+    {
+      "label": "基础数据",
+      "url": "/workspace/admin/base-data",
+      "color": 0
+    },
+    {
+      "label": "流程管控",
+      "url": "/workspace/admin/process",
+      "color": 1
+    },
+    {
+      "label": "报修派工",
+      "url": "/workspace/admin/dispatch",
+      "color": 2
+    },
+    {
+      "label": "统计报表",
+      "url": "/workspace/admin/reports",
+      "color": 3
+    },
+    {
+      "label": "权限管理",
+      "url": "/workspace/admin/permissions",
+      "color": 4
+    },
+    {
+      "label": "备份恢复",
+      "url": "/workspace/admin/backup",
+      "color": 5
+    },
+    {
+      "label": "账单管理",
+      "url": "/workspace/admin/billing",
+      "color": 6
+    },
+    {
+      "label": "公告管理",
+      "url": "/workspace/admin/announcements",
+      "color": 7
+    },
+    {
+      "label": "个人中心",
+      "url": "/workspace/admin/personal",
+      "color": 8
+    },
+    {
+      "label": "个人消息",
+      "url": "/workspace/admin/notifications",
+      "color": 9
+    },
+    {
+      "label": "数据维护",
+      "url": "/workspace/admin/base-data/manage",
+      "color": 0
+    }
+  ]
+}

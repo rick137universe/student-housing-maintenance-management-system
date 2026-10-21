@@ -6,6 +6,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { workspacePath } from '@/utils/workspace-route';
 import { api, saveAuthSession } from '@/utils/auth-session';
 import type { Account } from '@/types/auth';
+import homeShortcuts from '../../../public/assets/home/shortcuts.json';
 import s from './AnimeHome.module.css';
 
 export function AnimeHome() {
@@ -25,11 +26,13 @@ export function AnimeHome() {
       if (event.data?.type === 'dorma-session-changed') { await refreshRef.current(); return; }
       if (event.data?.type !== 'dorma-home-entry') return;
       if (event.data.destination === 'login') { router.push('/login'); return; }
-      if (event.data.destination !== 'workspace') return;
+      const destination = event.data.destination;
+      if (destination !== 'workspace' && !Object.values(homeShortcuts).some(entries => entries.some(entry => entry.url === destination))) return;
       try {
         const result = await api<Account>('auth/me');
         saveAuthSession(result.data);
-        router.push(workspacePath(result.data.role));
+        const shortcut = homeShortcuts[result.data.role].find(entry => entry.url === destination);
+        router.push(shortcut?.url ?? workspacePath(result.data.role));
       } catch { router.push('/login'); }
     };
     window.addEventListener('message', receive);

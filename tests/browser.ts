@@ -7,6 +7,7 @@ import {roleFeatures} from '../src/data/role-features';
 import type {RoleId} from '../src/types/auth';
 import {verifyLoginTemplate} from './login-template';
 import {verifyHomeTemplate} from './home-template';
+import {homeShortcutRegression} from './home-shortcuts';
 import {verifyStudentTemplate} from './student-template';
 import {studentDocsRegression} from './student-browser';
 import {workspacePath} from '../src/utils/workspace-route';
@@ -54,6 +55,7 @@ export async function browserRegression(origin:string,password:string,database:P
  await mkdir('docs/qa/backend',{recursive:true});
  try{
   await workspaceRedirectRegression(browser,origin);
+  await homeShortcutRegression(browser,origin,password);
   await authRedirectRegression(browser,origin,password);
   for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']] as [RoleId,string][]){
    const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
