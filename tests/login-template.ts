@@ -24,6 +24,10 @@ export async function verifyLoginTemplate() {
       .replace(' aria-label="返回项目首页"', '')
       .replace('<img src="./assets/images/flight_shmms_white.svg" alt="学生公寓住宿与报修管理系统" width="1081" height="208" />', '<img src="./assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118" />')
       .replace('<span>学生公寓住宿与报修管理系统</span>', '<span>Anime.js | JavaScript Animation Engine</span>');
+
+    if (tag === 'footer') normalized = normalized
+      .replace('<img src="/assets/login/assets/images/flight_shmms_white.svg" alt="学生公寓住宿与报修管理系统" width="580" height="118" style="aspect-ratio:580 / 118;object-fit:contain;object-position:left center">', '<img src="./assets/images/anime-js-logo-v4.svg" alt="anime.js logo v4" width="580" height="118" />')
+      .replace('<span>学生公寓住宿与报修管理系统</span>', '<span>Anime.js | JavaScript Animation Engine</span>');
     normalized = normalized.replace(/\s+/g, ' ').trim();
     assert.equal(createHash('sha256').update(normalized).digest('hex'), manifest.fragments[tag === 'header' ? 'headerWithoutAccountButton' : tag], `母版 ${tag} 结构或文案被改写`);
   }
