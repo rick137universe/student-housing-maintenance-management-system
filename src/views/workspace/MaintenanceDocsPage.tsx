@@ -4,43 +4,16 @@ import {useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
-import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {DocsWorkspace} from '@/components/workspace/LiveWorkspace';
 import {StudentAnnouncementPage} from '@/components/workspace/StudentAnnouncementPage';
 import {StudentAnnouncementData,announcementListPath} from '@/utils/student-announcement-data';
 import {MaintenanceOrderPage} from '@/components/workspace/MaintenanceOrderPage';
 import {MaintenanceRecordPage} from '@/components/workspace/MaintenanceRecordPage';
-import {MaintenanceRecordData,maintenanceRecordListPath,maintenanceOrderListPath,maintenanceProcessingListPath} from '@/utils/maintenance-record-data';
-import {featureFor} from '@/data/role-features';
+import {MaintenanceRecordData,maintenanceRecordListPath,maintenanceOrderListPath,maintenanceProcessingListPath,maintenanceRatingListPath} from '@/utils/maintenance-record-data';
+import {MaintenanceAnalyticsPage} from '@/components/workspace/MaintenanceAnalyticsPage';
 import {maintenancePages,type MaintenancePage} from '@/data/maintenance-pages';
 import type {Account} from '@/types/auth';
-import legacy from './WorkspacePage.module.css';
 import s from './MaintenanceDocsPage.module.css';
-
-// Preserve existing business widgets and their styles inside the mother document.
-function MaintenanceBusiness({account,entry,onReady}:{account:Account;entry:MaintenancePage;onReady?:()=>void}){
- const host=useRef<HTMLDivElement>(null),[target,setTarget]=useState<HTMLDivElement|null>(null);
- useLayoutEffect(()=>{
-  const node=host.current!,shadow=node.shadowRoot??node.attachShadow({mode:'open'});
-  const styles=[...document.querySelectorAll('link[rel="stylesheet"],style')].map(style=>style.cloneNode(true) as HTMLElement);
-  const computed=getComputedStyle(document.documentElement);
-  for(const name of computed)if(name.startsWith('--'))node.style.setProperty(name,computed.getPropertyValue(name));
-  node.style.fontFamily=getComputedStyle(document.body).fontFamily;node.style.color=computed.getPropertyValue('--ink');
-  node.style.display='block';node.style.backgroundColor=computed.getPropertyValue('--page-bg');node.style.colorScheme=computed.colorScheme;
-  const content=node.ownerDocument.createElement('div');content.dataset.dormaMaintenanceBusiness='';shadow.replaceChildren(...styles,content);
-  let current=true;
-  void Promise.all(styles.filter(style=>style.tagName==='LINK').map(style=>new Promise<void>(resolve=>{
-   if((style as HTMLLinkElement).sheet){resolve();return;}
-   style.addEventListener('load',()=>resolve(),{once:true});style.addEventListener('error',()=>resolve(),{once:true});
-  }))).then(()=>{if(current)setTarget(content);});
-  return()=>{current=false;shadow.replaceChildren();};
- },[]);
- useEffect(()=>{if(target)onReady?.();},[target,onReady]);
- const feature=featureFor('maintenance',entry.feature)!;
- return <div ref={host} data-dorma-maintenance-business-host>{target&&createPortal(<>
-  <div className={legacy.actionTitle}><p>{account.roleName} / {feature.title}</p><h1>{entry.label}</h1><span>{feature.description}</span></div>
-  <div className={legacy.workspaceContent}><LiveWorkspace account={account} featureId={entry.feature} actionId={entry.action}/></div>
- </>,target)}</div>;
-}
 
 export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout}:{account:Account;featureId:string;actionId:string;onReady?:()=>void;onLogout?:()=>void}){
  const router=useRouter(),{refresh}=useAuth(),refreshRef=useRef(refresh),frame=useRef<HTMLIFrameElement>(null);
@@ -59,6 +32,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
     if(entry?.feature==='notifications'&&entry.action!=='overview')void messages.load(announcementListPath(entry)).catch(()=>{});
     if(entry?.feature==='orders'&&entry.action!=='overview')void records.load(maintenanceOrderListPath(entry.action)).catch(()=>{});
     if(entry?.feature==='repair'&&entry.action!=='overview')void records.load(maintenanceProcessingListPath(entry.action)).catch(()=>{});
+    if(entry?.feature==='analytics'&&entry.action!=='overview'){void records.load('statistics').catch(()=>{});if(entry.action==='action-3')void records.load(maintenanceRatingListPath()).catch(()=>{});}
     if(entry?.feature==='records'&&entry.action!=='overview')void records.load(maintenanceRecordListPath(entry.action)).catch(()=>{});
    };
    doc.addEventListener('pointerover',warm);doc.addEventListener('focusin',warm);
@@ -81,7 +55,7 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','records','orders','repair'].includes(entry.feature))onReady?.();
+    onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -99,6 +73,6 @@ export function MaintenanceDocsPage({account,featureId,actionId,onReady,onLogout
    ?<StudentAnnouncementPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={messages} workspaceTitle="维修工作台" contentChangeEvent="dorma-maintenance-content-change"/>
    :view.entry.feature==='personal'
    ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
-   :<MaintenanceBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
+   :<MaintenanceAnalyticsPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={records}/>,view.target)}
  </main>;
 }

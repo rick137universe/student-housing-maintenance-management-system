@@ -127,7 +127,7 @@ const entries = [
     "id": "animation-animatable-properties-javascript-object-properties",
     "action": "action-1",
     "url": "/workspace/maintenance/analytics/action-1",
-    "description": "工作量、完成率与评价形成同一组刻度。"
+    "description": "按派工月份查看本人的工作量与完成数量。"
   },
   {
     "feature": "analytics",
@@ -137,7 +137,7 @@ const entries = [
     "id": "timeline-timeline-properties",
     "action": "action-2",
     "url": "/workspace/maintenance/analytics/action-2",
-    "description": "工作量、完成率与评价形成同一组刻度。"
+    "description": "查看本人获派工单的总体完成率与每月完成情况。"
   },
   {
     "feature": "analytics",
@@ -147,7 +147,7 @@ const entries = [
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-3",
     "url": "/workspace/maintenance/analytics/action-3",
-    "description": "工作量、完成率与评价形成同一组刻度。"
+    "description": "查看本人收到的服务评分与评价内容。"
   },
   {
     "feature": "personal",

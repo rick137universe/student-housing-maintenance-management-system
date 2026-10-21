@@ -15,8 +15,8 @@ const prevArrow=source.match(/<li class="prev-link">[\s\S]*?(<svg[\s\S]*?<\/svg>
 const link=(entry:typeof maintenancePages[number])=>`<a class="text-ui color-${palette[entry.color]}" data-id="${entry.id}" data-color="${entry.color}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}${arrow}</a>`;
 const routes=Object.fromEntries(maintenancePages.map(entry=>[entry.url,`/assets/maintenance/pages/${entry.feature}-${entry.action}.html`]));
 for(const [position,entry] of maintenancePages.entries()){
- if(['personal','notifications','records','orders','repair'].includes(entry.feature)&&entry.action!=='overview'){
-  const notifications=entry.feature==='notifications',business=['records','orders','repair'].includes(entry.feature),sourceFeature=notifications?'notifications':'personal',sourceAction=business?'action-1':entry.action;
+ if(['personal','notifications','records','orders','repair','analytics'].includes(entry.feature)&&entry.action!=='overview'){
+  const notifications=entry.feature==='notifications',business=['records','orders','repair','analytics'].includes(entry.feature),sourceFeature=notifications?'notifications':'personal',sourceAction=business?'action-1':entry.action;
   let result=(notifications?notificationTemplate:personalTemplates[sourceAction]).replaceAll('/workspace/student/'+sourceFeature+'/'+sourceAction,entry.url)
    .replaceAll('/workspace/student/'+sourceFeature,'/workspace/maintenance/'+entry.feature).replaceAll('学生工作台','维修工作台')
    .replaceAll(`data-color="${notifications?5:0}"`,`data-color="${entry.color}"`)
