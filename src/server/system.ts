@@ -153,14 +153,14 @@ export async function statistics(account:Account,params:URLSearchParams) {
  count(m.maintenance_id) FILTER(WHERE m.completed_at IS NOT NULL) completed FROM maintenance_records m JOIN repair_requests rr USING(repair_id)
  JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id) WHERE ${repairScope} GROUP BY 1 ORDER BY 1`,pv)).rows;
  let outstanding='0.00';if(account.role!=='maintenance'){
-  const result=await listResource(account,'bills',new URLSearchParams({...Object.fromEntries(params),limit:'100'}));
-  // 全部匹配账单汇总，分页只用于明细，不截断统计。
+  await authorize(account,'bills','read');
+  // 账单数量与待缴金额使用相同的楼栋、日期及身份范围，不受明细分页影响。
   const vv:unknown[]=[];let filter='true';if(account.role==='student'){vv.push(account.studentNumber);filter='bb.student_number=$1';}
   else if(account.role==='dormManager'){filter=`EXISTS(SELECT 1 FROM occupancy_records o JOIN beds b USING(bed_id) JOIN rooms r USING(room_id) JOIN apartment_buildings a USING(building_id) WHERE o.student_number=bb.student_number AND o.check_out_date IS NULL AND ${managerScope('a',account,vv)})`;}
   if(params.get('buildingId')){vv.push(params.get('buildingId'));filter+=` AND EXISTS(SELECT 1 FROM occupancy_records o JOIN beds b USING(bed_id) JOIN rooms r USING(room_id) WHERE o.student_number=bb.student_number AND o.check_out_date IS NULL AND r.building_id=$${vv.length})`;}
   for(const [key,op] of [['from','>='],['to','<']] as const){const date=params.get(key);if(date){vv.push(date);filter+=` AND bx.generated_at ${op} $${vv.length}::date${key==='to'?"+interval '1 day'":''}`;}}
-  outstanding=(await query(`SELECT COALESCE(sum(GREATEST(outstanding_amount,0)),0)::text amount FROM bill_balances bb JOIN accommodation_bills bx USING(bill_id) WHERE ${filter}`,vv)).rows[0].amount;
-  repairStats.bill_count=result.meta?.total;
+  const balance=(await query(`SELECT count(*) bill_count,COALESCE(sum(GREATEST(outstanding_amount,0)),0)::text amount FROM bill_balances bb JOIN accommodation_bills bx USING(bill_id) WHERE ${filter}`,vv)).rows[0];
+  outstanding=balance.amount;repairStats.bill_count=Number(balance.bill_count);
  }
  return {buildings:beds,repairs:repairStats,workload,outstandingAmount:outstanding};
 }

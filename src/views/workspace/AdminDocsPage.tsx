@@ -5,6 +5,8 @@ import {createPortal} from 'react-dom';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
 import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
+import {AdminReportPage} from '@/components/workspace/AdminReportPage';
+import {adminReportPath,reportFilters,reportFilterError} from '@/utils/admin-report-data';
 import {AdminBaseDataPage} from '@/components/workspace/AdminBaseDataPage';
 import {baseResource,baseListPath} from '@/utils/admin-base-data';
 import {AdminProcessPage,adminProcessPath} from '@/components/workspace/AdminProcessPage';
@@ -54,12 +56,18 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  const params=useSearchParams(),queryRef=useRef(params.toString());
  useLayoutEffect(()=>{queryRef.current=params.toString();},[params]);
  useEffect(()=>{refreshRef.current=refresh;},[refresh]);
- const baseNavigation=useRef<string|null>(null);
+ const navigationIntent=useRef<string|null>(null);
+ const reports=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{buildings:'building_id'}),[account.id,account.csrfToken]);
  const bases=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{students:'student_number',buildings:'building_id',rooms:'room_id',beds:'bed_id',accounts:'account_id'}),[account.id,account.csrfToken]);
- const navigateBase=useCallback((url:string)=>{
+ const navigateNative=useCallback((url:string)=>{
   const target=adminPages.find(entry=>entry.url===url.split('?')[0]);
   const link=target&&frame.current?.contentDocument?.querySelector<HTMLAnchorElement>(`#docs-sidebar a[data-id="${target.id}"]`);
-  if(target&&location.pathname!==target.url&&link){baseNavigation.current=url;link.click();}else router.push(url,{scroll:false});
+  if(target&&location.pathname!==target.url&&link){
+   navigationIntent.current=url;
+   // The mother document captures this href before loading, then writes it to history.
+   const original=link.getAttribute('href')!;link.href=url;
+   try{link.click();}finally{link.setAttribute('href',original);}
+  }else router.push(url,{scroll:false});
  },[router]);
  const processes=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{settings:'setting_key'}),[account.id,account.csrfToken]);
  const dispatches=useMemo(()=>new StudentRecordData(account.id,account.csrfToken,{repairs:'repair_id'}),[account.id,account.csrfToken]);
@@ -76,6 +84,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
     const url=new URL(anchor.getAttribute('href')!,doc.baseURI);if(url.origin!==location.origin)return;
     const entry=adminPages.find(entry=>entry.url===url.pathname);
     if(entry&&(entry.feature==='notifications'&&entry.action!=='overview'||entry.feature==='announcements'&&entry.kind==='records'))void messages.load(announcementListPath(entry)).catch(()=>{});
+    if(entry?.feature==='reports'&&!entry.kind&&entry.action!=='overview'&&entry.action!=='action-3'&&!reportFilterError(reportFilters(url.searchParams)))void reports.load(adminReportPath(reportFilters(url.searchParams))).catch(()=>{});
     if(entry?.feature==='base-data'&&entry.kind==='base-records')void bases.load(baseListPath(baseResource(url.searchParams.get('type')))).catch(()=>{});
     if(entry?.feature==='process'&&entry.action!=='overview')void processes.load(adminProcessPath).catch(()=>{});
     if(entry?.feature==='dispatch'&&entry.action!=='overview')void dispatches.load(adminDispatchListPath(entry.action)).catch(()=>{});
@@ -87,7 +96,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    detach=()=>{doc.removeEventListener('pointerover',warm);doc.removeEventListener('focusin',warm);};
   };
   iframe.addEventListener('load',bind);bind();return()=>{iframe.removeEventListener('load',bind);detach();};
- },[messages,finances,backups,permissions,dispatches,processes,bases]);
+ },[messages,finances,backups,permissions,dispatches,processes,bases,reports]);
  const [src]=useState(()=>'/assets/admin/index.html?entry='+encodeURIComponent((adminPages.find(page=>page.feature===featureId&&page.action===actionId)??adminPages[0]).id));
  const [view,setView]=useState<{target:Element;entry:AdminPage}|null>(null);
  useEffect(()=>{frame.current?.contentWindow?.postMessage({type:'dorma-admin-account-changed'},location.origin);},[account.displayName]);
@@ -102,11 +111,11 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
-    if(['personal','notifications','announcements','billing','backup','permissions','dispatch','process','base-data'].includes(entry.feature))onReady?.();
+    if(['personal','notifications','announcements','billing','backup','permissions','dispatch','process','base-data','reports'].includes(entry.feature))onReady?.();
    }
-   const intent=baseNavigation.current?.split('?')[0]===entry.url?baseNavigation.current:null;
+   const intent=navigationIntent.current?.split('?')[0]===entry.url?navigationIntent.current:null;
    const query=intent?intent.split('?')[1]??'':location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
-   if(intent)baseNavigation.current=null;
+   if(intent)navigationIntent.current=null;
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
   };
   window.addEventListener('message',receive);frame.current?.contentWindow?.postMessage({type:'dorma-admin-connect'},location.origin);
@@ -114,8 +123,10 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-admin-frame src={src} title="管理员工作台"/>
-  {view&&createPortal(view.entry.feature==='base-data'
-   ?<AdminBaseDataPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={bases} navigate={navigateBase}/>
+  {view&&createPortal(view.entry.feature==='reports'
+   ?<AdminReportPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={reports} navigate={navigateNative}/>
+   :view.entry.feature==='base-data'
+   ?<AdminBaseDataPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={bases} navigate={navigateNative}/>
    :view.entry.feature==='process'
    ?<AdminProcessPage key={view.entry.id+':'+account.id+':'+(account.csrfToken??'')} entry={view.entry} data={processes}/>
    :view.entry.feature==='dispatch'

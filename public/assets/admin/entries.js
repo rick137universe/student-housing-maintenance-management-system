@@ -207,7 +207,19 @@ const entries = [
     "id": "animation-animation-playback-settings-reversed",
     "action": "action-1",
     "url": "/workspace/admin/reports/action-1",
-    "description": "运营指标被压缩为清晰的线与弧。"
+    "description": "查看楼栋床位、当前入住率和待缴金额，按楼栋查看统计详情。"
+  },
+  {
+    "feature": "reports",
+    "group": "统计报表",
+    "color": 3,
+    "label": "筛选运营统计",
+    "id": "timer-timer-methods-restart",
+    "action": "action-1/filter",
+    "url": "/workspace/admin/reports/action-1/filter",
+    "description": "选择日期与楼栋范围，确认后查看统计。",
+    "parent": "animation-animation-playback-settings-reversed",
+    "kind": "report-filter"
   },
   {
     "feature": "reports",
@@ -217,7 +229,19 @@ const entries = [
     "id": "animation-animatable-properties-svg-attributes",
     "action": "action-2",
     "url": "/workspace/admin/reports/action-2",
-    "description": "运营指标被压缩为清晰的线与弧。"
+    "description": "查看报修总量、完成率、服务评分及每月维修工作量。"
+  },
+  {
+    "feature": "reports",
+    "group": "统计报表",
+    "color": 3,
+    "label": "筛选维修统计",
+    "id": "timer-timer-methods-alternate",
+    "action": "action-2/filter",
+    "url": "/workspace/admin/reports/action-2/filter",
+    "description": "选择日期与楼栋范围，确认后查看统计。",
+    "parent": "animation-animatable-properties-svg-attributes",
+    "kind": "report-filter"
   },
   {
     "feature": "reports",
@@ -227,7 +251,7 @@ const entries = [
     "id": "animation-animation-properties",
     "action": "action-3",
     "url": "/workspace/admin/reports/action-3",
-    "description": "运营指标被压缩为清晰的线与弧。"
+    "description": "选择日期和楼栋范围，导出运营与维修统计 CSV 报表。"
   },
   {
     "feature": "permissions",
