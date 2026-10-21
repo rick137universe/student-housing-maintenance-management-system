@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent,type RefObject} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {adminPages,type AdminPage} from '@/data/admin-pages';
@@ -124,7 +126,7 @@ function BackupContent({entry,data,record,mode,page,navigate}:{entry:AdminPage;d
   {publish||(editing||restoring)&&detail?<BackupEditor entry={entry} row={editing||restoring?detail:null} data={data} submitAction={submitAction} onDisabled={setDisabled} onSaved={id=>navigate(publish?records.url:listUrl+(page>1?'&':'?')+'record='+id)}/>:result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-admin-backup-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+row[identifier];return <li key={String(row[identifier])}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onClick={event=>link(url,event)}>{(policies?['policy_name','enabled']:['backup_run_id','operation_type','run_status','started_at']).map(key=>display(key,row[key])).join(' · ')}<RepairArrow/></a></li>;})}</ul>
    {!rows.length&&<StudentEmptyState/>}
-   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(records.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(records.url+'?page='+(page+1))}>下一页</button></div></>}
+   <DocsPagination page={page} total={total} pageUrl={next=>records.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:!form&&detail&&<BackupValues row={detail} policies={policies}/>)}
  </div>;
 

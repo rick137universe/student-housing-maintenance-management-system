@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {ManagerPage} from '@/data/manager-pages';
@@ -67,7 +69,7 @@ function ResourceContent({entry,data,record,page,edit,navigate}:{entry:ManagerPa
  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-manager-beds={base?undefined:''} data-dorma-manager-base={base?'':undefined} aria-busy={loading}>
   {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<><ul className="links-list links-list-boxed" data-dorma-bed-list={base?undefined:''} data-dorma-base-list={base?'':undefined}>{rows.map(row=>{const id=String(row[base?spec.identifier:'bed_id']),url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(id);return <li key={id}><a className={'text-ui color-'+color} data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{anomaly?id+' · '+String(row.issue):(base?spec.summary:['bed_id','building_name','bed_status']).map(key=>display(key,row[key])).join(' · ')}<Arrow/></a></li>;})}</ul>
-   {!rows.length&&<StudentEmptyState/>}{total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(edit?(base&&resource!=='beds'?<ManagerBaseDataEditor entry={entry} row={detail} data={data} detailUrl={detailUrl} navigate={navigate}/>:<ManagerBedEditor entry={entry} row={detail} data={data} detailUrl={detailUrl} navigate={navigate}/>):<>{anomaly&&<StudentWarning>{String(detail.issue)}</StudentWarning>}<div data-dorma-bed-values={base?undefined:''} data-dorma-base-values={base?'':undefined}>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(key,detail[key])}</code></pre></Fragment>)}</div></>))}
  </div>;
 }

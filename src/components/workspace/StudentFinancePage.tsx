@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {StudentWarning} from './StudentWarning';
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type FormEvent,type MouseEvent,type ReactNode} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
@@ -148,7 +150,7 @@ function FinanceContent({data,entry,record,page,listUrl,paymentStep,navigate}:{d
         return navigation(summary,listUrl+(listUrl.includes('?')?'&':'?')+'record='+encodeURIComponent(id),id);
       })}</ul>
       {!rows.length&&<StudentEmptyState/>}
-      {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(pageUrl(page-1))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(pageUrl(page+1))}>下一页</button></div></>}
+      <DocsPagination page={page} total={total} pageUrl={next=>pageUrl(next)} navigate={navigate}/>
     </>:detail&&<>
       {paymentStep&&canPay?<PaymentForm bill={detail} onCancel={()=>navigate(detailUrl)} onSaved={async()=>{
         data.invalidate();

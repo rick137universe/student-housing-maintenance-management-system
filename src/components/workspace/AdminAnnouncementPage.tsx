@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent,type RefObject} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {adminPages,type AdminPage} from '@/data/admin-pages';
@@ -113,7 +115,7 @@ function AnnouncementContent({entry,data,record,mode,page,navigate}:{entry:Admin
   {publish||editing&&detail?<AnnouncementEditor entry={entry} row={editing?detail:null} data={data} submitAction={submitAction} onDisabled={setDisabled} onSaved={id=>navigate(publish?records.url:listUrl+(page>1?'&':'?')+'record='+id)}/>:result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-admin-announcement-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+row.announcement_id;return <li key={String(row.announcement_id)}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onClick={event=>link(url,event)}>{String(row.title)}<RepairArrow/></a></li>;})}</ul>
    {!rows.length&&<StudentEmptyState/>}
-   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(records.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(records.url+'?page='+(page+1))}>下一页</button></div></>}
+   <DocsPagination page={page} total={total} pageUrl={next=>records.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:!editing&&detail&&<div data-dorma-admin-announcement-body>
    <p><code>{date(detail.published_at)}</code>{' '}<code>{String(detail.announcement_type)}</code>{' '}<code>{detail.enabled?'已启用':'已停用'}</code></p>
    <p>发布范围：<code>{detail.building_id?String(detail.building_id):'全部楼栋'}</code>{Boolean(detail.expires_at)&&<> 到期时间：<code>{date(detail.expires_at)}</code></>}</p>

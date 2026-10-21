@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {api} from '@/utils/auth-session';
@@ -77,7 +79,7 @@ function OrderContent({entry,data,record,page,navigate}:{entry:MaintenancePage;d
   {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-maintenance-order-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(String(row.repair_id));return <li key={String(row.repair_id)}><a className="text-ui color-red" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>warm(row,url)} onFocus={()=>warm(row,url)} onClick={event=>link(url,event)}>{['full_name','room_id','fault_type','repair_status'].map(key=>repairValue(key,row[key])).join(' · ')}<RepairArrow/></a></li>;})}</ul>
-   {!rows.length&&<StudentEmptyState/>}{total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&<><RepairValues row={detail} fields={fields}/>{history.length>0&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map((update,index)=><section key={String(update.update_id??index)}><h3>{repairValue('created_at',update.created_at)} · {repairValue('status',update.status)}</h3><RepairValues row={update} fields={[["actor_name","处理人员"],["description","处理说明"]]}/></section>)}</div>}</>)}
  </div>;
 }

@@ -26,6 +26,7 @@ import {adminShellRegression,verifyAdminShell} from './admin-shell';
 import {adminPersonalRegression} from './admin-personal';
 import {adminNotificationRegression} from './admin-notifications';
 import {adminAnnouncementRegression} from './admin-announcements';
+import {docsPaginationRegression} from './docs-pagination';
 import {adminReportRegression} from './admin-reports';
 import {adminBaseDataRegression} from './admin-base-data';
 import {adminProcessRegression} from './admin-process';
@@ -222,6 +223,7 @@ export async function browserRegression(origin:string,password:string,database:P
   await maintenanceOrderRegression(browser,origin,password);
   await maintenanceProcessingRegression(browser,origin,password);
   await maintenanceAnalyticsRegression(browser,origin,password);
+  await docsPaginationRegression(browser,origin,password,database);
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(origin);await page.screenshot({path:'docs/qa/backend/home-mobile.png',fullPage:false});await context.close();
   assert.deepEqual(errors,[]);console.log(`浏览器回归通过：${visited} 个页面、四类真实登录退出、桌面/手机、浅深主题和刷新持久化。`);
  }finally{await browser.close();}

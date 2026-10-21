@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {StudentWarning} from './StudentWarning';
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
@@ -109,7 +111,7 @@ function RecordsContent({entry,data,record,page,listUrl,navigate}:{entry:Student
         return <li key={id}><a className="text-ui color-corail" data-color="1" href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{summary}<Arrow/></a></li>;
       })}</ul>
       {!rows.length&&<StudentEmptyState/>}
-      {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+      <DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
     </>:detail&&<RecordValues row={detail} fields={detailFields}/>)}
   </div>;
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent,type RefObject} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {AdminPage} from '@/data/admin-pages';
@@ -67,7 +69,7 @@ function DispatchContent({entry,data,record,page,dispatching,navigate}:{entry:Ad
   {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-admin-dispatch-list>{rows.map(row=>{const url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(String(row.repair_id));return <li key={String(row.repair_id)}><a className="text-ui color-orange" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>{void data.load('repairs/'+row.repair_id+'/history').catch(()=>{});}} onClick={event=>link(url,event)}>{['full_name','room_id','fault_type','repair_status'].map(key=>repairValue(key,row[key])).join(' · ')}<RepairArrow/></a></li>;})}</ul>
-   {!rows.length&&<StudentEmptyState/>}{total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(dispatching?(canDispatch?<DispatchEditor row={detail} entry={entry} data={data} submitAction={submitAction} onDisabled={setDisabled} onSaved={()=>navigate(detailUrl)}/>:<div className="docs-info-content formatted-text"><div className="notice info"><p>该工单已派工或尚未通过初审，请返回详情查看最新状态。</p></div></div>):<>
    <RepairValues row={detail} fields={repairFields}/>{Boolean(detail.maintenance_id)&&<><h2>派工与维修</h2><RepairValues row={detail} fields={maintenanceFields}/></>}
    {history.length>0&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map(update=><section key={String(update.update_id)}><h3>{repairValue('created_at',update.created_at)} · {repairValue('status',update.status)}</h3><RepairValues row={update} fields={[["actor_name","处理人员"],["description","处理说明"]]}/></section>)}</div>}

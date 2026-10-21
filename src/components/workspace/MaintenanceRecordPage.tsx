@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent,type ReactNode} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {MaintenancePage} from '@/data/maintenance-pages';
@@ -87,7 +89,7 @@ function RecordContent({entry,data,record,page,editing,navigate,summary}:{entry:
   {record===null&&summary}
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-maintenance-record-list>{rows.map(row=>{const id=String(row[identifier]),url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(id);return <li key={id}><a className={"text-ui color-"+(processing?"corail":"orange")} data-color={entry.color} href={url} target="_top" onPointerEnter={()=>warm(row,url)} onFocus={()=>warm(row,url)} onClick={event=>link(url,event)}>{(ratings?['repair_id','room_id','service_rating','evaluated_at']:['repair_id','room_id','fault_description','repair_status']).map(key=>repairValue(key,row[key])+(key==='service_rating'?' 分':'')).join(' · ')}<Arrow/></a></li>;})}</ul>
-   {!rows.length&&<StudentEmptyState/>}{total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(editing?(pending?(processing?<MaintenanceProcessingEditor entry={entry} row={detail} detailUrl={detailUrl} data={data} navigate={navigate}/>:<MaintenanceRecordEditor entry={entry} row={detail} detailUrl={detailUrl} data={data} navigate={navigate}/>):<div className="docs-info-content formatted-text"><div className="notice info"><p>{processing?'当前状态不能执行此操作，请返回详情查看处理结果。':'该记录已归档或当前不能填写，请返回详情查看处理结果。'}</p></div></div>):<><RepairValues row={detail} fields={fields}/>{start&&pending&&<MaintenanceProcessingEditor entry={entry} row={detail} detailUrl={detailUrl} data={data} navigate={navigate} onSaved={load}/>}{Array.isArray(history)&&history.length>0&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map((update,index)=><section key={String(update.update_id??index)}><h3>{repairValue('created_at',update.created_at)} · {repairValue('status',update.status)}</h3><RepairValues row={update} fields={[["actor_name","处理人员"],["description","处理说明"]]}/></section>)}</div>}</>))}
  </div>;
 }

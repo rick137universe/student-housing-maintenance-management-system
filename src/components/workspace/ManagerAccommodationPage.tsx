@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import type {ManagerPage} from '@/data/manager-pages';
@@ -77,7 +79,7 @@ function AccommodationContent({entry,data,record,page,review,navigate}:{entry:Ma
   {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-accommodation-list>{rows.map(row=>{const id=String(row[identifier]),url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(id);return <li key={id}><a className="text-ui color-corail" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{['full_name','student_number','business_type','original_bed_id','new_bed_id','review_status'].map(key=>display(key,row[key])).join(' · ')}<Arrow/></a></li>;})}</ul>
-   {!rows.length&&<StudentEmptyState/>}{total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   {!rows.length&&<StudentEmptyState/>}<DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(review?(pending?<ManagerAccommodationReview entry={entry} row={detail} resource={resource} detailUrl={detailUrl} data={data} navigate={navigate}/>:<div className="docs-info-content formatted-text"><div className="notice info"><p>该申请已审核，请返回详情查看办理结果。</p></div></div>):<div data-dorma-accommodation-values>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(key,detail[key])}</code></pre></Fragment>)}</div>))}
  </div>;
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {StudentWarning} from './StudentWarning';
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
@@ -106,7 +108,7 @@ function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentCh
     return <li key={id}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{String(row.title)}{notification?' · '+(row.read_at?'已读':'未读'):''}<Arrow/></a></li>;
    })}</ul>
    {!rows.length&&<StudentEmptyState/>}
-   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   <DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&<div data-dorma-announcement-body>
    <p><code>{date(detail[notification?'created_at':'published_at'])}</code>{notification&&<> <code>{detail.read_at?'已读':'未读'}</code></>}</p>
    {paragraphs.map((paragraph,index)=><p key={index}>{paragraph.split('\n').map((line,lineIndex)=><Fragment key={lineIndex}>{lineIndex>0&&<br/>}{line}</Fragment>)}</p>)}

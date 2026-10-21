@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {StudentWarning} from './StudentWarning';
 import {useCallback,useEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
@@ -65,7 +67,7 @@ function RepairRecordsContent({entry,data,record,page,navigate}:{entry:StudentPa
     return <li key={String(row.repair_id)}><a className="text-ui color-yellow" data-color="3" href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{summary}<RepairArrow/></a></li>;
    })}</ul>
    {!rows.length&&<StudentEmptyState/>}
-   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(entry.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(entry.url+'?page='+(page+1))}>下一页</button></div></>}
+   <DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:detail&&(!allowed?<StudentWarning>{evaluate?'此工单尚未完工或已经评价，不能重复提交。':'记录不存在或不可访问。'}</StudentWarning>:evaluate?<RepairForm entry={entry} data={data} repair={detail} locked={loading}/>:<>
    <RepairValues row={detail} fields={[...requestFields,...(detail.maintenance_id?maintenanceFields:[]),...(evaluations||detail.repair_status==='evaluated'?evaluationFields:[])]}/>
    {entry.action.startsWith('action-2')&&<div data-dorma-repair-history><h2>处理过程</h2>{history.map(update=><RepairValues key={String(update.update_id)} row={{description:[repairValue('status',update.status),repairValue('created_at',update.created_at),String(update.actor_name??''),String(update.description??'')].filter(Boolean).join(' · ')}} fields={[["description",repairValue('status',update.status)]]}/>)}</div>}

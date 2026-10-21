@@ -39,7 +39,7 @@ export async function studentAnnouncementRegression(page:Page,admin:Client){
  await page.screenshot({path:'docs/qa/backend/student-announcement-detail-mobile.png'});await page.setViewportSize({width:1440,height:1000});
  await page.reload();await expect(body).toContainText(paragraphs[0]);await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);
  await frame.locator('#docs-info .prev-link a').click();await expect(list.locator('a')).toHaveCount(20);await page.goBack();await expect(body).toContainText(paragraphs[0]);await page.goForward();await expect(list.locator('a')).toHaveCount(20);
- await frame.getByRole('button',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'action-1?page=2');
+ await frame.getByRole('link',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'action-1?page=2');
  const page2=(await get('announcements?page=2')) as Row[];await expect(list.locator('a')).toHaveText(page2.map(row=>String(row.title)));
  await list.locator('a').first().click();await expect(frame.locator('#docs-info .prev-link a')).toHaveAttribute('href',base+'action-1?page=2');
  await frame.locator('#docs-info .prev-link a').click();await expect(page).toHaveURL(origin+base+'action-1?page=2');

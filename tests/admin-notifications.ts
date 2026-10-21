@@ -50,7 +50,7 @@ export async function adminNotificationRegression(browser:Browser,origin:string,
   await previous.click();await expect(target).toHaveText(String(first.title)+' · 已读');assert(await shell!.evaluate(el=>el.isConnected));
   await page.goBack();await expect(body).toContainText('已读');await page.reload();await expect(body).toContainText('已读');await expect(read).toHaveCount(0);await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);
   await frame.locator('#docs-info .docs-breadcrumb a').last().click();await expect(target).toHaveText(String(first.title)+' · 已读');
-  await frame.getByRole('button',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'?page=2');await expect(list.locator('a')).toHaveCount(1);
+  await frame.getByRole('link',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'?page=2');await expect(list.locator('a')).toHaveCount(1);
   await list.locator('a').click();await expect(previous).toHaveAttribute('href',base+'?page=2');await previous.click();await expect(page).toHaveURL(origin+base+'?page=2');
   await frame.locator('#docs-sidebar a[title="个人中心"]').click();await expect(page).toHaveURL(origin+'/workspace/admin/personal');await expect(frame.locator('#docs-info h1')).toHaveText('个人中心');assert.equal(new URL(page.url()).search,'');
   const peerName='adminPeer'+suffix;await call(admin,'accounts',{username:peerName,fullName:'另一位管理员',role:'admin',password});

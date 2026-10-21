@@ -53,7 +53,7 @@ export async function maintenanceNotificationRegression(browser:Browser,origin:s
   await previous.click();await expect(target).toHaveText(String(first.title)+' · 已读');assert(await shell!.evaluate(el=>el.isConnected));
   await page.goBack();await expect(body).toContainText('已读');await page.reload();await expect(body).toContainText('已读');await expect(read).toHaveCount(0);await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);
   await frame.locator('#docs-info .docs-breadcrumb a').last().click();await expect(target).toHaveText(String(first.title)+' · 已读');
-  await frame.getByRole('button',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'?page=2');await expect(list.locator('a')).toHaveCount(1);
+  await frame.getByRole('link',{name:'下一页',exact:true}).click();await expect(page).toHaveURL(origin+base+'?page=2');await expect(list.locator('a')).toHaveCount(1);
   await list.locator('a').click();await expect(previous).toHaveAttribute('href',base+'?page=2');await previous.click();await expect(page).toHaveURL(origin+base+'?page=2');
   await frame.locator('#docs-sidebar a[title="个人中心"]').click();await expect(page).toHaveURL(origin+'/workspace/maintenance/personal');await expect(frame.locator('#docs-info h1')).toHaveText('个人中心');assert.equal(new URL(page.url()).search,'');
   const peerAccount=await login(peer,'mt008');await dispatchTo(String(peerAccount.id),'其他维修人员');const foreign=(await call(peer,'notifications') as Row[])[0];assert(foreign);

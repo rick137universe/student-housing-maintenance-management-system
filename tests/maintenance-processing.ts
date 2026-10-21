@@ -28,7 +28,7 @@ export async function maintenanceProcessingRegression(browser:Browser,origin:str
   for(let i=0;i<21;i++)await create(owner,String(worker.id),String(i));
   const foreign=await create(peer,String(other.id),'其他维修人员');
   await page.goto(origin+base+'action-1');await expect(list.locator('a')).toHaveCount(20);await expect(frame.locator('[data-dorma-maintenance-processing] table, [data-dorma-maintenance-business-host], dialog')).toHaveCount(0);
-  const shell=await frame.locator('#docs-demos').elementHandle();await frame.getByRole('button',{name:'下一页',exact:true}).click();await expect(list.locator('a')).toHaveCount(1);
+  const shell=await frame.locator('#docs-demos').elementHandle();await frame.getByRole('link',{name:'下一页',exact:true}).click();await expect(list.locator('a')).toHaveCount(1);
   const id=new URL((await list.locator('a').getAttribute('href'))!,origin).searchParams.get('record')!,detail=origin+base+'action-1?page=2&record='+id;
   await expectStudentReveal(page,()=>list.locator('a').click(),'维修工单详情',selector);await expect(page).toHaveURL(detail);await expect(field('处理编号')).toHaveText(id);const repairId=await field('报修编号').innerText();assert.notEqual(id,repairId);
   await expectStudentBreadcrumbSpacing(page,selector);await expect(previous).toHaveAttribute('href',base+'action-1?page=2');await expect(next).toHaveText('开始维修');

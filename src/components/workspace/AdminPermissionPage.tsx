@@ -1,5 +1,7 @@
 'use client';
 
+import {DocsPagination} from './DocsPagination';
+
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent,type RefObject} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {adminPages,type AdminPage} from '@/data/admin-pages';
@@ -134,7 +136,7 @@ function PermissionContent({entry,data,record,mode,page,navigate}:{entry:AdminPa
   {publish||editing&&detail?<PermissionEditor entry={entry} row={editing?detail:null} data={data} resource={resource} submitAction={submitAction} onDisabled={setDisabled} onSaved={id=>navigate(publish?(resource==='authorizations'?adminPages.find(page=>page.parent===parent.id&&page.kind==='authorization-records')!.url:records.url):id===null?listUrl:listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(id))}/>:result&&(record===null?<>
    <ul className="links-list links-list-boxed" data-dorma-admin-permission-list>{rows.map(row=>{const key=recordKey(resource,row),url=listUrl+(page>1?'&':'?')+'record='+encodeURIComponent(key);return <li key={key}><a className={'text-ui color-'+theme} data-color={entry.color} href={url} target="_top" onClick={event=>link(url,event)}>{(resource==='accounts'?['username','full_name','role','account_status']:resource==='permissions'?['role','resource','operation','data_scope']:resource==='authorizations'?['account_id','building_id']:['operation','entity_type','result','occurred_at']).map(key=>display(key,row[key])).join(' · ')}<RepairArrow/></a></li>;})}</ul>
    {!rows.length&&<StudentEmptyState/>}
-   {total>20&&<><p>共 {total} 条 · 第 {page} 页</p><div className="ui-controls"><button disabled={page===1} onClick={()=>navigate(records.url+(page>2?'?page='+(page-1):''))}>上一页</button><button disabled={page*20>=total} onClick={()=>navigate(records.url+'?page='+(page+1))}>下一页</button></div></>}
+   <DocsPagination page={page} total={total} pageUrl={next=>records.url+(next>1?'?page='+next:'')} navigate={navigate}/>
   </>:!editing&&detail&&<PermissionValues row={detail} resource={resource}/>)}
  </div>;
 
