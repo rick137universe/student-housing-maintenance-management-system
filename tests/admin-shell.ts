@@ -17,7 +17,7 @@ export async function verifyAdminShell(){
 
 export async function adminShellRegression(browser:Browser,origin:string,password:string){
  await verifyAdminShell();
- const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+ const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error'&&/Encountered two children with the same key/.test(message.text()))errors.push(message.text());});
  const selector='[data-dorma-admin-frame]',frame=page.frameLocator(selector),entry=(feature:string,action='overview')=>adminPages.find(entry=>entry.feature===feature&&entry.action===action)!;
  async function ready(item:typeof adminPages[number]){
   await expect(page).toHaveURL(origin+item.url);await expect(frame.locator('#toggle-search')).toBeEnabled();await expect(frame.locator('.docs-demo.is-active')).toHaveAttribute('data-id',item.id);await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');
