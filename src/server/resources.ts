@@ -116,6 +116,8 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  }
  await authorize(account,resource,'read');
  if(id)condition+=` AND ${key}=${add(id)}`;
+ if(kind==='permissions')for(const field of ['role','resource','operation']){const value=params.get(field);if(value)condition+=` AND x.${field}=${add(value)}`;}
+ if(kind==='authorizations')for(const field of ['account_id','building_id']){const value=params.get(field);if(value)condition+=` AND x.${field}=${add(value)}`;}
  const q=params.get('q');if(q){const alias=kind==='students'?'s':kind==='buildings'?'a':kind==='rooms'?'r':['beds','anomalies'].includes(kind)?'b':kind==='occupancies'?'o':'x';condition+=` AND (to_jsonb(${alias})-'password_hash')::text ILIKE ${add(`%${q.slice(0,100)}%`)}`;}
  const status=params.get('status');const statusColumn:Record<string,string>={applications:'x.review_status',changes:'x.review_status',repairs:'x.repair_status',maintenance:'rr.repair_status',bills:'x.bill_status',backups:'x.run_status',beds:'b.bed_status'};
  if(status&&statusColumn[kind])condition+=` AND ${statusColumn[kind]}=ANY(${add(status.split(','))}::text[])`;
@@ -129,7 +131,7 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  for(const [filter,op] of [['from','>='],['to','<']] as const){const value=params.get(filter);if(value&&dateColumn[kind]){z.iso.date().parse(value);condition+=` AND ${dateColumn[kind]} ${op} ${add(value)}::date${filter==='to'?"+interval '1 day'":''}`;}}
  const page=z.coerce.number().int().min(1).parse(params.get('page')??1);const limit=z.coerce.number().int().min(1).max(100).parse(params.get('limit')??20);
  const total=Number((await query(`SELECT count(*) FROM ${from} WHERE ${condition}`,values)).rows[0].count);
- const rows=(await query(`SELECT ${columns} FROM ${from} WHERE ${condition} ORDER BY ${key} DESC LIMIT ${add(id?1:limit)} OFFSET ${add(id?0:(page-1)*limit)}`,values)).rows;
+ const rows=(await query(`SELECT ${columns} FROM ${from} WHERE ${condition} ORDER BY ${key} DESC${kind==='permissions'?',x.resource DESC,x.operation DESC':kind==='authorizations'?',x.building_id DESC':''} LIMIT ${add(id?1:limit)} OFFSET ${add(id?0:(page-1)*limit)}`,values)).rows;
  if(id){requireValue(rows[0],'记录不存在或不可访问',404);return {data:rows[0]};}
  return {data:rows,meta:{page,limit,total}};
 }

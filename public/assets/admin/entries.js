@@ -187,7 +187,31 @@ const entries = [
     "id": "timer-timer-playback-settings-duration",
     "action": "action-1",
     "url": "/workspace/admin/permissions/action-1",
-    "description": "四种身份只连接各自被授权的功能。"
+    "description": "新增员工账号，查看和维护账号资料、角色及状态。"
+  },
+  {
+    "feature": "permissions",
+    "group": "权限管理",
+    "color": 4,
+    "label": "新增员工账号",
+    "id": "timer-timer-playback-settings-autoplay",
+    "action": "action-1/submit",
+    "url": "/workspace/admin/permissions/action-1/submit",
+    "description": "填写员工账号、姓名、角色、状态与初始密码。",
+    "parent": "timer-timer-playback-settings-duration",
+    "kind": "account-create"
+  },
+  {
+    "feature": "permissions",
+    "group": "权限管理",
+    "color": 4,
+    "label": "账号记录",
+    "id": "timer-timer-playback-settings-framerate",
+    "action": "action-1/records",
+    "url": "/workspace/admin/permissions/action-1/records",
+    "description": "查看和维护学生及员工账号。",
+    "parent": "timer-timer-playback-settings-duration",
+    "kind": "records"
   },
   {
     "feature": "permissions",
@@ -197,7 +221,55 @@ const entries = [
     "id": "animation-animation-callbacks-oncomplete",
     "action": "action-2",
     "url": "/workspace/admin/permissions/action-2",
-    "description": "四种身份只连接各自被授权的功能。"
+    "description": "配置角色权限，维护宿管人员的额外楼栋授权。"
+  },
+  {
+    "feature": "permissions",
+    "group": "权限管理",
+    "color": 4,
+    "label": "配置角色权限",
+    "id": "timer-timer-playback-settings-playbackrate",
+    "action": "action-2/submit",
+    "url": "/workspace/admin/permissions/action-2/submit",
+    "description": "选择角色、资源、操作和权限状态。",
+    "parent": "animation-animation-callbacks-oncomplete",
+    "kind": "permission-create"
+  },
+  {
+    "feature": "permissions",
+    "group": "权限管理",
+    "color": 4,
+    "label": "权限记录",
+    "id": "timer-timer-callbacks",
+    "action": "action-2/records",
+    "url": "/workspace/admin/permissions/action-2/records",
+    "description": "查看各角色的资源权限与数据范围。",
+    "parent": "animation-animation-callbacks-oncomplete",
+    "kind": "records"
+  },
+  {
+    "feature": "permissions",
+    "group": "权限管理",
+    "color": 4,
+    "label": "楼栋授权",
+    "id": "timer-timer-callbacks-onloop",
+    "action": "action-2/authorize",
+    "url": "/workspace/admin/permissions/action-2/authorize",
+    "description": "为宿管人员授予或撤销额外楼栋授权。",
+    "parent": "animation-animation-callbacks-oncomplete",
+    "kind": "authorization-create"
+  },
+  {
+    "feature": "permissions",
+    "group": "权限管理",
+    "color": 4,
+    "label": "授权记录",
+    "id": "timer-timer-callbacks-onpause",
+    "action": "action-2/authorizations",
+    "url": "/workspace/admin/permissions/action-2/authorizations",
+    "description": "查看宿管人员的额外楼栋授权。",
+    "parent": "animation-animation-callbacks-oncomplete",
+    "kind": "authorization-records"
   },
   {
     "feature": "permissions",
@@ -207,7 +279,7 @@ const entries = [
     "id": "timeline-add-timers",
     "action": "action-3",
     "url": "/workspace/admin/permissions/action-3",
-    "description": "四种身份只连接各自被授权的功能。"
+    "description": "查看操作审计记录及每次操作的详细信息。"
   },
   {
     "feature": "backup",
