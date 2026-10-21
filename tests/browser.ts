@@ -22,6 +22,7 @@ import {maintenanceShellRegression,verifyMaintenanceShell} from './maintenance-s
 import {maintenancePersonalRegression} from './maintenance-personal';
 import {maintenanceNotificationRegression} from './maintenance-notifications';
 import {adminShellRegression,verifyAdminShell} from './admin-shell';
+import {adminPersonalRegression} from './admin-personal';
 import {maintenanceAnalyticsRegression} from './maintenance-analytics';
 import {maintenanceProcessingRegression} from './maintenance-processing';
 import {maintenanceOrderRegression} from './maintenance-orders';
@@ -194,6 +195,7 @@ export async function browserRegression(origin:string,password:string){
   await managerBaseDataRegression(browser,origin,password);
   await managerBillingRegression(browser,origin,password);
   await adminShellRegression(browser,origin,password);
+  await adminPersonalRegression(browser,origin,password);
   await maintenanceShellRegression(browser,origin,password);
   await maintenancePersonalRegression(browser,origin,password);
   await maintenanceNotificationRegression(browser,origin,password);

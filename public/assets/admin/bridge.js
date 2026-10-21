@@ -1,4 +1,5 @@
 import entries from './entries.js';
+import { c as CopyButton } from '/assets/student/assets/js/chunks/chunk-WQVFBASJ.js';
 import { m as waapi, o as utils } from '/assets/student/assets/js/chunks/chunk-WXAKRBIO.js';
 const requested = new URLSearchParams(location.search).get('entry');
 const initial = entries.find(entry => entry.id === requested) ?? entries[0];
@@ -63,7 +64,7 @@ for (const [direction, neighbor, heading] of [
 }
 if(initial.action!=='overview'){
   const content=info.querySelector('.docs-info-content.formatted-text');
-  content.after(info.querySelector('[data-dorma-business]'));content.hidden=true;
+  if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));content.hidden=initial.feature!=='personal';
 }
 document.title = initial.label + ' · 管理员工作台';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
@@ -108,6 +109,19 @@ window.addEventListener('message', event => {
   if (event.origin === location.origin && event.source === parent && event.data?.type === 'dorma-admin-connect') announce();
   if (event.origin === location.origin && event.source === parent && event.data?.type === 'dorma-admin-account-changed') void syncAccount();
 });
+// Profile data arrives after the mother's highlighter has initialized.
+const profileCopies = new WeakMap();
+new MutationObserver(() => {
+  for (const pre of document.querySelectorAll('[data-dorma-profile] pre, [data-dorma-profile-editor] .code-editor pre')) {
+    if(pre.querySelector('textarea,input,select')){pre.querySelector('.copy-button')?.remove();profileCopies.delete(pre);continue;}
+    const value=pre.querySelector('code').textContent;
+    if(profileCopies.get(pre)?.data===value)continue;
+    pre.querySelector('.copy-button')?.remove();
+    const copy=new CopyButton(value);copy.$el.type='button';
+    copy.$el.title='复制'+(pre.closest('[data-profile-field]')?.querySelector('h2').textContent??pre.previousElementSibling.textContent);
+    pre.append(copy.$el);profileCopies.set(pre,copy);
+  }
+}).observe(document.querySelector('#docs-info'),{childList:true,subtree:true,characterData:true});
 window.addEventListener('load', () => {
   // The copied core initializes this widget before the document load event.
   document.querySelector('#docs-versions')?.remove();

@@ -4,7 +4,7 @@ import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useRouter,useSearchParams} from 'next/navigation';
 import {useAuth} from '@/components/auth/AuthProvider';
-import {LiveWorkspace} from '@/components/workspace/LiveWorkspace';
+import {LiveWorkspace,DocsWorkspace} from '@/components/workspace/LiveWorkspace';
 import {featureFor} from '@/data/role-features';
 import {adminPages,type AdminPage} from '@/data/admin-pages';
 import type {Account} from '@/types/auth';
@@ -56,6 +56,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;
     setView(current=>current?.target===target&&current.entry.id===entry.id?current:{target,entry});
+    if(entry.feature==='personal')onReady?.();
    }
    const query=location.pathname===entry.url?new URLSearchParams(location.search).toString():'';
    if(location.pathname!==entry.url||queryRef.current!==query)router.replace(entry.url+(query?'?'+query:''),{scroll:false});
@@ -65,6 +66,8 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
  },[router,onReady,onLogout]);
  return <main className={s.page}>
   <iframe ref={frame} className={s.frame} data-dorma-admin-frame src={src} title="管理员工作台"/>
-  {view&&createPortal(<AdminBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
+  {view&&createPortal(view.entry.feature==='personal'
+   ?<DocsWorkspace key={view.entry.id+':'+account.id} account={account} featureId={view.entry.feature} actionId={view.entry.action} docsColor={view.entry.color}/>
+   :<AdminBusiness key={view.entry.id+':'+account.id} account={account} entry={view.entry} onReady={onReady}/>,view.target)}
  </main>;
 }
