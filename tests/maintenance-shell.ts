@@ -3,6 +3,9 @@ import {readFile} from 'node:fs/promises';
 import {expect,type Browser} from '@playwright/test';
 import {maintenancePages} from '../src/data/maintenance-pages';
 import {roleFeatures} from '../src/data/role-features';
+import maintenancePreviews from '../src/data/maintenance-previews.json';
+import managerPreviews from '../src/data/manager-previews.json';
+import studentPreviews from '../src/data/student-previews.json';
 
 export async function verifyMaintenanceShell(){
  const index=await readFile('public/assets/maintenance/index.html','utf8'),sidebar=index.match(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/)![0];
@@ -11,6 +14,17 @@ export async function verifyMaintenanceShell(){
  assert(!/<a\b[^>]*\bdata-color=/.test(sidebar),'未选中的目录保持母版默认颜色');
  for(const resource of ['css/core.css','css/docs.css','js/docs.js'])assert(index.includes('/assets/student/assets/'+resource));
  const demos=await readFile('public/assets/maintenance/demos.html','utf8');
+ const randomPages=maintenancePages.filter(entry=>entry.action!=='overview'&&['orders','repair','records'].includes(entry.feature));
+ assert.deepEqual(maintenancePreviews.map(preview=>preview.url),randomPages.map(entry=>entry.url));
+ const allowed=new Set([...studentPreviews.filter(preview=>!preview.kind),...managerPreviews].map(preview=>preview.source).filter(source=>source!=='getting-started'&&source!=='text-splittext'&&!source.startsWith('timer')));
+ assert.equal(new Set(maintenancePreviews.map(preview=>preview.source)).size,maintenancePreviews.length,'七个业务子页分配不同的动画');
+ for(const config of maintenancePreviews){
+  assert(allowed.has(config.source),'随机样式必须来自已选学生端、宿管端图形动画，并排除点阵、双语和数字框');
+  const entry=maintenancePages.find(page=>page.url===config.url)!;
+  const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+  assert(!preview.includes('dotted-grid')&&!preview.includes('splitText(')&&!preview.includes('value lcd'));
+  assert(preview.includes(`data-color="${entry.color}"`)&&preview.includes(`<h2 class="text-ui">${entry.label}</h2>`));
+ }
  for(const entry of maintenancePages){
   const page=await readFile(`public/assets/maintenance/pages/${entry.feature}-${entry.action}.html`,'utf8');
   assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));
