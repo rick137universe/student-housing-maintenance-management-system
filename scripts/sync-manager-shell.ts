@@ -2,6 +2,7 @@ import {canonicalWorkspaceUrl} from '../src/data/workspace-paths';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {managerPages} from '../src/data/manager-pages';
 import {studentPages} from '../src/data/student-pages';
+import managerPreviews from '../src/data/manager-previews.json';
 
 // Reuse the student's copied mother shell; only role metadata and routes differ.
 const root='public/assets/manager/';
@@ -59,7 +60,8 @@ const studentDemos=await readFile('public/assets/student/assets/html/student-dem
 const demos=managerPages.map(entry=>{
  const shared=entry.action!=='overview'&&['personal','notifications'].includes(entry.feature)
   ?studentPages.find(page=>page.feature===entry.feature&&page.action===entry.action):undefined;
- const sourceId=shared?.id??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
+ const selected=managerPreviews.find(preview=>preview.url===entry.url);
+ const sourceId=shared?.id??selected?.source??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
  const article=(shared?studentDemos:originals).match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
  if(!article)throw new Error('Missing mother preview '+sourceId);
  return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);

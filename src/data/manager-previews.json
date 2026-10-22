@@ -1,0 +1,62 @@
+[
+  {
+    "url": "/workspace/dormManager/base-data/students",
+    "source": "animation-tween-value-types-numerical-value"
+  },
+  {
+    "url": "/workspace/dormManager/base-data/rooms",
+    "source": "utilities-stagger"
+  },
+  {
+    "url": "/workspace/dormManager/base-data/beds",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-spring-and-custom-easings"
+  },
+  {
+    "url": "/workspace/dormManager/accommodation/check-in",
+    "source": "animation-tween-parameters-to"
+  },
+  {
+    "url": "/workspace/dormManager/accommodation/room-change",
+    "source": "utilities-stagger-values-staggering"
+  },
+  {
+    "url": "/workspace/dormManager/accommodation/check-out",
+    "source": "web-animation-api-api-differences-with-native-waapi-iterations"
+  },
+  {
+    "url": "/workspace/dormManager/beds/inventory",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-individual-property-parameters"
+  },
+  {
+    "url": "/workspace/dormManager/beds/update-status",
+    "source": "animation-targets-dom-elements"
+  },
+  {
+    "url": "/workspace/dormManager/beds/anomalies",
+    "source": "animation-tween-value-types-function-based"
+  },
+  {
+    "url": "/workspace/dormManager/repair-review/pending",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-function-based-values"
+  },
+  {
+    "url": "/workspace/dormManager/repair-review/reported",
+    "source": "animation-keyframes-tween-values-keyframes"
+  },
+  {
+    "url": "/workspace/dormManager/repair-review/rejected",
+    "source": "animation-tween-parameters-from"
+  },
+  {
+    "url": "/workspace/dormManager/billing/verification",
+    "source": "animation-tween-parameters-to"
+  },
+  {
+    "url": "/workspace/dormManager/billing/arrears",
+    "source": "animation-keyframes-tween-values-keyframes"
+  },
+  {
+    "url": "/workspace/dormManager/billing/reminders",
+    "source": "animation-tween-value-types-function-based"
+  }
+]

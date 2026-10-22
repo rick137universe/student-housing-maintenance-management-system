@@ -3,6 +3,8 @@ import {readFile} from 'node:fs/promises';
 import {expect,type Browser} from '@playwright/test';
 import {managerPages} from '../src/data/manager-pages';
 import {roleFeatures} from '../src/data/role-features';
+import managerPreviews from '../src/data/manager-previews.json';
+import studentPreviews from '../src/data/student-previews.json';
 
 export async function verifyManagerShell(){
  const index=await readFile('public/assets/manager/index.html','utf8');
@@ -12,6 +14,10 @@ export async function verifyManagerShell(){
  assert(!/<a\b[^>]*\bdata-color=/.test(sidebar),'未选中目录不得强制着色');
  for(const resource of ['css/core.css','css/docs.css','js/docs.js'])assert(index.includes('/assets/student/assets/'+resource),'直接复用未修改母版资源');
  const demos=await readFile('public/assets/manager/demos.html','utf8');
+ const randomPages=managerPages.filter(entry=>entry.action!=='overview'&&!['personal','notifications'].includes(entry.feature));
+ assert.deepEqual(managerPreviews.map(preview=>preview.url),randomPages.map(entry=>entry.url));
+ const allowed=new Set(studentPreviews.filter(preview=>!preview.kind&&preview.source!=='getting-started'&&preview.source!=='text-splittext').map(preview=>preview.source));
+ for(const preview of managerPreviews)assert(allowed.has(preview.source),'随机预览必须来自已选的学生端图形动画');
  for(const entry of managerPages){
   const page=await readFile(`public/assets/manager/pages/${entry.feature}-${entry.action}.html`,'utf8');
   assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));
