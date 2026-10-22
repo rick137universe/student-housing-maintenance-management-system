@@ -75,6 +75,26 @@ void syncAccount();
 // Translate generated module labels without changing the source animation code,
 // its transforms, dimensions, breakpoints or timeline.
 const translate = element => {
+  const team = element.querySelector('funding-level[path="project-developers"]');
+  if (team && team.querySelectorAll('.sponsors-list .sponsor').length === 2 && !team.dataset.projectLabels) {
+    team.dataset.projectLabels = 'true';
+    team.querySelector('h3').textContent = '项目开发者';
+    // The native counter can finish on its detached span without overwriting
+    // the project label. Keep the same element type, classes and mother layout.
+    const counter = team.querySelector('.percents');
+    const label = counter.cloneNode(false); label.textContent = '2 位'; counter.replaceWith(label);
+    // Preserve the mother scene's decorative 13% strip, without presenting it
+    // as a funding or development-progress metric for this project.
+    const bar = team.querySelector('.chart-bar');
+    const decoration = bar.cloneNode(false); decoration.style.width = '13%'; bar.replaceWith(decoration);
+    team.querySelector('.chart').setAttribute('aria-hidden', 'true');
+    const invitation = team.querySelector('p');
+    invitation.firstChild.textContent = '一起完善项目，';
+    invitation.lastChild.textContent = '。';
+    const link = invitation.querySelector('a');
+    link.href = 'https://github.com/rick137universe/student-housing-maintenance-management-system';
+    link.textContent = '参与项目开发';
+  }
   for (const label of element.querySelectorAll('.module-label-text, .toolbox-labels li')) {
     const value = names[label.textContent.trim().toLowerCase()];
     if (value) label.textContent = value;

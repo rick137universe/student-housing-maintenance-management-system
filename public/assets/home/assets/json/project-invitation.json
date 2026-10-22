@@ -1,0 +1,17 @@
+    <a
+    class="sponsor"
+    href="https://github.com/rick137universe/student-housing-maintenance-management-system"
+    target="_blank"
+    title="加入开发团队"
+    data-url-params=""
+    data-url-params-docs=""
+  >
+          <img
+        src="./media/pages/sponsors/platinum-sponsors/ef1c9c6c85-1787698629/sponsor-placeholder.svg"
+        alt="加入开发团队"
+        width="100"
+        height="100"
+        loading="lazy"
+      >
+        <span>加入开发团队</span>
+  </a>

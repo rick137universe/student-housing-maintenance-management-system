@@ -24,12 +24,15 @@
   window.paths = {
     demos: 'https://animejs.com/documentation-demos',
     'easings': './assets/json/easings.json',
+    'project-developers': './assets/json/project-developers.json',
+    'project-invitation': './assets/json/project-invitation.json',
+    'project-brand': './assets/json/project-brand.json',
     'github-sponsors': './assets/json/sponsors-github-sponsors.json',
     'platinum-sponsors': './assets/json/sponsors-platinum-sponsors.json',
     'gold-sponsors': './assets/json/sponsors-gold-sponsors.json',
     'silver-sponsors': './assets/json/sponsors-silver-sponsors.json',
   };
-</script><link rel="stylesheet" href="/assets/fonts/source-han-sans-sc.css"><link rel="stylesheet" href="/assets/login/assets/css/account-button.css"><link href="/assets/home/assets/css/chinese-headings.css" rel="stylesheet"><link rel="stylesheet" href="/assets/home/assets/css/developers.css"></head>
+</script><link rel="stylesheet" href="/assets/fonts/source-han-sans-sc.css"><link rel="stylesheet" href="/assets/login/assets/css/account-button.css"><link href="/assets/home/assets/css/chinese-headings.css" rel="stylesheet"></head>
 
 
 <body data-template="home">
@@ -418,11 +421,17 @@
     <div class="section-spacer"></div>
   </section>
 
-  <section id="sponsors" class="section formatted-text" data-chapter="sponsors" data-label="开发团队">
+  <section id="sponsors" class="section formatted-text" data-chapter="sponsors" data-label="SPONSORS">
     <div class="section-content">
       <div class="section-text">
         <h2>加入开发团队</h2>
-        <p>从一个想法，到一次改进。<br>欢迎一起完善学生公寓的住宿与报修体验。</p>
+        <p>从一个想法，到一次改进。欢迎一起完善学生公寓的住宿与报修体验。</p>
+        <div class="company-sponsors-list">
+          <sponsors-list size="large" boxed="" path="project-invitation"></sponsors-list>
+        </div>
+        <div class="company-sponsors-list">
+          <sponsors-list size="small" boxed="" path="project-brand"></sponsors-list>
+        </div>
         <ul class="feature-links">
           <li><a class="text-ui" href="https://github.com/rick137universe/student-housing-maintenance-management-system" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
   <g fill="none" fill-rule="evenodd">
@@ -606,7 +615,7 @@
       </ul>
     </div>
     <div class="funding-level-box section-card formatted-text" data-card="sponsors" data-enter-offset="-=50lvh" data-leave-offset="-=50lvh">
-      <div class="developer-team" data-developer-team><div class="box-heading"><h3>项目开发者</h3></div><ul class="developer-avatars"><li><a href="https://github.com/Pimnghi" target="_blank" rel="noopener noreferrer" aria-label="Pimnghi 的 GitHub"><img src="/assets/images/avatars/pimnghi.jpg" alt="Pimnghi" width="40" height="40"><span>Pimnghi</span></a></li><li><a href="https://github.com/rick137universe" target="_blank" rel="noopener noreferrer" aria-label="rick137universe 的 GitHub"><img src="/assets/images/avatars/rick137universe.jpg" alt="rick137universe" width="40" height="40"><span>rick137universe</span></a></li></ul><p>一起，让公寓服务更好。<br><a href="https://github.com/rick137universe/student-housing-maintenance-management-system" target="_blank" rel="noopener noreferrer">加入项目开发</a></p></div>
+      <funding-level path="project-developers"></funding-level>
     </div>
   </div>
   <footer id="site-footer" class="layout-container text-ui" data-color="fg">

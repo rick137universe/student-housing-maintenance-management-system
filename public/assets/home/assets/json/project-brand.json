@@ -1,0 +1,17 @@
+    <a
+    class="sponsor"
+    href="https://github.com/rick137universe/student-housing-maintenance-management-system"
+    target="_blank"
+    title="FLight"
+    data-url-params=""
+    data-url-params-docs=""
+  >
+          <img
+        src="/assets/login/assets/images/flight_shmms_white.svg"
+        alt="FLight"
+        width="100"
+        height="100"
+        loading="lazy"
+      >
+        <span>FLight</span>
+  </a>

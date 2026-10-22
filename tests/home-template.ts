@@ -17,6 +17,11 @@ export async function verifyHomeTemplate() {
     count++;
   }
   const html = await readFile('public/assets/home/index.html', 'utf8');
+  const developers = html.match(/<section id="sponsors"[\s\S]*?<\/section>/)?.[0];
+  assert(developers, '缺少开发者场景');
+  assert(developers.includes('data-label="SPONSORS"'), '开发者文案不能改变母版动画时间轴的 SPONSORS 标识');
+  assert.equal([...developers.matchAll(/class="company-sponsors-list"/g)].length, 2, '保留母版左侧两个图标容器');
+  assert(html.includes('<funding-level path="project-developers"></funding-level>'), '开发者头像复用原有 funding-level 布局');
   for (const tag of ['header', 'footer']) {
     const fragment = html.match(new RegExp('<' + tag + ' id="site-' + tag + '"[\\s\\S]*?<\\/' + tag + '>'))?.[0];
     assert(fragment, `缺少主页 ${tag}`);
