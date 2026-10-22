@@ -1,0 +1,56 @@
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-ExtraLight.woff2") format("woff2");
+  font-weight: 250;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-Normal.woff2") format("woff2");
+  font-weight: 350;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
+@font-face {
+  font-family: SourceHanSansSC-UI;
+  src: url("/assets/fonts/SourceHanSansSC-UI-Heavy.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2E80-FFFF, U+20000-323AF;
+}
