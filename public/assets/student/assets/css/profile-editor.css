@@ -1,3 +1,8 @@
+/* Shared by all four workspaces: previews do not expose the CodePen editor. */
+#docs-demos .docs-nav-menu > .code-edit-button {
+  display: none;
+}
+
 /* Keep the template hover color; action buttons show a line only while pressed. */
 [data-dorma-profile-editor] .code-preview-button:not(:disabled):active,
 [data-dorma-password-editor] .code-preview-button:not(:disabled):active {
