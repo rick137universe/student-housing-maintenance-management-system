@@ -58,7 +58,7 @@ function AccommodationContent({entry,data,record,page,review,navigate}:{entry:Ma
   if(record===null)return;
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
   const saved={title:heading.textContent,href:heading.href,tooltip:heading.title,description:description.textContent,documentTitle:doc.title};
-  heading.textContent=title;heading.href=review?reviewUrl:detailUrl;heading.title=title;description.textContent=review?'确认审核结果、床位安排和审核意见，提交后完成办理。':'查看申请资料、床位安排及审核办理结果。';doc.title=title+' · 宿管工作台';
+  heading.textContent=title;heading.href=review?reviewUrl:detailUrl;heading.title=title;description.textContent=review?'确认审核结果、床位安排和审核意见，提交后完成办理。':'查看申请资料、床位安排及审核办理结果。';doc.title=title+' | 宿管工作台 | FLight';
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,back=previous.cloneNode(true) as HTMLAnchorElement;
   const links:{element:HTMLAnchorElement;url:string}[]=[];
   for(const [label,url] of [[entry.label,listUrl],...(review?[[detailTitle,detailUrl]]:[])]){

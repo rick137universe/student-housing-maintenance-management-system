@@ -35,7 +35,7 @@ function ReportContent({entry,data,filters,record,navigate}:{entry:AdminPage;dat
  },[filters,record]);
  useLayoutEffect(()=>{
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector<HTMLElement>('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
-  const saved={text:heading.textContent,href:heading.getAttribute('href')!,title:heading.title,description:description.textContent,documentTitle:doc.title};heading.textContent=title;heading.href=reportUrl(entry.url,filters,detail?record!:undefined);heading.title=title;doc.title=title+' · 管理员工作台';if(detail)description.textContent=operations?'查看楼栋当前床位及入住情况。':'按派工月份查看所选报修范围的工作量与完成情况。';
+  const saved={text:heading.textContent,href:heading.getAttribute('href')!,title:heading.title,description:description.textContent,documentTitle:doc.title};heading.textContent=title;heading.href=reportUrl(entry.url,filters,detail?record!:undefined);heading.title=title;doc.title=title+' | 管理员工作台 | FLight';if(detail)description.textContent=operations?'查看楼栋当前床位及入住情况。':'按派工月份查看所选报修范围的工作量与完成情况。';
   const handlers:Array<()=>void>=[],route=(anchor:HTMLAnchorElement,target:string)=>{const click=(event:globalThis.MouseEvent)=>{event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(target);};anchor.addEventListener('click',click);handlers.push(()=>anchor.removeEventListener('click',click));};
   const stay=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();};heading.addEventListener('click',stay);
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement;

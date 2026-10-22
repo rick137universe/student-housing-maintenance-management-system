@@ -85,7 +85,7 @@ function FinanceContent({data,entry,record,page,listUrl,paymentStep,navigate}:{d
     title.textContent=detailTitle;title.title=detailTitle;title.href=paymentStep?paymentUrl:detailUrl;
     description.textContent=paymentStep?'确认账期和待缴金额后支付，仅记录测试账务，不产生真实扣款。':payments?'查看本次缴费的详细信息。':'查看账单费用、缴费状态和剩余金额。';
     breadcrumb.textContent=backLabel;breadcrumb.title=backLabel;breadcrumb.href=backUrl;
-    doc.title=detailTitle+' · 学生工作台';
+    doc.title=detailTitle+' | 学生工作台 | FLight';
     const returnToList=(event:globalThis.MouseEvent)=>{
       event.stopPropagation();
       if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;

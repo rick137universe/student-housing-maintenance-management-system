@@ -66,7 +66,7 @@ function RecordContent({entry,data,record,page,editing,navigate,summary}:{entry:
   if(record===null)return;
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
   const saved={title:heading.textContent,href:heading.href,tooltip:heading.title,description:description.textContent,documentTitle:doc.title};
-  heading.textContent=title;heading.href=editing?editUrl:detailUrl;heading.title=title;description.textContent=editing?(processing?'填写并确认本次维修处理信息，完成后提交。':'填写并确认维修说明，完成后保存本次处理记录。'):'查看本次维修的派工、处理、完工及评价信息。';doc.title=title+' · 维修工作台';
+  heading.textContent=title;heading.href=editing?editUrl:detailUrl;heading.title=title;description.textContent=editing?(processing?'填写并确认本次维修处理信息，完成后提交。':'填写并确认维修说明，完成后保存本次处理记录。'):'查看本次维修的派工、处理、完工及评价信息。';doc.title=title+' | 维修工作台 | FLight';
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,back=previous.cloneNode(true) as HTMLAnchorElement;
   const links:{element:HTMLAnchorElement;url:string}[]=[];
   for(const [label,url] of [[entry.label,listUrl],...(editing?[[detailTitle,detailUrl]]:[])]){

@@ -40,7 +40,7 @@ export function useRepairDocument(root:RefObject<HTMLDivElement|null>,entry:Stud
   const returnToList=(event:globalThis.MouseEvent)=>{event.stopPropagation();if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();navigate(listUrl);};
   const stay=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();};
   if(title){
-   heading.textContent=title;heading.title=title;heading.href=url!;description.textContent=editor?'填写并确认评分和评价内容，完成后提交服务评价。':'查看本次报修的详细信息及处理结果。';doc.querySelector('title')!.textContent=title+' · 学生工作台';heading.addEventListener('click',stay);
+   heading.textContent=title;heading.title=title;heading.href=url!;description.textContent=editor?'填写并确认评分和评价内容，完成后提交服务评价。':'查看本次报修的详细信息及处理结果。';doc.querySelector('title')!.textContent=title+' | 学生工作台 | FLight';heading.addEventListener('click',stay);
    clonedBreadcrumb=breadcrumb.cloneNode(true) as HTMLElement;
    const arrow=doc.createElement('span'),link=doc.createElement('a');arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';link.textContent=entry.label;link.href=listUrl;link.title=entry.label;
    link.addEventListener('click',returnToList);clonedBreadcrumb.querySelector('p')!.append(' ',arrow,' ',link);breadcrumb.replaceWith(clonedBreadcrumb);

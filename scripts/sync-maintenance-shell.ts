@@ -31,7 +31,7 @@ for(const [position,entry] of maintenancePages.entries()){
   }
   await writeFile(root+`pages/${entry.feature}-${entry.action}.html`,result);continue;
  }
- const result=source.replace(/<title>[\s\S]*?<\/title>/,`<title>${html(entry.label)} · 维修工作台</title>`)
+ const result=source.replace(/<title>[\s\S]*?<\/title>/,`<title>${entry.label==='维修工作台'?'':html(entry.label)+' | '}维修工作台 | FLight</title>`)
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`);
  const start=result.indexOf('<div class="docs-info-content'),end=result.indexOf('<footer id="site-footer"',start);
  const children=maintenancePages.filter(child=>entry.feature==='overview'?child.action==='overview'&&child.feature!=='overview':child.feature===entry.feature&&child.action!=='overview');
@@ -42,7 +42,7 @@ for(const [position,entry] of maintenancePages.entries()){
  await writeFile(root+`pages/${entry.feature}-${entry.action}.html`,result.slice(0,start)+header+content+navigation+result.slice(end));
 }
 const sidebar=maintenancePages.filter(entry=>entry.action==='overview'&&entry.feature!=='overview').map(group=>`<li class="docs-nav-item docs-group color-${palette[group.color]}" data-color="${group.color}"><a class="docs-link" data-id="${group.id}" href="${group.url}" title="${html(group.label)}">${html(group.label)}</a><ul class="docs-nav-item">${maintenancePages.filter(entry=>entry.feature===group.feature&&entry.action!=='overview').map(entry=>`<li class="docs-nav-item docs-action color-${palette[entry.color]}" data-color="${entry.color}"><a class="docs-link" data-id="${entry.id}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}</a></li>`).join('')}</ul></li>`).join('');
-let shell=index.replace(/<title>[^<]*<\/title>/,'<title>维修工作台</title>')
+let shell=index.replace(/<title>[^<]*<\/title>/,'<title>维修工作台 | FLight</title>')
  .replace(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/,`<aside id="docs-sidebar" class="sidebar"><nav class="sidebar-nav text-ui"><ul class="docs-nav-item is-active">${sidebar}</ul></nav></aside>`)
  .replaceAll('/workspace/student','/workspace/maintenance')
  .replaceAll('搜索学生服务','搜索维修功能')

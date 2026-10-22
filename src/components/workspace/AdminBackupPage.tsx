@@ -89,7 +89,7 @@ function BackupContent({entry,data,record,mode,page,navigate}:{entry:AdminPage;d
   const url=publish?publishUrl:editing||restoring?editUrl:record!==null?detailUrl:listUrl;
   heading.textContent=title;heading.href=url;heading.title=title;description.hidden=record!==null&&!editing;
   if(form)description.textContent=policies?'逐项确认策略名称、每日备份时间、保留天数及启用状态。':restoring?'确认来源备份后，提交独立副本恢复与校验任务。':'确认后将创建备份任务，可在记录中查看执行结果。';
-  doc.querySelector('title')!.textContent=title+' · 管理员工作台';
+  doc.querySelector('title')!.textContent=title+' | 管理员工作台 | FLight';
   const stay=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();};heading.addEventListener('click',stay);
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,handlers:Array<()=>void>=[];
   const route=(anchor:HTMLAnchorElement,target:string)=>{

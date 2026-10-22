@@ -63,7 +63,7 @@ function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentCh
   if(record===null)return;
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector<HTMLElement>('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
   const saved={text:heading.textContent,href:heading.getAttribute('href')!,tooltip:heading.title,hidden:description.hidden,documentTitle:doc.title};
-  heading.textContent=title;heading.href=detailUrl;heading.title=title;description.hidden=true;doc.querySelector('title')!.textContent=title+' · '+workspaceTitle;
+  heading.textContent=title;heading.href=detailUrl;heading.title=title;description.hidden=true;doc.querySelector('title')!.textContent=title+' | '+workspaceTitle+' | FLight';
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),back=doc.createElement('a');
   arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.href=listUrl;back.title=entry.label;back.textContent=entry.label;back.target='_top';crumbs.querySelector('p')!.append(' ',arrow,' ',back);breadcrumb.replaceWith(crumbs);
   const previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,replacement=previous.cloneNode(true) as HTMLAnchorElement;

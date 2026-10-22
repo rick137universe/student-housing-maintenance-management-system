@@ -67,7 +67,7 @@ if(initial.action!=='overview'){
   if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));
   content.hidden=!['personal','notifications','records','orders','repair','analytics'].includes(initial.feature);
 }
-document.title = initial.label + ' · 维修工作台';
+document.title = (initial.label === '维修工作台' ? '' : initial.label + ' | ') + '维修工作台 | FLight';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
 document.querySelector('#toggle-search').title = '搜索维修功能';
 document.querySelector('#prev-demo').title = '上一项';

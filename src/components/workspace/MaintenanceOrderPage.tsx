@@ -58,7 +58,7 @@ function OrderContent({entry,data,record,page,navigate}:{entry:MaintenancePage;d
   if(record===null)return;
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
   const saved={title:heading.textContent,href:heading.href,tooltip:heading.title,description:description.textContent,documentTitle:doc.title};
-  heading.textContent='维修工单详情';heading.href=detailUrl;heading.title='维修工单详情';description.textContent='查看报修资料、初审结果及工单处理过程。';doc.title='维修工单详情 · 维修工作台';
+  heading.textContent='维修工单详情';heading.href=detailUrl;heading.title='维修工单详情';description.textContent='查看报修资料、初审结果及工单处理过程。';doc.title='维修工单详情 | 维修工作台 | FLight';
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),crumb=doc.createElement('a');arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';crumb.textContent=entry.label;crumb.title=entry.label;crumb.href=listUrl;crumb.target='_top';crumbs.querySelector('p')!.append(' ',arrow,' ',crumb);breadcrumb.replaceWith(crumbs);
   const previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,back=previous.cloneNode(true) as HTMLAnchorElement;back.href=listUrl;back.title=entry.label;back.removeAttribute('data-id');back.dataset.color=String(entry.color);back.className='text-ui color-red';
   for(const node of [...back.childNodes])if(node.nodeType===Node.TEXT_NODE)node.remove();back.append(entry.label);previous.replaceWith(back);

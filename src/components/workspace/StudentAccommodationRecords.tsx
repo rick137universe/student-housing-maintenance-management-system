@@ -72,7 +72,7 @@ function RecordsContent({entry,data,record,page,listUrl,navigate}:{entry:Student
     const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!;
     const description=info.querySelector('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
     const saved={title:heading.textContent,href:heading.getAttribute('href')!,tooltip:heading.title,description:description.textContent,documentTitle:doc.title};
-    heading.textContent=title;heading.href=detailUrl;heading.title=title;description.textContent='查看本次申请的床位安排、审核状态及办理信息。';doc.title=title+' · 学生工作台';
+    heading.textContent=title;heading.href=detailUrl;heading.title=title;description.textContent='查看本次申请的床位安排、审核状态及办理信息。';doc.title=title+' | 学生工作台 | FLight';
     const replacementBreadcrumb=breadcrumb.cloneNode(true) as HTMLElement,arrow=doc.createElement('span'),back=doc.createElement('a');
     arrow.className='docs-breadcrumb-arrow';arrow.textContent='\uE0B1';back.textContent=entry.label;back.href=listUrl;back.title=entry.label;back.target='_top';
     replacementBreadcrumb.querySelector('p')!.append(' ',arrow,' ',back);breadcrumb.replaceWith(replacementBreadcrumb);

@@ -78,7 +78,7 @@ for (const [direction, neighbor, heading] of [
   for (const node of [...link.childNodes]) if (node.nodeType === Node.TEXT_NODE) node.remove();
   if (direction === 'prev') link.append(neighbor.label); else link.prepend(neighbor.label);
 }
-document.title = initial.label + ' · 学生工作台';
+document.title = (initial.label === '学生工作台' ? '' : initial.label + ' | ') + '学生工作台 | FLight';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
 document.querySelector('#toggle-search').title = '搜索学生服务';
 document.querySelector('#prev-demo').title = '上一项';

@@ -66,7 +66,7 @@ if(initial.action!=='overview'){
   const content=info.querySelector('.docs-info-content.formatted-text');
   if(initial.feature!=='personal'||initial.action!=='action-1')content.after(info.querySelector('[data-dorma-business]'));content.hidden=!['personal','notifications','announcements','billing','backup','permissions','dispatch','process','base-data','reports'].includes(initial.feature);
 }
-document.title = initial.label + ' · 管理员工作台';
+document.title = (initial.label === '管理员工作台' ? '' : initial.label + ' | ') + '管理员工作台 | FLight';
 document.querySelector('#toggle-sidebar span').textContent = initial.label;
 document.querySelector('#toggle-search').title = '搜索管理功能';
 document.querySelector('#prev-demo').title = '上一项';

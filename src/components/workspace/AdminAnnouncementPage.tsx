@@ -78,7 +78,7 @@ function AnnouncementContent({entry,data,record,mode,page,navigate}:{entry:Admin
   const url=publish?publishUrl:editing?editUrl:record!==null?detailUrl:listUrl;
   heading.textContent=title;heading.href=url;heading.title=title;description.hidden=record!==null&&!editing;
   if(form)description.textContent='逐项填写并确认公告内容、发布范围和状态，完成后提交。';
-  doc.querySelector('title')!.textContent=title+' · 管理员工作台';
+  doc.querySelector('title')!.textContent=title+' | 管理员工作台 | FLight';
   const stay=(event:globalThis.MouseEvent)=>{event.preventDefault();event.stopPropagation();};heading.addEventListener('click',stay);
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,handlers:Array<()=>void>=[];
   const route=(anchor:HTMLAnchorElement,target:string)=>{

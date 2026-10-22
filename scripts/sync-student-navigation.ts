@@ -38,7 +38,7 @@ await writeFile(root+'index.html',index);
 const originalBreadcrumb=(await readFile(mother+'documentation--animation--animatable-properties--css-properties-d413c831/index.html','utf8')).match(/<div class="docs-breadcrumb text-ui"[\s\S]*?<\/div>/)![0].replace(/<a class="docs-breadcrumb-version"[\s\S]*?<\/a>/,'').replace(/[\t ]+$/gm,'');
 for(const [position,entry] of studentPages.entries()){
  let page=pages.get(entry.id)??pages.get(entry.parent!)!;
- page=page.replace(/<title>[\s\S]*?<\/title>/,`<title>${html(entry.label)} · 学生工作台</title>`)
+ page=page.replace(/<title>[\s\S]*?<\/title>/,`<title>${entry.label==='学生工作台'?'':html(entry.label)+' | '}学生工作台 | FLight</title>`)
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`)
   .replace(/<h1[^>]*>[\s\S]*?<\/h1>/,`<h1 data-color="${entry.color}"><a title="${html(entry.label)}" href="${entry.url}">${html(entry.label)}</a></h1>`)
   .replace(/(<p data-dorma-description="">)[\s\S]*?<\/p>/,`$1${html(entry.description)}</p>`)

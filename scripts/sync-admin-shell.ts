@@ -34,7 +34,7 @@ for(const [position,entry] of adminPages.entries()){
   if(announcements)result=result.replace(/<div class="prev-next-heading text-ui">[\s\S]*?<\/div>/,`<div class="prev-next-heading text-ui"><h6 class="links-list-heading">${entry.parent||adminPages[position-1]?'上一个':''}</h6><h6 class="links-list-heading">${adminPages[position+1]?'下一个':''}</h6></div>`);
   await writeFile(root+pageFile(entry),result);continue;
  }
- const result=source.replace(/<title>[\s\S]*?<\/title>/,`<title>${html(entry.label)} · 管理员工作台</title>`)
+ const result=source.replace(/<title>[\s\S]*?<\/title>/,`<title>${entry.label==='管理员工作台'?'':html(entry.label)+' | '}管理员工作台 | FLight</title>`)
   .replace(/(<div class="docs-info is-active" data-color=")[^"]+(" data-id=")[^"]+/,`$1${entry.color}$2${entry.id}`);
  const start=result.indexOf('<div class="docs-info-content'),end=result.indexOf('<footer id="site-footer"',start);
  const children=adminPages.filter(child=>entry.feature==='overview'?child.action==='overview'&&child.feature!=='overview':child.feature===entry.feature&&child.action!=='overview'&&!child.parent);
@@ -49,7 +49,7 @@ const sidebarItem=(entry:typeof adminPages[number]):string=>{
  return `<li class="docs-nav-item docs-action color-${palette[entry.color]}" data-color="${entry.color}"><a class="docs-link" data-id="${entry.id}" href="${entry.url}" title="${html(entry.label)}">${html(entry.label)}</a>${children.length?'<ul class="docs-nav-item">'+children.map(sidebarItem).join('')+'</ul>':''}</li>`;
 };
 const sidebar=adminPages.filter(entry=>entry.action==='overview'&&entry.feature!=='overview').map(group=>`<li class="docs-nav-item docs-group color-${palette[group.color]}" data-color="${group.color}"><a class="docs-link" data-id="${group.id}" href="${group.url}" title="${html(group.label)}">${html(group.label)}</a><ul class="docs-nav-item">${adminPages.filter(entry=>entry.feature===group.feature&&entry.action!=='overview'&&!entry.parent).map(sidebarItem).join('')}</ul></li>`).join('');
-let shell=index.replace(/<title>[^<]*<\/title>/,'<title>管理员工作台</title>')
+let shell=index.replace(/<title>[^<]*<\/title>/,'<title>管理员工作台 | FLight</title>')
  .replace(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/,`<aside id="docs-sidebar" class="sidebar"><nav class="sidebar-nav text-ui"><ul class="docs-nav-item is-active">${sidebar}</ul></nav></aside>`)
  .replaceAll('/workspace/student','/workspace/admin')
  .replaceAll('搜索学生服务','搜索管理功能')

@@ -49,7 +49,7 @@ function RepairContent({entry,data,record,page,review,navigate}:{entry:ManagerPa
   if(record===null)return;
   const doc=root.current!.ownerDocument,info=root.current!.closest('.docs-info')!,heading=info.querySelector<HTMLAnchorElement>('h1 a')!,description=info.querySelector('[data-dorma-description]')!,breadcrumb=info.querySelector('.docs-breadcrumb')!;
   const saved={title:heading.textContent,href:heading.href,tooltip:heading.title,description:description.textContent,documentTitle:doc.title};
-  heading.textContent=title;heading.href=review?reviewUrl:detailUrl;heading.title=title;description.textContent=review?'确认初审结果和审核意见，通过后上报维修，驳回时说明原因。':'查看报修资料、审核结果及处理过程。';doc.title=title+' · 宿管工作台';
+  heading.textContent=title;heading.href=review?reviewUrl:detailUrl;heading.title=title;description.textContent=review?'确认初审结果和审核意见，通过后上报维修，驳回时说明原因。':'查看报修资料、审核结果及处理过程。';doc.title=title+' | 宿管工作台 | FLight';
   const crumbs=breadcrumb.cloneNode(true) as HTMLElement,previous=info.querySelector<HTMLAnchorElement>('.prev-link a')!,back=previous.cloneNode(true) as HTMLAnchorElement;
   const links:{element:HTMLAnchorElement;url:string}[]=[];
   for(const [label,url] of [[entry.label,listUrl],...(review?[[detailTitle,detailUrl]]:[])]){
