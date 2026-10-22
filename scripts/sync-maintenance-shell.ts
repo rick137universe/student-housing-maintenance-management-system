@@ -1,6 +1,7 @@
 import {canonicalWorkspaceUrl} from '../src/data/workspace-paths';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {maintenancePages} from '../src/data/maintenance-pages';
+import {studentPages} from '../src/data/student-pages';
 
 // Keep the copied mother styles, navigation and animated previews unchanged.
 const root='public/assets/maintenance/';
@@ -52,10 +53,14 @@ shell=shell.replace('window.paths = {','window.dormaDocumentationRoutes = '+JSON
 await writeFile(root+'index.html',shell);
 await writeFile(root+'entries.js','const entries = '+JSON.stringify(maintenancePages,null,2)+';\nexport default entries;\n');
 const originals=await readFile('public/assets/student/assets/html/documentation-demos.html','utf8');
+const studentDemos=await readFile('public/assets/student/assets/html/student-demos.html','utf8');
 const demos=maintenancePages.map(entry=>{
- const article=originals.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))?.[0];
- if(!article)throw new Error('Missing mother preview '+entry.id);
- return article.replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
+ const personalModule=['personal','notifications'].includes(entry.feature);
+ const shared=personalModule&&entry.action!=='overview'?studentPages.find(page=>page.feature===entry.feature&&page.action===entry.action):undefined;
+ const sourceId=shared?.id??(personalModule&&entry.action==='overview'?'getting-started':entry.id);
+ const article=(shared?studentDemos:originals).match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
+ if(!article)throw new Error('Missing mother preview '+sourceId);
+ return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
 });
 await writeFile(root+'demos.html',demos.join('\n'));
 console.log(`已生成维修母版外壳、6 个模块目录和 ${maintenancePages.filter(entry=>entry.action!=='overview').length} 个业务页面入口。`);

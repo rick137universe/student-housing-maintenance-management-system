@@ -1,7 +1,10 @@
 import entries from './entries.js';
+import {studentPreviews as sharedPreviews} from '/assets/student/assets/js/student-preview-data.js';
 import { c as CopyButton } from '/assets/student/assets/js/chunks/chunk-WQVFBASJ.js';
 import { m as waapi, o as utils } from '/assets/student/assets/js/chunks/chunk-WXAKRBIO.js';
 const requested = new URLSearchParams(location.search).get('entry');
+// The shared typing preview reads the currently authenticated technician's profile.
+window.dormaStudentPreviews = sharedPreviews;
 const initial = entries.find(entry => entry.id === requested) ?? entries[0];
 const active = document.querySelector(`#docs-sidebar li > a[data-id="${initial.id}"]`);
 for (let item = active?.parentElement; item && item.id !== 'docs-sidebar'; item = item.parentElement) {

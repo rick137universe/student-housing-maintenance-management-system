@@ -22,6 +22,7 @@ export async function maintenanceNotificationRegression(browser:Browser,origin:s
   const created=await call(admin,'accounts',{username,fullName:'维修消息回归',role:'maintenance',password});
   const technician=await login(owner,username);
   await page.goto(origin+base);await expect(frame.locator('[data-dorma-empty-state] .notice.info')).toHaveText('暂无记录。');
+  await expect.poll(async()=>(await frame.locator('.docs-demo.is-active .docs-demo-live p [data-char]').allTextContents()).join('')).toBe('Messages消息通知');
   await expect(frame.locator('[data-dorma-maintenance-business-host]')).toHaveCount(0);
   await login(student,'stu202602341');
   async function dispatchTo(technicianId:string,index:number|string){

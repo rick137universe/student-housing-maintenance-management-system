@@ -16,6 +16,12 @@ export async function verifyMaintenanceShell(){
   assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));
   if(entry.feature!=='overview')assert(sidebar.includes(`href="${entry.url}"`));
   assert.equal(page.includes('data-dorma-business'),entry.action!=='overview');
+  if(['personal','notifications'].includes(entry.feature)){
+   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+   if(entry.action==='overview')assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`));
+   else if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'));
+   else assert(preview.includes('Messages<br>')&&preview.includes('消息通知')&&preview.includes('square-grid'));
+  }
  }
 }
 
