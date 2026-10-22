@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -14,14 +15,15 @@ import {RepairArrow,RepairEditorFields,type RepairField} from './StudentRepairEl
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
 const theme='citrus';
 function permissionResource(entry:AdminPage){return entry.action.startsWith('action-1')?'accounts':entry.kind?.startsWith('authorization')?'authorizations':entry.action.startsWith('action-2')?'permissions':'audit';}
 export const adminPermissionListPath=(entry:AdminPage,page=1)=>permissionResource(entry)+'?'+new URLSearchParams({page:String(page),limit:'20'});
 const resourceLabels:Record<string,string>={profile:'个人资料',resources:'基础数据',applications:'入住申请',changes:'住宿变更',occupancies:'住宿记录',bills:'账单',payments:'缴费流水',repairs:'报修',maintenance:'维修记录',announcements:'公告',notifications:'消息通知',statistics:'统计',accounts:'用户账号',permissions:'角色权限',settings:'业务规则',audit:'审计记录',backups:'备份恢复'};
 const operationLabels:Record<string,string>={read:'查询',write:'写入',review:'审核',dispatch:'派工'};
-function display(key:string,value:unknown){if(value===null||value===undefined||value==='')return '—';if(typeof value==='object')return JSON.stringify(value,null,2);if(key==='role')return ({student:'学生',dorm_manager:'宿管人员',dormManager:'宿管人员',maintenance:'维修人员',admin:'系统管理员'} as Record<string,string>)[String(value)]??String(value);if(key==='resource'||key==='entity_type')return resourceLabels[String(value)]??String(value);if(key==='operation')return operationLabels[String(value)]??String(value);return key.endsWith('_at')?date(value):valueLabels[String(value)]??String(value);}
+function display(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;if(value===null||value===undefined||value==='')return '—';if(typeof value==='object')return JSON.stringify(value,null,2);if(key==='role')return ({student:'学生',dorm_manager:'宿管人员',dormManager:'宿管人员',maintenance:'维修人员',admin:'系统管理员'} as Record<string,string>)[String(value)]??String(value);if(key==='resource'||key==='entity_type')return resourceLabels[String(value)]??String(value);if(key==='operation')return operationLabels[String(value)]??String(value);return key.endsWith('_at')?date(value):valueLabels[String(value)]??String(value);}
 const accountFields=[['account_id','账号编号'],['username','用户名'],['full_name','姓名'],['role','角色'],['student_number','学号'],['account_status','账号状态'],['email','邮箱']] as const;
 const permissionFields=[['role','角色'],['resource','资源'],['operation','操作'],['data_scope','数据范围']] as const;
 const authorizationFields=[['account_id','宿管账号编号'],['building_id','楼栋编号']] as const;

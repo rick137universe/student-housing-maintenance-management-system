@@ -1,3 +1,4 @@
+import {formatCurrency} from '../../../shared/display-format.js';
 // Live values belong to the active native demo scope, never to a global account cache.
 export function liveData(ctx, url, event, render, unavailable) {
   let alive = true, controller;
@@ -55,7 +56,7 @@ export const studentPreviews = {
       values.forEach((element, index) => {
         element.removeAttribute('title');
         const count = kind === 'unpaid' || unread, target = Math.round(Number(targets[index]) * (count ? 1 : 100));
-        const format = value => count ? String(Math.round(value)) : (Math.round(value) / 100).toFixed(2);
+        const format = value => count ? String(Math.round(value)) : formatCurrency((Math.round(value) / 100).toFixed(2));
         // Keep the native LCD boxes; scale only long numbers that would overflow.
         element.style.removeProperty('font-size');
         element.textContent = format(target);

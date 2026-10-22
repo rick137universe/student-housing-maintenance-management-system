@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -11,8 +12,9 @@ import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 import {ManagerAccommodationReview} from './ManagerAccommodationReview';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function display(key:string,value:unknown):string{
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;
  if(value===null||value===undefined||value==='')return '—';
  if(['applied_at','processing_due_at','reviewed_at','completed_at'].includes(key)){const date=new Date(String(value));return Number.isNaN(date.getTime())?String(value):dateTime.format(date);}
  return value==='checkin'?'入住':valueLabels[String(value)]??String(value);

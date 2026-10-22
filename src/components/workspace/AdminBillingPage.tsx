@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue,formatDateTimeInput} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -13,11 +14,12 @@ import {RepairArrow,RepairEditorFields,type RepairField} from './StudentRepairEl
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
 const theme='green';
 export const adminBillingListPath=(entry:AdminPage,page=1)=>(entry.action==='action-3'?'payments':'bills')+'?'+new URLSearchParams({page:String(page),limit:'20'});
-function display(key:string,value:unknown){if(value===null||value===undefined||value==='')return '—';return key.endsWith('_at')?date(value):valueLabels[String(value)]??String(value);}
+function display(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;if(value===null||value===undefined||value==='')return '—';return key.endsWith('_at')?date(value):valueLabels[String(value)]??String(value);}
 const billFields=[['bill_id','账单编号'],['student_number','学号'],['full_name','姓名'],['billing_period','账期'],['accommodation_fee','住宿费'],['utility_fee','水电费'],['total_amount','总金额'],['paid_amount','已缴金额'],['outstanding_amount','待缴金额'],['bill_status','账单状态'],['due_date','缴费截止日期'],['generated_at','生成时间'],['checked_at','核对时间']] as const;
 const paymentFields=[['payment_id','缴费编号'],['bill_id','账单编号'],['student_number','学号'],['full_name','姓名'],['amount','金额'],['paid_at','缴费时间'],['payment_method','缴费方式']] as const;
 function FinanceValues({row,payments=false,editing=false}:{row:StudentRow;payments?:boolean;editing?:boolean}){const fields=payments?paymentFields:editing?billFields.filter(([key])=>['student_number','full_name','billing_period','paid_amount','bill_status',...(Number(row.paid_amount)>0?['accommodation_fee','utility_fee']:[])].includes(key)):billFields;return <div data-dorma-finance-values>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(key,row[key])}</code></pre></Fragment>)}</div>;}
@@ -129,7 +131,7 @@ function BillingContent({entry,data,record,mode,page,navigate}:{entry:AdminPage;
 function BillingEditor({entry,row,data,submitAction,onDisabled,onSaved}:{entry:AdminPage;row:StudentRow|null;data:StudentFinanceData;submitAction:RefObject<()=>Promise<void>>;onDisabled:(disabled:boolean)=>void;onSaved:(id:string)=>void}){
  const root=useRef<HTMLDivElement>(null),saving=useRef(false),generating=entry.kind==='generate',creating=entry.kind==='create',paid=Boolean(row&&Number(row.paid_amount)>0);
  const today=new Date(),due=new Date(today.getTime()+14*86400000);
- const [values,setValues]=useState<Record<string,string>>(()=>({studentNumber:String(row?.student_number??''),period:String(row?.billing_period??date(today.toISOString()).slice(0,7)),accommodationFee:String(row?.accommodation_fee??'800.00'),utilityFee:String(row?.utility_fee??'128.60'),dueDate:String(row?.due_date??date(due.toISOString()).slice(0,10))}));
+ const [values,setValues]=useState<Record<string,string>>(()=>({studentNumber:String(row?.student_number??''),period:String(row?.billing_period??formatDateTimeInput(today).slice(0,7)),accommodationFee:String(row?.accommodation_fee??'800.00'),utilityFee:String(row?.utility_fee??'128.60'),dueDate:String(row?.due_date??formatDateTimeInput(due).slice(0,10))}));
  const [active,setActive]=useState<string|null>(null),[pending,setPending]=useState(false),[error,setError]=useState(''),[students,setStudents]=useState<StudentRow[]>([]),[ready,setReady]=useState(!creating);
  useEffect(()=>{if(!creating)return;let current=true;void(async()=>{const rows:StudentRow[]=[];let page=1;while(true){const next=await data.load('students?'+new URLSearchParams({page:String(page),limit:'100'}));if(!Array.isArray(next.data))throw new Error('学生资料读取失败，请重试。');rows.push(...next.data);if(rows.length>=(next.meta?.total??rows.length))break;page++;}if(current){setStudents(rows);setReady(true);}})().catch(reason=>{if(current)setError(reason instanceof Error?reason.message:'学生资料读取失败，请重试。');});return()=>{current=false;};},[data,creating]);
  const money=(value:string)=>!/^\d{1,10}(\.\d{1,2})?$/.test(value)?'金额须为非负数，最多10位整数和2位小数。':undefined;

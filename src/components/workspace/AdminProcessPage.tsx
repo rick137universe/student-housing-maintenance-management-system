@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 
 import {Fragment,useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {useRouter} from 'next/navigation';
@@ -13,9 +14,10 @@ const settingKeys:Record<string,string>={'action-1':'allocation','action-2':'acc
 const labels:Record<string,string>={automatic:'自动分床',reviewRequired:'住宿申请审核',processingDays:'办理时限（天）',accommodationFee:'每生每月住宿费',utilityFee:'每生每月水电费',dueDays:'缴费期限（天）'};
 const defaults:Record<string,StudentRow>={allocation:{automatic:true},accommodation:{reviewRequired:true,processingDays:7},billing:{accommodationFee:'800.00',utilityFee:'128.60',dueDays:14}};
 function settingValues(key:string,row:StudentRow|undefined){return {...defaults[key],...(row?.setting_value as StudentRow??{})};}
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
-function valueText(key:string,value:unknown){return key==='automatic'?value?'启用':'关闭（需手工选床）':key==='reviewRequired'?'必须由授权人员审核':String(value??'—');}
+function valueText(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;return key==='automatic'?value?'启用':'关闭（需手工选床）':key==='reviewRequired'?'必须由授权人员审核':String(value??'—');}
 
 export function AdminProcessPage({entry,data}:{entry:AdminPage;data:StudentRecordData}){
  const router=useRouter(),root=useRef<HTMLDivElement>(null),editing=entry.kind==='process-edit',parent=entry.parent?adminPages.find(page=>page.id===entry.parent)!:entry,child=adminPages.find(page=>page.parent===parent.id)!,key=settingKeys[parent.action];

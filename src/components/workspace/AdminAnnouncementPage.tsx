@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatDateTimeInput} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -12,9 +13,9 @@ import {RepairArrow,RepairEditorFields,type RepairField} from './StudentRepairEl
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
-function localDate(value:unknown){return value?date(value).slice(0,16).replace(' ','T'):'';}
+function localDate(value:unknown){return value?formatDateTimeInput(value):'';}
 const theme='turquoise';
 
 export function AdminAnnouncementPage({entry,data}:{entry:AdminPage;data:StudentAnnouncementData}){

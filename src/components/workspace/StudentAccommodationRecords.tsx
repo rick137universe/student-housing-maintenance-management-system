@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 import {NavigationReceipt} from './NavigationReceipt';
 
 import {DocsPagination} from './DocsPagination';
@@ -13,8 +14,9 @@ import type {StudentRow} from '@/utils/student-record-data';
 import {StudentEmptyState} from './StudentEmptyState';
 
 const fields=[['business_type','业务类型'],['student_number','学号'],['full_name','姓名'],['original_bed_id','原床位'],['new_bed_id','新床位'],['preferred_building_id','意向楼栋'],['application_note','申请说明'],['review_status','审核状态'],['applied_at','申请时间'],['processing_due_at','办理期限'],['reviewer_account_id','审核人员编号'],['reviewed_at','审核时间'],['review_note','审核意见']] as const;
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function display(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;
   if(value===null||value===undefined||value==='')return '—';
   if(['applied_at','processing_due_at','reviewed_at','completed_at'].includes(key)){
     const date=new Date(String(value));return Number.isNaN(date.getTime())?String(value):dateTime.format(date);

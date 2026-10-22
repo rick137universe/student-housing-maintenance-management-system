@@ -1,4 +1,5 @@
 'use client';
+import {formatDate} from '@/utils/display-format';
 
 import {useCallback,useEffect,useLayoutEffect,useRef,useState,type MouseEvent} from 'react';
 import {useRouter,useSearchParams} from 'next/navigation';
@@ -67,6 +68,6 @@ function MonthlyContent({entry,month,statistics,loading,error,retry,navigate}:{e
  const monthly=selected?{...selected,unfinished:Math.max(0,count(selected.assigned)-count(selected.completed)),completionRate:rate(selected.completed,selected.assigned)}:null;
  return <div ref={root} className={month===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-maintenance-analytics aria-busy={loading}>
   {error&&<><StudentWarning>{error}</StudentWarning><div className="ui-controls"><button onClick={retry}>重试</button></div></>}
-  {statistics&&(month===null?<><StatisticsSummary entry={entry} statistics={statistics}/>{months.length?<><h6 className="links-list-heading">每月统计</h6><ul className="links-list links-list-boxed" data-dorma-statistics-months>{months.map(row=>{const url=entry.url+'?month='+encodeURIComponent(String(row.month));return <li key={String(row.month)}><a className="text-ui color-yellow" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{completion?`${row.month} · ${rate(row.completed,row.assigned)} · 已完成 ${row.completed} / ${row.assigned} 单`:`${row.month} · 派工 ${row.assigned} 单 · 完成 ${row.completed} 单`}<RepairArrow/></a></li>;})}</ul></>:<StudentEmptyState/>}</>:monthly?<RepairValues row={monthly} fields={[["month","派工月份"],["assigned","派工数量"],["completed","完成数量"],["unfinished","未完成数量"],["completionRate","完成率"]]}/>:<StudentWarning>该月份暂无统计记录或不可访问。</StudentWarning>)}
+  {statistics&&(month===null?<><StatisticsSummary entry={entry} statistics={statistics}/>{months.length?<><h6 className="links-list-heading">每月统计</h6><ul className="links-list links-list-boxed" data-dorma-statistics-months>{months.map(row=>{const url=entry.url+'?month='+encodeURIComponent(String(row.month));return <li key={String(row.month)}><a className="text-ui color-yellow" data-color={entry.color} href={url} target="_top" onPointerEnter={()=>router.prefetch(url)} onFocus={()=>router.prefetch(url)} onClick={event=>link(url,event)}>{completion?`${formatDate(row.month)} · ${rate(row.completed,row.assigned)} · 已完成 ${row.completed} / ${row.assigned} 单`:`${formatDate(row.month)} · 派工 ${row.assigned} 单 · 完成 ${row.completed} 单`}<RepairArrow/></a></li>;})}</ul></>:<StudentEmptyState/>}</>:monthly?<RepairValues row={monthly} fields={[["month","派工月份"],["assigned","派工数量"],["completed","完成数量"],["unfinished","未完成数量"],["completionRate","完成率"]]}/>:<StudentWarning>该月份暂无统计记录或不可访问。</StudentWarning>)}
  </div>;
 }

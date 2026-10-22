@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -16,8 +17,9 @@ type Entry=typeof studentPages[number];
 const billFields=[['bill_id','账单编号'],['billing_period','账期'],['student_number','学号'],['full_name','姓名'],['accommodation_fee','住宿费'],['utility_fee','水电费'],['total_amount','总金额'],['paid_amount','已缴金额'],['outstanding_amount','待缴金额'],['bill_status','账单状态'],['due_date','缴费截止日期'],['generated_at','生成时间'],['checked_at','核对时间']] as const;
 const paymentFields=[['payment_id','缴费编号'],['bill_id','账单编号'],['student_number','学号'],['full_name','姓名'],['amount','金额'],['paid_at','缴费时间'],['payment_method','缴费方式']] as const;
 const checkoutFields=billFields.filter(([key])=>['billing_period','outstanding_amount'].includes(key));
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function display(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;
   if(value===null||value===undefined||value==='')return '—';
   if(['paid_at','generated_at','checked_at'].includes(key)){
     const date=new Date(String(value));

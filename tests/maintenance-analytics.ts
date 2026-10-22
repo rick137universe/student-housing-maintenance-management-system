@@ -1,3 +1,4 @@
+import {formatDate} from '../src/utils/display-format';
 import {canonicalWorkspaceUrl} from '../src/data/workspace-paths';
 import assert from 'node:assert/strict';
 import {expect,type Browser,type BrowserContext} from '@playwright/test';
@@ -43,7 +44,7 @@ export async function maintenanceAnalyticsRegression(browser:Browser,origin:stri
   await expect(previewValues).toHaveText(['26','22']);
   const shell=await frame.locator('#docs-demos').elementHandle(),month=String(workload.at(-1)!.month),monthly=workload.at(-1)!;
   await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/maintenance-analytics-workload.png'});
-  await expectStudentReveal(page,()=>months.first().click(),'每月工作量详情',selector);await expect(page).toHaveURL(origin+base+'workload?month='+month);await expect(field('派工月份')).toHaveText(month);await expect(field('派工数量')).toHaveText(String(monthly.assigned));await expect(field('完成数量')).toHaveText(String(monthly.completed));await expect(next).toHaveCount(0);await expect(previous).toHaveAttribute('href',base+'workload');await expectStudentBreadcrumbSpacing(page,selector);
+  await expectStudentReveal(page,()=>months.first().click(),'每月工作量详情',selector);await expect(page).toHaveURL(origin+base+'workload?month='+month);await expect(field('派工月份')).toHaveText(formatDate(month));await expect(field('派工数量')).toHaveText(String(monthly.assigned));await expect(field('完成数量')).toHaveText(String(monthly.completed));await expect(next).toHaveCount(0);await expect(previous).toHaveAttribute('href',base+'workload');await expectStudentBreadcrumbSpacing(page,selector);
   await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);await expect(frame.locator('[data-dorma-repair-values] .copy-button').first()).toBeVisible();await previous.click();await expect(months).toHaveCount(workload.length);
   await frame.locator('#docs-sidebar a[title="完成率"]').click();await expect(field('未完成工单')).toHaveText('4');await expect(field('总体完成率')).toHaveText('84.62%');await expect(months.first()).toContainText('84.62%');
   await expect(previewValues).toHaveText(['84.62%']);

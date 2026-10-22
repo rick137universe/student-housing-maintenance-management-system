@@ -131,6 +131,12 @@ try{
  assert.equal(restored.run_status,'succeeded',restored.result_description);restoredNames.push(restored.restored_database);assert(restored.validation_result.tableCount>=20);checks++;
  const content=await readFile(backupRow.external_file_reference);await writeFile(backupRow.external_file_reference,'damaged');const damaged=(await administrator.request('backups/restore','POST',{sourceBackupId:backup.backup_run_id})).data;await command('scripts/jobs.ts',['--once']);assert.equal((await administrator.request('backups/'+damaged.backup_run_id)).data.run_status,'failed');await writeFile(backupRow.external_file_reference,content);checks++;
  await navigationRegression(origin,env.SEED_PASSWORD,testPool);
+ if(process.argv.includes('--format-browser')){
+  const {chromium}=await import('@playwright/test');const {displayFormatBrowserRegression}=await import('./display-format-browser');
+  const {adminBillingRegression}=await import('./admin-billing');const {managerBillingRegression}=await import('./manager-billing');const {adminAnnouncementRegression}=await import('./admin-announcements');
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  try{await displayFormatBrowserRegression(browser,origin,env.SEED_PASSWORD);await adminBillingRegression(browser,origin,env.SEED_PASSWORD);await managerBillingRegression(browser,origin,env.SEED_PASSWORD);await adminAnnouncementRegression(browser,origin,env.SEED_PASSWORD);}finally{await browser.close();}
+ }
  if(process.argv.includes('--navigation-browser')){
   const {chromium}=await import('@playwright/test');const {studentNavigationBadgeRegression,navigationRoleRegression}=await import('./student-navigation-badges');
   const browser=await chromium.launch({channel:'msedge',headless:true});

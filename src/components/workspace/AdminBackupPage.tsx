@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 import {NavigationReceipt} from './NavigationReceipt';
 
 import {DocsPagination} from './DocsPagination';
@@ -14,11 +15,12 @@ import {RepairArrow,RepairEditorFields,type RepairField} from './StudentRepairEl
 import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
 const theme='lime';
 export const adminBackupListPath=(entry:AdminPage,page=1)=>(entry.action.startsWith('action-1')?'backup-policies':'backups')+'?'+new URLSearchParams({page:String(page),limit:'20'});
-function display(key:string,value:unknown){if(value===null||value===undefined||value==='')return '—';if(typeof value==='object')return JSON.stringify(value,null,2);if(typeof value==='boolean')return value?'启用':'停用';return key.endsWith('_at')?date(value):valueLabels[String(value)]??String(value);}
+function display(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;if(value===null||value===undefined||value==='')return '—';if(typeof value==='object')return JSON.stringify(value,null,2);if(typeof value==='boolean')return value?'启用':'停用';return key.endsWith('_at')?date(value):valueLabels[String(value)]??String(value);}
 const policyFields=[['policy_id','策略编号'],['policy_name','策略名称'],['schedule_expression','备份计划'],['retention_days','保留天数'],['enabled','启用状态'],['created_at','创建时间']] as const;
 const runFields=[['backup_run_id','任务编号'],['operation_type','任务类型'],['run_status','任务状态'],['policy_id','策略编号'],['source_backup_id','来源备份'],['started_at','开始时间'],['finished_at','完成时间'],['result_description','执行结果'],['external_file_reference','备份文件'],['checksum','校验值'],['file_deleted_at','文件清理时间'],['restored_database','恢复副本'],['validation_result','校验结果']] as const;
 function BackupValues({row,policies=false}:{row:StudentRow;policies?:boolean}){return <div data-dorma-backup-values>{!policies&&<NavigationReceipt row={row}/>}{(policies?policyFields:runFields).map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{key==='schedule_expression'?scheduleTime(row[key]):display(key,row[key])}</code></pre></Fragment>)}</div>;}

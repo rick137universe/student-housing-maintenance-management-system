@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime} from '@/utils/display-format';
 import {NavigationReceipt} from './NavigationReceipt';
 
 import {DocsPagination} from './DocsPagination';
@@ -12,7 +13,7 @@ import {announcementListPath,type StudentAnnouncementData} from '@/utils/student
 import {api} from '@/utils/auth-session';
 import {StudentEmptyState} from './StudentEmptyState';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
 function isReminder(row:StudentRow){return row.title==='缴费提醒'&&row.bill_id!==null&&row.bill_id!==undefined;}
 const arrowPoints='17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75';

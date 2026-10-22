@@ -1,3 +1,4 @@
+import {formatCurrency} from '../src/utils/display-format';
 import assert from 'node:assert/strict';
 import {expect,type Browser} from '@playwright/test';
 import configs from '../src/data/student-previews.json';
@@ -58,7 +59,7 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
     const unread=await (await context.request.get(origin+'/api/v1/notifications?unread=true&limit=1')).json();
     await expect(live.locator('.value')).toHaveText(String(unread.meta.total));
    }else if(config.kind){
-    const expected=config.kind==='unpaid'?[String(summary.unpaidCount)]:config.kind==='latest'?[Number(summary.latestUtility).toFixed(2),Number(summary.latestAccommodation).toFixed(2)]:[Number(summary.paidUtility).toFixed(2),Number(summary.paidAccommodation).toFixed(2)];
+    const expected=config.kind==='unpaid'?[String(summary.unpaidCount)]:config.kind==='latest'?[formatCurrency(summary.latestUtility),formatCurrency(summary.latestAccommodation)]:[formatCurrency(summary.paidUtility),formatCurrency(summary.paidAccommodation)];
     await expect.poll(()=>live.locator('.value').allTextContents(),{timeout:10000}).toEqual(expected);
     await page.waitForTimeout(250);
     assert.deepEqual(await live.locator('.value').allTextContents(),expected,'金额达到目标后必须停止');
@@ -85,10 +86,10 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
   assert.deepEqual(await values.allTextContents(),['—','—']);
   await page.unroute('**/api/v1/statistics/student-finance');
   await frame.locator(`article[data-id="${bills.id}"] .demo-reload-button`).click();
-  await expect.poll(()=>values.allTextContents(),{timeout:10000}).toEqual([Number(summary.latestUtility).toFixed(2),Number(summary.latestAccommodation).toFixed(2)]);
+  await expect.poll(()=>values.allTextContents(),{timeout:10000}).toEqual([formatCurrency(summary.latestUtility),formatCurrency(summary.latestAccommodation)]);
   await page.route('**/api/v1/statistics/student-finance',route=>route.fulfill({json:{data:{...summary,latestUtility:'12.34',latestAccommodation:'56.78'}}}));
   await frame.locator('body').evaluate(el=>el.ownerDocument.dispatchEvent(new Event('dorma-finance-saved')));
-  await expect.poll(()=>values.allTextContents()).toEqual(['12.34','56.78']);
+  await expect.poll(()=>values.allTextContents()).toEqual(['￥12.34','￥56.78']);
   await page.unroute('**/api/v1/statistics/student-finance');
   await context.clearCookies();
   assert.equal((await context.request.get(origin+'/api/v1/statistics/student-finance')).status(),401);

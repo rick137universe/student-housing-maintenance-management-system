@@ -1,4 +1,5 @@
 'use client';
+import {formatDateTime,formatBusinessValue} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -12,7 +13,7 @@ import {valueLabels} from '@/data/workspace-actions';
 import {api} from '@/utils/auth-session';
 import {StudentEmptyState} from './StudentEmptyState';
 
-const dateTime=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const dateTime={format:formatDateTime};
 function date(value:unknown){const parsed=new Date(String(value??''));return Number.isNaN(parsed.getTime())?'—':dateTime.format(parsed);}
 const arrowPoints='17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75';
 function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><g fill="none" fillRule="evenodd"><polygon fill="currentColor" fillRule="nonzero" points={arrowPoints}/></g></svg>;}
@@ -100,7 +101,7 @@ function BillingContent({entry,data,record,page,navigate}:{entry:ManagerPage;dat
  useLayoutEffect(()=>{submitLink.current?.setAttribute('aria-disabled',String(pending));submitLink.current?.setAttribute('aria-busy',String(pending));},[pending,canAct]);
  const billFields=[['bill_id','账单编号'],['billing_period','账期'],['student_number','学号'],['full_name','姓名'],['accommodation_fee','住宿费'],['utility_fee','水电费'],['total_amount','总金额'],['paid_amount','已缴金额'],['outstanding_amount','待缴金额'],['bill_status','账单状态'],['due_date','缴费截止日期'],['generated_at','生成时间'],['check_status','核对状态'],['checked_by','核对人员编号'],['checked_at','核对时间']];
  const reminderFields=[['notification_id','提醒编号'],['bill_id','账单编号'],['billing_period','账期'],['student_number','学号'],['full_name','姓名'],['title','提醒标题'],['content','催缴内容'],['created_at','催缴时间'],['read_status','已读状态'],['read_at','已读时间']];
- const display=(key:string,row:StudentRow)=>{if(key==='check_status')return row.checked_at?'已核对':'未核对';if(key==='read_status')return row.read_at?'已读':'未读';const value=row[key];if(value===null||value===undefined||value==='')return '—';if(key.endsWith('_at'))return date(value);return ['bill_status'].includes(key)?valueLabels[String(value)]??String(value):String(value);};
+ const display=(key:string,row:StudentRow)=>{if(key==='check_status')return row.checked_at?'已核对':'未核对';if(key==='read_status')return row.read_at?'已读':'未读';const value=row[key];const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;if(value===null||value===undefined||value==='')return '—';if(key.endsWith('_at'))return date(value);return ['bill_status'].includes(key)?valueLabels[String(value)]??String(value):String(value);};
  return <div ref={root} className={record===null?'docs-info-content':undefined} data-dorma-live-workspace data-dorma-manager-billing aria-busy={loading}>
   {error&&<StudentWarning>{error}</StudentWarning>}
   {result&&(record===null?<>

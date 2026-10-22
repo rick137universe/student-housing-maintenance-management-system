@@ -1,4 +1,5 @@
 'use client';
+import {formatBusinessValue} from '@/utils/display-format';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -14,7 +15,8 @@ import {StudentEmptyState} from './StudentEmptyState';
 import {StudentWarning} from './StudentWarning';
 import {ManagerBedEditor} from './ManagerBedEditor';
 
-function display(key:string,value:unknown){if(value===null||value===undefined||value==='')return '—';if(key==='actual_occupied')return value?'有人入住':'无有效入住';return valueLabels[String(value)]??String(value);}
+function display(key:string,value:unknown){
+ const formatted=formatBusinessValue(key,value);if(formatted!==undefined)return formatted;if(value===null||value===undefined||value==='')return '—';if(key==='actual_occupied')return value?'有人入住':'无有效入住';return valueLabels[String(value)]??String(value);}
 const arrowPoints='17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75';
 function Arrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><polygon fill="currentColor" points={arrowPoints}/></svg>;}
 

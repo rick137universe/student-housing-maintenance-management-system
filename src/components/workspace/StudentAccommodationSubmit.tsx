@@ -1,4 +1,5 @@
 'use client';
+import {formatBusinessValue} from '@/utils/display-format';
 
 import {StudentWarning} from './StudentWarning';
 import {useEffect,useLayoutEffect,useRef,useState} from 'react';
@@ -95,7 +96,7 @@ export function StudentAccommodationSubmit({entry,data}:{entry:StudentPage;data:
             if(!editing||event.nativeEvent.isComposing)return;
             if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancel();}
             if(event.key==='Enter'&&(field.key!=='note'||event.ctrlKey||event.metaKey)){event.preventDefault();event.stopPropagation();confirm(field.key);}
-          }}>{editing?(field.key==='preferredBuildingId'?<select ref={node=>{input.current=node;}} aria-label={field.label} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}><option value="">请选择意向楼栋</option>{buildings.map(building=><option key={building.building_id} value={building.building_id}>{building.building_id} · {building.building_name}</option>)}</select>:field.key==='expectedDate'?<input ref={node=>{input.current=node;}} aria-label={field.label} type="date" value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>:<textarea ref={node=>{input.current=node;}} aria-label={field.label} rows={3} maxLength={4000} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>):value}</code></pre></div>
+          }}>{editing?(field.key==='preferredBuildingId'?<select ref={node=>{input.current=node;}} aria-label={field.label} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}><option value="">请选择意向楼栋</option>{buildings.map(building=><option key={building.building_id} value={building.building_id}>{building.building_id} · {building.building_name}</option>)}</select>:field.key==='expectedDate'?<input ref={node=>{input.current=node;}} aria-label={field.label} type="date" value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>:<textarea ref={node=>{input.current=node;}} aria-label={field.label} rows={3} maxLength={4000} value={draft} disabled={pending} onChange={event=>setDraft(event.target.value)}/>):(formatBusinessValue(field.key,value)??value)}</code></pre></div>
         </div>
       </section>;
     })}
