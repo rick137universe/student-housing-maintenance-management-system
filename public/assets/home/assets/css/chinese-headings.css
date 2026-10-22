@@ -1,0 +1,43 @@
+/* Smaller Chinese glyphs inside the template's original line boxes. */
+#home :where(#intro, .feature-section) .section-text h2,
+#home .section-heading,
+#get-started h2,
+#learn-header h2.text-xxxl {
+  --heading-original-size: var(--text-xxxl);
+  --heading-original-leading: .865;
+  font-size: calc(var(--heading-original-size) * .8);
+  line-height: calc(var(--heading-original-size) * var(--heading-original-leading));
+}
+
+#home :where(#intro, .feature-section) .section-text h2 {
+  margin-bottom: calc(var(--heading-original-size) * .365);
+}
+
+#home #intro .section-text h2 {
+  --heading-original-size: var(--text-xxxxl);
+}
+
+#home .section-heading {
+  --heading-original-size: var(--text-xxl);
+  --heading-original-leading: .95;
+}
+
+#get-started h2,
+#learn-header h2.text-xxxl {
+  --heading-original-leading: .95;
+}
+
+#get-started h2.text-xxxl {
+  margin-bottom: calc(var(--heading-original-size) * .375);
+}
+
+@media (max-width: 899px) {
+  #home #intro .section-text h2 {
+    margin-top: calc(var(--heading-original-size) * .25);
+  }
+
+  #home .feature-section .section-text h2 {
+    --heading-original-size: var(--text-xxl);
+  }
+}
+
