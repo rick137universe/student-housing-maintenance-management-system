@@ -4,6 +4,7 @@ import { query, transaction } from './db';
 import { AppError, requireValue } from './errors';
 import { assertBuilding, audit, authorize, passwordHash } from './security';
 import type { Account } from '../types/auth';
+import {repairNotificationContent} from '../utils/repair-notification';
 
 export type Row = QueryResultRow;
 const str = z.string().trim().min(1).max(150);
@@ -148,6 +149,7 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  const total=Number((await query(`SELECT count(*) FROM ${from} WHERE ${condition}`,values)).rows[0].count);
  if(relatedColumn&&account.role==='student')columns+=`,(SELECT COALESCE(max(n.notification_id),0)::text FROM notifications n WHERE n.recipient_account_id=${add(account.id)} AND n.${relatedColumn}=${key}) navigation_version,'${kind}' navigation_resource,${key} navigation_id`;
  const rows=(await query(`SELECT ${columns} FROM ${from} WHERE ${condition} ORDER BY ${key} DESC${kind==='permissions'?',x.resource DESC,x.operation DESC':kind==='authorizations'?',x.building_id DESC':''} LIMIT ${add(id?1:limit)} OFFSET ${add(id?0:(page-1)*limit)}`,values)).rows;
+ if(kind==='notifications')for(const row of rows)row.content=repairNotificationContent(row);
  if(id){requireValue(rows[0],'记录不存在或不可访问',404);return {data:rows[0]};}
  return {data:rows,meta:{page,limit,total}};
 }

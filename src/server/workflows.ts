@@ -3,6 +3,7 @@ import type { PoolClient } from 'pg';
 import { query, transaction } from './db';
 import { AppError, requireValue } from './errors';
 import { assertBuilding, audit, authorize, notify } from './security';
+import {repairStatusLabel} from '../utils/repair-notification';
 import type { Account } from '../types/auth';
 import {listResource,type Row} from './resources';
 
@@ -200,7 +201,7 @@ export async function repairAction(account:Account,repairId:string,action:string
   }
   await query('UPDATE repair_requests SET repair_status=$2 WHERE repair_id=$1',[repairId,status],c);
   await query('INSERT INTO maintenance_updates(repair_id,maintenance_id,actor_account_id,status,description) VALUES($1,$2,$3,$4,$5)',[repairId,maintenanceId,account.id,status,data.note||repairActionDescription(action,status)||'更新维修进度'],c);
-  await notify(c,row.student_number,'报修进度更新',`工单状态：${status}${data.note?'；'+data.note:''}`,'repair_id',repairId);
+  await notify(c,row.student_number,'报修进度更新',`工单状态：${repairStatusLabel(status)}${data.note?'；'+data.note:''}`,'repair_id',repairId);
   await audit(c,account,action,'repairs',repairId,{status});return {repairId,status};
  });
 }

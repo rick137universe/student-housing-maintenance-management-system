@@ -82,6 +82,17 @@ try{
  await technician.request(`repairs/${repair.repair_id}/complete`,'POST',{note:'更换完成且测试通过',hours:1.5,materials:'密封圈1个'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5,note:'测试评价'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5},409);
  const history=(await student.request(`repairs/${repair.repair_id}/history`)).data as QueryResultRow[];
  assert(history.length>=8);
+ const storedNotices=(await testPool.query("SELECT notification_id,content FROM housing.notifications WHERE repair_id=$1 AND title='报修进度更新' ORDER BY notification_id",[repair.repair_id])).rows;
+ assert(storedNotices.length>=8);
+ for(const notice of storedNotices)assert(!/^工单状态：[a-z_]+/.test(notice.content),'新通知应保存中文状态');
+ assert(storedNotices.some(row=>row.content==='工单状态：处理中；零件到达'));
+ const legacyNotice=storedNotices[0],legacyContent='工单状态：in_progress；保留备注 in_progress / Good';
+ await testPool.query('UPDATE housing.notifications SET content=$1 WHERE notification_id=$2',[legacyContent,legacyNotice.notification_id]);
+ assert.equal((await student.request('notifications/'+legacyNotice.notification_id)).data.content,'工单状态：处理中；保留备注 in_progress / Good');
+ assert((await student.request('notifications?limit=100')).data.some((row:QueryResultRow)=>row.notification_id===legacyNotice.notification_id&&row.content==='工单状态：处理中；保留备注 in_progress / Good'));
+ assert.equal((await testPool.query('SELECT content FROM housing.notifications WHERE notification_id=$1',[legacyNotice.notification_id])).rows[0].content,legacyContent,'旧通知仅兼容显示，不重写历史记录');
+ await second.request('notifications/'+legacyNotice.notification_id,'GET',undefined,404);
+ await testPool.query('UPDATE housing.notifications SET content=$1 WHERE notification_id=$2',[legacyNotice.content,legacyNotice.notification_id]);checks++;
  const defaults=[['pending_dispatch','review','初审通过'],['dispatched','dispatch','已派发维修工单'],['accepted','accept','维修人员已接单'],['in_progress','start','开始维修']] as const;
  const storedHistory=(await testPool.query('SELECT status,description FROM housing.maintenance_updates WHERE repair_id=$1 ORDER BY created_at,update_id',[repair.repair_id])).rows;
  for(const [status,,description] of defaults){assert(history.some(row=>row.status===status&&row.description===description));assert(storedHistory.some(row=>row.status===status&&row.description===description),'新记录应存储中文默认说明');}
