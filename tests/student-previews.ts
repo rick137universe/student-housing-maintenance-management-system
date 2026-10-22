@@ -65,8 +65,12 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
     }
    }else if(config.source==='getting-started')await expect(article.locator('.dotted-grid')).toHaveCount(1);
    else{
-    await expect(live.locator('.square').first()).toBeVisible();
-    await expect.poll(()=>live.locator('.square').first().evaluate(el=>getComputedStyle(el).transform)).not.toBe('none');
+    const shape=live.locator('.square, .circle').first();
+    await expect(shape).toBeVisible();
+    await expect.poll(()=>shape.evaluate(el=>{
+     const style=getComputedStyle(el);
+     return [style.transform,style.translate,style.rotate,style.scale].some(value=>value!=='none');
+    })).toBe(true);
    }
   }
   // Failed summary loads must not masquerade as a zero balance.

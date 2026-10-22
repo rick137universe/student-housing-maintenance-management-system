@@ -10,4 +10,6 @@
 
 公寓通知、缴费提醒和消息通知使用母版 `text/splittext` 的网格与循环文字动画，分别展示配置中的英文标题与中文标题两行文本。
 
-`tests/student-finance-preview.ts` 使用事务内临时表验证金额与权限；`tests/student-previews.ts` 验证二十一个页面的动画、双语文本、真实数据、刷新、错误恢复和账号隔离，已纳入浏览器回归入口。
+报修申请、进度和评价的六个三级子页面分别使用配置中的 Stagger 或 WAAPI 母版演示，保留原有交错、弹簧、独立属性、循环次数及函数值动画。
+
+`tests/student-finance-preview.ts` 使用事务内临时表验证金额与权限；`tests/student-previews.ts` 验证二十七个页面的动画、双语文本、真实数据、刷新、错误恢复和账号隔离，已纳入浏览器回归入口。

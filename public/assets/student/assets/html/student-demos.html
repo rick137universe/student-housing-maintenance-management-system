@@ -1306,34 +1306,30 @@ window.demos['animation-animation-methods-refresh'] = function(ctx, {
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="large row">
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">began</span>
-      <span class="status value">false</span>
-    </pre>
-  </div>
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">current time</span>
-      <span class="time value lcd">0</span>
-    </pre>
-  </div>
+    <div class="small row">
+  <div class="square"></div>
+</div>
+<div class="small row">
+  <div class="square"></div>
+</div>
+<div class="small row">
+  <div class="square"></div>
+</div>
+<div class="small row">
+  <div class="square"></div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="large row">
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">began</span>
-      <span class="status value">false</span>
-    </pre>
-  </div>
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">current time</span>
-      <span class="time value lcd">0</span>
-    </pre>
-  </div>
+    <div class="small row">
+  <div class="square"></div>
+</div>
+<div class="small row">
+  <div class="square"></div>
+</div>
+<div class="small row">
+  <div class="square"></div>
+</div>
+<div class="small row">
+  <div class="square"></div>
 </div>        </div>
     <script class="docs-demo-js">
 window.demos['timer-timer-callbacks-onbegin'] = function(ctx, {
@@ -1363,18 +1359,10 @@ window.demos['timer-timer-callbacks-onbegin'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const [ $status ] = utils.$('.status');
-const [ $time ] = utils.$('.time');
-
-const timer = createTimer({
-  delay: 2000,
-  duration: 2000,
-  onBegin: self => $status.innerHTML = 'true'
-});
-
-const logTimer = createTimer({
-  duration: 4000,
-  onUpdate: self => $time.innerHTML = timer.currentTime
+animate('.square', {
+  x: '17rem',
+  scale: stagger([1, .1]),
+  delay: stagger(100),
 });
 }
 </script>
@@ -1398,34 +1386,32 @@ const logTimer = createTimer({
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="large row">
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">updates</span>
-      <span class="updates value">0</span>
-    </pre>
-  </div>
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">current time</span>
-      <span class="time value lcd">0</span>
-    </pre>
-  </div>
+    <div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="large row">
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">updates</span>
-      <span class="updates value">0</span>
-    </pre>
-  </div>
-  <div class="col">
-    <pre class="large log row">
-      <span class="label">current time</span>
-      <span class="time value lcd">0</span>
-    </pre>
-  </div>
+    <div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
 </div>        </div>
     <script class="docs-demo-js">
 window.demos['timer-timer-callbacks-onupdate'] = function(ctx, {
@@ -1455,16 +1441,11 @@ window.demos['timer-timer-callbacks-onupdate'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const [ $updates ] = utils.$('.updates');
-const [ $time ] = utils.$('.time');
-
-let updates = 0;
-
-createTimer({
-  onUpdate: self => {
-    $updates.innerHTML = ++updates;
-    $time.innerHTML = self.currentTime;
-  }
+const animation = animate('.square', {
+  y: stagger(['-2.75rem', '2.75rem']),
+  rotate: { from: stagger('-.125turn') },
+  loop: true,
+  alternate: true
 });
 }
 </script>
@@ -1541,20 +1522,22 @@ window.demos['timeline-timeline-methods-seek'] = function(ctx, {
         </style>
     <div class="docs-demo-html docs-demo-live demo">
     <div class="large row">
-  <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">updates</span>
-    <span class="value">0</span>
-  </pre>
-</div>    <div class="viewer"></div>    </div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>        </div>
     <div class="docs-demo-html docs-demo-template">
     <div class="large row">
-  <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">updates</span>
-    <span class="value">0</span>
-  </pre>
-</div>    <div class="viewer"></div>    </div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>        </div>
     <script class="docs-demo-js">
 window.demos['animation-animation-callbacks-onupdate'] = function(ctx, {
   animate,
@@ -1583,17 +1566,18 @@ window.demos['animation-animation-callbacks-onupdate'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const [ $value ] = utils.$('.value');
-
-let updates = 0;
-
-const animation = animate('.circle', {
-  x: '16rem',
-  loopDelay: 1500,
+waapi.animate('.square', {
+  y: {
+    to: [0, -30, 0],
+    ease: 'out(4)',
+    duration: 1000,
+  },
+  rotate: { from: -180, to: 0, ease: 'out(3)' },
+  scale: { to: [.65, 1, .65], ease: 'inOut(3)' },
+  duration: 500,
+  delay: stagger(75),
   loop: true,
-  alternate: true,
-  onUpdate: self => $value.textContent = ++updates
-});createViewer(ctx, animation);
+});
 }
 </script>
       </div>
@@ -1618,19 +1602,21 @@ const animation = animate('.circle', {
     <div class="docs-demo-html docs-demo-live demo">
     <div class="large row">
   <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">loops</span>
-    <span class="value">0</span>
-  </pre>
-</div>    <div class="viewer"></div>    </div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>        </div>
     <div class="docs-demo-html docs-demo-template">
     <div class="large row">
   <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">loops</span>
-    <span class="value">0</span>
-  </pre>
-</div>    <div class="viewer"></div>    </div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>        </div>
     <script class="docs-demo-js">
 window.demos['animation-animation-callbacks-onloop'] = function(ctx, {
   animate,
@@ -1659,17 +1645,12 @@ window.demos['animation-animation-callbacks-onloop'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const [ $value ] = utils.$('.value');
-
-let loops = 0;
-
-const animation = animate('.circle', {
-  x: '16rem',
-  loopDelay: 1500,
+waapi.animate('.circle', {
+  y: [0, -30, 0],
+  ease: spring({ stiffness: 150, damping: 5 }),
+  delay: stagger(75),
   loop: true,
-  alternate: true,
-  onLoop: self => $value.textContent = ++loops
-});createViewer(ctx, animation);
+});
 }
 </script>
       </div>
@@ -1744,34 +1725,24 @@ window.demos['utilities-stagger-stagger-parameters-stagger-grid'] = function(ctx
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="large row">
-  <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">paused</span>
-    <span class="value">0</span>
-  </pre>
+    <div class="medium row">
+  <div class="square"></div>
 </div>
 <div class="medium row">
-  <fieldset class="controls">
-    <button class="button">Animate x</button>
-    <button class="button">Pause anim</button>
-    <button class="button">Remove target</button>
-  </fieldset>
+  <div class="square"></div>
+</div>
+<div class="medium row">
+  <div class="square"></div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="large row">
-  <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">paused</span>
-    <span class="value">0</span>
-  </pre>
+    <div class="medium row">
+  <div class="square"></div>
 </div>
 <div class="medium row">
-  <fieldset class="controls">
-    <button class="button">Animate x</button>
-    <button class="button">Pause anim</button>
-    <button class="button">Remove target</button>
-  </fieldset>
+  <div class="square"></div>
+</div>
+<div class="medium row">
+  <div class="square"></div>
 </div>        </div>
     <script class="docs-demo-js">
 window.demos['animation-animation-callbacks-onpause'] = function(ctx, {
@@ -1801,40 +1772,12 @@ window.demos['animation-animation-callbacks-onpause'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const [ $animateButton, $pauseButton, $removeButton ] = utils.$('.button');
-const [ $value ] = utils.$('.value');
-const [ $circle ] = utils.$('.circle');
-
-let paused = 0;
-let alternate = 0;
-let animation;
-
-const animateX = () => {
-  alternate = !alternate;
-  animation = animate($circle, {
-    x: () => (alternate ? 16 : 0) + 'rem',
-    duration: 2000,
-    onPause: () => $value.innerHTML = ++paused,
-  });
-}
-
-const pauseAnimation = () => {
-  if (animation) animation.pause();
-}
-
-const removeTarget = () => {
-  utils.remove($circle);
-}
-
-animateX();
-
-$animateButton.addEventListener('click', animateX);
-$pauseButton.addEventListener('click', pauseAnimation);
-$removeButton.addEventListener('click', removeTarget);return function() {
-$animateButton.removeEventListener('click', animateX);
-$pauseButton.removeEventListener('click', pauseAnimation);
-$removeButton.removeEventListener('click', removeTarget);}
-
+waapi.animate('.square', {
+  translate: '17rem',
+  loop: 3,
+  alternate: true,
+  delay: stagger(100)
+});
 }
 </script>
       </div>
@@ -1857,21 +1800,31 @@ $removeButton.removeEventListener('click', removeTarget);}
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="large row">
-  <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">promise status</span>
-    <span class="value">pending</span>
-  </pre>
-</div>    <div class="viewer"></div>    </div>
+    <div class="small row">
+  <div data-duration="400" class="square"></div>
+</div>
+<div class="small row">
+  <div data-duration="600" class="square"></div>
+</div>
+<div class="small row">
+  <div data-duration="800" class="square"></div>
+</div>
+<div class="small row">
+  <div data-duration="1000" class="square"></div>
+</div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="large row">
-  <div class="circle"></div>
-  <pre class="large log row">
-    <span class="label">promise status</span>
-    <span class="value">pending</span>
-  </pre>
-</div>    <div class="viewer"></div>    </div>
+    <div class="small row">
+  <div data-duration="400" class="square"></div>
+</div>
+<div class="small row">
+  <div data-duration="600" class="square"></div>
+</div>
+<div class="small row">
+  <div data-duration="800" class="square"></div>
+</div>
+<div class="small row">
+  <div data-duration="1000" class="square"></div>
+</div>        </div>
     <script class="docs-demo-js">
 window.demos['animation-animation-callbacks-then'] = function(ctx, {
   animate,
@@ -1900,14 +1853,13 @@ window.demos['animation-animation-callbacks-then'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const [ $value ] = utils.$('.value');
-
-const animation = animate('.circle', {
-  x: '16rem',
-  delay: 500,
+waapi.animate('.square', {
+  translate: () => `${utils.random(10, 17)}rem`,
+  rotate: () => utils.random(-180, 180),
+  scale: (_, i) => .25 + (i * .25),
+  duration: $el => $el.dataset.duration,
+  delay: stagger(100)
 });
-
-animation.then(() => $value.textContent = 'fulfilled');createViewer(ctx, animation);
 }
 </script>
       </div>
