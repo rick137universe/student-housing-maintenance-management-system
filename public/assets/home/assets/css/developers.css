@@ -1,0 +1,12 @@
+/* Keep the original scene/card placement; only the developer content is new. */
+#sponsors .section-text h2 { line-height: 1.15; }
+.developer-team .developer-avatars { display:flex; flex-wrap:wrap; gap:var(--margin-s); margin:var(--margin-s) 0; padding:0; list-style:none; }
+.developer-team .developer-avatars li { flex:1; min-width:0; }
+.developer-team .developer-avatars a { display:flex; flex-direction:column; align-items:flex-start; gap:var(--margin-xxs); text-decoration:none; }
+.developer-team .developer-avatars img { display:block; width:2.5rem; height:2.5rem; object-fit:cover; border-radius:50%; margin:0; }
+.developer-team .developer-avatars span { font-family:var(--font-code); font-size:var(--text-xxs); }
+.developer-team p { margin:0; }
+@media (max-width:899px) {
+  /* Cards stay anchored above the same slider; allow the avatar row to fit. */
+  .sub-nav:has(.developer-team) { min-height:16rem; }
+}
