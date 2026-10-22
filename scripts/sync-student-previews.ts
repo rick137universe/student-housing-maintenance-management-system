@@ -20,7 +20,7 @@ export async function syncStudentPreviews(){
    preview=preview.replaceAll('All-in-one text splitter',config.lines[0])
     .replaceAll('テキストスプリッター',config.lines[1]);
   }else if(['username','phone','password'].includes(config.kind??'')){
-   preview=preview.replaceAll('npm·install·animejs',config.kind==='password'?'PASSWORD':'—');
+   preview=preview.replaceAll('npm·install·animejs',config.kind==='password'?'password':'—');
    preview=preview.replace(/(window\.demos[\s\S]*?\}\) \{)[\s\S]*?(\n\}\s*<\/script>)/,
     `$1\nreturn window.dormaStudentPreviews.installation(ctx, {animate, waapi, createScope, utils, splitText, stagger, steps, irregular}, '${config.kind}');$2`);
   }else if(config.kind){

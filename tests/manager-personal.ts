@@ -48,7 +48,7 @@ export async function managerPersonalRegression(browser:Browser,origin:string,pa
   await page.setViewportSize({width:390,height:844});await open('action-2');await expect(editor.locator('.copy-button')).toHaveCount(3);
   assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);await page.screenshot({path:'docs/qa/backend/manager-personal-mobile.png'});
   await page.setViewportSize({width:1440,height:1000});await open('action-3');await expect(frame.locator('[data-dorma-password-editor] section[data-color="5"]')).toHaveCount(3);
-  await expectPreview('PASSWORD');
+  await expectPreview('password');
   await studentPasswordEditorRegression(page,password,{frameSelector:'[data-dorma-manager-frame]',workspaceBase:'/workspace/dormManager'});
   assert.deepEqual(errors,[]);console.log('宿管个人中心通过：本人代码框资料、复制、编辑确认/取消、真实保存与刷新、WARNING、原密码提前校验、真实改密撤销会话及手机布局。');
  }finally{await context.close();await admin.close();}

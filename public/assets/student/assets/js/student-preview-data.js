@@ -36,7 +36,7 @@ export const studentPreviews = {
         code.style.opacity = 1;
       });
     };
-    if (kind === 'password') { render('PASSWORD'); return () => typing?.revert(); }
+    if (kind === 'password') { render('password'); return () => typing?.revert(); }
     const stop = liveData(ctx, 'profile', 'dorma-profile-saved', profile => render(String(profile[kind] || (kind === 'phone' ? '未填写' : '—'))), () => {
       typing?.revert(); code.textContent = '—'; code.style.opacity = 1;
       code.title = '预览数据暂时无法加载，请刷新重试。';

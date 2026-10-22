@@ -45,7 +45,7 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
     await expect.poll(async()=>(await live.locator('p [data-char]').allTextContents()).join('')).toBe(config.lines.join('').replace(/\s/g,''));
     await expect.poll(()=>live.locator('p [data-char]').evaluateAll(chars=>[...new Set(chars.map(el=>(el as HTMLElement).dataset.line))])).toEqual(['0','1']);
    }else if(['username','phone','password'].includes(config.kind??'')){
-    const expected=config.kind==='password'?'PASSWORD':String(profile[config.kind!]||(config.kind==='phone'?'未填写':'—'));
+    const expected=config.kind==='password'?'password':String(profile[config.kind!]||(config.kind==='phone'?'未填写':'—'));
     await expect.poll(async()=> (await live.locator('code [data-char]').allTextContents()).join('')).toBe(expected);
     await expect(live.locator('code [data-char]').last()).toHaveCSS('opacity','1');
     if(config.kind==='phone'){
