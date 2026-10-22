@@ -60,9 +60,10 @@ await writeFile(root+'index.html',shell);
 await writeFile(root+'entries.js','const entries = '+JSON.stringify(adminPages,null,2)+';\nexport default entries;\n');
 const originals=await readFile('public/assets/student/assets/html/documentation-demos.html','utf8');
 const demos=adminPages.map(entry=>{
- const article=originals.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))?.[0];
- if(!article)throw new Error('Missing mother preview '+entry.id);
- return article.replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
+ const sourceId=entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id;
+ const article=originals.match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
+ if(!article)throw new Error('Missing mother preview '+sourceId);
+ return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
 });
 await writeFile(root+'demos.html',demos.join('\n').replace(/[ \t]+$/gm,''));
 console.log(`已生成管理员母版外壳、10 个模块目录和 ${adminPages.filter(entry=>entry.action!=='overview').length} 个业务页面入口。`);

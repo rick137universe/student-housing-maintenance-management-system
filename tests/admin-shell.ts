@@ -12,6 +12,12 @@ export async function verifyAdminShell(){
  assert(!/<a\b[^>]*\bdata-color=/.test(sidebar),'未选中的导航保持母版默认颜色');
  for(const resource of ['css/core.css','css/docs.css','js/docs.js'])assert(index.includes('/assets/student/assets/'+resource));
  const demos=await readFile('public/assets/admin/demos.html','utf8');
+ for(const entry of adminPages.filter(page=>page.action==='overview'&&page.feature!=='overview')){
+  const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+  assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`),'十个模块主页统一使用 getting-started 点阵');
+  assert(preview.includes(`data-color="${entry.color}"`));
+  assert(preview.includes(`<h2 class="text-ui">${entry.label}</h2>`));
+ }
  for(const entry of adminPages){const page=await readFile(`public/assets/admin/pages/${entry.feature}-${entry.action.replaceAll('/','-')}.html`,'utf8');assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));if(entry.feature!=='overview')assert(sidebar.includes(`href="${entry.url}"`));assert.equal(page.includes('data-dorma-business'),entry.action!=='overview');}
 }
 
