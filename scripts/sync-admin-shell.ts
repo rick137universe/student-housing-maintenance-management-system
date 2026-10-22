@@ -1,6 +1,7 @@
 import {canonicalWorkspaceUrl} from '../src/data/workspace-paths';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {adminPages} from '../src/data/admin-pages';
+import adminPreviews from '../src/data/admin-previews.json';
 
 // Keep the copied mother styles, navigation and animated previews unchanged.
 const root='public/assets/admin/';
@@ -60,7 +61,7 @@ await writeFile(root+'index.html',shell);
 await writeFile(root+'entries.js','const entries = '+JSON.stringify(adminPages,null,2)+';\nexport default entries;\n');
 const originals=await readFile('public/assets/student/assets/html/documentation-demos.html','utf8');
 const demos=adminPages.map(entry=>{
- const sourceId=entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id;
+ const sourceId=adminPreviews.find(preview=>preview.url===entry.url)?.source??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
  const article=originals.match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
  if(!article)throw new Error('Missing mother preview '+sourceId);
  return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
