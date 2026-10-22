@@ -93,7 +93,7 @@ function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentCh
  async function markRead(){
   if(saving.current||!detail||detail.read_at||!notification)return;
   saving.current=true;setPending(true);setError('');
-  try{await api(`notifications/${detail.notification_id}/read`,{method:'POST',body:'{}'});data.invalidate();await load(true);}
+  try{await api(`notifications/${detail.notification_id}/read`,{method:'POST',body:'{}'});root.current?.ownerDocument.dispatchEvent(new Event('dorma-notifications-saved'));data.invalidate();await load(true);}
   catch(reason){setError(reason instanceof Error?reason.message:'操作失败，请重试。');}
   finally{saving.current=false;setPending(false);}
  }

@@ -11,6 +11,7 @@ import {homeShortcutRegression} from './home-shortcuts';
 import {verifyStudentTemplate} from './student-template';
 import {studentDocsRegression} from './student-browser';
 import {studentPreviewRegression} from './student-previews';
+import {studentNavigationBadgeRegression} from './student-navigation-badges';
 import {workspacePath} from '../src/utils/workspace-route';
 import {delayedWorkspaceHydration} from './workspace-entry';
 import {managerShellRegression,verifyManagerShell} from './manager-shell';
@@ -206,6 +207,7 @@ export async function browserRegression(origin:string,password:string,database:P
    await context.close();
   }
   await studentPreviewRegression(browser,origin,password);
+  await studentNavigationBadgeRegression(browser,origin);
   await studentDocsRegression(browser,origin,password);
   await managerShellRegression(browser,origin,password);
   await managerPersonalRegression(browser,origin,password);
