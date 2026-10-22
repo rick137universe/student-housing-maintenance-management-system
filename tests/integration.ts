@@ -79,7 +79,22 @@ try{
  await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{});await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{},409);await technician.request(`repairs/${repair.repair_id}/start`,'POST',{});
  await technician.request(`repairs/${repair.repair_id}/progress`,'POST',{status:'waiting_parts',note:'等待零件'});await technician.request(`repairs/${repair.repair_id}/progress`,'POST',{status:'in_progress',note:'零件到达'});
  await technician.request(`repairs/${repair.repair_id}/complete`,'POST',{note:'更换完成且测试通过',hours:1.5,materials:'密封圈1个'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5,note:'测试评价'});await student.request(`repairs/${repair.repair_id}/evaluate`,'POST',{rating:5},409);
- assert((await student.request(`repairs/${repair.repair_id}/history`)).data.length>=8);checks++;
+ const history=(await student.request(`repairs/${repair.repair_id}/history`)).data as QueryResultRow[];
+ assert(history.length>=8);
+ const defaults=[['pending_dispatch','review','初审通过'],['dispatched','dispatch','已派发维修工单'],['accepted','accept','维修人员已接单'],['in_progress','start','开始维修']] as const;
+ const storedHistory=(await testPool.query('SELECT status,description FROM housing.maintenance_updates WHERE repair_id=$1 ORDER BY created_at,update_id',[repair.repair_id])).rows;
+ for(const [status,,description] of defaults){assert(history.some(row=>row.status===status&&row.description===description));assert(storedHistory.some(row=>row.status===status&&row.description===description),'新记录应存储中文默认说明');}
+ for(const description of ['等待零件','零件到达','更换完成且测试通过','测试评价'])assert(history.some(row=>row.description===description),'保留填写的处理说明与评价');
+ // Simulate old defaults in the disposable test database. All four roles share
+ // the compatibility response, while the original database values remain intact.
+ for(const [status,action,description] of defaults)await testPool.query('UPDATE housing.maintenance_updates SET description=$1 WHERE repair_id=$2 AND status=$3 AND description=$4',[action,repair.repair_id,status,description]);
+ for(const session of [student,manager,technician,administrator]){
+  const legacyHistory=(await session.request(`repairs/${repair.repair_id}/history`)).data as QueryResultRow[];
+  for(const [status,,description] of defaults)assert(legacyHistory.some(row=>row.status===status&&row.description===description),'各角色历史默认说明应显示为中文');
+ }
+ for(const [status,action] of defaults)assert((await testPool.query('SELECT 1 FROM housing.maintenance_updates WHERE repair_id=$1 AND status=$2 AND description=$3',[repair.repair_id,status,action])).rowCount,'兼容展示不能重写历史数据');
+ await testPool.query("UPDATE housing.maintenance_updates SET description='Good' WHERE repair_id=$1 AND status='evaluated'",[repair.repair_id]);
+ assert((await student.request(`repairs/${repair.repair_id}/history`)).data.some((row:QueryResultRow)=>row.status==='evaluated'&&row.description==='Good'),'英文评价原文应保持不变');checks++;
  const repairDetail=(await student.request('repairs/'+repair.repair_id)).data;
  assert.equal(repairDetail.repair_status,'evaluated');assert.equal(Number(repairDetail.service_rating),5);assert.equal(repairDetail.evaluation_content,'测试评价');assert.equal(repairDetail.processing_description,'更换完成且测试通过');assert.equal(repairDetail.materials,'密封圈1个');assert(repairDetail.technician_name&&repairDetail.completed_at&&repairDetail.evaluated_at);
  await second.request('repairs/'+repair.repair_id,'GET',undefined,404);await second.request(`repairs/${repair.repair_id}/history`,'GET',undefined,403);checks++;

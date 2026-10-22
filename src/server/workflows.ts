@@ -130,8 +130,22 @@ async function scopedRepair(account:Account,repairId:string,c:PoolClient) {
  else if(account.role==='maintenance')requireValue((await query('SELECT 1 FROM maintenance_records WHERE repair_id=$1 AND technician_account_id=$2',[repairId,account.id],c)).rowCount,'工单不属于你',403);
  return row;
 }
+const repairActionDescriptions=[
+ ['review','pending_dispatch','初审通过'],['review','rejected','初审驳回'],
+ ['dispatch','dispatched','已派发维修工单'],['accept','accepted','维修人员已接单'],
+ ['start','in_progress','开始维修'],['evaluate','evaluated','已提交服务评价'],
+] as const;
+function repairActionDescription(action:string,status:string){
+ return repairActionDescriptions.find(([name,state])=>name===action&&state===status)?.[2];
+}
 export async function repairHistory(account:Account,repairId:string) {
- return transaction(async c=>{await authorize(account,'repairs','read',c);await scopedRepair(account,repairId,c);return (await query('SELECT u.*,a.full_name actor_name FROM maintenance_updates u JOIN user_accounts a ON a.account_id=u.actor_account_id WHERE repair_id=$1 ORDER BY created_at,update_id',[repairId],c)).rows;});
+ return transaction(async c=>{
+  await authorize(account,'repairs','read',c);await scopedRepair(account,repairId,c);
+  const rows=(await query('SELECT u.*,a.full_name actor_name FROM maintenance_updates u JOIN user_accounts a ON a.account_id=u.actor_account_id WHERE repair_id=$1 ORDER BY created_at,update_id',[repairId],c)).rows;
+  // Older records used the action name when no note was supplied. Match the full
+  // value and its resulting status; keep stored history and other free text intact.
+  return rows.map(row=>({...row,description:repairActionDescription(row.description,row.status)??row.description}));
+ });
 }
 export async function submitRepair(account:Account,input:unknown) {
  const data=z.object({roomId:id,faultType:z.string().min(1).max(80),description:note.min(1),phone:z.string().min(3).max(32)}).strict().parse(input);
@@ -185,7 +199,7 @@ export async function repairAction(account:Account,repairId:string,action:string
    }
   }
   await query('UPDATE repair_requests SET repair_status=$2 WHERE repair_id=$1',[repairId,status],c);
-  await query('INSERT INTO maintenance_updates(repair_id,maintenance_id,actor_account_id,status,description) VALUES($1,$2,$3,$4,$5)',[repairId,maintenanceId,account.id,status,data.note||action],c);
+  await query('INSERT INTO maintenance_updates(repair_id,maintenance_id,actor_account_id,status,description) VALUES($1,$2,$3,$4,$5)',[repairId,maintenanceId,account.id,status,data.note||repairActionDescription(action,status)||'更新维修进度'],c);
   await notify(c,row.student_number,'报修进度更新',`工单状态：${status}${data.note?'；'+data.note:''}`,'repair_id',repairId);
   await audit(c,account,action,'repairs',repairId,{status});return {repairId,status};
  });
