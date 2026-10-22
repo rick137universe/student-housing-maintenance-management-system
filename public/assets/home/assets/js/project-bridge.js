@@ -79,15 +79,15 @@ const translate = element => {
   if (team && team.querySelectorAll('.sponsors-list .sponsor').length === 2 && !team.dataset.projectLabels) {
     team.dataset.projectLabels = 'true';
     team.querySelector('h3').textContent = '项目开发者';
-    // The native counter can finish on its detached span without overwriting
-    // the project label. Keep the same element type, classes and mother layout.
-    const counter = team.querySelector('.percents');
-    const label = counter.cloneNode(false); label.textContent = '2 位'; counter.replaceWith(label);
-    // Preserve the mother scene's decorative 13% strip, without presenting it
-    // as a funding or development-progress metric for this project.
-    const bar = team.querySelector('.chart-bar');
-    const decoration = bar.cloneNode(false); decoration.style.width = '13%'; bar.replaceWith(decoration);
-    team.querySelector('.chart').setAttribute('aria-hidden', 'true');
+    // Native animations may finish on their detached nodes without changing
+    // the scene timeline or its original card positioning.
+    team.querySelector('.funding-level-status').remove();
+    team.querySelector('.chart').remove();
+    const avatars = team.querySelector('.sponsors-list');
+    avatars.style.justifyContent = 'flex-start';
+    for (const avatar of avatars.querySelectorAll('.sponsor')) {
+      avatar.style.flex = '0 0 calc(var(--height) * .5)';
+    }
     const invitation = team.querySelector('p');
     invitation.firstChild.textContent = '一起完善项目，';
     invitation.lastChild.textContent = '。';
