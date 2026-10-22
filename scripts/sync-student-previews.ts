@@ -16,7 +16,10 @@ export async function syncStudentPreviews(){
   let preview=source.replaceAll(config.source,entry.id)
    .replace(/data-color="[^"]+"/,`data-color="${entry.color}"`)
    .replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${entry.label}</h2>`);
-  if(['username','phone','password'].includes(config.kind??'')){
+  if(config.kind==='splittext'&&config.lines){
+   preview=preview.replaceAll('All-in-one text splitter',config.lines[0])
+    .replaceAll('テキストスプリッター',config.lines[1]);
+  }else if(['username','phone','password'].includes(config.kind??'')){
    preview=preview.replaceAll('npm·install·animejs',config.kind==='password'?'PASSWORD':'—');
    preview=preview.replace(/(window\.demos[\s\S]*?\}\) \{)[\s\S]*?(\n\}\s*<\/script>)/,
     `$1\nreturn window.dormaStudentPreviews.installation(ctx, {animate, waapi, createScope, utils, splitText, stagger, steps, irregular}, '${config.kind}');$2`);

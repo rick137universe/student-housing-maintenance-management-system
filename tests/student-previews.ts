@@ -40,7 +40,11 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
    await expect(article.locator('h2')).toHaveText(entry.label);
    await expect(article).toHaveAttribute('data-color',String(entry.color));
    const live=article.locator('.docs-demo-live');
-   if(['username','phone','password'].includes(config.kind??'')){
+   if(config.kind==='splittext'&&config.lines){
+    await expect(live.locator('.square-grid')).toHaveCount(1);
+    await expect.poll(async()=>(await live.locator('p [data-char]').allTextContents()).join('')).toBe(config.lines.join('').replace(/\s/g,''));
+    await expect.poll(()=>live.locator('p [data-char]').evaluateAll(chars=>[...new Set(chars.map(el=>(el as HTMLElement).dataset.line))])).toEqual(['0','1']);
+   }else if(['username','phone','password'].includes(config.kind??'')){
     const expected=config.kind==='password'?'PASSWORD':String(profile[config.kind!]||(config.kind==='phone'?'未填写':'—'));
     await expect.poll(async()=> (await live.locator('code [data-char]').allTextContents()).join('')).toBe(expected);
     await expect(live.locator('code [data-char]').last()).toHaveCSS('opacity','1');
@@ -85,7 +89,7 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
   await page.goto(origin+configs[0].url);
   await expect.poll(async()=>(await frame.locator('article.is-active .docs-demo-live code [data-char]').allTextContents()).join('')).toBe('stu202602114');
   assert.deepEqual(errors,[]);
-  console.log('学生专属预览通过：18个页面、当前账号/手机号、真实缴费金额、数字停止、重播及错误恢复。');
+  console.log(`学生专属预览通过：${configs.length}个页面、双语文字动画、当前账号/手机号、真实缴费金额、数字停止、重播及错误恢复。`);
  }finally{await context.close();}
 }
 
