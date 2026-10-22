@@ -21,6 +21,11 @@ export async function verifyManagerShell(){
    const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
    assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`),'模块首页使用 Getting started 点阵预览');
   }
+  if(entry.action!=='overview'&&['personal','notifications'].includes(entry.feature)){
+   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+   if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'),'个人页面共用账号资料打字预览');
+   else assert(preview.includes('Messages<br>')&&preview.includes('消息通知')&&preview.includes('square-grid'),'消息通知使用双语 splitText 预览');
+  }
  }
  console.log('宿管外壳结构通过：7 组目录、19 个原业务入口、母版样式/运行时复用及独立路径。');
 }
