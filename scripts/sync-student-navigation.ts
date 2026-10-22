@@ -66,6 +66,14 @@ for(const [position,entry] of studentPages.entries()){
 }
 let demos=await readFile(root+'assets/html/student-demos.html','utf8');
 const originals=await readFile(root+'assets/html/documentation-demos.html','utf8');
+// Module overviews share the template's Getting started dotted-grid preview.
+const modulePreview=demos.match(/<article[^>]*data-id="getting-started"[\s\S]*?<\/article>/)![0];
+for(const entry of studentPages.filter(page=>page.action==='overview'&&page.feature!=='overview')){
+ const preview=modulePreview.replaceAll('getting-started',entry.id)
+  .replace(/data-color="[^"]+"/,`data-color="${entry.color}"`)
+  .replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
+ demos=demos.replace(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`),()=>preview);
+}
 for(const entry of [...studentChildren].reverse()){
  const expression=new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`);
  demos=demos.replace(new RegExp('\\r?\\n?'+expression.source),'');

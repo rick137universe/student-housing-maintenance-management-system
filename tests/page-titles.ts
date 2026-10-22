@@ -18,7 +18,10 @@ async function checkHtml(directory: string): Promise<number> {
     const path = join(directory, entry.name);
     if (entry.isDirectory()) count += await checkHtml(path);
     else if (entry.name.endsWith('.html')) {
-      const title = (await readFile(path, 'utf8')).match(/<title>([^<]*)<\/title>/)?.[1];
+      const html = await readFile(path, 'utf8');
+      // Demo fragments also contain escaped/example HTML inside scripts.
+      if (!/^\s*(?:<!doctype html[^>]*>\s*)?<html\b/i.test(html)) continue;
+      const title = html.match(/<title>([^<]*)<\/title>/)?.[1];
       if (title) { check(title); count++; }
     }
   }
