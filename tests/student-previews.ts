@@ -22,6 +22,15 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto(origin+configs[0].url);
   const frame=page.frameLocator('[data-dorma-student-frame]');
+  await frame.locator('#docs-sidebar a[data-feature="payment"]').click();
+  await expect(page).toHaveURL(origin+'/workspace/student/payment');
+  for(const config of configs.filter(config=>['latest','unpaid','paid'].includes(config.kind??''))){
+   const entry=studentPages.find(page=>page.url===config.url)!;
+   const article=frame.locator(`#docs-demos article[data-id="${entry.id}"]`);
+   await article.scrollIntoViewIfNeeded();
+   await expect.poll(()=>article.locator('.docs-demo-template .value').allTextContents()).toEqual(config.kind==='unpaid'?['0']:['0','0']);
+   await expect(article).not.toHaveClass(/is-active/);
+  }
   for(const config of configs){
    const entry=studentPages.find(page=>page.url===config.url)!;
    await frame.locator(`#docs-sidebar a[data-id="${entry.id}"]`).evaluate((a:HTMLAnchorElement)=>a.click());
