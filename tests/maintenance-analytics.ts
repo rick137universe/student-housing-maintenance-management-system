@@ -14,6 +14,7 @@ export async function maintenanceAnalyticsRegression(browser:Browser,origin:stri
  }
  async function login(context:BrowserContext,username:string){const account=await call(context,'auth/login',{username,password});accounts.set(context,account);return account;}
  const selector='[data-dorma-maintenance-frame]',frame=page.frameLocator(selector),base='/workspace/maintenance/analytics/',months=frame.locator('[data-dorma-statistics-months] a'),ratings=frame.locator('[data-dorma-maintenance-record-list] a');
+ const previewValues=frame.locator('article.docs-demo.is-active .docs-demo-live .value');
  const previous=frame.locator('#docs-info .prev-link a'),next=frame.locator('#docs-info .next-link a'),warning=frame.getByRole('alert'),field=(label:string)=>frame.getByRole('heading',{name:label,exact:true}).locator('+ pre code');
  try{
   await login(admin,'admin');const username='mtAnalytics'+Date.now();await call(admin,'accounts',{username,fullName:'个人统计回归',role:'maintenance',password});
@@ -22,6 +23,7 @@ export async function maintenanceAnalyticsRegression(browser:Browser,origin:stri
    await page.goto(origin+canonicalWorkspaceUrl(base+action));await expect(frame.locator('.notice.info')).toHaveText('暂无记录。');
    await expect(frame.locator('[data-dorma-maintenance-business-host], [data-dorma-live-workspace] table, [data-dorma-live-workspace] input, [data-dorma-live-workspace] select')).toHaveCount(0);
    if(action==='action-1')await expect(field('获派工单总数')).toHaveText('0');if(action==='action-2')await expect(field('总体完成率')).toHaveText('0.00%');if(action==='action-3')await expect(field('平均评分')).toHaveText('—');
+   await expect(previewValues).toHaveText(action==='action-1'?['0','0']:action==='action-2'?['0.00%']:['0.00','0']);
   }
   async function create(context:BrowserContext,technicianId:string,status:string,index:string,rating=5){
    const repair=await call(student,'repairs',{roomId:'NY3-502',faultType:'水电设施',description:'统计验证 '+index,phone:'13800001234'}),id=String(repair.repair_id);
@@ -38,13 +40,16 @@ export async function maintenanceAnalyticsRegression(browser:Browser,origin:stri
   const foreign=await create(peer,String(other.id),'evaluated','其他人员',1),stats=await call(owner,'statistics'),workload=stats.workload as Row[],repairs=stats.repairs as Row;
   assert.equal(Number(repairs.total_repairs),26);assert.equal(Number(repairs.completed_repairs),22);assert.equal(Number(repairs.rating_count),21);assert.equal(Number(repairs.average_rating),4.81);
   await page.goto(origin+base+'workload');await expect(field('获派工单总数')).toHaveText('26');await expect(field('已完成工单')).toHaveText('22');await expect(months).toHaveCount(workload.length);await expect(frame.locator('#docs-info')).not.toContainText('待缴金额');
+  await expect(previewValues).toHaveText(['26','22']);
   const shell=await frame.locator('#docs-demos').elementHandle(),month=String(workload.at(-1)!.month),monthly=workload.at(-1)!;
   await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/maintenance-analytics-workload.png'});
   await expectStudentReveal(page,()=>months.first().click(),'每月工作量详情',selector);await expect(page).toHaveURL(origin+base+'workload?month='+month);await expect(field('派工月份')).toHaveText(month);await expect(field('派工数量')).toHaveText(String(monthly.assigned));await expect(field('完成数量')).toHaveText(String(monthly.completed));await expect(next).toHaveCount(0);await expect(previous).toHaveAttribute('href',base+'workload');await expectStudentBreadcrumbSpacing(page,selector);
   await expect.poll(()=>frame.locator('html').evaluate(el=>el.scrollTop)).toBe(0);await expect(frame.locator('[data-dorma-repair-values] .copy-button').first()).toBeVisible();await previous.click();await expect(months).toHaveCount(workload.length);
   await frame.locator('#docs-sidebar a[title="完成率"]').click();await expect(field('未完成工单')).toHaveText('4');await expect(field('总体完成率')).toHaveText('84.62%');await expect(months.first()).toContainText('84.62%');
+  await expect(previewValues).toHaveText(['84.62%']);
   await expectStudentReveal(page,()=>months.first().click(),'每月完成率详情',selector);await expect(field('完成率')).toHaveText('84.62%');await expect(field('未完成数量')).toHaveText('4');await expect(next).toHaveCount(0);assert(await shell!.evaluate(el=>el.isConnected));await page.reload();await expect(field('完成率')).toHaveText('84.62%');
   await frame.locator('#docs-sidebar a[title="服务评价"]').click();await expect(field('平均评分')).toHaveText('4.81 分');await expect(field('评价数量')).toHaveText('21');await expect(ratings).toHaveCount(20);await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/maintenance-analytics-ratings-list.png'});await expect(ratings.first()).toContainText('5 分');await expect(frame.locator('[data-dorma-maintenance-record]')).toContainText('第1/2页');
+  await expect(previewValues).toHaveText(['4.81','21']);
   await frame.getByRole('link',{name:'下一页',exact:true}).click();await expect(ratings).toHaveCount(1);await ratings.click();await expect(frame.locator('#docs-info h1')).toHaveText('服务评价详情');await expect(field('服务评分')).toHaveText('1');await expect(field('评价内容')).toHaveText('服务评价 0');await expect(field('使用材料')).toHaveText('密封圈');await expect(next).toHaveCount(0);await expect(previous).toHaveAttribute('href',base+'reviews?page=2');
   await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/maintenance-analytics-rating.png'});await page.setViewportSize({width:390,height:844});assert.equal(await frame.locator('html').evaluate(el=>el.scrollWidth>innerWidth),false);await page.screenshot({path:'docs/qa/backend/maintenance-analytics-rating-mobile.png'});await previous.click();await expect(ratings).toHaveCount(1);
   await page.goto(origin+base+'completion-rate?month='+month);await expect(field('完成率')).toHaveText('84.62%');await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');await page.screenshot({path:'docs/qa/backend/maintenance-analytics-month-mobile.png'});
@@ -55,7 +60,9 @@ export async function maintenanceAnalyticsRegression(browser:Browser,origin:stri
   await page.setViewportSize({width:1440,height:1000});await frame.locator('#docs-sidebar a[title="维修处理"]').click();await frame.locator('#docs-sidebar a[title="完成工单"]').click();await frame.locator('[data-dorma-maintenance-record-list] a').first().click();await expect(field('工单状态')).toBeVisible();await expect(next).toHaveText('确认完工');await next.click();await expect(frame.locator('[data-dorma-maintenance-processing-editor]')).toBeVisible();
   const editor=frame.locator('[data-dorma-maintenance-processing-editor]');for(const [key,label,value] of [['note','维修结果','统计缓存更新'],['hours','实际工时（小时）','2']]){const box=editor.locator(`[data-profile-field="${key}"]`);await box.getByRole('button',{name:'编辑'+label,exact:true}).click();await box.locator('textarea,input').fill(value);await box.getByRole('button',{name:'确认',exact:true}).click();}await next.click();await expect(field('工单状态')).toHaveText('已完成');
   await frame.locator('#docs-sidebar a[title="个人统计"]').click();await frame.locator('#docs-sidebar a[title="完成率"]').click();await expect(field('已完成工单')).toHaveText('23');await expect(field('总体完成率')).toHaveText('88.46%');
+  await expect(previewValues).toHaveText(['88.46%']);
   await login(owner,'mt009');await page.reload();const peerStats=await call(owner,'statistics');await expect(field('获派工单总数')).toHaveText(String(peerStats.repairs.total_repairs));await expect(field('总体完成率')).toHaveText(String(peerStats.repairs.completion_rate)+'%');
+  await expect(previewValues).toHaveText([String(peerStats.repairs.completion_rate)+'%']);
   await expect(frame.getByText('正在读取…',{exact:true})).toHaveCount(0);assert.deepEqual(errors,[]);console.log('个人统计通过：零数据、真实工作量/完成率/评分、每月导航与只读详情、评价分页返回、INFO/WARNING与重试、完工后缓存刷新、未评价/非法/越权隔离、渐显与手机布局。');
  }finally{await owner.close();await peer.close();await student.close();await admin.close();}
 }

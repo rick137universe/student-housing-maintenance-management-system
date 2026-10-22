@@ -22,6 +22,13 @@ export async function verifyMaintenanceShell(){
    assert(preview.includes(`data-color="${entry.color}"`));
    assert(preview.includes(`<h2 class="text-ui">${entry.label}</h2>`));
   }
+  if(entry.feature==='analytics'&&entry.action!=='overview'){
+   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+   const labels=entry.action==='action-1'?['获派工单总数','已完成工单']:entry.action==='action-2'?['总体完成率']:['平均评分','评价数量'];
+   assert(preview.includes('dormaMaintenancePreviews.statistics'));
+   for(const label of labels)assert(preview.includes(`<span class="label">${label}</span>`));
+   assert.equal([...preview.matchAll(/class="(?:time )?value lcd"/g)].length,2*labels.length,'实时和未激活模板均保留母版数字框');
+  }
   if(['personal','notifications'].includes(entry.feature)){
    const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
    if(entry.action!=='overview'){

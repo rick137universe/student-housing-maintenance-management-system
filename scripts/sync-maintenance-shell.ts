@@ -54,13 +54,25 @@ await writeFile(root+'index.html',shell);
 await writeFile(root+'entries.js','const entries = '+JSON.stringify(maintenancePages,null,2)+';\nexport default entries;\n');
 const originals=await readFile('public/assets/student/assets/html/documentation-demos.html','utf8');
 const studentDemos=await readFile('public/assets/student/assets/html/student-demos.html','utf8');
+const statisticsPreviews=[
+ {action:'action-1',source:'timer',kind:'workload',labels:['获派工单总数','已完成工单']},
+ {action:'action-2',source:'timer-timer-playback-settings-duration',kind:'completion',labels:['总体完成率']},
+ {action:'action-3',source:'timer',kind:'ratings',labels:['平均评分','评价数量']},
+];
 const demos=maintenancePages.map(entry=>{
  const personalModule=['personal','notifications'].includes(entry.feature);
  const shared=personalModule&&entry.action!=='overview'?studentPages.find(page=>page.feature===entry.feature&&page.action===entry.action):undefined;
- const sourceId=shared?.id??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
+ const statistics=entry.feature==='analytics'?statisticsPreviews.find(preview=>preview.action===entry.action):undefined;
+ const sourceId=statistics?.source??shared?.id??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
  const article=(shared?studentDemos:originals).match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
  if(!article)throw new Error('Missing mother preview '+sourceId);
- return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
+ let preview=article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
+ if(statistics){
+  preview=preview.replaceAll('current time',statistics.labels[0]).replaceAll('callback fired',statistics.labels[1]??'');
+  preview=preview.replace(/(window\.demos[\s\S]*?\}\) \{)[\s\S]*?(\n\}\s*<\/script>)/,
+   `$1\nreturn window.dormaMaintenancePreviews.statistics(ctx, {createTimer, utils}, '${statistics.kind}');$2`);
+ }
+ return preview;
 });
 await writeFile(root+'demos.html',demos.join('\n'));
 console.log(`已生成维修母版外壳、6 个模块目录和 ${maintenancePages.filter(entry=>entry.action!=='overview').length} 个业务页面入口。`);

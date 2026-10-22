@@ -1,5 +1,5 @@
 // Live values belong to the active native demo scope, never to a global account cache.
-function liveData(ctx, url, event, render, unavailable) {
+export function liveData(ctx, url, event, render, unavailable) {
   let alive = true, controller;
   const load = async () => {
     controller?.abort();
