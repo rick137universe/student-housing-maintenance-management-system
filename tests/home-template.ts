@@ -18,16 +18,11 @@ export async function verifyHomeTemplate() {
   }
   const html = await readFile('public/assets/home/index.html', 'utf8');
   for (const tag of ['header', 'footer']) {
-    let fragment = html.match(new RegExp('<' + tag + ' id="site-' + tag + '"[\\s\\S]*?<\\/' + tag + '>'))?.[0];
+    const fragment = html.match(new RegExp('<' + tag + ' id="site-' + tag + '"[\\s\\S]*?<\\/' + tag + '>'))?.[0];
     assert(fragment, `缺少主页 ${tag}`);
-    if (tag === 'header') fragment = fragment.replace(' aria-label="返回项目首页"', '')
-      .replace('data-id="docs" href="/workspace"', 'data-id="docs" href="https://animejs.com/documentation"')
-      .replace('href="https://animejs.com/learn" target="_top" title="Learn"', 'href="/login" target="_top" title="Learn"')
-      .replace(/(<h1 class="heading-logo header-logo">\s*<a[^>]*>)[\s\S]*?(<\/a>)/, '$1$2')
-      .replace(/<sponsor-button>[\s\S]*?<\/sponsor-button>/, '<sponsor-button></sponsor-button>');
     const normalized = fragment.replace(/\s+/g, ' ').trim();
-    // The project footer intentionally replaces the template's sponsor and signup blocks.
-    assert.equal(createHash('sha256').update(normalized).digest('hex'), manifest.fragments[tag === 'footer' ? 'projectFooter' : tag], `主页 ${tag} 超出允许替换范围`);
+    // Project navigation and footer are customized; original asset hashes stay protected.
+    assert.equal(createHash('sha256').update(normalized).digest('hex'), manifest.fragments[tag === 'footer' ? 'projectFooter' : 'projectHeader'], `主页 ${tag} 超出允许替换范围`);
   }
   const sections = [...html.matchAll(/<section\b([^>]*)>/g)].map(match => {
     const attribute = (name: string) => match[1].match(new RegExp('(?:^|\\s)' + name + '="([^"]*)"'))?.[1];

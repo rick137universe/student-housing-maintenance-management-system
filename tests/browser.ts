@@ -84,7 +84,9 @@ export async function browserRegression(origin:string,password:string,database:P
    await loginAccountButton.click();
    await expect(loginPage.locator('#site-menu')).not.toHaveClass(/is-active/);
    await expect(loginForm.locator('#username')).toBeFocused();
-   assert.equal(await loginPage.locator('#site-menu .main-nav-link').count(),6);
+   assert.equal(await loginPage.locator('#site-menu .main-nav-link').count(),3);
+   await expect(loginPage.locator('#site-menu a[data-id="docs"]')).toHaveText('工作台');
+   await expect(loginPage.locator('#site-menu a[title="GitHub"]')).toHaveAttribute('href','https://github.com/rick137universe/student-housing-maintenance-management-system');
    await expect(loginPage.locator('#site-footer .footer-logo')).toHaveCount(1);
    if(role==='student'){
     await loginForm.getByLabel(/账号/).fill(username);
