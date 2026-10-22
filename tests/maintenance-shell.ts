@@ -16,11 +16,18 @@ export async function verifyMaintenanceShell(){
   assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));
   if(entry.feature!=='overview')assert(sidebar.includes(`href="${entry.url}"`));
   assert.equal(page.includes('data-dorma-business'),entry.action!=='overview');
+  if(entry.action==='overview'&&entry.feature!=='overview'){
+   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+   assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`),'六个模块主页统一使用 getting-started 点阵');
+   assert(preview.includes(`data-color="${entry.color}"`));
+   assert(preview.includes(`<h2 class="text-ui">${entry.label}</h2>`));
+  }
   if(['personal','notifications'].includes(entry.feature)){
    const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
-   if(entry.action==='overview')assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`));
-   else if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'));
-   else assert(preview.includes('Messages<br>')&&preview.includes('消息通知')&&preview.includes('square-grid'));
+   if(entry.action!=='overview'){
+    if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'));
+    else assert(preview.includes('Messages<br>')&&preview.includes('消息通知')&&preview.includes('square-grid'));
+   }
   }
  }
 }

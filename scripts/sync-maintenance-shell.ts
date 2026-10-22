@@ -57,7 +57,7 @@ const studentDemos=await readFile('public/assets/student/assets/html/student-dem
 const demos=maintenancePages.map(entry=>{
  const personalModule=['personal','notifications'].includes(entry.feature);
  const shared=personalModule&&entry.action!=='overview'?studentPages.find(page=>page.feature===entry.feature&&page.action===entry.action):undefined;
- const sourceId=shared?.id??(personalModule&&entry.action==='overview'?'getting-started':entry.id);
+ const sourceId=shared?.id??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
  const article=(shared?studentDemos:originals).match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
  if(!article)throw new Error('Missing mother preview '+sourceId);
  return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);
