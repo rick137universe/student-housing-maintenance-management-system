@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/flight-logo.svg" alt="FLight 项目 Logo" width="320">
+</p>
+
 # FLight | 学生公寓住宿与报修管理系统
 
 FLight 面向学生、宿管人员、维修人员和管理员，提供从入住申请、床位分配、账单缴费到报修派工、维修评价的完整业务流程。项目使用 Next.js、TypeScript 和 PostgreSQL，业务数据通过同源 API 持久化到数据库。
