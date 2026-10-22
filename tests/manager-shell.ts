@@ -17,6 +17,10 @@ export async function verifyManagerShell(){
   assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));
   if(entry.feature!=='overview')assert(sidebar.includes(`href="${entry.url}"`));
   assert.equal(page.includes('data-dorma-business'),entry.action!=='overview');
+  if(entry.action==='overview'&&entry.feature!=='overview'){
+   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+   assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`),'模块首页使用 Getting started 点阵预览');
+  }
  }
  console.log('宿管外壳结构通过：7 组目录、19 个原业务入口、母版样式/运行时复用及独立路径。');
 }
@@ -35,6 +39,10 @@ export async function managerShellRegression(browser:Browser,origin:string,passw
    await expect(page).toHaveURL(origin+entry.url);await expect(frame.locator('#toggle-search')).toBeEnabled();
    await expect(frame.locator('.docs-demo.is-active')).toHaveAttribute('data-id',entry.id);
    await expect(frame.locator('#docs-info')).toHaveCSS('opacity','1');
+   if(entry.action==='overview'&&entry.feature!=='overview'){
+    await expect(frame.locator('.docs-demo.is-active .dotted-grid')).toBeVisible();
+    await expect(frame.locator('.docs-demo.is-active')).toHaveAttribute('data-color',String(entry.color));
+   }
    if(entry.action!=='overview'){
     await expect(frame.locator('[data-dorma-live-workspace]')).toBeVisible();
     await expect(frame.getByText('正在读取…',{exact:true})).toHaveCount(0);
