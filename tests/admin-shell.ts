@@ -3,6 +3,10 @@ import {readFile} from 'node:fs/promises';
 import {expect,type Browser} from '@playwright/test';
 import {adminPages} from '../src/data/admin-pages';
 import adminPreviews from '../src/data/admin-previews.json';
+import adminRandomPreviews from '../src/data/admin-random-previews.json';
+import studentPreviews from '../src/data/student-previews.json';
+import managerPreviews from '../src/data/manager-previews.json';
+import maintenancePreviews from '../src/data/maintenance-previews.json';
 import {roleFeatures} from '../src/data/role-features';
 import {expectStudentReveal} from './student-transitions';
 
@@ -20,6 +24,19 @@ export async function verifyAdminShell(){
   else assert(preview.includes('未读消息通知')&&preview.includes('createTimer')&&preview.includes("'unread'"));
  }
  assert.equal(adminPreviews.length,13);
+ const candidates=new Set([...studentPreviews,...managerPreviews,...maintenancePreviews].filter(config=>!('kind' in config)&&!config.source.startsWith('getting-started')&&!config.source.startsWith('text-')&&!config.source.startsWith('timer')).map(config=>config.source));
+ const unassigned=adminPages.filter(page=>page.action!=='overview'&&!['personal','notifications'].includes(page.feature)&&!adminPreviews.some(config=>config.url===page.url));
+ assert.equal(adminRandomPreviews.length,unassigned.length);
+ assert.equal(new Set(adminRandomPreviews.map(config=>config.url)).size,unassigned.length);
+ const originals=await readFile('public/assets/student/assets/html/documentation-demos.html','utf8');
+ for(const config of adminRandomPreviews){
+  const entry=unassigned.find(page=>page.url===config.url);assert(entry,'随机分配只覆盖尚未指定样式的管理员子页面');
+  assert(candidates.has(config.source),'随机样式应来自其他三端已选的图形动画，排除点阵、双语文字和数字框');
+  const source=originals.match(new RegExp(`<article[^>]*data-id="${config.source}"[\\s\\S]*?</article>`))?.[0];assert(source);
+  const expected=source.replaceAll(config.source,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${entry.label}</h2>`).replace(/[ \t]+$/gm,'');
+  const actual=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))?.[0];
+  assert.equal(actual,expected,`${entry.label} 应保留母版动画结构、布局和交互`);
+ }
  for(const config of adminPreviews){assert.equal(config.source,'getting-started');assert(adminPages.some(page=>page.url===config.url&&!page.parent),'指定的点阵预览应属于现有二级页面');}
  for(const entry of adminPages.filter(page=>(page.action==='overview'&&page.feature!=='overview')||adminPreviews.some(preview=>preview.url===page.url))){
   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];

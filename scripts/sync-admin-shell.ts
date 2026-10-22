@@ -3,6 +3,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {adminPages} from '../src/data/admin-pages';
 import {studentPages} from '../src/data/student-pages';
 import adminPreviews from '../src/data/admin-previews.json';
+import adminRandomPreviews from '../src/data/admin-random-previews.json';
 
 // Keep the copied mother styles, navigation and animated previews unchanged.
 const root='public/assets/admin/';
@@ -64,7 +65,7 @@ const originals=await readFile('public/assets/student/assets/html/documentation-
 const studentDemos=await readFile('public/assets/student/assets/html/student-demos.html','utf8');
 const demos=adminPages.map(entry=>{
  const shared=['personal','notifications'].includes(entry.feature)&&entry.action!=='overview'?studentPages.find(page=>page.feature===entry.feature&&page.action===entry.action):undefined;
- const sourceId=shared?.id??adminPreviews.find(preview=>preview.url===entry.url)?.source??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
+ const sourceId=shared?.id??adminPreviews.find(preview=>preview.url===entry.url)?.source??adminRandomPreviews.find(preview=>preview.url===entry.url)?.source??(entry.action==='overview'&&entry.feature!=='overview'?'getting-started':entry.id);
  const article=(shared?studentDemos:originals).match(new RegExp(`<article[^>]*data-id="${sourceId}"[\\s\\S]*?</article>`))?.[0];
  if(!article)throw new Error('Missing mother preview '+sourceId);
  return article.replaceAll(sourceId,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${html(entry.label)}</h2>`);

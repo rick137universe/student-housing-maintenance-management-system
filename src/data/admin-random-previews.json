@@ -1,0 +1,130 @@
+[
+  {
+    "url": "/workspace/admin/base-data/manage/submit",
+    "source": "animation-tween-parameters-from"
+  },
+  {
+    "url": "/workspace/admin/base-data/manage/records",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-function-based-values"
+  },
+  {
+    "url": "/workspace/admin/base-data/import",
+    "source": "animation-keyframes-tween-values-keyframes"
+  },
+  {
+    "url": "/workspace/admin/base-data/export",
+    "source": "animation-tween-value-types-function-based"
+  },
+  {
+    "url": "/workspace/admin/process/bed-assignment/edit",
+    "source": "utilities-stagger-values-staggering"
+  },
+  {
+    "url": "/workspace/admin/process/accommodation/edit",
+    "source": "animation-tween-parameters-to"
+  },
+  {
+    "url": "/workspace/admin/process/payment/edit",
+    "source": "web-animation-api-api-differences-with-native-waapi-iterations"
+  },
+  {
+    "url": "/workspace/admin/dispatch/pending",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-individual-property-parameters"
+  },
+  {
+    "url": "/workspace/admin/dispatch/automatic",
+    "source": "utilities-stagger"
+  },
+  {
+    "url": "/workspace/admin/dispatch/progress",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-spring-and-custom-easings"
+  },
+  {
+    "url": "/workspace/admin/reports/operations/filter",
+    "source": "animation-targets-dom-elements"
+  },
+  {
+    "url": "/workspace/admin/reports/maintenance/filter",
+    "source": "animation-tween-value-types-numerical-value"
+  },
+  {
+    "url": "/workspace/admin/reports/export",
+    "source": "utilities-stagger"
+  },
+  {
+    "url": "/workspace/admin/permissions/accounts/submit",
+    "source": "web-animation-api-api-differences-with-native-waapi-iterations"
+  },
+  {
+    "url": "/workspace/admin/permissions/accounts/records",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-individual-property-parameters"
+  },
+  {
+    "url": "/workspace/admin/permissions/roles/submit",
+    "source": "animation-targets-dom-elements"
+  },
+  {
+    "url": "/workspace/admin/permissions/roles/records",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-spring-and-custom-easings"
+  },
+  {
+    "url": "/workspace/admin/permissions/roles/authorize",
+    "source": "animation-tween-parameters-to"
+  },
+  {
+    "url": "/workspace/admin/permissions/roles/authorizations",
+    "source": "animation-keyframes-tween-values-keyframes"
+  },
+  {
+    "url": "/workspace/admin/permissions/audit",
+    "source": "animation-tween-parameters-from"
+  },
+  {
+    "url": "/workspace/admin/backup/policies/submit",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-function-based-values"
+  },
+  {
+    "url": "/workspace/admin/backup/policies/records",
+    "source": "utilities-stagger-values-staggering"
+  },
+  {
+    "url": "/workspace/admin/backup/tasks/submit",
+    "source": "animation-tween-value-types-numerical-value"
+  },
+  {
+    "url": "/workspace/admin/backup/tasks/records",
+    "source": "animation-tween-value-types-function-based"
+  },
+  {
+    "url": "/workspace/admin/backup/restore",
+    "source": "web-animation-api-api-differences-with-native-waapi-iterations"
+  },
+  {
+    "url": "/workspace/admin/billing/generate/submit",
+    "source": "animation-tween-parameters-from"
+  },
+  {
+    "url": "/workspace/admin/billing/generate/records",
+    "source": "animation-tween-parameters-to"
+  },
+  {
+    "url": "/workspace/admin/billing/manage/submit",
+    "source": "animation-keyframes-tween-values-keyframes"
+  },
+  {
+    "url": "/workspace/admin/billing/manage/records",
+    "source": "utilities-stagger-values-staggering"
+  },
+  {
+    "url": "/workspace/admin/billing/payments",
+    "source": "web-animation-api-improvements-to-the-web-animation-api-individual-property-parameters"
+  },
+  {
+    "url": "/workspace/admin/announcements/publish/submit",
+    "source": "animation-tween-value-types-function-based"
+  },
+  {
+    "url": "/workspace/admin/announcements/publish/records",
+    "source": "animation-tween-value-types-numerical-value"
+  }
+]
