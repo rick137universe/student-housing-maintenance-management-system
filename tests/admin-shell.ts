@@ -13,6 +13,12 @@ export async function verifyAdminShell(){
  assert(!/<a\b[^>]*\bdata-color=/.test(sidebar),'未选中的导航保持母版默认颜色');
  for(const resource of ['css/core.css','css/docs.css','js/docs.js'])assert(index.includes('/assets/student/assets/'+resource));
  const demos=await readFile('public/assets/admin/demos.html','utf8');
+ for(const entry of adminPages.filter(page=>['personal','notifications'].includes(page.feature)&&page.action!=='overview')){
+  const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
+  assert(preview.includes(`data-color="${entry.color}"`)&&preview.includes(`<h2 class="text-ui">${entry.label}</h2>`));
+  if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'));
+  else assert(preview.includes('Messages<br>')&&preview.includes('消息通知')&&preview.includes('square-grid'));
+ }
  assert.equal(adminPreviews.length,13);
  for(const config of adminPreviews){assert.equal(config.source,'getting-started');assert(adminPages.some(page=>page.url===config.url&&!page.parent),'指定的点阵预览应属于现有二级页面');}
  for(const entry of adminPages.filter(page=>(page.action==='overview'&&page.feature!=='overview')||adminPreviews.some(preview=>preview.url===page.url))){
