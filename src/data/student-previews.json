@@ -25,5 +25,5 @@
   {"url":"/workspace/student/repair/reviews/records","source":"web-animation-api-improvements-to-the-web-animation-api-function-based-values"},
   {"url":"/workspace/student/announcements/notices","source":"text-splittext","kind":"splittext","lines":["Notices","公寓通知"]},
   {"url":"/workspace/student/announcements/payment-reminders","source":"text-splittext","kind":"splittext","lines":["Payment reminders","缴费提醒"]},
-  {"url":"/workspace/student/notifications/messages","source":"text-splittext","kind":"splittext","lines":["Messages","消息通知"]}
+  {"url":"/workspace/student/notifications/messages","source":"timer-timer-playback-settings-duration","kind":"unread"}
 ]

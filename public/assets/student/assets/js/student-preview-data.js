@@ -8,7 +8,7 @@ export function liveData(ctx, url, event, render, unavailable) {
       const response = await fetch('/api/v1/' + url, {credentials: 'same-origin', cache: 'no-store', signal: request.signal});
       if (!response.ok) throw new Error('预览数据暂时无法加载，请刷新重试。');
       const result = await response.json();
-      if (alive && controller === request) ctx.execute(() => render(result.data));
+      if (alive && controller === request) ctx.execute(() => render(result.data, result.meta));
     } catch (error) {
       if (alive && controller === request && error.name !== 'AbortError') unavailable();
     }
@@ -48,12 +48,13 @@ export const studentPreviews = {
     const values = utils.$('.value');
     let animations = [];
     const clear = () => { animations.forEach(animation => animation.revert()); animations = []; };
-    const stop = liveData(ctx, 'statistics/student-finance', 'dorma-finance-saved', data => {
+    const unread = kind === 'unread';
+    const stop = liveData(ctx, unread ? 'notifications?unread=true&limit=1' : 'statistics/student-finance', unread ? 'dorma-notifications-saved' : 'dorma-finance-saved', (data, meta) => {
       clear();
-      const targets = kind === 'unpaid' ? [data.unpaidCount] : kind === 'latest' ? [data.latestUtility, data.latestAccommodation] : [data.paidUtility, data.paidAccommodation];
+      const targets = unread ? [meta?.total ?? data.length] : kind === 'unpaid' ? [data.unpaidCount] : kind === 'latest' ? [data.latestUtility, data.latestAccommodation] : [data.paidUtility, data.paidAccommodation];
       values.forEach((element, index) => {
         element.removeAttribute('title');
-        const count = kind === 'unpaid', target = Math.round(Number(targets[index]) * (count ? 1 : 100));
+        const count = kind === 'unpaid' || unread, target = Math.round(Number(targets[index]) * (count ? 1 : 100));
         const format = value => count ? String(Math.round(value)) : (Math.round(value) / 100).toFixed(2);
         // Keep the native LCD boxes; scale only long numbers that would overflow.
         element.style.removeProperty('font-size');

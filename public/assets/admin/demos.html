@@ -4170,25 +4170,24 @@ window.demos['svg'] = function(ctx, {
   </header>
   <div id="timer-timer-callbacks-oncomplete" class="docs-demo-content">
     <style async class="docs-demo-css">
-    #text-split .text-xl {
-  font-size: 1.5rem;
-  color: currentColor;
-  letter-spacing: 0.06em;
-  line-height: 1.35;
-}    </style>
+        </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="large centered grid square-grid">
-  <p class="text-xl">
-    Messages<br>
-    消息通知
-  </p>
+    <div class="large centered row">
+  <div class="half col">
+    <pre class="large log row">
+      <span class="label">未读消息通知</span>
+      <span class="time value lcd">0</span>
+    </pre>
+  </div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="large centered grid square-grid">
-  <p class="text-xl">
-    Messages<br>
-    消息通知
-  </p>
+    <div class="large centered row">
+  <div class="half col">
+    <pre class="large log row">
+      <span class="label">未读消息通知</span>
+      <span class="time value lcd">0</span>
+    </pre>
+  </div>
 </div>        </div>
     <script class="docs-demo-js">
 window.demos['timer-timer-callbacks-oncomplete'] = function(ctx, {
@@ -4218,22 +4217,7 @@ window.demos['timer-timer-callbacks-oncomplete'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-const { words, chars } = splitText('p', {
-  words: { wrap: 'clip' },
-  chars: true,
-});
-
-createTimeline({
-  loop: true,
-  defaults: { ease: 'inOut(3)', duration: 650 }
-})
-.add(words, {
-  y: [$el => +$el.dataset.line % 2 ? '100%' : '-100%', '0%'],
-}, stagger(125))
-.add(chars, {
-  y: $el => +$el.dataset.line % 2 ? '100%' : '-100%',
-}, stagger(10, { from: 'random' }))
-.init();
+return window.dormaStudentPreviews.finance(ctx, {animate, createTimer, utils}, 'unread');
 }
 </script>
       </div>

@@ -24,7 +24,7 @@ export async function syncStudentPreviews(){
    preview=preview.replace(/(window\.demos[\s\S]*?\}\) \{)[\s\S]*?(\n\}\s*<\/script>)/,
     `$1\nreturn window.dormaStudentPreviews.installation(ctx, {animate, waapi, createScope, utils, splitText, stagger, steps, irregular}, '${config.kind}');$2`);
   }else if(config.kind){
-   const labels=config.kind==='latest'?['最新待缴的水电费','最新待缴的住宿费']:config.kind==='paid'?['累计缴费的水电费','累计缴费的住宿费']:['待缴费账单数量'];
+   const labels=config.kind==='latest'?['最新待缴的水电费','最新待缴的住宿费']:config.kind==='paid'?['累计缴费的水电费','累计缴费的住宿费']:config.kind==='unread'?['未读消息通知']:['待缴费账单数量'];
    preview=preview.replaceAll('current time',labels[0]).replaceAll('callback fired',labels[1]??'');
    preview=preview.replace(/(window\.demos[\s\S]*?\}\) \{)[\s\S]*?(\n\}\s*<\/script>)/,
     `$1\nreturn window.dormaStudentPreviews.finance(ctx, {animate, createTimer, utils}, '${config.kind}');$2`);

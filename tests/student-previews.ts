@@ -54,6 +54,9 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
      await expect.poll(async()=>(await live.locator('code [data-char]').allTextContents()).join('')).toBe('13912345678');
      await page.unroute('**/api/v1/profile');
     }
+   }else if(config.kind==='unread'){
+    const unread=await (await context.request.get(origin+'/api/v1/notifications?unread=true&limit=1')).json();
+    await expect(live.locator('.value')).toHaveText(String(unread.meta.total));
    }else if(config.kind){
     const expected=config.kind==='unpaid'?[String(summary.unpaidCount)]:config.kind==='latest'?[Number(summary.latestUtility).toFixed(2),Number(summary.latestAccommodation).toFixed(2)]:[Number(summary.paidUtility).toFixed(2),Number(summary.paidAccommodation).toFixed(2)];
     await expect.poll(()=>live.locator('.value').allTextContents(),{timeout:10000}).toEqual(expected);

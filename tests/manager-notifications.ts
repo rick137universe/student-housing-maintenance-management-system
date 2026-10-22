@@ -22,7 +22,7 @@ export async function managerNotificationRegression(browser:Browser,origin:strin
   const created=await call(admin,'accounts',{username,fullName:'宿管消息回归',role:'dormManager',password});
   const manager=await login(owner,username);
   await page.goto(origin+base);await expect(frame.locator('[data-dorma-empty-state] .notice.info')).toHaveText('暂无记录。');
-  await expect.poll(async()=>(await frame.locator('.docs-demo.is-active .docs-demo-live p [data-char]').allTextContents()).join('')).toBe('Messages消息通知');
+  await expect(frame.locator('.docs-demo.is-active .docs-demo-live .label')).toHaveText('未读消息通知');
   await expect(frame.locator('[data-dorma-manager-business-host]')).toHaveCount(0);
   await call(admin,'authorizations',{accountId:created.accountId,buildingId:'NY3'});
   await call(admin,'students',{student_number:number,full_name:'宿管消息来源',gender:'male',college:'计算机学院',grade:'2026',password});

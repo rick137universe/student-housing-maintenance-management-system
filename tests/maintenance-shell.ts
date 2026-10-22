@@ -47,7 +47,7 @@ export async function verifyMaintenanceShell(){
    const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
    if(entry.action!=='overview'){
     if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'));
-    else assert(preview.includes('Messages<br>')&&preview.includes('消息通知')&&preview.includes('square-grid'));
+    else assert(preview.includes('未读消息通知')&&preview.includes('createTimer')&&preview.includes("'unread'"));
    }
   }
  }
