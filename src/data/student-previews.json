@@ -1,0 +1,20 @@
+[
+  {"url":"/workspace/student/personal/profile","source":"getting-started-installation","kind":"username"},
+  {"url":"/workspace/student/personal/edit-profile","source":"getting-started-installation","kind":"phone"},
+  {"url":"/workspace/student/personal/change-password","source":"getting-started-installation","kind":"password"},
+  {"url":"/workspace/student/accommodation/check-in","source":"getting-started"},
+  {"url":"/workspace/student/accommodation/check-in/submit","source":"animation-tween-value-types-function-based"},
+  {"url":"/workspace/student/accommodation/check-in/records","source":"animation-targets-dom-elements"},
+  {"url":"/workspace/student/accommodation/room-change","source":"getting-started"},
+  {"url":"/workspace/student/accommodation/room-change/submit","source":"animation-tween-parameters-to"},
+  {"url":"/workspace/student/accommodation/room-change/records","source":"animation-tween-value-types-numerical-value"},
+  {"url":"/workspace/student/accommodation/check-out","source":"getting-started"},
+  {"url":"/workspace/student/accommodation/check-out/submit","source":"animation-tween-parameters-from"},
+  {"url":"/workspace/student/accommodation/check-out/records","source":"animation-keyframes-tween-values-keyframes"},
+  {"url":"/workspace/student/payment/bills","source":"timer","kind":"latest"},
+  {"url":"/workspace/student/payment/online-payment","source":"timer-timer-playback-settings-delay","kind":"unpaid"},
+  {"url":"/workspace/student/payment/payment-history","source":"timer","kind":"paid"},
+  {"url":"/workspace/student/repair/requests","source":"getting-started"},
+  {"url":"/workspace/student/repair/progress","source":"getting-started"},
+  {"url":"/workspace/student/repair/reviews","source":"getting-started"}
+]

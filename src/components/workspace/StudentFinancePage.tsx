@@ -155,6 +155,7 @@ function FinanceContent({data,entry,record,page,listUrl,paymentStep,navigate}:{d
       {paymentStep&&canPay?<PaymentForm bill={detail} onCancel={()=>navigate(detailUrl)} onSaved={async()=>{
         data.invalidate();
         await Promise.all([data.load(path,true),data.prefetchLists()]);
+        root.current?.ownerDocument.dispatchEvent(new Event('dorma-finance-saved'));
         if(active.current)navigate(detailUrl);
       }}/>:<><FinanceValues row={detail} fields={paymentStep?checkoutFields:payments?paymentFields:billFields}/>{paymentStep&&<p>账单已缴清。</p>}</>}
     </>)}

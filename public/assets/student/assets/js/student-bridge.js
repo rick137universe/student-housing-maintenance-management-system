@@ -1,7 +1,9 @@
 import entries from './student-entries.js';
+import {studentPreviews} from './student-preview-data.js';
 import { c as CopyButton } from './chunks/chunk-WQVFBASJ.js';
 import { m as waapi, o as utils } from './chunks/chunk-WXAKRBIO.js';
 const requested = new URLSearchParams(location.search).get('entry');
+window.dormaStudentPreviews = studentPreviews;
 const initial = entries.find(entry => entry.id === requested) ?? entries[0];
 const active = document.querySelector(`#docs-sidebar li > a[data-id="${initial.id}"]`);
 for (let item = active?.parentElement; item && item.id !== 'docs-sidebar'; item = item.parentElement) {
