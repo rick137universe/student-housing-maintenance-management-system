@@ -12,7 +12,7 @@
   {"url":"/workspace/student/accommodation/check-out/submit","source":"animation-tween-parameters-from"},
   {"url":"/workspace/student/accommodation/check-out/records","source":"animation-keyframes-tween-values-keyframes"},
   {"url":"/workspace/student/payment/bills","source":"timer","kind":"latest"},
-  {"url":"/workspace/student/payment/online-payment","source":"timer-timer-playback-settings-delay","kind":"unpaid"},
+  {"url":"/workspace/student/payment/online-payment","source":"timer-timer-playback-settings-duration","kind":"unpaid"},
   {"url":"/workspace/student/payment/payment-history","source":"timer","kind":"paid"},
   {"url":"/workspace/student/repair/requests","source":"getting-started"},
   {"url":"/workspace/student/repair/requests/submit","source":"utilities-stagger"},

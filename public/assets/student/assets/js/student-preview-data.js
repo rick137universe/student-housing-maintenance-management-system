@@ -63,8 +63,8 @@ export const studentPreviews = {
         element.textContent = format(0);
         if (!target) return;
         if (count) {
-          animations.push(createTimer({delay: 2000, duration: 1200,
-            onUpdate: self => { element.textContent = format(target * Math.min(1, Math.max(0, self.currentTime / 1200))); },
+          animations.push(createTimer({duration: 2000,
+            onUpdate: self => { element.textContent = format(target * Math.min(1, Math.max(0, self.currentTime / 2000))); },
             onComplete: () => { element.textContent = format(target); }}));
         } else {
           const state = {value: 0};
