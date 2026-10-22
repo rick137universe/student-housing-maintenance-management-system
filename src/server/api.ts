@@ -8,6 +8,7 @@ import { submitAccommodation, reviewAccommodation, accommodationBedOptions, subm
 import { profile, changeProfile, changePassword, verifyCurrentPassword, accountWrite, permissionWrite, authorizationWrite, adminSetting, announcementWrite, billWrite, billReview, statistics, importCsv, encodeCsv } from './system';
 import { backupPolicy, enqueueBackup, health } from './tasks';
 import {studentFinancePreview} from './student-finance-preview';
+import {navigationAttention,navigationRead} from './navigation';
 
 const cookie=(value:string,request:Request,clear=false)=>`dorma_session=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${clear?0:28800}${new URL(process.env.APP_ORIGIN??request.url).protocol==='https:'?'; Secure':''}`;
 function response(data:unknown,extra:HeadersInit={},status=200){return Response.json(data,{status,headers:{'Cache-Control':'no-store',...extra}});}
@@ -58,6 +59,8 @@ export async function handle(request:Request,path:string[]) {
    if(id==='password'&&!action&&method==='POST')return response({data:await changePassword(account,body)},{'Set-Cookie':cookie('',request,true)});
    if(method==='PATCH')return response({data:await changeProfile(account,body)});
   }
+  if(resource==='navigation'&&!id&&method==='GET')return response({data:await navigationAttention(account)});
+  if(resource==='navigation'&&id==='read'&&!action&&method==='POST')return response({data:await navigationRead(account,body)});
   if(resource==='statistics'&&id==='student-finance'&&!action&&method==='GET')return response({data:await studentFinancePreview(account)});
   if(resource==='statistics'&&method==='GET'){const stats=await statistics(account,params);if(id==='export'){
    const rows:Row[]=[...Object.entries(stats.repairs).map(([metric,value])=>({category:'报修统计',object:'汇总',metric,value})),{category:'欠费统计',object:'汇总',metric:'outstandingAmount',value:stats.outstandingAmount}];

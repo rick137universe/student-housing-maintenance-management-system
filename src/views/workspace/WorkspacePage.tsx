@@ -16,6 +16,7 @@ import {MaintenanceDocsPage} from './MaintenanceDocsPage';
 import {adminPages} from '@/data/admin-pages';
 import {AdminDocsPage} from './AdminDocsPage';
 import {workspaceActionId} from '@/data/workspace-paths';
+import {useNavigationAttention} from '@/components/workspace/useNavigationAttention';
 
 const validRoles: RoleId[] = ['student', 'dormManager', 'maintenance', 'admin'];
 
@@ -27,6 +28,7 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   const leavingRef=useRef(false),[leaving,setLeaving]=useState(false);
   const docsLogout=useCallback(()=>{leavingRef.current=true;setLeaving(true);void refresh().then(()=>router.push('/'));},[refresh,router]);
   const role = validRoles.includes(params.role as RoleId) ? params.role as RoleId : null;
+  useNavigationAttention(account,role);
   const feature = role && params.feature ? featureFor(role, params.feature) : undefined;
   const nestedAction=role&&feature?workspaceActionId(role,feature.id,pathname.split('/').slice(4).join('/')):'';
   const actionId = nestedAction.split('/')[0];

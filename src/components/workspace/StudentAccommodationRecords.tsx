@@ -1,4 +1,5 @@
 'use client';
+import {NavigationReceipt} from './NavigationReceipt';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -115,4 +116,4 @@ function RecordsContent({entry,data,record,page,listUrl,navigate}:{entry:Student
     </>:detail&&<RecordValues row={detail} fields={detailFields}/>)}
   </div>;
 }
-function RecordValues({row,fields}:{row:StudentRow;fields:ReadonlyArray<readonly [string,string]>}){return <div data-dorma-accommodation-values>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(key,row[key])}</code></pre></Fragment>)}</div>;}
+function RecordValues({row,fields}:{row:StudentRow;fields:ReadonlyArray<readonly [string,string]>}){return <div data-dorma-accommodation-values><NavigationReceipt row={row}/>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{display(key,row[key])}</code></pre></Fragment>)}</div>;}

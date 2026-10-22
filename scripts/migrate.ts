@@ -12,7 +12,7 @@ try {
   const tableCount = Number((await client.query("SELECT count(*) FROM information_schema.tables WHERE table_schema='housing' AND table_type='BASE TABLE'")).rows[0].count);
   if (tableCount < 20) throw new Error('现有 housing 初始化结构不完整，迁移已停止');
   await client.query(`CREATE TABLE IF NOT EXISTS housing.schema_migrations(version text PRIMARY KEY,checksum char(64) NOT NULL,applied_at timestamptz NOT NULL DEFAULT now())`);
-  for (const version of ['003_backend','004_resource_guards','005_metadata','006_account_usernames']) {
+  for (const version of ['003_backend','004_resource_guards','005_metadata','006_account_usernames','007_navigation_reads']) {
     const sql = await readFile(`database/migrations/${version}.sql`,'utf8');
     const checksum = createHash('sha256').update(sql).digest('hex');
     const old = (await client.query('SELECT checksum FROM housing.schema_migrations WHERE version=$1',[version])).rows[0];

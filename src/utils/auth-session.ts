@@ -9,5 +9,6 @@ export async function api<T = unknown>(path:string,options:RequestInit={}):Promi
  const response=await fetch('/api/v1/'+path,{...options,headers,credentials:'same-origin',cache:'no-store'});
  const result=await response.json();
  if(!response.ok){if(response.status===401)saveAuthSession(null);throw new Error(result.error?.message+(result.error?.fieldErrors?'：'+Object.entries(result.error.fieldErrors).map(([field,errors])=>`${field} ${Array.isArray(errors)?errors.join('、'):errors}`).join('；'):'')||'请求失败');}
+ if(options.method&&options.method!=='GET'&&!path.startsWith('navigation/')&&typeof window!=='undefined')window.dispatchEvent(new Event('dorma-business-saved'));
  return result;
 }

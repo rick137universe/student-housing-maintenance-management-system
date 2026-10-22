@@ -1,4 +1,5 @@
 'use client';
+import {NavigationReceipt} from './NavigationReceipt';
 
 import {DocsPagination} from './DocsPagination';
 
@@ -109,7 +110,7 @@ function NoticeContent({entry,data,record,page,navigate,workspaceTitle,contentCh
    })}</ul>
    {!rows.length&&<StudentEmptyState/>}
    <DocsPagination page={page} total={total} pageUrl={next=>entry.url+(next>1?'?page='+next:'')} navigate={navigate}/>
-  </>:detail&&<div data-dorma-announcement-body>
+  </>:detail&&<div data-dorma-announcement-body>{!notification&&<NavigationReceipt row={detail}/>}
    <p><code>{date(detail[notification?'created_at':'published_at'])}</code>{notification&&<> <code>{detail.read_at?'已读':'未读'}</code></>}</p>
    {paragraphs.map((paragraph,index)=><p key={index}>{paragraph.split('\n').map((line,lineIndex)=><Fragment key={lineIndex}>{lineIndex>0&&<br/>}{line}</Fragment>)}</p>)}
   </div>)}

@@ -1,48 +1,44 @@
 import assert from 'node:assert/strict';
-import {expect, type Browser} from '@playwright/test';
+import {expect,type Browser} from '@playwright/test';
 import {studentPages} from '../src/data/student-pages';
-
-export async function studentNavigationBadgeRegression(browser:Browser, origin:string){
- const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage();
- const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
- let bills=1,reminders=1,messages=2,status=200;
- const entry=(feature:string,action:string)=>studentPages.find(entry=>entry.feature===feature&&entry.action===action)!;
- const link=(feature:string,action:string)=>page.locator(`#docs-sidebar a[data-id="${entry(feature,action).id}"]`);
- const badge=(feature:string,action:string)=>link(feature,action).locator('[data-student-new]');
- const refresh=async(event='dorma-notifications-saved')=>{await page.evaluate(event=>document.dispatchEvent(new Event(event)),event);};
- const check=async()=>{
-  for(const [feature,action,visible] of [
-   ['payment','overview',bills>0],['payment','action-1',bills>0],['payment','action-2',bills>0],
-   ['announcements','overview',reminders>0],['announcements','action-2',reminders>0],
-   ['notifications','overview',messages>0],['notifications','action-1',messages>0],
-  ] as const)await expect(badge(feature,action)).toHaveCount(visible?1:0);
-  for(const [feature,action] of [['payment','action-3'],['announcements','action-1'],['personal','overview']])await expect(badge(feature,action)).toHaveCount(0);
- };
+export async function studentNavigationBadgeRegression(browser:Browser,origin:string,password:string){
+ const context=await browser.newContext({viewport:{width:1440,height:1000}});
  try{
-  await page.route('**/api/v1/bills?*',route=>{
-   const params=new URL(route.request().url()).searchParams;assert.equal(params.get('unpaid'),'true');assert.equal(params.get('limit'),'1');
-   return route.fulfill({status,json:{data:bills?[{bill_id:'1'}]:[],meta:{total:bills}}});
-  });
-  await page.route('**/api/v1/notifications?*',route=>{
-   const params=new URL(route.request().url()).searchParams;assert.equal(params.get('unread'),'true');assert.equal(params.get('limit'),'1');
-   const total=params.get('type')==='payment-reminder'?reminders:messages;
-   return route.fulfill({status,json:{data:total?[{notification_id:'1'}]:[],meta:{total}}});
-  });
-  await page.goto(origin+'/assets/student/index.html');await check();
-  await link('payment','overview').click();
-  await expect(page.locator('.docs-demo.is-active')).toHaveAttribute('data-id',entry('payment','overview').id);
-  await expect(badge('payment','overview')).toHaveClass('badge');await expect(badge('payment','overview')).toBeVisible();
-  bills=0;await refresh('dorma-finance-saved');await check();
-  reminders=0;messages=1;await refresh();await check();
-  messages=0;await refresh();await check();
-  bills=1;messages=1;await refresh();await check();
-  status=503;await refresh();await page.waitForTimeout(350);await check();
-  status=200;bills=0;messages=0;await refresh();await check();
-  bills=1;messages=1;await refresh();await check();
-  status=401;bills=0;messages=0;await refresh();await check();
-  await page.reload();await check();
-  await page.setViewportSize({width:390,height:844});await check();
-  assert.deepEqual(errors,[]);
-  console.log('学生导航 NEW：账单与父目录、未读提醒与消息、缴清/已读更新、错误恢复、会话失效和去重通过。');
+  assert.equal((await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username:'stu202602341',password}})).status(),200);
+  const page=await context.newPage();let active=true;
+  const notice=(await (await context.request.get(origin+'/api/v1/announcements?limit=1')).json()).data[0];
+  await page.goto(origin+'/workspace/student/announcements/notices?record='+notice.announcement_id);
+  const detailFrame=page.frameLocator('[data-dorma-student-frame]');
+  await expect(detailFrame.locator('[data-dorma-announcement-body]')).toBeVisible();
+  await expect.poll(async()=>{
+   const result=await (await context.request.get(origin+'/api/v1/announcements?fresh=true&limit=100')).json();
+   return result.data.some((row:{announcement_id:string})=>row.announcement_id===notice.announcement_id);
+  }).toBe(false);
+  await page.route('**/api/v1/navigation',route=>route.fulfill({json:{data:[{feature:'payment',actions:['action-1','action-2'],active},{feature:'repair',actions:['action-3','action-3/submit'],active}]}}));
+  await page.goto(origin+'/workspace/student');const frame=page.frameLocator('[data-dorma-student-frame]');
+  const badge=(feature:string,action:string)=>frame.locator(`#docs-sidebar a[data-id="${studentPages.find(e=>e.feature===feature&&e.action===action)!.id}"] [data-student-new]`);
+  await expect(badge('payment','overview')).toHaveCount(1);await expect(badge('payment','action-1')).toHaveCount(1);
+  await expect(badge('repair','overview')).toHaveCount(1);await expect(badge('repair','action-3/submit')).toHaveCount(1);
+  await expect(badge('payment','action-3')).toHaveCount(0);
+  active=false;await page.evaluate(()=>window.dispatchEvent(new Event('dorma-navigation-refresh')));
+  await expect(frame.locator('[data-student-new]')).toHaveCount(0);
+  active=true;await page.evaluate(()=>window.dispatchEvent(new Event('dorma-business-saved')));await expect(badge('payment','overview')).toHaveCount(1);
+  await page.setViewportSize({width:390,height:844});await expect(badge('payment','overview')).toHaveCount(1);
+  console.log('导航 NEW：学生待缴/待评价、父目录聚合、操作后刷新与移动端通过。');
  }finally{await context.close();}
+}
+
+export async function navigationRoleRegression(browser:Browser,origin:string,password:string){
+ for(const [role,username] of [['student','stu202602341'],['dormManager','dm0301'],['maintenance','mt008'],['admin','admin']]){
+  const context=await browser.newContext();
+  try{
+   assert.equal((await context.request.post(origin+'/api/v1/auth/login',{headers:{Origin:origin},data:{username,password}})).status(),200);
+   const signals=(await (await context.request.get(origin+'/api/v1/navigation')).json()).data;
+   const page=await context.newPage();await page.goto(origin+'/workspace/'+role);
+   const frame=page.frameLocator('iframe[data-dorma-'+({dormManager:'manager'}[role as 'dormManager']??role)+'-frame]');
+   for(const signal of signals.filter((s:{active:boolean})=>s.active))await expect(frame.locator(`#docs-sidebar a[href="/workspace/${role}/${signal.feature}"] .badge`)).toHaveCount(1);
+   if(role==='student')await page.screenshot({path:'temp/navigation-student-expanded.png'});
+  }finally{await context.close();}
+ }
+ console.log('四端真实导航标记与详情阅读确认通过。');
 }

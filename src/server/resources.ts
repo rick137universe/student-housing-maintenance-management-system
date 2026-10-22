@@ -116,6 +116,20 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  default:throw new AppError(404,'NOT_FOUND','接口不存在');
  }
  await authorize(account,resource,'read');
+ const versioned=['announcements','maintenance','backups'].includes(kind);
+ const relatedColumn=({repairs:'repair_id',applications:'application_id',changes:'change_id'} as Record<string,string>)[kind];
+ if(versioned){
+  columns+=`,md5(to_jsonb(x)::text) navigation_version,'${kind}' navigation_resource,${key} navigation_id`;
+  if(params.get('fresh')==='true')condition+=` AND NOT EXISTS(SELECT 1 FROM navigation_reads nr WHERE nr.account_id=${add(account.id)} AND nr.resource='${kind}' AND nr.record_id=${key} AND nr.version=md5(to_jsonb(x)::text))`;
+ }
+ if(params.get('unchecked')==='true'&&kind==='bills')condition+=' AND x.checked_at IS NULL';
+ if(kind==='notifications'){
+  const related=params.get('related');
+  if(related==='repair')condition+=' AND x.repair_id IS NOT NULL';
+  if(related==='application')condition+=' AND x.application_id IS NOT NULL';
+  if(related==='transfer'||related==='checkout')condition+=` AND EXISTS(SELECT 1 FROM accommodation_changes ac WHERE ac.change_id=x.change_id AND ac.business_type=${add(related)})`;
+  if(params.get('repairStatus'))condition+=` AND EXISTS(SELECT 1 FROM repair_requests rr WHERE rr.repair_id=x.repair_id AND rr.repair_status=ANY(${add(params.get('repairStatus')!.split(','))}::text[]))`;
+ }
  if(id)condition+=` AND ${key}=${add(id)}`;
  if(kind==='permissions')for(const field of ['role','resource','operation']){const value=params.get(field);if(value)condition+=` AND x.${field}=${add(value)}`;}
  if(kind==='authorizations')for(const field of ['account_id','building_id']){const value=params.get(field);if(value)condition+=` AND x.${field}=${add(value)}`;}
@@ -132,6 +146,7 @@ export async function listResource(account:Account,kind:string,params:URLSearchP
  for(const [filter,op] of [['from','>='],['to','<']] as const){const value=params.get(filter);if(value&&dateColumn[kind]){z.iso.date().parse(value);condition+=` AND ${dateColumn[kind]} ${op} ${add(value)}::date${filter==='to'?"+interval '1 day'":''}`;}}
  const page=z.coerce.number().int().min(1).parse(params.get('page')??1);const limit=z.coerce.number().int().min(1).max(100).parse(params.get('limit')??20);
  const total=Number((await query(`SELECT count(*) FROM ${from} WHERE ${condition}`,values)).rows[0].count);
+ if(relatedColumn&&account.role==='student')columns+=`,(SELECT COALESCE(max(n.notification_id),0)::text FROM notifications n WHERE n.recipient_account_id=${add(account.id)} AND n.${relatedColumn}=${key}) navigation_version,'${kind}' navigation_resource,${key} navigation_id`;
  const rows=(await query(`SELECT ${columns} FROM ${from} WHERE ${condition} ORDER BY ${key} DESC${kind==='permissions'?',x.resource DESC,x.operation DESC':kind==='authorizations'?',x.building_id DESC':''} LIMIT ${add(id?1:limit)} OFFSET ${add(id?0:(page-1)*limit)}`,values)).rows;
  if(id){requireValue(rows[0],'记录不存在或不可访问',404);return {data:rows[0]};}
  return {data:rows,meta:{page,limit,total}};

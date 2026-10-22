@@ -1,4 +1,5 @@
 'use client';
+import {NavigationReceipt} from './NavigationReceipt';
 
 import {StudentWarning} from './StudentWarning';
 import {StudentEmptyState} from './StudentEmptyState';
@@ -16,7 +17,7 @@ export function repairValue(key:string,value:unknown):string{
  return valueLabels[String(value)]??String(value);
 }
 export function RepairArrow(){return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon"><g fill="none" fillRule="evenodd"><polygon fill="currentColor" fillRule="nonzero" points="17.737 11.987 12.5 17.225 11.263 15.987 14.388 12.862 6.5 12.862 6.5 11.112 14.388 11.112 11.263 7.987 12.5 6.75"/></g></svg>;}
-export function RepairValues({row,fields}:{row:StudentRow;fields:ReadonlyArray<readonly [string,string]>}){return <div data-dorma-repair-values>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{repairValue(key,row[key])}</code></pre></Fragment>)}</div>;}
+export function RepairValues({row,fields}:{row:StudentRow;fields:ReadonlyArray<readonly [string,string]>}){return <div data-dorma-repair-values><NavigationReceipt row={row}/>{fields.map(([key,label])=><Fragment key={key}><h3>{label}</h3><pre><code className="hljs language-plaintext">{repairValue(key,row[key])}</code></pre></Fragment>)}</div>;}
 
 const historyFields=[['created_at','处理时间'],['status','状态'],['actor_name','处理人员'],['description','处理说明']] as const;
 export function RepairHistory({history,title='处理过程'}:{history:StudentRow[];title?:string}){

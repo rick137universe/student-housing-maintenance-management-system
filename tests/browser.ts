@@ -207,7 +207,7 @@ export async function browserRegression(origin:string,password:string,database:P
    await context.close();
   }
   await studentPreviewRegression(browser,origin,password);
-  await studentNavigationBadgeRegression(browser,origin);
+  await studentNavigationBadgeRegression(browser,origin,password);
   await studentDocsRegression(browser,origin,password);
   await managerShellRegression(browser,origin,password);
   await managerPersonalRegression(browser,origin,password);
