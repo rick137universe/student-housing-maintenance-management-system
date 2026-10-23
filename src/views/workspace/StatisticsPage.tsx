@@ -21,7 +21,7 @@ export function StatisticsPage({account,onReady}:{account:Account;onReady?:()=>v
  useEffect(()=>{if(!target)return;const doc=target.ownerDocument;const click=(event:MouseEvent)=>{const node=(event.target as Element).closest('a,button');if(!node)return;
   if(node.closest('#toggle-site-menu')){doc.querySelector('#site-menu')?.classList.toggle('is-active');return;}
   if(node.closest('[data-dorma-account]')){event.preventDefault();void api('auth/logout',{method:'POST',body:'{}'}).then(()=>{saveAuthSession(null);router.push('/');});return;}
-  if(event.defaultPrevented||node.tagName!=='A'||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0)return;const a=node as HTMLAnchorElement,url=new URL(a.href);if(url.origin===location.origin){event.preventDefault();router.push(url.pathname+url.search,{scroll:false});}
+  if(event.defaultPrevented||node.tagName!=='A'||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0)return;const a=node as HTMLAnchorElement,url=new URL(a.href);if(url.origin===location.origin){event.preventDefault();doc.querySelector('#site-menu')?.classList.remove('is-active');router.push(url.pathname+url.search,{scroll:false});}
  };doc.addEventListener('click',click);return()=>doc.removeEventListener('click',click);},[target,router]);
  return <main className={s.page}><iframe ref={frame} onLoad={ready} className={s.frame} data-dorma-statistics-frame src="/assets/statistics/index.html" title="统计可视化"/>{target&&createPortal(<StatisticsContent/>,target)}</main>;
 }

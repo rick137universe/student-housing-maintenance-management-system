@@ -25,3 +25,6 @@ html,body{min-height:100%;background:var(--hex-bg-1)}
 #easings-navigation .easing-curve-link span{flex-shrink:0}#easings-navigation .easing-curve-link .metric-value{padding-bottom:10px}
 html{color-scheme:dark;scrollbar-color:var(--hex-bg-5) var(--hex-bg-1)}
 #easing-editor .ui-selectable:focus-visible{outline:2px solid var(--hex-current-1);outline-offset:-2px}
+/* The statistics shell uses the native menu without the easing editor's JS. */
+@media(max-width:1199px){#site-header:has(#site-menu.is-active){z-index:5}#site-menu{transition:transform .25s cubic-bezier(.5,0,.5,1)}#site-menu.is-active{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){#site-menu{transition:none}}

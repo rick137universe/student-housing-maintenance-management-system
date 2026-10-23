@@ -1,6 +1,6 @@
 # 统计可视化
 
-入口：管理员端 → 统计报表 → 统计可视化（`/workspace/admin/reports/visualization`）。
+入口：管理员端 → 统计报表 → 统计可视化（`/workspace/admin/reports/visualization`）；管理员顶部导航及统计页面也提供位于“工作台”右侧的“统计”快捷入口，沿用母版 EASINGS 曲线图标，目录入口同时保留。
 
 页面直接使用 [Anime.js easing-editor](https://animejs.com/easing-editor) 的三栏布局样式：`public/assets/statistics/easings.css` 为官方 `assets/css/easings.css?v=1787698626` 的原文件。指标卡片复用 `easing-curve-items`，中栏复用 `easing-pane`、点状绘图背景、参数控件布局及底部刻度区域，右栏复用 Preview 网格、Export 页签布局和母版刷新/播放图标。顶栏、页脚、LOGO、英文及中文字体沿用项目已有素材。没有加载母版的广告、分析脚本或缓动编辑逻辑。
 

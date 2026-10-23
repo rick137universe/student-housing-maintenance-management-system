@@ -58,6 +58,8 @@ let shell=index.replace(/<title>[^<]*<\/title>/,'<title>管理员工作台 | FLi
  .replaceAll('搜索学生服务','搜索管理功能')
  .replace("demos: '/assets/student/assets/html/student-demos.html'","demos: '/assets/admin/demos.html'")
  .replace('./assets/js/student-bridge.js','/assets/admin/bridge.js');
+const statisticsNavigation=(await readFile('public/assets/statistics/index.html','utf8')).match(/<li><a[^>]*data-dorma-statistics-link=""[^>]*>[\s\S]*?<\/a><\/li>/)![0].replace(' is-active','');
+shell=shell.replace(/<li><a class="main-nav-link[^"]*"[^>]*title="工作台"[^>]*>[\s\S]*?<\/a><\/li>/,item=>item+statisticsNavigation);
 shell=shell.replace('window.paths = {','window.dormaDocumentationRoutes = '+JSON.stringify(routes)+';\n  window.paths = {');
 await writeFile(root+'index.html',shell);
 await writeFile(root+'entries.js','const entries = '+JSON.stringify(adminPages,null,2)+';\nexport default entries;\n');
