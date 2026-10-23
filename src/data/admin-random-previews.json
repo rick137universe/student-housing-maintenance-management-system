@@ -17,11 +17,11 @@
   },
   {
     "url": "/workspace/admin/base-data/import",
-    "source": "animation-keyframes-tween-values-keyframes"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid"
   },
   {
     "url": "/workspace/admin/base-data/export",
-    "source": "animation-tween-value-types-function-based"
+    "source": "utilities-stagger-stagger-parameters-stagger-from"
   },
   {
     "url": "/workspace/admin/process/bed-assignment/edit",
@@ -29,7 +29,7 @@
   },
   {
     "url": "/workspace/admin/process/accommodation/edit",
-    "source": "animation-tween-parameters-to"
+    "source": "utilities-stagger-stagger-parameters-stagger-modifier"
   },
   {
     "url": "/workspace/admin/process/payment/edit",
@@ -53,7 +53,7 @@
   },
   {
     "url": "/workspace/admin/reports/maintenance/filter",
-    "source": "animation-tween-value-types-numerical-value"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid-axis"
   },
   {
     "url": "/workspace/admin/reports/export",
@@ -77,11 +77,11 @@
   },
   {
     "url": "/workspace/admin/permissions/roles/authorize",
-    "source": "animation-tween-parameters-to"
+    "source": "utilities-stagger-values-staggering"
   },
   {
     "url": "/workspace/admin/permissions/roles/authorizations",
-    "source": "animation-keyframes-tween-values-keyframes"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid-axis"
   },
   {
     "url": "/workspace/admin/permissions/audit",
@@ -93,7 +93,7 @@
   },
   {
     "url": "/workspace/admin/backup/policies/records",
-    "source": "utilities-stagger-values-staggering"
+    "source": "utilities-stagger-stagger-parameters-stagger-from"
   },
   {
     "url": "/workspace/admin/backup/tasks/submit",
@@ -105,11 +105,11 @@
   },
   {
     "url": "/workspace/admin/backup/restore",
-    "source": "web-animation-api-api-differences-with-native-waapi-iterations"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid"
   },
   {
     "url": "/workspace/admin/billing/generate/submit",
-    "source": "animation-tween-parameters-from"
+    "source": "utilities-stagger-stagger-parameters-stagger-jitter"
   },
   {
     "url": "/workspace/admin/billing/generate/records",
@@ -121,11 +121,11 @@
   },
   {
     "url": "/workspace/admin/billing/manage/records",
-    "source": "utilities-stagger-values-staggering"
+    "source": "utilities-stagger-stagger-parameters-stagger-ease"
   },
   {
     "url": "/workspace/admin/billing/payments",
-    "source": "web-animation-api-improvements-to-the-web-animation-api-individual-property-parameters"
+    "source": "utilities-stagger-stagger-value-types-range-value"
   },
   {
     "url": "/workspace/admin/announcements/publish/submit",

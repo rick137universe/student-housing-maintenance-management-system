@@ -25,13 +25,14 @@ export async function verifyAdminShell(){
  }
  assert.equal(adminPreviews.length,14);
  const candidates=new Set([...studentPreviews,...managerPreviews,...maintenancePreviews].filter(config=>!('kind' in config)&&!config.source.startsWith('getting-started')&&!config.source.startsWith('text-')&&!config.source.startsWith('timer')).map(config=>config.source));
+ for(const source of ['utilities-stagger-values-staggering','utilities-stagger-stagger-value-types-range-value',...['from','ease','grid','grid-axis','modifier','jitter'].map(name=>'utilities-stagger-stagger-parameters-stagger-'+name)])candidates.add(source);
  const unassigned=adminPages.filter(page=>page.action!=='overview'&&!['personal','notifications'].includes(page.feature)&&!adminPreviews.some(config=>config.url===page.url));
  assert.equal(adminRandomPreviews.length,unassigned.length);
  assert.equal(new Set(adminRandomPreviews.map(config=>config.url)).size,unassigned.length);
  const originals=await readFile('public/assets/student/assets/html/documentation-demos.html','utf8');
  for(const config of adminRandomPreviews){
   const entry=unassigned.find(page=>page.url===config.url);assert(entry,'随机分配只覆盖尚未指定样式的管理员子页面');
-  assert(candidates.has(config.source),'随机样式应来自其他三端已选的图形动画，排除点阵、双语文字和数字框');
+  assert(candidates.has(config.source),'随机样式应来自已选图形动画或指定 Stagger 动画，排除点阵、双语文字和数字框');
   const source=originals.match(new RegExp(`<article[^>]*data-id="${config.source}"[\\s\\S]*?</article>`))?.[0];assert(source);
   const expected=source.replaceAll(config.source,entry.id).replace(/data-color="[^"]+"/,`data-color="${entry.color}"`).replace(/(<h2 class="text-ui">)[\s\S]*?<\/h2>/,`$1${entry.label}</h2>`).replace(/[ \t]+$/gm,'');
   const actual=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))?.[0];
