@@ -65,7 +65,7 @@ export async function adminShellRegression(browser:Browser,origin:string,passwor
   await expectStudentReveal(page,()=>frame.locator('[data-student-module-links] a').first().click(),'基础数据',selector);await ready(entry('base-data'));
   for(const group of adminPages.filter(entry=>entry.action==='overview'&&entry.feature!=='overview')){
    await frame.locator(`#docs-sidebar a[data-id="${group.id}"]`).click();await ready(group);
-   for(const item of adminPages.filter(entry=>entry.feature===group.feature&&entry.action!=='overview')){await frame.locator(`#docs-sidebar a[data-id="${item.id}"]`).click();await ready(item);await expect(frame.locator(`#docs-sidebar a[data-id="${item.id}"]`).locator('..')).toHaveClass(/is-active/);}
+   for(const item of adminPages.filter(entry=>entry.feature===group.feature&&entry.action!=='overview'&&entry.url!=='/workspace/admin/reports/visualization')){await frame.locator(`#docs-sidebar a[data-id="${item.id}"]`).click();await ready(item);await expect(frame.locator(`#docs-sidebar a[data-id="${item.id}"]`).locator('..')).toHaveClass(/is-active/);}
   }
   assert(await shell!.evaluate(el=>el.isConnected),'目录切换应保留当前母版外壳');
   await frame.locator('#toggle-search').click();await frame.locator('#docs-search-input').fill('权限审计');await frame.locator('#docs-search-results a').first().click();await ready(entry('permissions','action-3'));

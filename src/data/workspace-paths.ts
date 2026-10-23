@@ -29,7 +29,7 @@ export const workspaceActionPaths:Record<string,Record<string,readonly string[]>
   'base-data':['manage','import','export'],
   process:['bed-assignment','accommodation','payment','repair'],
   dispatch:['pending','automatic','progress'],
-  reports:['operations','maintenance','export'],
+  reports:['operations','maintenance','export','visualization'],
   permissions:['accounts','roles','audit'],
   backup:['policies','tasks','restore'],
   billing:['generate','manage','payments'],

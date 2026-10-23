@@ -1,5 +1,9 @@
 [
   {
+    "url": "/workspace/admin/reports/visualization",
+    "source": "animation-keyframes-tween-values-keyframes"
+  },
+  {
     "url": "/workspace/admin/process/repair/edit",
     "source": "animation-tween-parameters-to"
   },

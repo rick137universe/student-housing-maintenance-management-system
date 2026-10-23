@@ -45,7 +45,7 @@ export const roleFeatures: Record<RoleId, RoleFeature[]> = {
     feature('base-data', '01', '基础数据', 'BASE DATA', '全校基础信息分层展开并保持同步。', '#ff4f64', 'data', 'base', ['数据维护', '批量导入', '数据导出']),
     feature('process', '02', '流程管控', 'PROCESS', '规则闸门决定业务如何继续流转。', '#ffad24', 'rules', 'accommodation', ['分床规则', '住宿流程', '缴费流程', '报修流程']),
     feature('dispatch', '03', '报修派工', 'DISPATCH', '工单从中心分流到匹配的维修节点。', '#b8ff42', 'dispatch', 'repair', ['待派工', '智能派工', '进度监控']),
-    feature('reports', '04', '统计报表', 'REPORTS', '运营指标被压缩为清晰的线与弧。', '#00e7c4', 'analytics', 'analytics', ['运营统计', '维修统计', '导出报表']),
+    feature('reports', '04', '统计报表', 'REPORTS', '运营指标被压缩为清晰的线与弧。', '#00e7c4', 'analytics', 'analytics', ['运营统计', '维修统计', '导出报表', '统计可视化']),
     feature('permissions', '05', '权限管理', 'ACCESS', '四种身份只连接各自被授权的功能。', '#50a8ff', 'permissions', 'system', ['用户账号', '角色权限', '权限审计']),
     feature('backup', '06', '备份恢复', 'BACKUP', '数据环完成复制，也能沿时间轴返回。', '#a889ff', 'backup', 'system', ['备份策略', '立即备份', '数据恢复']),
     feature('billing', '07', '账单管理', 'BILLING', '生成、维护账单并核对缴费结果。', '#50a8ff', 'ledger', 'payment', ['账单生成', '账单维护', '缴费流水']),

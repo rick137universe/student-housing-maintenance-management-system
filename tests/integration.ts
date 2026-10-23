@@ -177,6 +177,11 @@ try{
   const browser=await chromium.launch({channel:'msedge',headless:true});
   try{await adminRepairProcessRegression(browser,origin,env.SEED_PASSWORD);}finally{await browser.close();}
  }
+ if(process.argv.includes('--statistics-browser')){
+  const {chromium}=await import('@playwright/test');const {statisticsVisualizationRegression}=await import('./statistics-visualization');
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  try{await statisticsVisualizationRegression(browser,origin,env.SEED_PASSWORD);}finally{await browser.close();}
+ }
  if(process.argv.includes('--browser'))await browserRegression(origin,env.SEED_PASSWORD,testPool);
  // 原密码预校验只检查当前账号，不修改密码或撤销会话；最终提交仍重新验证。
  await new Session().request('profile/password/verify','POST',{currentPassword:env.SEED_PASSWORD},401);

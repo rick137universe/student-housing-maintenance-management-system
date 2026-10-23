@@ -15,6 +15,7 @@ import {ManagerDocsPage} from './ManagerDocsPage';
 import {MaintenanceDocsPage} from './MaintenanceDocsPage';
 import {adminPages} from '@/data/admin-pages';
 import {AdminDocsPage} from './AdminDocsPage';
+import {StatisticsPage} from './StatisticsPage';
 import {workspaceActionId} from '@/data/workspace-paths';
 import {useNavigationAttention} from '@/components/workspace/useNavigationAttention';
 
@@ -77,6 +78,8 @@ export function WorkspacePage({onReady}:{onReady?:()=>void}) {
   }
   if(role==='dormManager')return <ManagerDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
   if(role==='maintenance')return <MaintenanceDocsPage account={account} featureId={feature.id} actionId={actionId?action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;
+
+  if(role==='admin'&&feature.id==='reports'&&nestedAction==='action-4')return <StatisticsPage account={account} onReady={onReady}/>;
 
   const adminAction=adminPages.find(entry=>entry.feature===feature.id&&entry.action===nestedAction)?.action;
   return <AdminDocsPage account={account} featureId={feature.id} actionId={actionId?adminAction??action?.id??'action-1':'overview'} onReady={onReady} onLogout={docsLogout}/>;

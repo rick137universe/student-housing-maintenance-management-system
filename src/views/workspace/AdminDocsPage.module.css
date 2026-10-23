@@ -1,3 +1,3 @@
-:global(html:has([data-dorma-admin-frame])){overflow:hidden;scrollbar-gutter:auto}
+:global(html:has([data-dorma-admin-frame],[data-dorma-statistics-frame])){overflow:hidden;scrollbar-gutter:auto}
 .page{position:fixed;inset:0;background:#252423}
 .frame{display:block;width:100%;height:100dvh;border:0}

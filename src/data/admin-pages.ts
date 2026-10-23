@@ -6,7 +6,7 @@ export type AdminPage={feature:string;group:string;color:number;label:string;id:
 const groups=['getting-started','timer','animation','timeline','animatable','draggable','layout','scope','events','svg'];
 const demos=studentPages.filter(page=>page.action!=='overview'&&!groups.includes(page.id));
 const personalDescriptions=['查看本人的账号、姓名、角色和联系方式。','修改姓名、联系电话及邮箱。','依次填写并确认三项密码，完成后重新登录。'];
-const reportDescriptions=['查看楼栋床位、当前入住率和待缴金额，按楼栋查看统计详情。','查看报修总量、完成率、服务评分及每月维修工作量。','选择日期和楼栋范围，导出运营与维修统计 CSV 报表。'];
+const reportDescriptions=['查看楼栋床位、当前入住率和待缴金额，按楼栋查看统计详情。','查看报修总量、完成率、服务评分及每月维修工作量。','选择日期和楼栋范围，导出运营与维修统计 CSV 报表。','通过图表查看床位、报修及缴费统计，按楼栋和日期筛选。'];
 const baseDescriptions=['维护学生、楼栋、房间与床位资料，查看记录并办理新增和修改。','按数据类型下载模板并批量导入基础资料。','导出学生、楼栋、房间与床位基础资料。'];
 const processDescriptions=['查看和配置自动分床规则。','查看住宿审核要求与办理时限，配置住宿业务流程。','查看固定月费及缴费期限，配置后续账单生成规则。','配置报修初审方式，决定新报修是否由系统自动通过初审。'];
 const dispatchDescriptions=['查看通过初审的报修工单，选择维修人员并派工。','按未完工工单数量分配维修人员，确认后提交派工。','查看报修、派工与维修进度及完整处理过程。'];
@@ -18,7 +18,7 @@ const pages:AdminPage[]=[{
  feature:'overview',group:'管理员工作台',color:0,label:'管理员工作台',id:'docs',action:'overview',url:'/workspace/admin',description:'维护基础数据，管控业务流程，统筹派工、账单与系统管理。',
 },...roleFeatures.admin.flatMap((feature,color)=>[{
  feature:feature.id,group:feature.title,color,label:feature.title,id:groups[color],action:'overview',url:'/workspace/admin/'+feature.id,description:feature.description,
-},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:feature.id==='process'&&action.id==='action-4'?'admin-process-repair':demos[preview++].id,action:action.id,url:canonicalWorkspaceUrl('/workspace/admin/'+feature.id+'/'+action.id),description:feature.id==='reports'?reportDescriptions[index]:feature.id==='base-data'?baseDescriptions[index]:feature.id==='personal'?personalDescriptions[index]:feature.id==='process'?processDescriptions[index]:feature.id==='dispatch'?dispatchDescriptions[index]:feature.id==='permissions'?permissionDescriptions[index]:feature.id==='backup'?backupDescriptions[index]:feature.id==='billing'?billingDescriptions[index]:feature.id==='announcements'?'发布公寓公告与服务信息，查看和维护已有公告。':feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
+},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:action.id==='action-4'&&['process','reports'].includes(feature.id)?'admin-'+feature.id+'-'+(feature.id==='process'?'repair':'visualization'):demos[preview++].id,action:action.id,url:canonicalWorkspaceUrl('/workspace/admin/'+feature.id+'/'+action.id),description:feature.id==='reports'?reportDescriptions[index]:feature.id==='base-data'?baseDescriptions[index]:feature.id==='personal'?personalDescriptions[index]:feature.id==='process'?processDescriptions[index]:feature.id==='dispatch'?dispatchDescriptions[index]:feature.id==='permissions'?permissionDescriptions[index]:feature.id==='backup'?backupDescriptions[index]:feature.id==='billing'?billingDescriptions[index]:feature.id==='announcements'?'发布公寓公告与服务信息，查看和维护已有公告。':feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
 
 const announcement=pages.find(page=>page.feature==='announcements'&&page.action==='action-1')!;
 const withAnnouncements:AdminPage[]=pages.flatMap(page=>page!==announcement?[page]:[page,

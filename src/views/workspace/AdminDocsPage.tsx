@@ -108,6 +108,7 @@ export function AdminDocsPage({account,featureId,actionId,onReady,onLogout}:{acc
    if(event.data?.type==='dorma-admin-login'){router.push('/login');return;}
    if(event.data?.type!=='dorma-admin-page')return;
    const entry=adminPages.find(page=>page.id===event.data.id);if(!entry)return;
+   if(entry.feature==='reports'&&entry.action==='action-4'){router.push(entry.url,{scroll:false});return;}
    if(entry.action==='overview'){setView(null);onReady?.();}
    else{
     const target=frame.current?.contentDocument?.querySelector('[data-dorma-business]');if(!target)return;

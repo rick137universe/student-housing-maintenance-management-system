@@ -276,6 +276,16 @@ const entries = [
     "description": "选择日期和楼栋范围，导出运营与维修统计 CSV 报表。"
   },
   {
+    "feature": "reports",
+    "group": "统计报表",
+    "color": 3,
+    "label": "统计可视化",
+    "id": "admin-reports-visualization",
+    "action": "action-4",
+    "url": "/workspace/admin/reports/visualization",
+    "description": "通过图表查看床位、报修及缴费统计，按楼栋和日期筛选。"
+  },
+  {
     "feature": "permissions",
     "group": "权限管理",
     "color": 4,

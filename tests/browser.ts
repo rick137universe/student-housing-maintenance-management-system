@@ -33,6 +33,7 @@ import {adminNotificationRegression} from './admin-notifications';
 import {adminAnnouncementRegression} from './admin-announcements';
 import {docsPaginationRegression} from './docs-pagination';
 import {adminReportRegression} from './admin-reports';
+import {statisticsVisualizationRegression} from './statistics-visualization';
 import {adminBaseDataRegression} from './admin-base-data';
 import {adminProcessRegression} from './admin-process';
 import {adminDispatchRegression} from './admin-dispatch';
@@ -123,6 +124,7 @@ export async function browserRegression(origin:string,password:string,database:P
    await page.goto(origin+'/login');await page.waitForURL('**/workspace/**');
    for(const feature of roleFeatures[role])for(const action of feature.actions){
     await page.goto(origin+canonicalWorkspaceUrl(`/workspace/${role}/${feature.id}/${action.id}`));
+    if(role==='admin'&&feature.id==='reports'&&action.id==='action-4'){await expect(page.frameLocator('[data-dorma-statistics-frame]').locator('#easing-editor')).toHaveAttribute('aria-busy','false');visited++;continue;}
     await workspace.locator(role==='student'&&['accommodation','repair'].includes(feature.id)?'[data-student-record-links]':'[data-dorma-live-workspace]').waitFor();
     await workspace.getByText('正在读取…',{exact:true}).waitFor({state:'hidden'});
     assert.equal(await workspace.locator('[data-dorma-live-workspace]').getByRole('alert').count(),0,`${role}/${feature.id}/${action.id}`);visited++;
@@ -229,7 +231,7 @@ export async function browserRegression(origin:string,password:string,database:P
   await adminDispatchRegression(browser,origin,password);
   await adminProcessRegression(browser,origin,password,database);
   await adminBaseDataRegression(browser,origin,password);
-  await adminReportRegression(browser,origin,password,database);
+  await adminReportRegression(browser,origin,password,database);await statisticsVisualizationRegression(browser,origin,password);
   await maintenanceShellRegression(browser,origin,password);
   await maintenancePersonalRegression(browser,origin,password);
   await maintenanceNotificationRegression(browser,origin,password);
