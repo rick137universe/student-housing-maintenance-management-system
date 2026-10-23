@@ -17,3 +17,12 @@
 报修申请、进度和评价的六个三级子页面分别使用配置中的 Stagger 或 WAAPI 母版演示，保留原有交错、弹簧、独立属性、循环次数及函数值动画。
 
 `tests/student-finance-preview.ts` 使用事务内临时表验证金额与权限；`tests/student-previews.ts` 验证二十七个页面的动画、双语文本、真实数据、刷新、错误恢复和账号隔离，已纳入浏览器回归入口。
+
+本轮仅替换 4 个图形预览，沿用管理员端新增的八种 Stagger 候选样式；保留点阵、双语文字、资料打字及数字统计等专属预览。其他业务预览保持原分配，结果固定保存，刷新时不重新随机。
+
+| 页面 | 路径 | 本次母版动画 |
+| --- | --- | --- |
+| 服务评价记录 | `/workspace/student/repair/reviews/records` | `utilities-stagger-stagger-parameters-stagger-modifier` |
+| 提交报修申请 | `/workspace/student/repair/requests/submit` | `utilities-stagger-stagger-parameters-stagger-jitter` |
+| 提交退宿申请 | `/workspace/student/accommodation/check-out/submit` | `utilities-stagger-stagger-parameters-stagger-grid` |
+| 提交入住申请 | `/workspace/student/accommodation/check-in/submit` | `utilities-stagger-stagger-value-types-range-value` |

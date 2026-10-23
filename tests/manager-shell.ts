@@ -5,6 +5,7 @@ import {managerPages} from '../src/data/manager-pages';
 import {roleFeatures} from '../src/data/role-features';
 import managerPreviews from '../src/data/manager-previews.json';
 import studentPreviews from '../src/data/student-previews.json';
+import adminPreviews from '../src/data/admin-random-previews.json';
 
 export async function verifyManagerShell(){
  const index=await readFile('public/assets/manager/index.html','utf8');
@@ -16,8 +17,8 @@ export async function verifyManagerShell(){
  const demos=await readFile('public/assets/manager/demos.html','utf8');
  const randomPages=managerPages.filter(entry=>entry.action!=='overview'&&!['personal','notifications'].includes(entry.feature));
  assert.deepEqual(managerPreviews.map(preview=>preview.url),randomPages.map(entry=>entry.url));
- const allowed=new Set(studentPreviews.filter(preview=>!preview.kind&&preview.source!=='getting-started'&&preview.source!=='text-splittext').map(preview=>preview.source));
- for(const preview of managerPreviews)assert(allowed.has(preview.source),'随机预览必须来自已选的学生端图形动画');
+ const allowed=new Set([...studentPreviews.filter(preview=>!preview.kind),...adminPreviews].map(preview=>preview.source).filter(source=>!source.startsWith('getting-started')&&!source.startsWith('text-')&&!source.startsWith('timer')));
+ for(const preview of managerPreviews)assert(allowed.has(preview.source),'随机预览必须来自已选图形动画或指定 Stagger 动画');
  for(const entry of managerPages){
   const page=await readFile(`public/assets/manager/pages/${entry.feature}-${entry.action}.html`,'utf8');
   assert(page.includes(`data-id="${entry.id}"`));assert(demos.includes(`data-id="${entry.id}"`));

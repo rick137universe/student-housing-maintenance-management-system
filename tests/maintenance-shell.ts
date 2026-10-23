@@ -6,6 +6,7 @@ import {roleFeatures} from '../src/data/role-features';
 import maintenancePreviews from '../src/data/maintenance-previews.json';
 import managerPreviews from '../src/data/manager-previews.json';
 import studentPreviews from '../src/data/student-previews.json';
+import adminPreviews from '../src/data/admin-random-previews.json';
 
 export async function verifyMaintenanceShell(){
  const index=await readFile('public/assets/maintenance/index.html','utf8'),sidebar=index.match(/<aside id="docs-sidebar"[\s\S]*?<\/aside>/)![0];
@@ -16,7 +17,7 @@ export async function verifyMaintenanceShell(){
  const demos=await readFile('public/assets/maintenance/demos.html','utf8');
  const randomPages=maintenancePages.filter(entry=>entry.action!=='overview'&&['orders','repair','records'].includes(entry.feature));
  assert.deepEqual(maintenancePreviews.map(preview=>preview.url),randomPages.map(entry=>entry.url));
- const allowed=new Set([...studentPreviews.filter(preview=>!preview.kind),...managerPreviews].map(preview=>preview.source).filter(source=>source!=='getting-started'&&source!=='text-splittext'&&!source.startsWith('timer')));
+ const allowed=new Set([...studentPreviews.filter(preview=>!preview.kind),...managerPreviews,...adminPreviews].map(preview=>preview.source).filter(source=>!source.startsWith('getting-started')&&!source.startsWith('text-')&&!source.startsWith('timer')));
  assert.equal(new Set(maintenancePreviews.map(preview=>preview.source)).size,maintenancePreviews.length,'七个业务子页分配不同的动画');
  for(const config of maintenancePreviews){
   assert(allowed.has(config.source),'随机样式必须来自已选学生端、宿管端图形动画，并排除点阵、双语和数字框');

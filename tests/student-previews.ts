@@ -69,12 +69,10 @@ export async function studentPreviewRegression(browser:Browser,origin:string,pas
     }
    }else if(config.source==='getting-started')await expect(article.locator('.dotted-grid')).toHaveCount(1);
    else{
-    const shape=live.locator('.square, .circle').first();
-    await expect(shape).toBeVisible();
-    await expect.poll(()=>shape.evaluate(el=>{
-     const style=getComputedStyle(el);
-     return [style.transform,style.translate,style.rotate,style.scale].some(value=>value!=='none');
-    })).toBe(true);
+    const shapes=live.locator('.square, .circle');
+    await expect(shapes.first()).toBeAttached();await article.locator('.demo-reload-button').click();
+    const snapshot=()=>shapes.evaluateAll(elements=>elements.map(el=>{const style=getComputedStyle(el);return [style.transform,style.translate,style.rotate,style.scale,style.opacity,style.boxShadow].join(';');}).join('|'));
+    const before=await snapshot();await expect.poll(snapshot,{timeout:5000}).not.toBe(before);
    }
   }
   // Failed summary loads must not masquerade as a zero balance.

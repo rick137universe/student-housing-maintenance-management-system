@@ -17,7 +17,7 @@
   },
   {
     "url": "/workspace/dormManager/accommodation/room-change",
-    "source": "utilities-stagger-values-staggering"
+    "source": "utilities-stagger-stagger-parameters-stagger-jitter"
   },
   {
     "url": "/workspace/dormManager/accommodation/check-out",
@@ -29,7 +29,7 @@
   },
   {
     "url": "/workspace/dormManager/beds/update-status",
-    "source": "animation-targets-dom-elements"
+    "source": "utilities-stagger-values-staggering"
   },
   {
     "url": "/workspace/dormManager/beds/anomalies",
@@ -49,14 +49,14 @@
   },
   {
     "url": "/workspace/dormManager/billing/verification",
-    "source": "animation-tween-parameters-to"
+    "source": "utilities-stagger-stagger-parameters-stagger-ease"
   },
   {
     "url": "/workspace/dormManager/billing/arrears",
-    "source": "animation-keyframes-tween-values-keyframes"
+    "source": "utilities-stagger-stagger-parameters-stagger-from"
   },
   {
     "url": "/workspace/dormManager/billing/reminders",
-    "source": "animation-tween-value-types-function-based"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid-axis"
   }
 ]

@@ -110,23 +110,109 @@ window.demos['getting-started'] = function(ctx, {
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="medium row">
+    <div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>
-<div class="medium row">
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>
-<div class="medium row">
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="medium row">
+    <div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>
-<div class="medium row">
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>
-<div class="medium row">
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>        </div>
     <script class="docs-demo-js">
@@ -157,12 +243,32 @@ window.demos['animation-animatable-properties-css-properties'] = function(ctx, {
   getInstances,
   commitChanges,
 }) {
-waapi.animate('.square', {
-  translate: '17rem',
-  loop: 3,
-  alternate: true,
-  delay: stagger(100)
-});
+const grid = [11, 4];
+const $squares = utils.$('.square');
+
+function animateGrid() {
+  const from = utils.random(0, 11 * 4);
+  animate($squares, {
+    translateX: [
+      { to: stagger('-.75rem', { grid, from, axis: 'x' }) },
+      { to: 0, ease: 'inOutQuad', },
+    ],
+    translateY: [
+      { to: stagger('-.75rem', { grid, from, axis: 'y' }) },
+      { to: 0, ease: 'inOutQuad' },
+    ],
+    opacity: [
+      { to: .5 },
+      { to: 1 }
+    ],
+    delay: stagger(85, { grid, from }),
+    onComplete: animateGrid
+  });
+}
+
+animateGrid();return function() {
+utils.remove($squares);}
+
 }
 </script>
       </div>
@@ -302,28 +408,110 @@ window.demos['timer'] = function(ctx, {
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div id="selector-demo">
-  <div class="medium row">
-    <div class="square"></div>
-  </div>
-  <div class="medium row">
-    <div class="square"></div>
-  </div>
-  <div class="medium row">
-    <div class="square"></div>
-  </div>
+    <div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div id="selector-demo">
-  <div class="medium row">
-    <div class="square"></div>
-  </div>
-  <div class="medium row">
-    <div class="square"></div>
-  </div>
-  <div class="medium row">
-    <div class="square"></div>
-  </div>
+    <div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<div class="small justified row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
 </div>        </div>
     <script class="docs-demo-js">
 window.demos['animation-animatable-properties-html-attributes'] = function(ctx, {
@@ -353,11 +541,29 @@ window.demos['animation-animatable-properties-html-attributes'] = function(ctx, 
   getInstances,
   commitChanges,
 }) {
-const $demo = document.querySelector('#selector-demo');
-const $squares = $demo.querySelectorAll('.square');
+const $squares = utils.$('.square');
 
-animate($demo, { scale: .75 });
-animate($squares, { x: '23rem' });
+function animateGrid() {
+  animate($squares, {
+    scale: [
+      { to: [0, 1.25] },
+      { to: 0 }
+    ],
+    boxShadow: [
+      { to: '0 0 1rem 0 currentColor' },
+      { to: '0 0 0rem 0 currentColor' }
+    ],
+    delay: stagger(100, {
+      grid: [11, 4],
+      from: utils.random(0, 11 * 4)
+    }),
+    onComplete: animateGrid
+  });
+}
+
+animateGrid();return function() {
+utils.remove($squares);}
+
 }
 </script>
       </div>
@@ -380,29 +586,31 @@ animate($squares, { x: '23rem' });
     <style async class="docs-demo-css">
         </style>
     <div class="docs-demo-html docs-demo-live demo">
-    <div class="small row">
+    <div class="small justified row">
   <div class="square"></div>
-</div>
-<div class="small row">
   <div class="square"></div>
-</div>
-<div class="small row">
   <div class="square"></div>
-</div>
-<div class="small row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>        </div>
     <div class="docs-demo-html docs-demo-template">
-    <div class="small row">
+    <div class="small justified row">
   <div class="square"></div>
-</div>
-<div class="small row">
   <div class="square"></div>
-</div>
-<div class="small row">
   <div class="square"></div>
-</div>
-<div class="small row">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
   <div class="square"></div>
 </div>        </div>
     <script class="docs-demo-js">
@@ -434,9 +642,16 @@ window.demos['animation-animatable-properties-css-transforms'] = function(ctx, {
   commitChanges,
 }) {
 animate('.square', {
-  x: '17rem',
-  scale: stagger([1, .1]),
-  delay: stagger(100),
+  boxShadow: [
+    { to: stagger([1, .25], {
+        modifier: v => `0 0 ${v * 30}px ${v * 20}px currentColor`,
+        from: 'center'
+      })
+    },
+    { to: 0 },
+  ],
+  delay: stagger(100, { from: 'center' }),
+  loop: true
 });
 }
 </script>

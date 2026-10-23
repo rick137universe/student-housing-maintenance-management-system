@@ -1,7 +1,7 @@
 [
   {
     "url": "/workspace/maintenance/orders/assigned",
-    "source": "web-animation-api-api-differences-with-native-waapi-iterations"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid-axis"
   },
   {
     "url": "/workspace/maintenance/orders/accept",
@@ -9,11 +9,11 @@
   },
   {
     "url": "/workspace/maintenance/repair/start",
-    "source": "animation-targets-dom-elements"
+    "source": "utilities-stagger-stagger-parameters-stagger-grid"
   },
   {
     "url": "/workspace/maintenance/repair/update-status",
-    "source": "utilities-stagger"
+    "source": "utilities-stagger-stagger-parameters-stagger-modifier"
   },
   {
     "url": "/workspace/maintenance/repair/complete",

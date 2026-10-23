@@ -14,6 +14,14 @@
 
 未激活的数字框保持 0；零数据为 0、0.00 或 0.00%。请求失败显示 `—` 并提供悬停说明，重新播放可重试。长数字仅缩小数字字体以适应母版框宽，不改变容器尺寸。
 
-个人中心与个人消息继续复用学生端的账号/手机号/PASSWORD 打字动画及 Messages 双语动画。
+个人中心与个人消息继续复用学生端的账号/手机号/password 打字动画及“未读消息通知”duration 单数字框。
 
 工单接收、维修处理、维修记录的七个业务子页从学生端和宿管端已选的图形动画中随机分配，每页使用不同样式。结果固定保存在 `src/data/maintenance-previews.json`，刷新及重新生成不会重新抽取。候选为数值补间、关键帧、Stagger 和 WAAPI 动画，排除 getting-started 点阵、双语 splitText、timer 双数字框和 duration 单数字框。模块主页、个人统计及个人中心/消息的专属样式保持原分配。
+
+本轮仅替换 3 个图形预览，沿用管理员端新增的八种 Stagger 候选样式；保留点阵、双语文字、资料打字及数字统计等专属预览。其他业务预览保持原分配，结果固定保存，刷新时不重新随机。
+
+| 页面 | 路径 | 本次母版动画 |
+| --- | --- | --- |
+| 开始维修 | `/workspace/maintenance/repair/start` | `utilities-stagger-stagger-parameters-stagger-grid` |
+| 查看工单 | `/workspace/maintenance/orders/assigned` | `utilities-stagger-stagger-parameters-stagger-grid-axis` |
+| 更新状态 | `/workspace/maintenance/repair/update-status` | `utilities-stagger-stagger-parameters-stagger-modifier` |
