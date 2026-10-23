@@ -1,13 +1,14 @@
 # 管理员端中间栏
 
-十个模块主页及 `src/data/admin-previews.json` 中十三个已指定的二级页面保持 getting-started 点阵。个人中心沿用账号、手机号、小写 password 打字动画，消息通知沿用未读数量 duration 动画。
+十个模块主页及 `src/data/admin-previews.json` 中十四个二级页面保持 getting-started 点阵，包括新增的“报修流程”。个人中心沿用账号、手机号、小写 password 打字动画，消息通知沿用未读数量 duration 动画。
 
-其余 32 个子页面从学生端、宿管端和维修人员端已选图形动画中随机分配，排除 getting-started 点阵、双语 splitText 及所有 timer 数字框。分配结果固定在 `src/data/admin-random-previews.json`；刷新和重新生成不再随机抽取。
+其余 33 个子页面从学生端、宿管端和维修人员端已选图形动画中分配，排除 getting-started 点阵、双语 splitText 及所有 timer 数字框。分配结果固定在 `src/data/admin-random-previews.json`；刷新和重新生成不再随机抽取。新增的“配置报修流程”沿用 `animation/tween-parameters/to`。
 
 `scripts/sync-admin-shell.ts` 优先应用专属样式，再读取固定分配。仅替换预览来源和对应标题、主题色、页面标识，保留母版布局、尺寸与重新播放功能，业务内容和路由保持原样。
 
 | 页面 | 路径 | 母版动画 |
 | --- | --- | --- |
+| 配置报修流程 | `/workspace/admin/process/repair/edit` | `animation-tween-parameters-to` |
 | 新增数据 | `/workspace/admin/base-data/manage/submit` | `animation-tween-parameters-from` |
 | 数据记录 | `/workspace/admin/base-data/manage/records` | `web-animation-api-improvements-to-the-web-animation-api-function-based-values` |
 | 批量导入 | `/workspace/admin/base-data/import` | `animation-keyframes-tween-values-keyframes` |

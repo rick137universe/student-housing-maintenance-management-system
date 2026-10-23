@@ -23,7 +23,7 @@ export async function verifyAdminShell(){
   if(entry.feature==='personal')assert(preview.includes('dormaStudentPreviews.installation'));
   else assert(preview.includes('未读消息通知')&&preview.includes('createTimer')&&preview.includes("'unread'"));
  }
- assert.equal(adminPreviews.length,13);
+ assert.equal(adminPreviews.length,14);
  const candidates=new Set([...studentPreviews,...managerPreviews,...maintenancePreviews].filter(config=>!('kind' in config)&&!config.source.startsWith('getting-started')&&!config.source.startsWith('text-')&&!config.source.startsWith('timer')).map(config=>config.source));
  const unassigned=adminPages.filter(page=>page.action!=='overview'&&!['personal','notifications'].includes(page.feature)&&!adminPreviews.some(config=>config.url===page.url));
  assert.equal(adminRandomPreviews.length,unassigned.length);
@@ -40,7 +40,7 @@ export async function verifyAdminShell(){
  for(const config of adminPreviews){assert.equal(config.source,'getting-started');assert(adminPages.some(page=>page.url===config.url&&!page.parent),'指定的点阵预览应属于现有二级页面');}
  for(const entry of adminPages.filter(page=>(page.action==='overview'&&page.feature!=='overview')||adminPreviews.some(preview=>preview.url===page.url))){
   const preview=demos.match(new RegExp(`<article[^>]*data-id="${entry.id}"[\\s\\S]*?</article>`))![0];
-  assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`),'十个模块主页及十三个指定页面使用 getting-started 点阵');
+  assert(preview.includes(`id="${entry.id}" class="docs-demo-content dotted-grid"`),'模块主页及指定页面使用 getting-started 点阵');
   assert(preview.includes(`data-color="${entry.color}"`));
   assert(preview.includes(`<h2 class="text-ui">${entry.label}</h2>`));
  }

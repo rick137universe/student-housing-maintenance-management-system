@@ -1,5 +1,7 @@
 # PostgreSQL 数据库结构
 
+> 报修流程更新：运行 `npm run db:migrate` 应用 `008_repair_workflow`，新增默认关闭的 `repair.autoReview` 设置。开启后新报修自动通过初审；现有工单不变。系统事件的 `maintenance_updates.actor_account_id` 允许为空，时间线显示“系统”，不冒用宿管身份；原有人工作业记录及外键保留。
+
 > 导航提醒更新：运行 `npm run db:migrate` 应用 `007_navigation_reads`，新增按账号、资源和记录保存版本的阅读记录表 `navigation_reads`，当前结构共 28 张表。新增表用于公告、评价及任务结果的阅读确认，不修改已有业务记录。学生报修与住宿进展继续复用关联通知的 `read_at`。
 
 > 后端接入更新（2026-10-14）：原20张业务表保留，增量迁移补充会话、登录限流、月账单批次、测试支付请求、维修进展、任务心跳及迁移记录，当前共27张表。使用 `npm run db:migrate` 升级，使用 `npm run db:seed` 显式初始化样例；不能在现有库重新执行初始建库或建表脚本。`002_verify.sql` 仅验证原始概念模型的边界，后端升级后使用 `npm run test:integration` / `npm run test:e2e` 验收。本轮按已确认业务规则增加1～5整数评分、禁止超额缴费、已缴账单金额保护及楼栋性别限制；同学生同账期仍允许额外人工账单。

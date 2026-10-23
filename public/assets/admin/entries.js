@@ -150,6 +150,28 @@ const entries = [
     "kind": "process-edit"
   },
   {
+    "feature": "process",
+    "group": "流程管控",
+    "color": 1,
+    "label": "报修流程",
+    "id": "admin-process-repair",
+    "action": "action-4",
+    "url": "/workspace/admin/process/repair",
+    "description": "配置报修初审方式，决定新报修是否由系统自动通过初审。"
+  },
+  {
+    "feature": "process",
+    "group": "流程管控",
+    "color": 1,
+    "label": "配置报修流程",
+    "id": "admin-process-repair-edit",
+    "action": "action-4/edit",
+    "url": "/workspace/admin/process/repair/edit",
+    "description": "设置新报修的初审方式，完成后保存。",
+    "parent": "admin-process-repair",
+    "kind": "process-edit"
+  },
+  {
     "feature": "dispatch",
     "group": "报修派工",
     "color": 2,

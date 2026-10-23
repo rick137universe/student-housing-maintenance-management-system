@@ -75,6 +75,7 @@ try{
  assert.deepEqual(results.map(r=>r.status).sort(),[200,409]);assert.equal((await student.request('bills/'+bill.bill_id)).data.bill_status,'paid');checks++;
  const generated=(await administrator.request('bills/generate','POST',{period:'2026-10'})).data;assert.equal((await administrator.request('bills/generate','POST',{period:'2026-10'})).data.batch_id,generated.batch_id);checks++;
  const repair=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'水电设施',description:'集成测试水龙头',phone:'13800000001'})).data;
+ assert.equal(repair.repair_status,'pending_review');assert.deepEqual((await administrator.request('settings?key=repair')).data[0].setting_value,{autoReview:false});checks++;
  await second.request('repairs/'+repair.repair_id,'GET',undefined,404);await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{},403);
  await manager.request(`repairs/${repair.repair_id}/review`,'POST',{decision:'approve'});await administrator.request(`repairs/${repair.repair_id}/dispatch`,'POST',{technicianId:(await testPool.query("SELECT account_id FROM housing.user_accounts WHERE username='mt008'")).rows[0].account_id});
  await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{});await technician.request(`repairs/${repair.repair_id}/accept`,'POST',{},409);await technician.request(`repairs/${repair.repair_id}/start`,'POST',{});
@@ -110,6 +111,35 @@ try{
  const repairDetail=(await student.request('repairs/'+repair.repair_id)).data;
  assert.equal(repairDetail.repair_status,'evaluated');assert.equal(Number(repairDetail.service_rating),5);assert.equal(repairDetail.evaluation_content,'测试评价');assert.equal(repairDetail.processing_description,'更换完成且测试通过');assert.equal(repairDetail.materials,'密封圈1个');assert(repairDetail.technician_name&&repairDetail.completed_at&&repairDetail.evaluated_at);
  await second.request('repairs/'+repair.repair_id,'GET',undefined,404);await second.request(`repairs/${repair.repair_id}/history`,'GET',undefined,403);checks++;
+ // 报修自动初审：仅影响新提交的工单，保留人工流程、数据范围与真实操作归属。
+ for(const session of [student,manager,technician])await session.request('settings/repair','PATCH',{autoReview:true},403);checks+=3;
+ await administrator.request('settings/repair','PATCH',{autoReview:'true'},400);
+ await administrator.request('settings/repair','PATCH',{autoReview:true,studentNumber:'202602114'},400);checks+=2;
+ const manualRepair=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'其他',description:'保留人工初审的工单',phone:'13800000001'})).data;
+ await administrator.request('settings/repair','PATCH',{autoReview:true});
+ assert.equal((await student.request('repairs/'+manualRepair.repair_id)).data.repair_status,'pending_review');checks++;
+ await student.request('repairs','POST',{roomId:'BY4-502',faultType:'其他',description:'不能越权报修',phone:'13800000001'},403);
+ await student.request('repairs','POST',{roomId:'NY3-502',faultType:'其他',description:'不能覆盖流程设置',phone:'13800000001',autoReview:false},400);checks+=2;
+ const automaticRepair=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'其他',description:'自动通过初审测试',phone:'13800000001'})).data;
+ assert.equal(automaticRepair.repair_status,'pending_dispatch');assert.equal(automaticRepair.reviewer_account_id,null);assert(automaticRepair.reviewed_at);assert.match(automaticRepair.review_note,/系统自动通过初审/);
+ const autoHistory=(await student.request(`repairs/${automaticRepair.repair_id}/history`)).data;
+ assert.deepEqual(autoHistory.map((row:QueryResultRow)=>row.status),['pending_review','pending_dispatch']);assert.equal(autoHistory[1].actor_account_id,null);assert.equal(autoHistory[1].actor_name,'系统');assert.match(autoHistory[1].description,/无需宿管人工审核/);checks++;
+ assert(!(await manager.request('repairs?status=pending_review')).data.some((row:QueryResultRow)=>row.repair_id===automaticRepair.repair_id));
+ assert((await manager.request('repairs?status=pending_dispatch')).data.some((row:QueryResultRow)=>row.repair_id===automaticRepair.repair_id));
+ assert((await administrator.request('repairs?status=pending_dispatch')).data.some((row:QueryResultRow)=>row.repair_id===automaticRepair.repair_id));
+ assert((await student.request('notifications')).data.some((row:QueryResultRow)=>row.repair_id===automaticRepair.repair_id&&String(row.content).includes('待派工')));
+ assert.equal((await testPool.query("SELECT count(*) FROM housing.notifications WHERE repair_id=$1 AND title='待初审报修'",[automaticRepair.repair_id])).rows[0].count,'0');checks++;
+ await manager.request(`repairs/${automaticRepair.repair_id}/review`,'POST',{decision:'approve'},409);
+ await second.request(`repairs/${automaticRepair.repair_id}/history`,'GET',undefined,403);checks+=2;
+ await administrator.request('settings/repair','PATCH',{autoReview:false});
+ assert.equal((await student.request('repairs/'+automaticRepair.repair_id)).data.repair_status,'pending_dispatch');
+ const manualAgain=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'其他',description:'恢复人工初审测试',phone:'13800000001'})).data;
+ assert.equal(manualAgain.repair_status,'pending_review');assert((await testPool.query("SELECT 1 FROM housing.notifications WHERE repair_id=$1 AND title='待初审报修'",[manualAgain.repair_id])).rowCount);checks++;
+ for(const row of [manualRepair,manualAgain])await manager.request(`repairs/${row.repair_id}/review`,'POST',{decision:'reject',note:'人工审核路径测试完成'});
+ await administrator.request(`repairs/${automaticRepair.repair_id}/dispatch`,'POST',{technicianId:(await testPool.query("SELECT account_id FROM housing.user_accounts WHERE username='mt008'")).rows[0].account_id});
+ for(const action of ['accept','start'])await technician.request(`repairs/${automaticRepair.repair_id}/${action}`,'POST',{});
+ await technician.request(`repairs/${automaticRepair.repair_id}/complete`,'POST',{note:'自动初审后完整维修测试',hours:1});
+ await student.request(`repairs/${automaticRepair.repair_id}/evaluate`,'POST',{rating:5,note:'自动初审后完成评价'});checks++;
  const rejected=(await student.request('repairs','POST',{roomId:'NY3-502',faultType:'其他',description:'重复报修验证',phone:'13800000001'})).data;await manager.request(`repairs/${rejected.repair_id}/review`,'POST',{decision:'reject',note:'重复提交'});assert.equal((await student.request('repairs/'+rejected.repair_id)).data.repair_status,'rejected');checks++;
  await administrator.request(`bills/${bill.bill_id}/remind`,'POST',{});
  const reminders=(await student.request('notifications?type=payment-reminder')).data;assert(reminders.length>0);assert(reminders.every((row:QueryResultRow)=>row.title==='缴费提醒'&&row.bill_id));
@@ -141,6 +171,11 @@ try{
   const {chromium}=await import('@playwright/test');const {studentNavigationBadgeRegression,navigationRoleRegression}=await import('./student-navigation-badges');
   const browser=await chromium.launch({channel:'msedge',headless:true});
   try{await studentNavigationBadgeRegression(browser,origin,env.SEED_PASSWORD);await navigationRoleRegression(browser,origin,env.SEED_PASSWORD);}finally{await browser.close();}
+ }
+ if(process.argv.includes('--repair-browser')){
+  const {chromium}=await import('@playwright/test');const {adminRepairProcessRegression}=await import('./admin-repair-process');
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  try{await adminRepairProcessRegression(browser,origin,env.SEED_PASSWORD);}finally{await browser.close();}
  }
  if(process.argv.includes('--browser'))await browserRegression(origin,env.SEED_PASSWORD,testPool);
  // 原密码预校验只检查当前账号，不修改密码或撤销会话；最终提交仍重新验证。

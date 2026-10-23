@@ -1,5 +1,9 @@
 [
   {
+    "url": "/workspace/admin/process/repair/edit",
+    "source": "animation-tween-parameters-to"
+  },
+  {
     "url": "/workspace/admin/base-data/manage/submit",
     "source": "animation-tween-parameters-from"
   },

@@ -8,7 +8,7 @@ const demos=studentPages.filter(page=>page.action!=='overview'&&!groups.includes
 const personalDescriptions=['查看本人的账号、姓名、角色和联系方式。','修改姓名、联系电话及邮箱。','依次填写并确认三项密码，完成后重新登录。'];
 const reportDescriptions=['查看楼栋床位、当前入住率和待缴金额，按楼栋查看统计详情。','查看报修总量、完成率、服务评分及每月维修工作量。','选择日期和楼栋范围，导出运营与维修统计 CSV 报表。'];
 const baseDescriptions=['维护学生、楼栋、房间与床位资料，查看记录并办理新增和修改。','按数据类型下载模板并批量导入基础资料。','导出学生、楼栋、房间与床位基础资料。'];
-const processDescriptions=['查看和配置自动分床规则。','查看住宿审核要求与办理时限，配置住宿业务流程。','查看固定月费及缴费期限，配置后续账单生成规则。'];
+const processDescriptions=['查看和配置自动分床规则。','查看住宿审核要求与办理时限，配置住宿业务流程。','查看固定月费及缴费期限，配置后续账单生成规则。','配置报修初审方式，决定新报修是否由系统自动通过初审。'];
 const dispatchDescriptions=['查看通过初审的报修工单，选择维修人员并派工。','按未完工工单数量分配维修人员，确认后提交派工。','查看报修、派工与维修进度及完整处理过程。'];
 const permissionDescriptions=['新增员工账号，查看和维护账号资料、角色及状态。','配置角色权限，维护宿管人员的额外楼栋授权。','查看操作审计记录及每次操作的详细信息。'];
 const backupDescriptions=['配置每日备份时间、保留天数及启用状态。','创建备份任务，查看执行状态与备份结果。','查看备份与恢复记录，将有效备份恢复到独立副本。'];
@@ -18,7 +18,7 @@ const pages:AdminPage[]=[{
  feature:'overview',group:'管理员工作台',color:0,label:'管理员工作台',id:'docs',action:'overview',url:'/workspace/admin',description:'维护基础数据，管控业务流程，统筹派工、账单与系统管理。',
 },...roleFeatures.admin.flatMap((feature,color)=>[{
  feature:feature.id,group:feature.title,color,label:feature.title,id:groups[color],action:'overview',url:'/workspace/admin/'+feature.id,description:feature.description,
-},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:demos[preview++].id,action:action.id,url:canonicalWorkspaceUrl('/workspace/admin/'+feature.id+'/'+action.id),description:feature.id==='reports'?reportDescriptions[index]:feature.id==='base-data'?baseDescriptions[index]:feature.id==='personal'?personalDescriptions[index]:feature.id==='process'?processDescriptions[index]:feature.id==='dispatch'?dispatchDescriptions[index]:feature.id==='permissions'?permissionDescriptions[index]:feature.id==='backup'?backupDescriptions[index]:feature.id==='billing'?billingDescriptions[index]:feature.id==='announcements'?'发布公寓公告与服务信息，查看和维护已有公告。':feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
+},...feature.actions.map((action,index)=>({feature:feature.id,group:feature.title,color,label:action.label,id:feature.id==='process'&&action.id==='action-4'?'admin-process-repair':demos[preview++].id,action:action.id,url:canonicalWorkspaceUrl('/workspace/admin/'+feature.id+'/'+action.id),description:feature.id==='reports'?reportDescriptions[index]:feature.id==='base-data'?baseDescriptions[index]:feature.id==='personal'?personalDescriptions[index]:feature.id==='process'?processDescriptions[index]:feature.id==='dispatch'?dispatchDescriptions[index]:feature.id==='permissions'?permissionDescriptions[index]:feature.id==='backup'?backupDescriptions[index]:feature.id==='billing'?billingDescriptions[index]:feature.id==='announcements'?'发布公寓公告与服务信息，查看和维护已有公告。':feature.id==='notifications'?'查看业务消息并标记已读。':feature.description}))])];
 
 const announcement=pages.find(page=>page.feature==='announcements'&&page.action==='action-1')!;
 const withAnnouncements:AdminPage[]=pages.flatMap(page=>page!==announcement?[page]:[page,
@@ -46,7 +46,7 @@ const permissionChildren=[
 ] as const;
 const withPermissions:AdminPage[]=withBackup.flatMap(page=>[page,...(page.feature==='permissions'?permissionChildren.filter(([action])=>action===page.action).map(([,path,kind,label,description,id])=>({...page,parent:page.id,kind,id,action:page.action+'/'+path,url:page.url+'/'+path,label,description})):[])]);
 
-const processEditors=[['action-1','配置分床规则','确认自动分床状态，完成后保存。','timer-timer-callbacks-then'],['action-2','配置住宿流程','确认审核要求和办理时限，完成后保存。','timer-timer-methods'],['action-3','配置缴费流程','确认固定月费和缴费期限，完成后保存。','timer-timer-methods-play']] as const;
+const processEditors=[['action-1','配置分床规则','确认自动分床状态，完成后保存。','timer-timer-callbacks-then'],['action-2','配置住宿流程','确认审核要求和办理时限，完成后保存。','timer-timer-methods'],['action-3','配置缴费流程','确认固定月费和缴费期限，完成后保存。','timer-timer-methods-play'],['action-4','配置报修流程','设置新报修的初审方式，完成后保存。','admin-process-repair-edit']] as const;
 const withProcess:AdminPage[]=withPermissions.flatMap(page=>[page,...(page.feature==='process'?processEditors.filter(([action])=>action===page.action).map(([,label,description,id])=>({...page,parent:page.id,kind:'process-edit',id,action:page.action+'/edit',url:page.url+'/edit',label,description})):[])]);
 
 const withBase:AdminPage[]=withProcess.flatMap(page=>page.feature==='base-data'&&page.action==='action-1'?[page,

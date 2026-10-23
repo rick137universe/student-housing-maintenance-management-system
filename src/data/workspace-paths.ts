@@ -27,7 +27,7 @@ export const workspaceActionPaths:Record<string,Record<string,readonly string[]>
  admin:{
   personal,notifications,
   'base-data':['manage','import','export'],
-  process:['bed-assignment','accommodation','payment'],
+  process:['bed-assignment','accommodation','payment','repair'],
   dispatch:['pending','automatic','progress'],
   reports:['operations','maintenance','export'],
   permissions:['accounts','roles','audit'],

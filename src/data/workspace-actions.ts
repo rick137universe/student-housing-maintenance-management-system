@@ -25,7 +25,7 @@ export function workspaceSpec(role:RoleId,feature:string,action:string):PageSpec
  }
  if(role==='admin'){
   if(feature==='base-data')return {resource:'students',mode:n===2?'import':n===3?'export':undefined,create:n===1?'resource':undefined,rowAction:n===1?'resource-edit':undefined};
-  if(feature==='process')return {resource:'settings',mode:'settings',query:{key:['allocation','accommodation','billing'][n-1]}};
+  if(feature==='process')return {resource:'settings',mode:'settings',query:{key:['allocation','accommodation','billing','repair'][n-1]}};
   if(feature==='dispatch')return {resource:'repairs',query:n<3?{status:'pending_dispatch'}:{},rowAction:n===1?'dispatch':n===2?'auto-dispatch':'history'};
   if(feature==='reports')return {resource:'statistics',mode:n===3?'export':'statistics'};
   if(feature==='permissions')return {resource:n===1?'accounts':n===2?'permissions':'audit',mode:n===2?'permissions':undefined,create:n===1?'account':undefined,rowAction:n===1?'account-edit':undefined};

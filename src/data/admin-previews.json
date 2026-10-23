@@ -3,6 +3,7 @@
   {"url":"/workspace/admin/process/bed-assignment","source":"getting-started"},
   {"url":"/workspace/admin/process/accommodation","source":"getting-started"},
   {"url":"/workspace/admin/process/payment","source":"getting-started"},
+  {"url":"/workspace/admin/process/repair","source":"getting-started"},
   {"url":"/workspace/admin/reports/operations","source":"getting-started"},
   {"url":"/workspace/admin/reports/maintenance","source":"getting-started"},
   {"url":"/workspace/admin/permissions/accounts","source":"getting-started"},

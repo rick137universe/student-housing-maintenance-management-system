@@ -142,7 +142,7 @@ function repairActionDescription(action:string,status:string){
 export async function repairHistory(account:Account,repairId:string) {
  return transaction(async c=>{
   await authorize(account,'repairs','read',c);await scopedRepair(account,repairId,c);
-  const rows=(await query('SELECT u.*,a.full_name actor_name FROM maintenance_updates u JOIN user_accounts a ON a.account_id=u.actor_account_id WHERE repair_id=$1 ORDER BY created_at,update_id',[repairId],c)).rows;
+  const rows=(await query("SELECT u.*,COALESCE(a.full_name,'系统') actor_name FROM maintenance_updates u LEFT JOIN user_accounts a ON a.account_id=u.actor_account_id WHERE repair_id=$1 ORDER BY created_at,update_id",[repairId],c)).rows;
   // Older records used the action name when no note was supplied. Match the full
   // value and its resulting status; keep stored history and other free text intact.
   return rows.map(row=>({...row,description:repairActionDescription(row.description,row.status)??row.description}));
@@ -152,13 +152,21 @@ export async function submitRepair(account:Account,input:unknown) {
  const data=z.object({roomId:id,faultType:z.string().min(1).max(80),description:note.min(1),phone:z.string().min(3).max(32)}).strict().parse(input);
  return transaction(async c=>{await authorize(account,'repairs','write',c);requireValue(account.role==='student','仅学生可以提交报修',403);
   const stay=await currentStay(account.studentNumber!,c);requireValue(stay?.room_id===data.roomId,'请选择本人当前入住的房间',403);
+  const autoReview=(await settings('repair',c)).autoReview===true;
   const row=(await query('INSERT INTO repair_requests(student_number,room_id,fault_type,fault_description,contact_phone) VALUES($1,$2,$3,$4,$5) RETURNING *',[account.studentNumber,data.roomId,data.faultType,data.description,data.phone],c)).rows[0];
-  await query(`INSERT INTO notifications(recipient_account_id,title,content,repair_id)
-   SELECT DISTINCT u.account_id,'待初审报修',$2::text,$3::bigint FROM user_accounts u
-   JOIN apartment_buildings a ON a.manager_account_id=u.account_id OR EXISTS(SELECT 1 FROM building_authorizations ba WHERE ba.building_id=a.building_id AND ba.account_id=u.account_id)
-   WHERE a.building_id=$1`,[stay.building_id,data.description,row.repair_id],c);
   await query("INSERT INTO maintenance_updates(repair_id,actor_account_id,status,description) VALUES($1,$2,'pending_review','学生提交报修')",[row.repair_id,account.id],c);
-  await audit(c,account,'submit','repairs',row.repair_id);return row;
+  if(autoReview){
+   const message='系统自动通过初审，无需宿管人工审核，等待管理员派工。';
+   Object.assign(row,(await query("UPDATE repair_requests SET repair_status='pending_dispatch',reviewed_at=now(),review_note=$2 WHERE repair_id=$1 RETURNING *",[row.repair_id,message],c)).rows[0]);
+   await query("INSERT INTO maintenance_updates(repair_id,actor_account_id,status,description) VALUES($1,NULL,'pending_dispatch',$2)",[row.repair_id,message],c);
+   await notify(c,row.student_number,'报修进度更新','工单状态：待派工；'+message,'repair_id',row.repair_id);
+  }else{
+   await query(`INSERT INTO notifications(recipient_account_id,title,content,repair_id)
+    SELECT DISTINCT u.account_id,'待初审报修',$2::text,$3::bigint FROM user_accounts u
+    JOIN apartment_buildings a ON a.manager_account_id=u.account_id OR EXISTS(SELECT 1 FROM building_authorizations ba WHERE ba.building_id=a.building_id AND ba.account_id=u.account_id)
+    WHERE a.building_id=$1`,[stay.building_id,data.description,row.repair_id],c);
+  }
+  await audit(c,account,'submit','repairs',row.repair_id,{status:row.repair_status,autoReview});return row;
  });
 }
 export async function repairAction(account:Account,repairId:string,action:string,input:unknown) {
