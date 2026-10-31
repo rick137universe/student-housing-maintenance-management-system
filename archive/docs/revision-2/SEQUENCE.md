@@ -1,4 +1,0 @@
-# Single canvas scroll direction
-One persistent WebGL canvas, one constructed model, no separate SVG duplicates or repeated service cards.
-Timeline 0..1: 0-.16 dark complete dorm; .16-.30 rotate to roof and start peeling panels; .30-.47 housing cutaway cream background showing interiors; .47-.64 maintenance dark green scene exposes risers; .64-.80 electrical/billing dark violet scene; .80-1 light architectural exploded outline. Rotation, position, camera elevation, shell distances, material colors interpolate continuously, reversible scroll.
-Navigation advances along same sequence. Functional UI remains mock dialogs. Desktop model occupies right ~62% viewport; copy left34%. Mobile model upper60%, copy lower35%. Final exploded view uses full-height diagonal composition, left compact title and lower-right module legend/progress meter similar to user screenshot.

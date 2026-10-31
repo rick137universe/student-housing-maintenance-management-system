@@ -1,4 +1,4 @@
-import {formatCurrency} from '../../../shared/display-format.js';
+import {formatCurrency} from '../../../shared/js/display-format.js';
 // Live values belong to the active native demo scope, never to a global account cache.
 export function liveData(ctx, url, event, render, unavailable) {
   let alive = true, controller;

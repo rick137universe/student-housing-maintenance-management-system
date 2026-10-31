@@ -1,1 +1,0 @@
-const fs=require('fs');const p='eslint.config.mjs';let t=fs.readFileSync(p,'utf8').replace('  ...nextTs,','  ...nextTs,\n  { files: ["scripts/**/*.cjs"], rules: { "@typescript-eslint/no-require-imports": "off" } },');fs.writeFileSync(p,t);

@@ -1,4 +1,4 @@
-import { handle } from '@/server/api';
+import { handle } from '@/services/server/api';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 type Context = {params:Promise<{path:string[]}>};

@@ -1,1 +1,0 @@
-const sharp=require('C:/Users/Mechrevo/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp');(async()=>{await sharp('docs/design-references/animejs-com-23cc7dc7/root-8a5edab2/source-desktop.png').extract({left:0,top:0,width:1440,height:1000}).resize(1152).jpeg({quality:75}).toFile('docs/source-hero.jpg');})();

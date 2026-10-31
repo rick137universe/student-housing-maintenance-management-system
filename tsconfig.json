@@ -30,16 +30,24 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "next.config.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.mts",
+    "scripts/**/*.ts",
+    "scripts/**/*.mts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "tests/**/*.mts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
     ".next-integration/types/**/*.ts",
     ".next-integration/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "archive"
+    "temp",
+    ".local",
+    "test-results"
   ]
 }

@@ -16,6 +16,7 @@ dist/
 next-env.d.ts
 
 # Local environment and secrets; templates may be committed
+.local/
 .env*
 !.env.example
 !.env.sample
@@ -47,6 +48,5 @@ coverage/
 test-results/
 playwright-report/
 blob-report/
-docs/qa/
 *.trace
 *.har

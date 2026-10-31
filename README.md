@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/flight-logo.svg" alt="FLight 项目 Logo" width="320">
+  <img src="public/assets/shared/images/flight-logo.svg" alt="FLight 项目 Logo" width="320">
 </p>
 
 # FLight | 学生公寓住宿与报修管理系统
@@ -19,7 +19,7 @@ FLight 面向学生、宿管人员、维修人员和管理员，提供从入住�
 | 维修人员 | 工单接收、维修处理、维修记录、个人统计、个人中心、个人消息 | 接收获派工单，记录维修进展与配件等待，确认完工，查看工作量、完成率和服务评价 |
 | 管理员 | 基础数据、流程管控、报修派工、统计报表、权限管理、备份恢复、账单管理、公告管理、个人中心、个人消息 | 导入导出基础资料，配置业务规则，人工或按负载派工，管理账号与楼栋授权，生成账单、发布公告、审计及备份恢复 |
 
-管理员“统计报表 → 统计可视化”沿用母版 easing-editor 的三栏布局，展示床位、报修、派工、评价及账单等 12 项真实统计指标，支持柱图、折线图和环图、楼栋与日期筛选、数据明细和 CSV 导出。参见[统计可视化说明](docs/statistics-visualization.md)。
+管理员“统计报表 → 统计可视化”沿用母版 easing-editor 的三栏布局，展示床位、报修、派工、评价及账单等 12 项真实统计指标，支持柱图、折线图和环图、楼栋与日期筛选、数据明细和 CSV 导出。参见[统计可视化说明](docs/STATISTICS_VISUALIZATION.md)。
 
 核心业务包括：
 
@@ -35,7 +35,7 @@ FLight 面向学生、宿管人员、维修人员和管理员，提供从入住�
 
 - 首页提供系统介绍、按登录身份生成的真实工作台入口，以及开发团队参与入口。
 - 四端模块主页使用母版 Getting started 点阵；具体页面采用文字、图形或数字动画。缴费与个人统计的指定数字预览读取真实业务数据，并在达到目标值后停止。
-- 英文与 ASCII 数字沿用母版 DINish、Berkeley Mono 和 Digital-7；中文采用思源黑体 `SourceHanSansSC`，使用 WOFF2、界面子集和关键字重预加载。说明见 [项目字体](docs/fonts.md)。
+- 英文与 ASCII 数字沿用母版 DINish、Berkeley Mono 和 Digital-7；中文采用思源黑体 `SourceHanSansSC`，使用 WOFF2、界面子集和关键字重预加载。说明见 [项目字体](docs/FONT_GUIDE.md)。
 - 顶部导航提供「工作台」、项目 GitHub 和账户入口；页脚使用项目 Logo、FLIGHT INC. 署名及项目与开发者链接。
 - 页面标题统一以 ` | FLight` 结尾；中间栏保留预览重播，隐藏跳转 CodePen 的编辑图标。
 - 日期统一显示为 `2026年10月23日`，账期显示为 `2026年10月`；日期时间保留现有 `HH:mm:ss`。金额显示为 `￥200` 或 `￥200.50`。显示格式独立于数据库、API、CSV 和表单提交值，日期及数值类型保持不变。
@@ -51,7 +51,7 @@ FLight 面向学生、宿管人员、维修人员和管理员，提供从入住�
 | 维修工作台 | `/workspace/maintenance` |
 | 管理员工作台 | `/workspace/admin` |
 
-具体页面使用语义化路径，例如 `/workspace/student/personal/profile`、`/workspace/student/accommodation/check-in/submit`。原 `action-1`、`action-2` 等编号地址保留 308 永久重定向兼容。完整清单见 [工作台页面地址规范](docs/workspace-routes.md)。
+具体页面使用语义化路径，例如 `/workspace/student/personal/profile`、`/workspace/student/accommodation/check-in/submit`。原 `action-1`、`action-2` 等编号地址保留 308 永久重定向兼容。完整清单见 [工作台页面地址规范](docs/WORKSPACE_ROUTES.md)。
 
 ## 技术栈
 
@@ -64,7 +64,7 @@ FLight 面向学生、宿管人员、维修人员和管理员，提供从入住�
 | 后台任务 | 独立 TypeScript 工作进程，执行账单调度、备份与恢复任务 |
 | 验证工具 | ESLint、TypeScript、接口集成测试、Playwright / Microsoft Edge |
 
-母版页面以同源独立文档承载，四端复用静态样式与动画运行时；React 业务组件通过接口读写数据。母版原始资源、项目适配脚本和业务代码分别维护。
+母版页面以同源独立文档承载，四端复用静态样式与动画运行时；React 业务组件通过接口读写数据。母版原始资源、项目适配脚本和业务代码分别维护。Anime.js 与 Three.js 使用 `public/assets` 中随母版保留的预构建运行时，不再单独安装对应的 npm 包。
 
 ## 本地运行
 
@@ -111,7 +111,7 @@ $pgClient = 'C:/Program Files/PostgreSQL/18/bin/psql.exe'
 
 ```powershell
 npm run db:migrate
-npx tsx scripts/setup-roles.ts
+npx tsx scripts/database/setup-roles.ts
 npm run db:seed
 ```
 
@@ -179,20 +179,25 @@ npm start
 
 备份使用 `pg_dump` 自定义格式并记录 SHA-256 校验值。恢复校验已登记的有效备份后，使用 `pg_restore` 创建 `dorma_restore_*` 独立数据库，并验证结构、约束与业务一致性，网页不会覆盖当前业务库。健康接口 `/api/v1/health` 提供数据库连接和工作进程心跳状态；工作进程未运行时，备份任务保留在队列中。
 
-生产运行还需保留任务脚本、所需依赖、数据库连接、PostgreSQL 工具和备份目录。部署到 HTTPS 或反向代理环境时，按实际拓扑配置来源校验与代理信任，相关说明见 [后端接口与业务说明](docs/backend-api.md)。
+生产运行还需保留任务脚本、所需依赖、数据库连接、PostgreSQL 工具和备份目录。部署到 HTTPS 或反向代理环境时，按实际拓扑配置来源校验与代理信任，相关说明见 [后端接口与业务说明](docs/BACKEND_API.md)。
 
 ## 项目结构
 
 ```text
 src/
 ├─ app/                 页面路由、布局及 /api/v1 接口入口
-├─ views/               首页、登录页与四端工作台视图
-├─ components/          认证、主题、母版承载与业务组件
-├─ data/                角色菜单、页面清单、语义化路径和预览映射
-├─ server/              数据访问、认证权限、业务事务与后台任务
-├─ styles/              应用全局样式
+│  ├─ (auth)/           登录路由组，公开地址不含组名
+│  ├─ (main)/           四端工作台路由组
+│  ├─ api/              同源 API Route Handlers
+│  └─ globals.css       全局样式
+├─ components/          跨业务共享 UI、文档控件及持久化布局
+├─ features/            按业务组织的组件、请求服务、配置与工具
+├─ hooks/               跨业务共用的文档交互 Hooks
+├─ lib/                 数据库、安全、错误及路由基础设施
+├─ services/            共享请求客户端、会话缓存和服务端编排
+├─ constants/           角色菜单、模块说明及业务操作常量
 ├─ types/               共享类型
-└─ utils/               客户端请求、路由和通用工具
+└─ utils/               日期金额格式化及公共路径工具
 public/assets/
 ├─ home/                首页母版资源与项目适配
 ├─ login/               登录页母版资源与项目适配
@@ -200,30 +205,50 @@ public/assets/
 ├─ manager/             宿管工作台
 ├─ maintenance/         维修工作台
 ├─ admin/               管理员工作台
-├─ fonts/               中文字体、网页子集及字体样式
-└─ images/              项目 Logo、favicon 和开发者头像
+├─ statistics/          统计可视化页面及样式
+└─ shared/
+   ├─ css/              跨页面的项目样式，fonts/ 保存字体声明
+   ├─ fonts/            字体文件及网页子集
+   ├─ images/           项目 Logo、favicon 和开发者头像
+   └─ js/               跨页面共用的工具函数
 database/               初始数据库结构及增量迁移
-scripts/                迁移、初始化、任务、预览同步与字体处理脚本
-tests/                  数据库、接口、母版及浏览器回归
+scripts/
+├─ database/            数据库迁移、初始化、角色配置和恢复检查
+├─ runtime/             生产启动及后台任务入口
+├─ sync/                静态页面、导航和预览同步
+├─ fonts/               字体转换与界面子集生成
+└─ lib/                 脚本共用的环境加载工具
+tests/
+├─ runners/             集成与浏览器回归编排入口
+├─ integration/         导航接口及数据库汇总检查
+├─ unit/                通用纯函数检查
+├─ checks/              标题与母版静态检查
+├─ e2e/                 按四端角色及共用用例组织的浏览器回归
+└─ fixtures/            母版资源摘要和结构校验清单
 docs/                   业务、页面路径、界面与字体说明
-archive/                历史源码、研究资料与一次性脚本
 ```
 
-页面 URL 映射集中在 `src/data/workspace-paths.ts`，各角色的页面清单与预览配置位于 `src/data/`，基础业务入口与接口对应关系由 `src/data/workspace-actions.ts` 管理。静态工作台页面和预览通过 `scripts/sync-*.ts` 同步；调整页面时需同时考虑对应数据源与生成文件。
+页面 URL 映射集中在 `src/lib/routing/workspace-paths.ts`，各角色的页面清单位于 `src/features/workspace/config/`，动画映射位于其中的 `previews/`，基础业务入口与接口对应关系由 `src/constants/workspace-actions.ts` 管理。静态工作台页面和预览通过 `scripts/sync/sync-*.ts` 同步；调整页面时需同时考虑对应数据源与生成文件。完整目录树、职责与迁移映射见 [项目结构说明](docs/PROJECT_STRUCTURE.md)。
+
+本机运行数据和检查产物单独保存且不纳入 Git：`.local/postgres/` 保存历史 PostgreSQL 测试实例与日志，`test-results/screenshots/` 保存浏览器截图，`temp/legacy-qa/` 保存旧模拟页面检查的临时留档。文档目录不再保存数据库文件或测试输出。旧测试实例不用于当前默认连接，按需启动方式见[数据库说明](docs/DATABASE_GUIDE.md#本机历史测试实例)。
 
 ## 文档
 
-- [数据库与迁移说明](database/README.md)
-- [后端接口、权限与业务规则](docs/backend-api.md)
-- [工作台页面地址规范](docs/workspace-routes.md)
-- [原需求映射](docs/requirements-map.md)
-- [首页设计来源](docs/home-design.md)、[登录页设计来源](docs/login-design.md)
-- [学生工作台设计](docs/student-workspace-design.md)、[宿管工作台设计](docs/manager-workspace-design.md)
-- [学生预览配置](docs/student-previews.md)、[宿管预览配置](docs/manager-previews.md)、[维修预览配置](docs/maintenance-previews.md)
-- [字体与网页字体生成](docs/fonts.md)
-- [历史资料索引](archive/README.md)
+- [文档索引与维护约定](docs/INDEX.md)
+- [项目结构与目录迁移](docs/PROJECT_STRUCTURE.md)
+- [数据库与迁移说明](docs/DATABASE_GUIDE.md)
+- [脚本用途与执行方式](docs/SCRIPTS_GUIDE.md)
+- [测试目录与执行方式](docs/TESTING_GUIDE.md)
+- [静态资源组织与维护](docs/PUBLIC_ASSETS.md)
+- [后端接口、权限与业务规则](docs/BACKEND_API.md)
+- [工作台页面地址规范](docs/WORKSPACE_ROUTES.md)
+- [首页设计来源](docs/HOME_DESIGN.md)、[登录页设计来源](docs/LOGIN_DESIGN.md)
+- [学生工作台设计](docs/STUDENT_WORKSPACE_DESIGN.md)、[宿管工作台设计](docs/MANAGER_WORKSPACE_DESIGN.md)
+- [学生预览配置](docs/STUDENT_PREVIEWS.md)、[宿管预览配置](docs/MANAGER_PREVIEWS.md)、[维修预览配置](docs/MAINTENANCE_PREVIEWS.md)、[管理员预览配置](docs/ADMIN_PREVIEWS.md)
+- [统计可视化](docs/STATISTICS_VISUALIZATION.md)
+- [字体与网页字体生成](docs/FONT_GUIDE.md)
 
-部分设计说明记录的是最初接入母版时的结构；当前页面行为以代码、页面清单和对应回归为准。
+界面设计、页面地址和动画预览分别维护，修改时以代码、页面清单和对应回归为准。历史 `archive/`、旧首页实现、未使用组件、旧根层静态资源及关联闲置依赖已移除，需要追溯时可查看 Git 历史。原始 OTF 和独立字体 LICENSE 文本已删除，运行所需 WOFF2 与中文子集保留；公开头像仅保留 Pimnghi 与 rick137universe。
 
 ## 项目边界与参与开发
 
@@ -233,4 +258,4 @@ archive/                历史源码、研究资料与一次性脚本
 
 欢迎通过 [Issues](https://github.com/rick137universe/student-housing-maintenance-management-system/issues) 反馈问题，或提交 Pull Request 参与开发。提交修改前运行与改动相关的检查；提交消息采用 `feat:`、`fix:`、`docs:`、`refactor:` 等前缀。
 
-开发者：[rick137universe](https://github.com/rick137universe)、[Pimnghi](https://github.com/Pimnghi)。界面与动画基于 Anime.js 母版适配，第三方代码、字体及资源沿用各自许可，中文字体版权与许可见 [SourceHanSansSC-LICENSE.txt](public/assets/fonts/SourceHanSansSC-LICENSE.txt)。
+开发者：[rick137universe](https://github.com/rick137universe)、[Pimnghi](https://github.com/Pimnghi)。界面与动画基于 Anime.js 母版适配，第三方代码、字体及资源沿用各自许可。

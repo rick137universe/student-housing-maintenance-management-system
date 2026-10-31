@@ -1,6 +1,0 @@
-.overlay{position:fixed;inset:0;z-index:50;pointer-events:none}
-.blackout{position:absolute;inset:0;display:block;overflow:visible}
-.ring{position:absolute;left:50%;top:calc(49% + 39.78px);width:min(54vw,720px);aspect-ratio:1;transform:translate(-50%,-50%) scale(.84);overflow:visible}
-@media(max-width:1200px){.ring{left:56%}}
-@media(max-width:900px){.ring{left:50%;top:calc(56% + 34px);width:min(78vw,680px)}}
-@media(max-width:620px){.ring{top:calc(53% + 29px);width:108vw}}

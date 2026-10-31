@@ -10,13 +10,12 @@ const eslintConfig = defineConfig([
     // Default ignores of eslint-config-next:
     ".next/**",
     ".next-integration/**",
-    "docs/qa/**",
+    ".local/**",
+    "test-results/**",
     "temp/**",
     "out/**",
     "build/**",
-    "archive/**",
     // Imported, prebuilt animation runtime and model decoder.
-    "public/assets/js/**",
     "public/assets/login/assets/js/learn.js",
     "public/assets/login/assets/js/chunks/**",
     "public/assets/home/assets/js/home.js",
@@ -24,7 +23,6 @@ const eslintConfig = defineConfig([
     "public/assets/student/assets/js/chunks/**",
     "public/assets/home/assets/js/chunks/**",
     "public/assets/home/assets/draco/**",
-    "public/assets/draco/**",
     "next-env.d.ts",
   ]),
 ]);

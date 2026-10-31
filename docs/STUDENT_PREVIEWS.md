@@ -1,0 +1,28 @@
+# 学生端中间栏预览
+
+`src/features/workspace/config/previews/student-previews.json` 定义业务页面与母版演示的对应关系。执行 `npx tsx scripts/sync/sync-student-previews.ts` 更新项目副本；完整导航同步也会执行此步骤。页面地址、主题色和母版原始资源保持独立。
+
+个人资料的 Installation 打字预览从当前登录学生的 `profile` 接口读取账号及手机号，密码页仅显示固定文本 `password`。保存手机号后重新播放。预览数据不写入静态文件，不跨登录会话缓存。
+
+缴费数码预览通过 `GET /api/v1/statistics/student-finance` 获取当前学生的完整汇总，不受列表分页影响。最新待缴账单按账期、生成时间和账单编号倒序选择；无待缴账单时显示零。累计金额仅来自已入账的缴费记录，不包括失败或取消的支付。
+
+在线缴费使用 `timer/timer-playback-settings/duration` 的居中单数字框，标签为“待缴费账单数量”，从零直接递增，在两秒内到达真实数量后停止；未激活时显示零。
+
+系统支付记录只有合计金额，没有费用分项，因此部分缴费按账单原始费用比例分配：水电费四舍五入到分，剩余金额归住宿费。待缴分项以原费用减去已缴分项计算，保证已缴、待缴与账单费用守恒。缴费完成事件会刷新预览，金额动画到达目标后停止，重新选择页面或点击母版刷新按钮可重播。
+
+公寓通知和缴费提醒使用母版 `text/splittext` 的网格与循环文字动画，分别展示配置中的英文标题与中文标题两行文本。
+
+四端消息通知统一复用 `timer/timer-playback-settings/duration`，标签为“未读消息通知”。数字读取当前账号 `notifications?unread=true&limit=1` 响应的总条数，从零计数至真实未读数量后停止，标记已读后刷新。未激活或没有未读消息时显示零；接口失败时显示“—”及错误提示。
+
+报修申请、进度和评价的六个三级子页面分别使用配置中的 Stagger 或 WAAPI 母版演示，保留原有交错、弹簧、独立属性、循环次数及函数值动画。
+
+`tests/integration/student-finance-preview.ts` 使用事务内临时表验证金额与权限；`tests/e2e/student/previews.ts` 验证二十七个页面的动画、双语文本、真实数据、刷新、错误恢复和账号隔离，已纳入浏览器回归入口。
+
+以下 4 个图形预览采用 Stagger 分配，其余预览使用配置中保存的映射。模块点阵、资料打字及数字统计等专属预览按各页面要求保留；所有分配固定保存，刷新时不重新随机。
+
+| 页面 | 路径 | 母版动画 |
+| --- | --- | --- |
+| 服务评价记录 | `/workspace/student/repair/reviews/records` | `utilities-stagger-stagger-parameters-stagger-modifier` |
+| 提交报修申请 | `/workspace/student/repair/requests/submit` | `utilities-stagger-stagger-parameters-stagger-jitter` |
+| 提交退宿申请 | `/workspace/student/accommodation/check-out/submit` | `utilities-stagger-stagger-parameters-stagger-grid` |
+| 提交入住申请 | `/workspace/student/accommodation/check-in/submit` | `utilities-stagger-stagger-value-types-range-value` |

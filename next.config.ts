@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import {legacyWorkspaceRedirects} from './src/data/workspace-paths';
+import {legacyWorkspaceRedirects} from './src/lib/routing/workspace-paths';
 
 const nextConfig: NextConfig = {
   /* config options here */
