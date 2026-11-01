@@ -1,6 +1,6 @@
 {
   "name": "student-housing-maintenance-management-system",
-  "version": "0.5.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "学生公寓住宿与报修管理系统",
